@@ -10,7 +10,8 @@
             <div class="headline">
                 <div class="attribute-area">Grundattribut</div>
             </div>
-            {{#each EON.CONFIG.grundegenskaper as |attribute key|}}
+
+            {{#each EON.CONFIG.grundegenskaper as |attribute key|}}            
                 <div class="clear">
                     <div class="pullLeft caption">{{attribute}}</div>
                     <div class="pullLeft attribute-value">
@@ -18,7 +19,9 @@
                             <div class="tic"><i class="fa-solid fa-sort-up tic-top"></i></div>
                             <div class="tic"><i class="fa-solid fa-sort-down tic-down"></i></div>
                         </div>
-                        <div class="pullLeft"><input class="attribute-value" type="text" value="2T6"></div>
+                        <div class="pullLeft">
+                            <input class="attribute-value" type="text" value="{{getDiceValue (getActorAttribute ../data key)}}" readonly>
+                        </div>
                         <div class="pullLeft tic-container">
                             <div class="tic"><i class="fa-solid fa-sort-up tic-top"></i></div>
                             <div class="tic"><i class="fa-solid fa-sort-down tic-down"></i></div>
@@ -31,38 +34,37 @@
                 <div class="pullLeft attribute-area">Oanvänd erfarenhet <span class="pullRight">0</span></div>
             </div>
         </div>
-
         <div class="three-column pullLeft">
             <div class="headline">
                 <div class="attribute-area">Härledda attribut</div>
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Förflyttning</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text"></div>
+                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.forflyttning}}" readonly></div>
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Intryck</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text"></div>
+                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.intryck}}" readonly></div>
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Kroppsbyggnad</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text"></div>
+                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.kroppsbyggnad}}" readonly></div>
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Reaktion</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text"></div>
+                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.reaktion}}" readonly></div>
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Självkontroll</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text"></div>
+                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.sjalvkontroll}}" readonly></div>
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Vaksamhet</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text"></div>
+                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.vaksamhet}}" readonly></div>
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Livskraft</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text"></div>
+                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.livskraft}}" readonly></div>
             </div>
         </div>  
 

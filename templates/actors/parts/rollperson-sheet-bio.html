@@ -70,12 +70,18 @@
         <div class="clear">
             <div class="pullLeft caption">Folkslag</div>
             <div class="pullLeft attribute-value">
-                <select>
-                    <option>- Välj -</option>
-                    {{#each EON.folkslag as |folkslag key|}}
-                        <option value="{{key}}">{{folkslag.namn}}</option>
-                    {{/each}}
-                </select>
+                {{#if data.system.installningar.skapad}}
+                    {{data.system.bakgrund.folkslag}}
+                {{else}}
+                    <select id="folkslag" class="inputdata" data-source="folkslag">
+                        <option>- Välj -</option>
+                        {{#select data.system.bakgrund.folkslag}}
+                            {{#each EON.folkslag as |folkslag key|}}
+                                <option value="{{key}}">{{folkslag.namn}}</option>
+                            {{/each}}
+                        {{/select}}
+                    </select>
+                {{/if}}
             </div>
         </div>  
     </div>

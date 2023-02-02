@@ -1,5 +1,5 @@
 import { eon } from "./config.js";
-import * as templates from "./templates.js";
+import * as Templates from "./templates.js";
 import { EonActorSheet } from "./actor-sheet.js";
 
 /* ------------------------------------ */
@@ -14,8 +14,9 @@ Hooks.once("init", async function() {
 
     //Items.unregisterSheet("core", ItemSheet);
 
-    templates.preloadHandlebarsTemplates();
-    game.EON = await templates.setup();
+    Templates.PreloadHandlebarsTemplates();
+    Templates.RegisterHandlebarsHelpers();
+    game.EON = await Templates.Setup();
 });
 
 /* ------------------------------------ */

@@ -2,6 +2,9 @@
 	"Actor": {
         "types": ["Rollperson"],
         "Rollperson": {
+            "installningar":{
+                "skapad": false
+            },
             "grundegenskaper": {
                 "styrka": {
                     "tvarde": 0,
@@ -35,8 +38,41 @@
                     "tvarde": 0,
                     "bonus": 0
                 }
+            },
+            "harleddegenskaper": {
+                "forflyttning": {
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "intryck": {
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "kroppsbyggnad": {
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "reaktion": {
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "sjalvkontroll": {
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "vaksamhet": {
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "livskraft": {
+                    "tvarde": 0,
+                    "bonus": 0
+                }
+            },
+            "bakgrund": {
+                "folkslag": ""
             }
-        }
+        }        
     },
     "Item": {}
 }
