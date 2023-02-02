@@ -1,0 +1,46 @@
+<form class="{{cssClass}} flexcol {{#if locked}}locked{{/if}}" autocomplete="off">
+
+    <div class="sheet-character">
+
+        <header class="sheet-header">
+
+            <div class="sheet-top clear">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-top.html"}}                
+            </div>
+
+            <div class="navigation clear">
+                {{> "systems/eon-rpg/templates/actors/parts/navigation.html"}}
+            </div>
+        </header>
+
+        <section class="sheet-body">            
+
+            <div class="tab skill" data-group="primary" data-tab="skill">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-skill.html"}}
+            </div>
+
+            <div class="tab combat" data-group="primary" data-tab="combat">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-combat.html"}}
+            </div>
+
+            <div class="tab mystic" data-group="primary" data-tab="mystic">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-mystic.html"}}
+            </div>
+
+            <div class="tab equipment" data-group="primary" data-tab="equipment">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-equipment.html"}}
+            </div>
+
+            <div class="tab bio" data-group="primary" data-tab="bio">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-bio.html"}}
+            </div>
+
+            <div class="tab settings" data-group="primary" data-tab="settings">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-setting.html"}}
+            </div>
+
+        </section>
+
+    </div>
+
+</form>

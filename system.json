@@ -1,0 +1,42 @@
+{
+    "id": "eon-rpg",
+    "title": "Eon IV RPG",
+    "description": "",
+    "version": "0.1.0",
+    "compatibility": {
+        "minimum": "10",
+        "verified": "10",
+        "maximum": "10"
+    },
+    "authors": [{
+        "name": "Johan Fält",
+        "discord": "johanfk#0054",
+        "flags": {}
+    }],
+    "scripts": [],
+    "esmodules": [
+        "scripts/eon-rpg.js"
+    ],
+    "styles": [
+        "styles/eon-main.css"
+    ],
+    "packs": [],
+    "languages": [{
+        "lang": "se",
+        "name": "Svenska",
+        "path": "lang/se.json",
+        "flags": {}
+    }],
+    "socket": false,
+    "initiative": "1d20",
+    "gridDistance": 2,
+    "gridUnits": "m",
+    "primaryTokenAttribute": "resources.health",
+    "secondaryTokenAttribute": "resources.power",
+    "url": "",
+    "manifest": "",
+    "download": "",
+    "bugs": "",
+    "changelog": "",
+    "license": "LICENSE.txt"    
+}

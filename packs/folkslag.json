@@ -1,0 +1,461 @@
+{
+    "folkslag": {
+        "adasier" : {
+            "namn": "Adasier",
+            "referens": "s91",
+            "grundegenskaper": {
+                "styrka": {
+                    "tvarde": 1,
+                    "bonus": 2
+                },
+                "talighet": {
+                    "tvarde": 2,
+                    "bonus": 3
+                },
+                "rorlighet": {
+                    "tvarde": 3,
+                    "bonus": 0
+                },
+                "uppfattning": {
+                    "tvarde": 2,
+                    "bonus": 2
+                },
+                "vilja": {
+                    "tvarde": 2,
+                    "bonus": 1
+                },
+                "psyke": {
+                    "tvarde": 1,
+                    "bonus": 3
+                },
+                "visdom": {
+                    "tvarde": 1,
+                    "bonus": 0
+                },
+                "utstralning": {
+                    "tvarde": 1,
+                    "bonus": 3
+                }
+            }
+        },
+        "cirefalier" : {
+            "namn": "Cirefalier",
+            "referens": "s92",
+            "grundegenskaper": {
+                "styrka": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "talighet": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "rorlighet": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "uppfattning": {
+                    "tvarde": 1,
+                    "bonus": 2
+                },
+                "vilja": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "psyke": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "visdom": {
+                    "tvarde": 2,
+                    "bonus": 2
+                },
+                "utstralning": {
+                    "tvarde": 2,
+                    "bonus": 2
+                }
+            }
+        },
+        "fedaki" : {
+            "namn": "Fedaki",
+            "referens": "s93",
+            "grundegenskaper": {
+                "styrka": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "talighet": {
+                    "tvarde": 1,
+                    "bonus": 3
+                },
+                "rorlighet": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "uppfattning": {
+                    "tvarde": 2,
+                    "bonus": 1
+                },
+                "vilja": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "psyke": {
+                    "tvarde": 2,
+                    "bonus": 2
+                },
+                "visdom": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "utstralning": {
+                    "tvarde": 2,
+                    "bonus": 0
+                }
+            }
+        },
+        "genver" : {
+            "namn": "Genver",
+            "referens": "s94",
+            "grundegenskaper": {
+                "styrka": {
+                    "tvarde": 2,
+                    "bonus": 1
+                },
+                "talighet": {
+                    "tvarde": 2,
+                    "bonus": 2
+                },
+                "rorlighet": {
+                    "tvarde": 2,
+                    "bonus": 2
+                },
+                "uppfattning": {
+                    "tvarde": 1,
+                    "bonus": 2
+                },
+                "vilja": {
+                    "tvarde": 2,
+                    "bonus": 2
+                },
+                "psyke": {
+                    "tvarde": 1,
+                    "bonus": 3
+                },
+                "visdom": {
+                    "tvarde": 1,
+                    "bonus": 2
+                },
+                "utstralning": {
+                    "tvarde": 2,
+                    "bonus": 0
+                }
+            }
+        },
+        "jahann" : {
+            "namn": "Jahann",
+            "referens": "s95",
+            "grundegenskaper": {
+                "styrka": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "talighet": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "rorlighet": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "uppfattning": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "vilja": {
+                    "tvarde": 2,
+                    "bonus": 1
+                },
+                "psyke": {
+                    "tvarde": 2,
+                    "bonus": 1
+                },
+                "visdom": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "utstralning": {
+                    "tvarde": 2,
+                    "bonus": 0
+                }
+            }
+        },
+        "jargier" : {
+            "namn": "Jargier",
+            "referens": "s96-s97",
+            "grundegenskaper": {
+                "styrka": {
+                    "tvarde": 2,
+                    "bonus": 1
+                },
+                "talighet": {
+                    "tvarde": 2,
+                    "bonus": 1
+                },
+                "rorlighet": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "uppfattning": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "vilja": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "psyke": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "visdom": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "utstralning": {
+                    "tvarde": 2,
+                    "bonus": 0
+                }
+            }
+        },
+        "kamorian" : {
+            "namn": "Kamorian",
+            "referens": "s98-s99",
+            "grundegenskaper": {
+                "styrka": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "talighet": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "rorlighet": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "uppfattning": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "vilja": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "psyke": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "visdom": {
+                    "tvarde": 1,
+                    "bonus": 0
+                },
+                "utstralning": {
+                    "tvarde": 2,
+                    "bonus": 0
+                }
+            }
+        },
+        "marnakhtirak" : {
+            "namn": "Marnakh-tirak",
+            "referens": "s100",
+            "grundegenskaper": {
+                "styrka": {
+                    "tvarde": 2,
+                    "bonus": 2
+                },
+                "talighet": {
+                    "tvarde": 3,
+                    "bonus": 0
+                },
+                "rorlighet": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "uppfattning": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "vilja": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "psyke": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "visdom": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "utstralning": {
+                    "tvarde": 2,
+                    "bonus": 0
+                }
+            }
+        },
+        "missla" : {
+            "namn": "Missla",
+            "referens": "s101",
+            "grundegenskaper": {
+                "styrka": {
+                    "tvarde": 1,
+                    "bonus": 0
+                },
+                "talighet": {
+                    "tvarde": 1,
+                    "bonus": 2
+                },
+                "rorlighet": {
+                    "tvarde": 2,
+                    "bonus": 2
+                },
+                "uppfattning": {
+                    "tvarde": 3,
+                    "bonus": 0
+                },
+                "vilja": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "psyke": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "visdom": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "utstralning": {
+                    "tvarde": 2,
+                    "bonus": 0
+                }
+            }
+        },
+        "pyar" : {
+            "namn": "Pyar",
+            "referens": "s102",
+            "grundegenskaper": {
+                "styrka": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "talighet": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "rorlighet": {
+                    "tvarde": 2,
+                    "bonus": 1
+                },
+                "uppfattning": {
+                    "tvarde": 2,
+                    "bonus": 1
+                },
+                "vilja": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "psyke": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "visdom": {
+                    "tvarde": 2,
+                    "bonus": 2
+                },
+                "utstralning": {
+                    "tvarde": 2,
+                    "bonus": 2
+                }
+            }
+        },
+        "taup" : {
+            "namn": "Taup",
+            "referens": "s103",
+            "grundegenskaper": {
+                "styrka": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "talighet": {
+                    "tvarde": 1,
+                    "bonus": 2
+                },
+                "rorlighet": {
+                    "tvarde": 1,
+                    "bonus": 2
+                },
+                "uppfattning": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "vilja": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "psyke": {
+                    "tvarde": 2,
+                    "bonus": 2
+                },
+                "visdom": {
+                    "tvarde": 3,
+                    "bonus": 2
+                },
+                "utstralning": {
+                    "tvarde": 1,
+                    "bonus": 2
+                }
+            }
+        },
+        "zolod" : {
+            "namn": "Zolod",
+            "referens": "s104",
+            "grundegenskaper": {
+                "styrka": {
+                    "tvarde": 2,
+                    "bonus": 2
+                },
+                "talighet": {
+                    "tvarde": 2,
+                    "bonus": 2
+                },
+                "rorlighet": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "uppfattning": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "vilja": {
+                    "tvarde": 2,
+                    "bonus": 2
+                },
+                "psyke": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "visdom": {
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "utstralning": {
+                    "tvarde": 2,
+                    "bonus": 0
+                }
+            }
+        }
+    }
+    
+}

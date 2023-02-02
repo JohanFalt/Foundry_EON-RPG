@@ -1,0 +1,33 @@
+{
+    "miljoer": {
+        "hav" : {
+            "namn": "Hav",
+            "referens": "s114"
+        },
+        "hov" : {
+            "namn": "Hov",
+            "referens": "s115"
+        },
+        "landsbygd" : {
+            "namn": "Landsbygd",
+            "referens": "s115"
+        },
+        "larosate" : {
+            "namn": "Lärosäte",
+            "referens": "s116"
+        },
+        "stad" : {
+            "namn": "Stad",
+            "referens": "s116"
+        },
+        "undrevarlden" : {
+            "namn": "Undre världen",
+            "referens": "s117"
+        },
+        "vildmark" : {
+            "namn": "Vildmark",
+            "referens": "s117"
+        }
+    }
+    
+}

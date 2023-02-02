@@ -1,0 +1,42 @@
+{
+	"Actor": {
+        "types": ["Rollperson"],
+        "Rollperson": {
+            "grundegenskaper": {
+                "styrka": {
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "talighet": {
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "rorlighet": {
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "uppfattning": {
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "vilja": {
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "psyke": {
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "visdom": {
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "utstralning": {
+                    "tvarde": 0,
+                    "bonus": 0
+                }
+            }
+        }
+    },
+    "Item": {}
+}

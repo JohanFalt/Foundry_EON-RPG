@@ -1,0 +1,33 @@
+{
+    "arketyper": {
+        "donare" : {
+            "namn": "Donare",
+            "referens": "s107"
+        },
+        "krigare" : {
+            "namn": "Krigare",
+            "referens": "s108"
+        },
+        "ledare" : {
+            "namn": "Ledare",
+            "referens": "s109"
+        },
+        "lard" : {
+            "namn": "Lärd",
+            "referens": "s110"
+        },
+        "mystiker" : {
+            "namn": "Mystiker",
+            "referens": "s111"
+        },
+        "skugga" : {
+            "namn": "Skugga",
+            "referens": "s112"
+        },
+        "underhallare" : {
+            "namn": "Underhållare",
+            "referens": "s113"
+        }
+    }
+    
+}

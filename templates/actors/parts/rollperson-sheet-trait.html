@@ -1,0 +1,25 @@
+<div class="clear headline">
+    <div class="pullLeft attribute-area">Karaktärsdrag<i class="pullRight fa-solid fa-square-plus"></i></div>        
+</div>
+<div class="clear">
+    <div class="pullLeft caption">Primärt</div>
+    <div class="pullLeft attribute-value">
+        <select>
+            <option>- Välj -</option>
+            {{#each EON.karaktarsdrag as |karaktarsdrag key|}}
+                <option value="{{key}}">{{karaktarsdrag.namn}}</option>
+            {{/each}}
+        </select>
+    </div>
+</div>
+<div class="clear">
+    <div class="pullLeft caption">Sekundärt</div>
+    <div class="pullLeft attribute-value">
+        <select>
+            <option>- Välj -</option>
+            {{#each EON.karaktarsdrag as |karaktarsdrag key|}}
+                <option value="{{key}}">{{karaktarsdrag.namn}}</option>
+            {{/each}}
+        </select>
+    </div>
+</div>
