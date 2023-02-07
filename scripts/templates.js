@@ -28,30 +28,28 @@ export const PreloadHandlebarsTemplates = async function () {
 export async function Setup()
 {
     try {        
-        const {files} = await FilePicker.browse("data", 'systems/eon-rpg/packs');
-        let data = await FilePicker.browse("data", "systems/eon-rpg/packs", { bucket: null, extensions: [".json", ".JSON"], wildcard: false });
-
-		let importData = {};
-
-        if (data.files.includes("systems/eon-rpg/packs/karaktarsdrag.json")) {
+        /* const {files} = await FilePicker.browse("data", 'systems/eon-rpg/packs');
+        let data = await FilePicker.browse("data", "systems/eon-rpg/packs", { bucket: null, extensions: [".json", ".JSON"], wildcard: false }); 
+		if (data.files.includes("systems/eon-rpg/packs/karaktarsdrag.json")) {
 			const fileData = await fetch(`systems/eon-rpg/packs/karaktarsdrag.json`).then((response) => response.json());
 			Object.assign(importData, fileData);
-        }
+        }*/
 
-		if (data.files.includes("systems/eon-rpg/packs/arketyper.json")) {
-			const fileData = await fetch(`systems/eon-rpg/packs/arketyper.json`).then((response) => response.json());
-			Object.assign(importData, fileData);
-        }
+		let importData = {};
+		let fileData = await fetch(`systems/eon-rpg/packs/karaktarsdrag.json`).then((response) => response.json());
+		Object.assign(importData, fileData);
 
-		if (data.files.includes("systems/eon-rpg/packs/miljoer.json")) {
-			const fileData = await fetch(`systems/eon-rpg/packs/miljoer.json`).then((response) => response.json());
-			Object.assign(importData, fileData);
-        }
+		fileData = await fetch(`systems/eon-rpg/packs/arketyper.json`).then((response) => response.json());
+		Object.assign(importData, fileData);
 
-		if (data.files.includes("systems/eon-rpg/packs/folkslag.json")) {
-			const fileData = await fetch(`systems/eon-rpg/packs/folkslag.json`).then((response) => response.json());
-			Object.assign(importData, fileData);
-        }
+		fileData = await fetch(`systems/eon-rpg/packs/miljoer.json`).then((response) => response.json());
+		Object.assign(importData, fileData);
+
+		fileData = await fetch(`systems/eon-rpg/packs/folkslag.json`).then((response) => response.json());
+		Object.assign(importData, fileData);
+
+		fileData = await fetch(`systems/eon-rpg/packs/fardigheter.json`).then((response) => response.json());
+		Object.assign(importData, fileData);
 
 		return importData;		
     } catch(err) {
@@ -74,11 +72,19 @@ export const RegisterHandlebarsHelpers = function () {
 			dice = dice + "+" + value?.bonus;
 		}
 
-		return dice;
+		return "ob" + dice;
+	});
+
+	Handlebars.registerHelper("getActorSkillGroup", function(fardighetgrupp, grupp) {
+		return fardighetgrupp[grupp];
 	});
 
 	Handlebars.registerHelper("getActorAttribute", function(actor, key) {
 		return actor.system.grundegenskaper[key];
+	});
+
+	Handlebars.registerHelper("getAttributeShortName", function(attribut) {
+		return CONFIG.EON.grundegenskaper[attribut].kort;
 	});
 	
 	Handlebars.registerHelper("setVariable", function(varName, varValue, options) {
@@ -117,7 +123,7 @@ export const RegisterHandlebarsHelpers = function () {
 		return ret;
 	});
 
-	Handlebars.registerHelper("iff", function (a, operator, b, opts) {
+	/* Handlebars.registerHelper("iff", function (a, operator, b, opts) {
 		var bool = false;
 		switch (operator) {
 			case "==":
@@ -154,7 +160,7 @@ export const RegisterHandlebarsHelpers = function () {
 		} else {
 			return opts.inverse(this);
 		}
-	});
+	}); */
 
 	Handlebars.registerHelper('eqAny', function () {
 		for(let i = 1; i < arguments.length; i++) {

@@ -1,4 +1,5 @@
 import DiceHelper from "./dice-helper.js";
+import CreateHelper from "./create-helper.js";
 
 export class EonActorSheet extends ActorSheet {
 
@@ -43,22 +44,44 @@ export class EonActorSheet extends ActorSheet {
 
     /** @override */
     async getData() {
-        /* const actorData = duplicate(this.actor);		
+        const actorData = duplicate(this.actor);		
 
 		if (!actorData.system.installningar.skapad) {
-            ActionHelper._setMortalAbilities(actorData);
-            ActionHelper._setMortalAttributes(actorData);
+            const version = game.data.system.version;
 
-            this.actor.update(actorData);
+            await CreateHelper.SkapaFardigheter(this.actor, CONFIG.EON, version);
+
+            actorData.system.installningar.skapad = true;
+            actorData.system.installningar.version = version;
+            await this.actor.update(actorData);
 		}
 		else {
 			
 		}	
-        */
+
         const data = await super.getData();	
 
         data.EON = game.EON;
         data.EON.CONFIG = CONFIG.EON;
+
+        data.actor.system.listdata = [];
+        data.actor.system.listdata.fardigheter = [];
+        data.actor.system.listdata.fardigheter.strid = [];
+        data.actor.system.listdata.fardigheter.rorelse = [];
+        data.actor.system.listdata.fardigheter.mystik = [];
+        data.actor.system.listdata.fardigheter.social = [];
+        data.actor.system.listdata.fardigheter.kunskap = [];
+        data.actor.system.listdata.fardigheter.sprak = [];
+        data.actor.system.listdata.fardigheter.vildmark = [];
+        data.actor.system.listdata.fardigheter.ovriga = [];
+
+        for (const item of this.actor.items) {
+            data.actor.system.listdata.fardigheter[item.system.grupp].push(item);
+        }
+
+        for (const grupp in CONFIG.EON.fardighetgrupper) {
+            data.actor.system.listdata.fardigheter[grupp] = data.actor.system.listdata.fardigheter[grupp].sort((a, b) => a.name.localeCompare(b.name));
+        }
 
         console.log(data.actor);
         console.log(data.EON);
@@ -85,10 +108,6 @@ export class EonActorSheet extends ActorSheet {
 		const actorData = duplicate(this.actor);
 
         if (source == "folkslag") {
-            if (this.actor.system.installningar.skapad) {
-                return;
-            }
-
             var e = document.getElementById("folkslag");
             let data = game.EON.folkslag[e.value];
 
@@ -128,69 +147,6 @@ export class EonActorSheet extends ActorSheet {
             await this.actor.update(actorData);
 		    this.render();
             return;
-        }
-
-		/* if (source == "attribute") {
-			let attribute = dataset.attribute;
-			let value = 0;
-
-			try {
-				value = parseInt(element.value);	
-			} catch (error) {
-				value = 0;
-			}		
-
-			actorData.system.attributes[attribute].bonus = value;
-		}	
-		else if (source == "ability") {
-			const itemid = dataset.abilityid;
-			const item = this.actor.getEmbeddedDocument("Item", itemid);
-			const itemData = duplicate(item);
-			itemData.system.speciality = element.value;
-			await item.update(itemData);
-			return;
-		}
-		else if (source == "shiftertype") {
-			var e = document.getElementById("system.changingbreed");
-			var type = e.value;
-
-			ActionHelper.setShifterAttributes(actorData, type);
-		}
-		else if (source == "frenzy") {
-			let value = 0;
-
-			try {
-				value = parseInt(element.value);
-			} catch (error) {
-				value = 0;
-			}
-
-			actorData.system.advantages.rage.bonus = value;
-		}
-		else if (source == "soak") {
-			let value = 0;
-			const type = dataset.type;
-
-			try {
-				value = parseInt(element.value);
-			} catch (error) {
-				value = 0;
-			}
-
-			actorData.system.settings.soak[type].bonus = value;
-		}
-		else if (source == "initiative") {
-			let value = 0;
-
-			try {
-				value = parseInt(element.value);
-			} catch (error) {
-				value = 0;
-			}
-
-			actorData.system.initiative.bonus = value;			
-		} */
-
-		
+        }		
 	}
 }

@@ -2,7 +2,7 @@
     <div>
         <div class="headline">
             <div class="clear attribute-area">
-                <div class="pullLeft">ROLLPERSONENS NAMN</div>
+                <div class="pullLeft large-headline">ROLLPERSONENS NAMN</div>
             </div>
         </div>
 
@@ -13,7 +13,7 @@
 
             {{#each EON.CONFIG.grundegenskaper as |attribute key|}}            
                 <div class="clear">
-                    <div class="pullLeft caption">{{attribute}}</div>
+                    <div class="pullLeft caption">{{attribute.namn}}</div>
                     <div class="pullLeft attribute-value">
                         <div class="pullLeft tic-container">
                             <div class="tic"><i class="fa-solid fa-sort-up tic-top"></i></div>

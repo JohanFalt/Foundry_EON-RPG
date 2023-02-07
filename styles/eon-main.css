@@ -1,22 +1,46 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
+
+/* Imported Fonts */
+@font-face {
+    font-family: "stor-rubrik";
+    src: url("fonts/PrinceValiant.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "rubrik";
+    src: url("fonts/vinque rg.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "eon-font";
+    src: url("fonts/OFLGoudyStMTT.ttf") format("truetype");
+}
+
 :root {
+    --main-font: "eon-font", Arial, Helvetica, sans-serif;
+    --main-rubrik: "rubrik", Arial, Helvetica, sans-serif;
+    --main-stor-rubrik: "stor-rubrik", Arial, Helvetica, sans-serif;
+
     --image-width: 100px;
     --font-xsmall: 10px;
     --font-small: 12px;
     --font-large: 16px;
+    --font-x-large: 24px;
     --back-color-inputs: rgb(237, 235, 235);
+}
+
+.rollperson:not(.minimized) {
+    min-width: 800px;
+}
+
+.sheet-character {
+    font-family: var(--main-font);
 }
 
 input[type="text"],
 textarea,
 select {
     background-color: var(--back-color-inputs);
-}
-
-input[type="text"].attribute-value {
-    border-top-style: none;
-    border-left-style: none;
-    width: 50px;
-    text-align: center;
 }
 
 .sheet-character {
@@ -40,9 +64,7 @@ input[type="text"].attribute-value {
     overflow: hidden;
 }
 
-.avtrubbning-column {
-    width: 80%
-}
+
 
 .two-third-column {
     width: 66%;
@@ -113,21 +135,6 @@ i.tic-top {
     width: 100%;
 }
 
-.navigation {
-    width: 100%;
-}
-
-.sheet-character .profile-img {
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 100px;
-    flex: 0 0 100px;
-    min-height: 50px;
-    max-height: 205px;
-    height: auto;
-    width: 100px;
-    margin-right: 0;
-  }
-
 .pointer:hover,
 .pointer:focus {
   cursor: pointer;
@@ -139,9 +146,14 @@ i.tic-top {
 }
 
 .headline {
-    width: 100%;
     font-size: var(--font-large);    
     margin-bottom: 5px;
+    font-family: var(--main-rubrik);
+}
+
+.large-headline {
+    font-family: var(--main-stor-rubrik); 
+    font-size: var(--font-x-large);         
 }
 
 .locked .resource-circle {
@@ -208,9 +220,79 @@ i.tic-top {
     height: 30px;
 }
 
+
+
+/* TOPP */
+
 .navigation {
     margin-top: 10px;
     margin-bottom: 10px;
+    width: 100%;
 }
 
+.sheet-character .profile-img {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100px;
+    flex: 0 0 100px;
+    min-height: 50px;
+    max-height: 205px;
+    height: auto;
+    width: 100px;
+    margin-right: 0;
+}
 
+input[type="text"].attribute-value {
+    border-top-style: none;
+    border-left-style: none;
+    width: 50px;
+    text-align: center;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.avtrubbning-column {
+    width: 80%
+}
+
+/* FÄRDIGHETER */
+
+input[type="text"].skill-value {
+    border-top-style: none;
+    border-left-style: none;
+    width: 45px;
+    text-align: center;
+    height: 23px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.skill-area {
+    display: flex; 
+    flex-wrap: wrap;
+    flex-direction: column;
+    /* flex-basis: 30%; */
+    max-height: 700px;
+} 
+
+.skill {
+    /* flex: 0 0 33%; */
+    flex-grow: 1;
+    max-height: 25px;
+    line-height: 25px;
+}
+
+.skill-headline.headline {
+    width: 75%;
+}
+
+.skill-short {
+    margin-left: 5px;
+    line-height: 25px;
+}
+
+@media all and (max-width : 1280px)
+{
+  .rollperson:not(.minimized) {
+    min-width: 400px;
+  }
+}

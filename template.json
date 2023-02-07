@@ -3,7 +3,8 @@
         "types": ["Rollperson"],
         "Rollperson": {
             "installningar":{
-                "skapad": false
+                "skapad": false,
+                "version": ""
             },
             "grundegenskaper": {
                 "styrka": {
@@ -74,5 +75,19 @@
             }
         }        
     },
-    "Item": {}
+    "Item": {
+        "types": ["Färdighet"],
+        "Färdighet": {
+            "installningar":{
+                "skapad": false,
+                "version": ""
+            },
+            "attribut": "",
+            "grupp": "",
+            "varde": {
+                "tvarde": 0,
+                "bonus": 0
+            }
+        }
+    }
 }

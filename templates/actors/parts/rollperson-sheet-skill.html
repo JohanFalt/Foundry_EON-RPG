@@ -1,1 +1,29 @@
-SKILL
+<div class="skill-area">
+    {{#each EON.CONFIG.fardighetgrupper as |grupp key|}}
+        <div class="skill-headline skill clear">
+            <div class="pullLeft skill-headline headline">{{grupp}}</div>
+            <div class="pullLeft"><i class="fa-solid fa-square-plus"></i></div>
+        </div>
+        {{#each (getActorSkillGroup ../actor.system.listdata.fardigheter key) as |fardighet key|}}
+            <div class="skill clear">
+                <div class="pullLeft caption">{{fardighet.name}}</div>
+                <div class="pullLeft attribute-value">
+                    <div class="pullLeft tic-container">
+                        <div class="tic"><i class="fa-solid fa-sort-up tic-top"></i></div>
+                        <div class="tic"><i class="fa-solid fa-sort-down tic-down"></i></div>
+                    </div>
+                    <div class="pullLeft">
+                        <input class="skill-value" type="text" value="{{getDiceValue fardighet.system.varde}}" readonly>
+                    </div>
+                    <div class="pullLeft tic-container">
+                        <div class="tic"><i class="fa-solid fa-sort-up tic-top"></i></div>
+                        <div class="tic"><i class="fa-solid fa-sort-down tic-down"></i></div>
+                    </div>
+                </div>
+                <div class="pullLeft skill-short">({{getAttributeShortName fardighet.system.attribut}})</div>
+            </div>
+        {{/each}}
+    {{/each}}
+</div>
+
+
