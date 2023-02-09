@@ -16,8 +16,15 @@
     src: url("fonts/OFLGoudyStMTT.ttf") format("truetype");
 }
 
+@font-face {
+    font-family: "eon-font-siffror";
+    src: url("fonts/Sukhumala Regular.otf") format("opentype");
+}
+
+/* ROOT and variables */
 :root {
     --main-font: "eon-font", Arial, Helvetica, sans-serif;
+    --main-font-siffror: "eon-font-siffror", Arial, Helvetica, sans-serif;
     --main-rubrik: "rubrik", Arial, Helvetica, sans-serif;
     --main-stor-rubrik: "stor-rubrik", Arial, Helvetica, sans-serif;
 
@@ -27,7 +34,11 @@
     --font-large: 16px;
     --font-x-large: 24px;
     --back-color-inputs: rgb(237, 235, 235);
+    --color-good: rgb(2, 106, 2);
+    --color-bad: rgb(151, 3, 3);
 }
+
+/* Sheet */
 
 .rollperson:not(.minimized) {
     min-width: 800px;
@@ -38,6 +49,7 @@
 }
 
 input[type="text"],
+input[type="number"],
 textarea,
 select {
     background-color: var(--back-color-inputs);
@@ -45,74 +57,6 @@ select {
 
 .sheet-character {
     font-size: var(--font-small);
-}
-
-.smalltext {
-    font-size: var(--font-xsmall);
-}
-
-.pullLeft {
-    float: left;
-}
-
-.pullRight {
-    float: right;
-}
-
-.clear {
-    clear: both;
-    overflow: hidden;
-}
-
-
-
-.two-third-column {
-    width: 66%;
-}
-
-.two-column {
-    width: 50%;
-}
-
-.three-column {
-    width: 33%;
-}
-
-.five-column {
-    width: 20%;
-}
-
-.image-column {
-    display: inline-block;
-    width: var(--image-width);
-}
-
-.remaining-width {
-    display: inline-block;
-    width: calc(100% - var(--image-width));
-}
-
-.attribute-area {
-    width: 98%;
-    border-bottom: 1px solid black;
-}
-
-.attribute-value {
-    line-height: 23px;
-}
-
-i.tic-down,
-i.tic-top {
-    scale: 1.3;
-}
-
-.tic-container {    
-    display: flex; 
-    flex-direction: column;
-}
-
-.tic {
-    height: 5px;
 }
 
 .sheet-top {
@@ -133,6 +77,59 @@ i.tic-top {
 
 .sheet-box {
     width: 100%;
+}
+
+/* General */
+
+.smalltext {
+    font-size: var(--font-xsmall);
+}
+
+.pullLeft {
+    float: left;
+}
+
+.pullRight {
+    float: right;
+}
+
+.clear {
+    clear: both;
+    overflow: hidden;
+}
+
+.two-third-column {
+    width: 66%;
+}
+
+.two-column {
+    width: 50%;
+}
+
+.three-column {
+    width: 33%;
+}
+
+.five-column {
+    width: 20%;
+}
+
+.attribute-value {
+    line-height: 23px;
+}
+
+i.tic-down,
+i.tic-top {
+    scale: 1.3;
+}
+
+.tic-container {    
+    display: flex; 
+    flex-direction: column;
+}
+
+.tic {
+    height: 5px;
 }
 
 .pointer:hover,
@@ -220,9 +217,30 @@ i.tic-top {
     height: 30px;
 }
 
+.green {
+    color: var(--color-good);
+}
 
+.red {
+    color: var(--color-bad);
+}
 
 /* TOPP */
+
+.image-column {
+    display: inline-block;
+    width: var(--image-width);
+}
+
+.remaining-width {
+    display: inline-block;
+    width: calc(100% - var(--image-width));
+}
+
+.attribute-area {
+    width: 98%;
+    border-bottom: 1px solid black;
+}
 
 .navigation {
     margin-top: 10px;
@@ -248,6 +266,7 @@ input[type="text"].attribute-value {
     text-align: center;
     margin-left: 5px;
     margin-right: 5px;
+    font-family: var(--main-font-siffror);
 }
 
 .avtrubbning-column {
@@ -256,7 +275,7 @@ input[type="text"].attribute-value {
 
 /* FÄRDIGHETER */
 
-input[type="text"].skill-value {
+/* input[type="text"].skill-value {
     border-top-style: none;
     border-left-style: none;
     width: 45px;
@@ -264,25 +283,46 @@ input[type="text"].skill-value {
     height: 23px;
     margin-left: 5px;
     margin-right: 5px;
+    font-family: var(--main-font-siffror);
+}
+
+input[type="number"].skill-value {
+    border-top-style: none;
+    border-left-style: none;
+    width: 45px;
+    text-align: center;
+    height: 23px;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-family: var(--main-font-siffror);
+} */
+
+input.skill-value {
+    border-top-style: none;
+    border-left-style: none;
+    width: 45px;
+    text-align: center;
+    height: 23px;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-family: var(--main-font-siffror);
 }
 
 .skill-area {
     display: flex; 
     flex-wrap: wrap;
     flex-direction: column;
-    /* flex-basis: 30%; */
     max-height: 700px;
 } 
 
 .skill {
-    /* flex: 0 0 33%; */
     flex-grow: 1;
     max-height: 25px;
     line-height: 25px;
 }
 
 .skill-headline.headline {
-    width: 75%;
+    width: 60%;
 }
 
 .skill-short {
@@ -290,9 +330,28 @@ input[type="text"].skill-value {
     line-height: 25px;
 }
 
+/* VAPEN */
+
+.weapon-value {
+    font-family: var(--main-font-siffror);
+}
+
+input.weapon-value {
+    border-top-style: none;
+    border-left-style: none;
+    width: 45px;
+    text-align: center;
+    height: 23px;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-family: var(--main-font-siffror);
+}
+
+
+
 @media all and (max-width : 1280px)
 {
-  .rollperson:not(.minimized) {
-    min-width: 400px;
-  }
+    .rollperson:not(.minimized) {
+        min-width: 400px;
+    }
 }

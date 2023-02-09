@@ -554,7 +554,7 @@
             },
             "speja": {
                 "namn": "Speja",
-                "referens": "s129",
+                "referens": "s129",                
                 "attribut": "uppfattning",
                 "grund": {
                     "tvarde": 2,

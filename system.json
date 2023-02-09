@@ -2,7 +2,7 @@
     "id": "eon-rpg",
     "title": "Eon IV RPG",
     "description": "",
-    "version": "0.1.0",
+    "version": "Alpha 1.0",
     "compatibility": {
         "minimum": "10",
         "verified": "10",
@@ -21,12 +21,15 @@
         "styles/eon-main.css"
     ],
     "packs": [],
-    "languages": [{
-        "lang": "se",
-        "name": "Svenska",
-        "path": "lang/se.json",
-        "flags": {}
-    }],
+    "relationships": {
+        "requires": [
+        {
+            "id": "eon-dice-roller",
+            "type": "module",
+            "compatibility": {}
+        }]
+    },
+    "languages": [],
     "socket": false,
     "initiative": "1d20",
     "gridDistance": 2,

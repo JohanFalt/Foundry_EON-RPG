@@ -13,6 +13,11 @@ export class EonActorSheet extends ActorSheet {
                     initial: "skill",
 			    },
                 {
+                    navSelector: ".sheet-combat-tabs",
+                    contentSelector: ".sheet-combat-body",
+                    initial: "weapon",
+                },
+                {
                     navSelector: ".sheet-mystic-tabs",
                     contentSelector: ".sheet-mystic-body",
                     initial: "magic",
@@ -50,13 +55,11 @@ export class EonActorSheet extends ActorSheet {
             const version = game.data.system.version;
 
             await CreateHelper.SkapaFardigheter(this.actor, CONFIG.EON, version);
+            await CreateHelper.SkapaVapen(this.actor, version);
 
             actorData.system.installningar.skapad = true;
             actorData.system.installningar.version = version;
             await this.actor.update(actorData);
-		}
-		else {
-			
 		}	
 
         const data = await super.getData();	
@@ -74,14 +77,34 @@ export class EonActorSheet extends ActorSheet {
         data.actor.system.listdata.fardigheter.sprak = [];
         data.actor.system.listdata.fardigheter.vildmark = [];
         data.actor.system.listdata.fardigheter.ovriga = [];
+        data.actor.system.listdata.vapen = [];
+        data.actor.system.listdata.vapen.narstrid = [];
+        data.actor.system.listdata.vapen.avstand = [];
+        data.actor.system.listdata.vapen.forsvar = [];
+
 
         for (const item of this.actor.items) {
-            data.actor.system.listdata.fardigheter[item.system.grupp].push(item);
+            if (item.type == "Färdighet") {
+                data.actor.system.listdata.fardigheter[item.system.grupp].push(item);
+            }        
+            if (item.type == "Närsstridsvapen") {    
+                data.actor.system.listdata.vapen.narstrid.push(item);
+            }
+            if (item.type == "Avståndsvapen") {    
+                data.actor.system.listdata.vapen.avstand.push(item);
+            }
+            if (item.type == "Försvar") {    
+                data.actor.system.listdata.vapen.forsvar.push(item);
+            }
         }
 
         for (const grupp in CONFIG.EON.fardighetgrupper) {
             data.actor.system.listdata.fardigheter[grupp] = data.actor.system.listdata.fardigheter[grupp].sort((a, b) => a.name.localeCompare(b.name));
         }
+
+        data.actor.system.listdata.vapen.narstrid = data.actor.system.listdata.vapen.narstrid.sort((a, b) => a.name.localeCompare(b.name));
+        data.actor.system.listdata.vapen.avstand = data.actor.system.listdata.vapen.avstand.sort((a, b) => a.name.localeCompare(b.name));
+        data.actor.system.listdata.vapen.forsvar = data.actor.system.listdata.vapen.forsvar.sort((a, b) => a.name.localeCompare(b.name));
 
         console.log(data.actor);
         console.log(data.EON);
@@ -141,6 +164,10 @@ export class EonActorSheet extends ActorSheet {
             actorData.system.harleddegenskaper.sjalvkontroll = await DiceHelper.BeraknaMedelvarde(actorData.system.grundegenskaper.psyke, actorData.system.grundegenskaper.vilja);
             actorData.system.harleddegenskaper.vaksamhet = await DiceHelper.BeraknaMedelvarde(actorData.system.grundegenskaper.psyke, actorData.system.grundegenskaper.uppfattning);
             actorData.system.harleddegenskaper.livskraft = await DiceHelper.BeraknaLivskraft(actorData.system.grundegenskaper.styrka, actorData.system.grundegenskaper.talighet);
+            actorData.system.harleddegenskaper.grundskada = await DiceHelper.BeraknaGrundskada(actorData.system.grundegenskaper.styrka);
+            actorData.system.harleddegenskaper.grundrustning = await DiceHelper.BeraknaGrundrustning(actorData.system.grundegenskaper.styrka, actorData.system.grundegenskaper.talighet);
+
+            actorData.system.strid.lakningstakt = parseInt(data.lakningstakt);
 
             actorData.system.bakgrund.folkslag = e.value;            
 

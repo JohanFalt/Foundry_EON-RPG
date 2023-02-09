@@ -3,6 +3,7 @@
         "adasier" : {
             "namn": "Adasier",
             "referens": "s91",
+            "lakningstakt": 1,
             "grundegenskaper": {
                 "styrka": {
                     "tvarde": 1,
@@ -41,6 +42,7 @@
         "cirefalier" : {
             "namn": "Cirefalier",
             "referens": "s92",
+            "lakningstakt": 1,
             "grundegenskaper": {
                 "styrka": {
                     "tvarde": 2,
@@ -79,6 +81,7 @@
         "fedaki" : {
             "namn": "Fedaki",
             "referens": "s93",
+            "lakningstakt": 1,
             "grundegenskaper": {
                 "styrka": {
                     "tvarde": 2,
@@ -117,6 +120,7 @@
         "genver" : {
             "namn": "Genver",
             "referens": "s94",
+            "lakningstakt": 1,
             "grundegenskaper": {
                 "styrka": {
                     "tvarde": 2,
@@ -155,6 +159,7 @@
         "jahann" : {
             "namn": "Jahann",
             "referens": "s95",
+            "lakningstakt": 1,
             "grundegenskaper": {
                 "styrka": {
                     "tvarde": 2,
@@ -193,6 +198,7 @@
         "jargier" : {
             "namn": "Jargier",
             "referens": "s96-s97",
+            "lakningstakt": 1,
             "grundegenskaper": {
                 "styrka": {
                     "tvarde": 2,
@@ -231,6 +237,7 @@
         "kamorian" : {
             "namn": "Kamorian",
             "referens": "s98-s99",
+            "lakningstakt": 1,
             "grundegenskaper": {
                 "styrka": {
                     "tvarde": 2,
@@ -269,6 +276,7 @@
         "marnakhtirak" : {
             "namn": "Marnakh-tirak",
             "referens": "s100",
+            "lakningstakt": 1,
             "grundegenskaper": {
                 "styrka": {
                     "tvarde": 2,
@@ -307,6 +315,7 @@
         "missla" : {
             "namn": "Missla",
             "referens": "s101",
+            "lakningstakt": 1,
             "grundegenskaper": {
                 "styrka": {
                     "tvarde": 1,
@@ -345,6 +354,7 @@
         "pyar" : {
             "namn": "Pyar",
             "referens": "s102",
+            "lakningstakt": 1,
             "grundegenskaper": {
                 "styrka": {
                     "tvarde": 2,
@@ -383,6 +393,7 @@
         "taup" : {
             "namn": "Taup",
             "referens": "s103",
+            "lakningstakt": 2,
             "grundegenskaper": {
                 "styrka": {
                     "tvarde": 2,
@@ -421,6 +432,7 @@
         "zolod" : {
             "namn": "Zolod",
             "referens": "s104",
+            "lakningstakt": 1,
             "grundegenskaper": {
                 "styrka": {
                     "tvarde": 2,

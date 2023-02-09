@@ -1,3 +1,5 @@
+import DiceHelper from "./dice-helper.js";
+
 /**
  * Define a set of template paths to pre-load
  * Pre-loaded templates are compiled and cached for fast access when rendering
@@ -7,10 +9,14 @@ export const PreloadHandlebarsTemplates = async function () {
     const templatePaths = [
         // Actor Sheet Partials
 		"systems/eon-rpg/templates/actors/parts/navigation.html",
+		"systems/eon-rpg/templates/actors/parts/navigation-combat.html",
+		"systems/eon-rpg/templates/actors/parts/navigation-mystic.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-top.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-bio.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-trait.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-combat.html",
+		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon.html",
+		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-armor.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-equipment.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-mystic.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-magic.html",
@@ -59,6 +65,7 @@ export async function Setup()
 
 export const RegisterHandlebarsHelpers = function () {
 
+	// konverterar det interna värdet till ett T6-värde
 	Handlebars.registerHelper("getDiceValue", function(value) {
 		let dice = "0";
 
@@ -72,19 +79,62 @@ export const RegisterHandlebarsHelpers = function () {
 			dice = dice + "+" + value?.bonus;
 		}
 
-		return "ob" + dice;
+		//return "ob" + dice;
+		return dice;
 	});
 
+	// hämtar en särskild grupp av färdigheterna
 	Handlebars.registerHelper("getActorSkillGroup", function(fardighetgrupp, grupp) {
 		return fardighetgrupp[grupp];
 	});
 
+	// lägger ihop två tärningspooler till en.
+	Handlebars.registerHelper("addDiceValues", function(fardighet1, fardighet2) {
+		return DiceHelper.AdderaVarden(fardighet1, fardighet2);
+	});
+
+	// hämtar värdet på en särskild färdighet som RP har.
+	Handlebars.registerHelper("getActorSkillGroupValue", function(actor, fardighet, grupp) {
+		for (const item of actor.system.listdata.fardigheter[grupp]) {
+			if (item.name == fardighet) {
+				return item.system.varde;
+			}
+		}
+
+		return {
+			"tvarde": 0,
+			"bonus": 0
+		}
+	});
+
+	// hämtar erfarenhetspoängen på en särskild färdighet.
+	Handlebars.registerHelper("getActorSkillGroupExp", function(fardighetgrupp, grupp) {
+		return fardighetgrupp[grupp].erf;
+	});
+
+	// hämtar ett attribut med egenskaper
 	Handlebars.registerHelper("getActorAttribute", function(actor, key) {
 		return actor.system.grundegenskaper[key];
 	});
 
+	// hämtar ett attributs kortnamn
 	Handlebars.registerHelper("getAttributeShortName", function(attribut) {
 		return CONFIG.EON.grundegenskaper[attribut].kort;
+	});
+
+	// skickar ut en lista i läsbart skick
+	Handlebars.registerHelper("getLista", function(lista) {
+		let text = "";
+
+		for (const item of lista) {
+			if (text != "") {
+				text += ", ";
+			}
+
+			text += item;
+		}
+
+		return text;
 	});
 	
 	Handlebars.registerHelper("setVariable", function(varName, varValue, options) {

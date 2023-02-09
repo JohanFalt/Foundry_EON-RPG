@@ -2,7 +2,7 @@
     <div>
         <div class="headline">
             <div class="clear attribute-area">
-                <div class="pullLeft large-headline">ROLLPERSONENS NAMN</div>
+                <div class="pullLeft large-headline">{{actor.name}}</div>
             </div>
         </div>
 
@@ -15,24 +15,24 @@
                 <div class="clear">
                     <div class="pullLeft caption">{{attribute.namn}}</div>
                     <div class="pullLeft attribute-value">
-                        <div class="pullLeft tic-container">
+                        <!-- <div class="pullLeft tic-container">
                             <div class="tic"><i class="fa-solid fa-sort-up tic-top"></i></div>
                             <div class="tic"><i class="fa-solid fa-sort-down tic-down"></i></div>
-                        </div>
+                        </div> -->
                         <div class="pullLeft">
                             <input class="attribute-value" type="text" value="{{getDiceValue (getActorAttribute ../data key)}}" readonly>
                         </div>
-                        <div class="pullLeft tic-container">
+                        <!-- <div class="pullLeft tic-container">
                             <div class="tic"><i class="fa-solid fa-sort-up tic-top"></i></div>
                             <div class="tic"><i class="fa-solid fa-sort-down tic-down"></i></div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             {{/each}}
 
-            <div class="clear headline">
+            <!-- <div class="clear headline">
                 <div class="pullLeft attribute-area">Oanvänd erfarenhet <span class="pullRight">0</span></div>
-            </div>
+            </div> -->
         </div>
         <div class="three-column pullLeft">
             <div class="headline">

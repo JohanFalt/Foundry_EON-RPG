@@ -40,6 +40,32 @@
                     "bonus": 0
                 }
             },
+            "fardigheter": {
+                "strid": {
+                    "erf": 0
+                }, 
+                "rorelse": {
+                    "erf": 0
+                },
+                "mystik": {
+                    "erf": 0
+                },
+                "social": {
+                    "erf": 0
+                },
+                "kunskap": {
+                    "erf": 0
+                },
+                "sprak": {
+                    "erf": 0
+                },
+                "vildmark": {
+                    "erf": 0
+                },
+                "ovriga": {
+                    "erf": 0
+                }
+            },
             "harleddegenskaper": {
                 "forflyttning": {
                     "tvarde": 0,
@@ -68,26 +94,110 @@
                 "livskraft": {
                     "tvarde": 0,
                     "bonus": 0
-                }
+                },
+                "grundskada": {
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "grundrustning": 0
             },
             "bakgrund": {
                 "folkslag": ""
+            },
+            "strid": {
+                "vapenarm": "",
+                "lakningstakt": 0
             }
         }        
     },
     "Item": {
-        "types": ["Färdighet"],
-        "Färdighet": {
-            "installningar":{
-                "skapad": false,
-                "version": ""
+        "types": [
+            "Färdighet",
+            "Närsstridsvapen",
+            "Avståndsvapen",
+            "Försvar"
+        ],
+        "templates": {
+            "installningar": {
+                "installningar":{
+                    "skapad": false,
+                    "version": ""
+                }
             },
+            "vapen": {
+                "attribut": "",
+                "egenskaper": [],
+                "langd": 0,
+                "vikt": 0
+            }
+        },
+        "Färdighet": {
+            "templates": [
+				"installningar"
+			],            
             "attribut": "",
             "grupp": "",
+            "svarighet": "N",
             "varde": {
                 "tvarde": 0,
                 "bonus": 0
             }
+        },
+        "Närsstridsvapen": {
+            "templates": [
+				"installningar",
+                "vapen"
+			],
+            "enhand": {
+                "tvarde": 0,
+                "bonus": 0
+            },
+            "tvahand": {
+                "tvarde": 0,
+                "bonus": 0
+            },
+            "hugg": {
+                "aktiv": true,
+                "tvarde": 0,
+                "bonus": 0
+            },
+            "kross": {
+                "aktiv": true,
+                "tvarde": 0,
+                "bonus": 0
+            },
+            "stick": {
+                "aktiv": true,
+                "tvarde": 0,
+                "bonus": 0
+            }
+        },
+        "Avståndsvapen": {
+            "templates": [
+				"installningar",
+                "vapen"
+			],
+            "rackvidd": 0,
+            "typ": "",
+            "skada": {
+                "tvarde": 0,
+                "bonus": 0
+            }
+        },
+        "Försvar": {
+            "templates": [
+				"installningar",
+                "vapen"
+			],
+            "narstrid": {
+                "tvarde": 0,
+                "bonus": 0
+            },
+            "avstand": {
+                "tvarde": 0,
+                "bonus": 0
+            },
+            "skydd": 0
         }
     }
 }

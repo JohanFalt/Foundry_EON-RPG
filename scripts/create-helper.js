@@ -9,6 +9,50 @@ export default class CreateHelper {
         }       
     }
 
+    static async SkapaVapen(actor, version) {
+
+        let itemData = {
+            name: "Slagsmål",
+            type: "Närsstridsvapen",
+            
+            data: {
+                installningar: {
+                    skapad: true,
+                    version: version
+                },
+                attribut: "Slagsmål",
+                hugg: {
+                    aktiv: false,
+                    tvarde: 0,
+                    bonus: 0
+                },
+                stick: {
+                    aktiv: false,
+                    tvarde: 0,
+                    bonus: 0
+                },
+                egenskaper: ["Begränsad", "Obeväpnad", "Snabb"]                    
+            }
+        };
+
+        await actor.createEmbeddedDocuments("Item", [itemData]);
+
+        itemData = itemData = {
+            name: "Undvika",
+            type: "Försvar",
+            
+            data: {
+                installningar: {
+                    skapad: true,
+                    version: version
+                },
+                attribut: "Undvika"                    
+            }
+        };
+        
+        await actor.createEmbeddedDocuments("Item", [itemData]);       
+    }
+
     static async _SkapaFardighetItem(grupp, fardighet, worldVersion) {
 
         let itemData = {
