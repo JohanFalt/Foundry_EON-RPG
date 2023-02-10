@@ -116,9 +116,20 @@ export class EonActorSheet extends ActorSheet {
     activateListeners(html) {
         super.activateListeners(html);
 
+        this._setupDotCounters(html);
+
         html
 			.find('.inputdata')
 			.change(event => this._onsheetChange(event));
+
+        // Resource dots
+		html
+            .find(".resource-circle > .resource-value")
+            .click(this._clickedCircle.bind(this));
+
+        html
+            .find(".resource-box > .resource-value")
+            .click(this._clickedCircle.bind(this));
     }
 
     async _onsheetChange(event) {
@@ -176,4 +187,76 @@ export class EonActorSheet extends ActorSheet {
             return;
         }		
 	}
+
+    _setupDotCounters(html) {
+		html.find(".resource-circle").each(function () {
+			const value = Number(this.dataset.value);
+			$(this)
+				.find(".resource-value")
+				.each(function (i) {
+					if (i <= value - 1) {
+						$(this).addClass("active");
+					}
+				});
+		});
+
+        html.find(".resource-box").each(function () {
+			const value = Number(this.dataset.value);
+			$(this)
+				.find(".resource-value")
+				.each(function (i) {
+					if (i <= value - 1) {
+						$(this).addClass("active");
+					}
+				});
+		});
+	}
+
+    async _clickedCircle(event) {
+        event.preventDefault();
+		const element = event.currentTarget;
+		const dataset = element.dataset;
+		const type = dataset.type;
+        const value = dataset.value
+
+        const index = Number(dataset.index);
+		const parent = $(element.parentNode);
+		const steps = parent.find(".resource-value");
+
+        const fieldStrings = parent[0].dataset.name;
+
+        /* if (this.locked)
+            return;
+        } */
+
+        if (index < 0 || index > steps.length) {
+            return;
+        }
+
+        const actorData = duplicate(this.actor);
+        steps.removeClass("active");
+
+        if (type != undefined) {
+            if ((parseInt(actorData.system[fieldStrings][type][value]) == 1) && (parseInt(index) == 1)) {
+                actorData.system[fieldStrings][type][value] = 0;
+            }
+            else {
+                actorData.system[fieldStrings][type][value] = parseInt(index);
+            }
+        }
+        else if ((actorData.system[fieldStrings][value] == 1) && (parseInt(index) == 1)) {
+            actorData.system[fieldStrings][value] = 0;
+        }
+        else {
+            actorData.system[fieldStrings][value] = parseInt(index);
+        }
+
+        steps.each(function (i) {
+            if (i <= index - 1) {
+                $(this).addClass("active");
+            }
+        });
+        
+        this.actor.update(actorData);
+    }
 }

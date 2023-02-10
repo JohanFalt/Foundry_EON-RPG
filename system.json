@@ -15,7 +15,7 @@
     }],
     "scripts": [],
     "esmodules": [
-        "scripts/eon-rpg.js"
+        "module/eon-rpg.js"
     ],
     "styles": [
         "styles/eon-main.css"

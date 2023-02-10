@@ -101,6 +101,18 @@
                 },
                 "grundrustning": 0
             },
+            "egenskap": {
+                "karaktärsdrag": [],
+                "fokus": {
+                    "varde": 10,
+                    "max": 10
+                },
+                "avtrubbning": {
+                    "utsatthet": 0,
+                    "vald": 0,
+                    "overnaturligt": 0
+                }
+            },
             "bakgrund": {
                 "folkslag": ""
             },
@@ -128,7 +140,17 @@
                 "attribut": "",
                 "egenskaper": [],
                 "langd": 0,
-                "vikt": 0
+                "vikt": 0,
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                }
             }
         },
         "Färdighet": {
@@ -148,14 +170,6 @@
 				"installningar",
                 "vapen"
 			],
-            "enhand": {
-                "tvarde": 0,
-                "bonus": 0
-            },
-            "tvahand": {
-                "tvarde": 0,
-                "bonus": 0
-            },
             "hugg": {
                 "aktiv": true,
                 "tvarde": 0,
@@ -177,7 +191,7 @@
 				"installningar",
                 "vapen"
 			],
-            "rackvidd": 0,
+            "rackvidd": "",
             "typ": "",
             "skada": {
                 "tvarde": 0,

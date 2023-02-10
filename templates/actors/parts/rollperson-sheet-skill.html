@@ -3,7 +3,7 @@
         <div class="skill-headline skill clear">
             <div class="pullLeft skill-headline headline">{{grupp}}</div>
             <div class="pullLeft"><input name="system.fardigheter.{{key}}.erf" class="skill-value" type="number" value="{{getActorSkillGroupExp ../actor.system.fardigheter key}}" min="0" max="50"></div>
-            {{#if (eqAny key "sprak" "ovriga")}}
+            {{#if (eqAny key "mystik" "sprak" "ovriga")}}
                 <div class="pullLeft"><i class="fa-solid fa-square-plus green"></i></div>
             {{/if}}
         </div>

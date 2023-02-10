@@ -1,1 +1,32 @@
-RUSTNING
+<div class="armor-area">
+    <div class="clear">
+        <div class="pullLeft">
+            <div class="clear headline">
+                <div class="pullLeft" style="width: 100px;">Delområde</div>
+                <div class="pullLeft" style="width: 50px;">Kod</div>
+                <div class="pullLeft" style="width: 75px;">Material</div>
+                <div class="pullLeft" style="width: 50px;">Hugg</div>
+                <div class="pullLeft" style="width: 50px;">Kross</div>
+                <div class="pullLeft" style="width: 50px;">Stick</div>
+                <div class="pullLeft">Egenskaper</div>
+            </div>
+            {{#numFromLoop 1 26}}
+                <div class="clear">
+                    <div class="pullLeft" style="width: 100px;">{{getBodypart this}}</div>
+                    <div class="pullLeft weapon-value" style="width: 50px;">{{this}}</div>
+                </div>
+            {{/numFromLoop}}
+        </div>
+        <img class="pullLeft" src="systems/eon-rpg/assets/traffomrade.png" style="height:300px;" />
+    </div>
+</div>
+
+<div class="clear">
+    <div class="pullLeft large-headline">Rustning</div>
+    <div class="pullLeft"><i class="fa-solid fa-square-plus green"></i></div>
+</div>
+<div class="clear headline">
+    <div class="pullLeft" style="width: 100px;">Rustningsdel</div>
+    <div class="pullLeft" style="width: 100px;">Belastning</div>
+    <div class="pullLeft" style="width: 100px;">Dekorationer</div>
+</div>

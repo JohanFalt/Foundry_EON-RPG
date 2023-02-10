@@ -33,6 +33,8 @@
     --font-small: 12px;
     --font-large: 16px;
     --font-x-large: 24px;
+
+    --main-full-color: rgba(121, 8, 19, 1);
     --back-color-inputs: rgb(237, 235, 235);
     --color-good: rgb(2, 106, 2);
     --color-bad: rgb(151, 3, 3);
@@ -40,19 +42,27 @@
 
 /* Sheet */
 
+.tabButton:hover,
+.tabButton:focus,
+.tabButton.active {
+	text-shadow: 0 0 10px var(--main-full-color);
+}
+
 .rollperson:not(.minimized) {
     min-width: 800px;
+    min-height: 1200px;
 }
 
 .sheet-character {
     font-family: var(--main-font);
 }
 
+span.resource-value,
 input[type="text"],
 input[type="number"],
 textarea,
 select {
-    background-color: var(--back-color-inputs);
+    background-color: var(--back-color-inputs) !important;
 }
 
 .sheet-character {
@@ -153,61 +163,6 @@ i.tic-top {
     font-size: var(--font-x-large);         
 }
 
-.locked .resource-circle {
-    cursor: default;
-}
-
-.resource-circle .resource-value {
-    height: 14px;
-    width: 14px;
-    border: 1px solid black;
-    display: inline-block;
-    border-radius: 50%;
-    cursor: pointer;
-    background-color: var(--back-color-inputs);
-}
-
-.resource-box .resource-value {
-    height: 16px;
-    width: 16px;
-    border: 1px solid black;
-    display: inline-block;
-    cursor: pointer;
-    background-color: var(--back-color-inputs);
-}
-
-.resource-box .resource-value.active {
-    background-color: black;
-}
-
-.resource-counter .resource-value[data-state="x"] {
-    background:
-        linear-gradient(
-            45deg,
-            transparent 0%,
-            transparent 43%,
-            black 45%,
-            black 55%,
-            transparent 57%,
-            transparent 100%
-        ),
-        linear-gradient(
-            135deg,
-            transparent 0%,
-            transparent 43%,
-            black 45%,
-            black 55%,
-            transparent 57%,
-            transparent 100%
-        );
-}
-
-.resource-box-text {
-    width: 16px;
-    margin: 1px;
-    text-align: center;
-}
-
 .headlineTabs {
     font-size: 20px;    
     border-bottom-style: solid;
@@ -225,7 +180,66 @@ i.tic-top {
     color: var(--color-bad);
 }
 
+/* Rutor / cirklar */
+
+.locked .resource-circle {
+    cursor: default;
+}
+
+.locked .resource-value {
+    cursor: default;
+}
+
+.resource-circle {
+  line-height: 30px;
+}
+
+.resource-circle .resource-value {
+  height: 14px;
+  width: 14px;
+  border: 1px solid black;
+  display: inline-block;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.resource-box .resource-value {
+    height: 16px;
+    width: 16px;
+    border: 1px solid black;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.resource-value.active {
+    background:
+      linear-gradient(
+        45deg,
+        transparent 0%,
+        transparent 43%,
+        black 45%,
+        black 55%,
+        transparent 57%,
+        transparent 100%
+      ),
+      linear-gradient(
+        135deg,
+        transparent 0%,
+        transparent 43%,
+        black 45%,
+        black 55%,
+        transparent 57%,
+        transparent 100%
+      );
+}
+
 /* TOPP */
+
+.resource-box-text {
+    width: 16px;
+    margin: 1px;
+    text-align: center;
+}
 
 .image-column {
     display: inline-block;
@@ -259,7 +273,7 @@ i.tic-top {
     margin-right: 0;
 }
 
-input[type="text"].attribute-value {
+input.attribute-value {
     border-top-style: none;
     border-left-style: none;
     width: 50px;
@@ -274,28 +288,6 @@ input[type="text"].attribute-value {
 }
 
 /* FÄRDIGHETER */
-
-/* input[type="text"].skill-value {
-    border-top-style: none;
-    border-left-style: none;
-    width: 45px;
-    text-align: center;
-    height: 23px;
-    margin-left: 5px;
-    margin-right: 5px;
-    font-family: var(--main-font-siffror);
-}
-
-input[type="number"].skill-value {
-    border-top-style: none;
-    border-left-style: none;
-    width: 45px;
-    text-align: center;
-    height: 23px;
-    margin-left: 5px;
-    margin-right: 5px;
-    font-family: var(--main-font-siffror);
-} */
 
 input.skill-value {
     border-top-style: none;
@@ -346,8 +338,6 @@ input.weapon-value {
     margin-right: 5px;
     font-family: var(--main-font-siffror);
 }
-
-
 
 @media all and (max-width : 1280px)
 {

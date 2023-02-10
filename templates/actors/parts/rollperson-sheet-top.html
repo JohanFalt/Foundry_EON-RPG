@@ -33,6 +33,9 @@
             <!-- <div class="clear headline">
                 <div class="pullLeft attribute-area">Oanvänd erfarenhet <span class="pullRight">0</span></div>
             </div> -->
+
+            
+            
         </div>
         <div class="three-column pullLeft">
             <div class="headline">
@@ -65,41 +68,21 @@
             <div class="clear">
                 <div class="pullLeft caption">Livskraft</div>
                 <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.livskraft}}" readonly></div>
-            </div>
+            </div>            
         </div>  
 
-        <div class="three-column pullLeft">
-            <div class="clear headline">
-                <div class="pullLeft attribute-area">Karaktärsdrag</div>        
-            </div>
-            <div class="clear">
-                <div class="pullLeft caption">Primärt</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text"></div>
-            </div>
-            <div class="clear">
-                <div class="pullLeft caption">Sekundärt</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text"></div>
-            </div>
+        <div class="three-column pullLeft">            
             <div class="headline">
                 <div class="attribute-area">Focus</div>
             </div>
-            <div class="resource-circle">
-                <span class="resource-value"></span>
-                <span class="resource-value"></span>
-                <span class="resource-value"></span>
-                <span class="resource-value"></span>
-                <span class="resource-value"></span>
-            </div>
-            <div class="resource-circle">
-                <span class="resource-value"></span>
-                <span class="resource-value"></span>
-                <span class="resource-value"></span>
-                <span class="resource-value"></span>
-                <span class="resource-value"></span>
+            <div class="resource-circle" data-value="{{actor.system.egenskap.fokus.varde}}" data-name="egenskap">
+                {{#numFromLoop 1 actor.system.egenskap.fokus.max}}
+                    <span class="resource-value" data-index="{{this}}" data-type="fokus" data-value="varde"></span>
+                {{/numFromLoop}}
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Välmående</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text"></div>
+                <div class="pullLeft attribute-value"><input name="system.egenskap.fokus.max" class="attribute-value" type="number" value="{{actor.system.egenskap.fokus.max}}" min="0" max="10"></div>
             </div>
             <div class="headline">
                 <div class="attribute-area">Avtrubbning</div>
@@ -107,32 +90,26 @@
             <div class="avtrubbning-column">
                 <div class="clear">
                     <div class="pullLeft caption">Utsatthet</div>
-                    <div class="resource-box pullLeft">
-                        <span class="resource-value"></span>
-                        <span class="resource-value"></span>
-                        <span class="resource-value"></span>
-                        <span class="resource-value"></span>
-                        <span class="resource-value"></span>
+                    <div class="resource-box pullLeft" data-value="{{actor.system.egenskap.avtrubbning.utsatthet}}" data-name="egenskap">
+                        {{#numFromLoop 1 5}}
+                            <span class="resource-value" data-index="{{this}}" data-type="avtrubbning" data-value="utsatthet"></span>
+                        {{/numFromLoop}}
                     </div>
                 </div>
                 <div class="clear">
                     <div class="pullLeft caption">Våld</div>
-                    <div class="resource-box pullLeft">
-                        <span class="resource-value"></span>
-                        <span class="resource-value"></span>
-                        <span class="resource-value"></span>
-                        <span class="resource-value"></span>
-                        <span class="resource-value"></span>
+                    <div class="resource-box pullLeft" data-value="{{actor.system.egenskap.avtrubbning.vald}}" data-name="egenskap">
+                        {{#numFromLoop 1 5}}
+                            <span class="resource-value" data-index="{{this}}" data-type="avtrubbning" data-value="vald"></span>
+                        {{/numFromLoop}}
                     </div>
                 </div>
                 <div class="clear">
                     <div class="pullLeft caption">Övernaturligt</div>
-                    <div class="resource-box pullLeft">
-                        <span class="resource-value"></span>
-                        <span class="resource-value"></span>
-                        <span class="resource-value"></span>
-                        <span class="resource-value"></span>
-                        <span class="resource-value"></span>
+                    <div class="resource-box pullLeft" data-value="{{actor.system.egenskap.avtrubbning.overnaturligt}}" data-name="egenskap">
+                        {{#numFromLoop 1 5}}
+                            <span class="resource-value" data-index="{{this}}" data-type="avtrubbning" data-value="overnaturligt"></span>
+                        {{/numFromLoop}}
                     </div>
                 </div>
                 <div class="clear sheet-box">

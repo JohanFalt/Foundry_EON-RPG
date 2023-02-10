@@ -107,6 +107,23 @@ export const RegisterHandlebarsHelpers = function () {
 		}
 	});
 
+	Handlebars.registerHelper("getActorSkillValue", function(actor, fardighet, config) {
+		for (const grupp in config.fardighetgrupper) {
+			for (const item of actor.system.listdata.fardigheter[grupp]) {
+				if (item.name == fardighet) {
+					return item.system.varde;
+				}
+			}
+		}
+
+		return {
+			"tvarde": 0,
+			"bonus": 0
+		}
+	});
+
+	
+
 	// hämtar erfarenhetspoängen på en särskild färdighet.
 	Handlebars.registerHelper("getActorSkillGroupExp", function(fardighetgrupp, grupp) {
 		return fardighetgrupp[grupp].erf;
@@ -132,6 +149,95 @@ export const RegisterHandlebarsHelpers = function () {
 			}
 
 			text += item;
+		}
+
+		return text;
+	});
+
+	Handlebars.registerHelper("getBodypart", function(nr) {
+		let text = "";
+		let bodynr = parseInt(nr);
+
+		switch (bodynr) {
+			case 1:
+				text = "Ansikte";
+				break;
+			case 2:
+				text = "Skalle";
+				break;
+			case 3:
+				text = "Hals";
+				break;
+			case 4:
+				text = "Bröstkorg";
+				break;
+			case 5:
+				text = "Mage";
+				break;
+			case 6:
+				text = "Underliv";
+				break;
+			case 7:
+				text = "Skuldra (V)";
+				break;
+			case 8:
+				text = "Skuldra (H)";
+				break;
+			case 9:
+				text = "Överarm (V)";
+				break;
+			case 10:
+				text = "Överarm (H)";
+				break;
+			case 11:
+				text = "Armbåge (V)";
+				break;
+			case 12:
+				text = "Armbåde (H)";
+				break;
+			case 13:
+				text = "Underarm (V)";
+				break;
+			case 14:
+				text = "Underarm (H)";
+				break;
+			case 15:
+				text = "Hand (V)";
+				break;
+			case 16:
+				text = "Hand (H)";
+				break;
+			case 17:
+				text = "Höft (V)";
+				break;
+			case 18:
+				text = "Höft (H)";
+				break;
+			case 19:
+				text = "Lår (V)";
+				break;
+			case 20:
+				text = "Lår (H)";
+				break;
+			case 21:
+				text = "Knä (V)";
+				break;
+			case 22:
+				text = "Knä (H)";
+				break;
+			case 23:
+				text = "Vad (V)";
+				break;
+			case 24:
+				text = "Vad (H)";
+				break;
+			case 25:
+				text = "Fot (V)";
+				break;
+			case 26:
+				text = "Fot (H)";
+				break;
+			default:
 		}
 
 		return text;
