@@ -1,6 +1,6 @@
 //import { API_RollDice } from "/modules/eon-dice-roller/scripts/rollDice.js";
 
-export class GeneralRoll {
+/* export class GeneralRoll {
     constructor(key, type) {
         this.canRoll = false;
         this.close = false;
@@ -48,6 +48,18 @@ export class GeneralRoll {
             this.key = "dice";
             this.attributeValue = 3;
         }
+    }
+} */
+
+export class SkillRoll {
+}
+
+export class DialogSkillRoll extends FormApplication {
+    constructor(actor, roll) {
+        super(roll, {submitOnChange: true, closeOnSubmit: false});
+        this.actor = actor;     
+        this.isDialog = true;  
+        this.options.title = `${this.actor.name}`;        
     }
 }
 
