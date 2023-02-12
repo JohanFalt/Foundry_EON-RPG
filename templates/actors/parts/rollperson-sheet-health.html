@@ -1,0 +1,53 @@
+<div class="health-area">
+    <div>
+        <div class="headline">Smärta</div>
+        <div class="resource-box" data-value="" data-name="">
+            {{#numFromLoop 1 4}}
+                <span class="resource-value" data-index="{{this}}" data-type="" data-value=""></span>
+            {{/numFromLoop}}
+        </div>
+        <div class="clear smalltext">
+            <div class="pullLeft">-1T6</div>
+            <div class="pullLeft">-2T6</div>
+            <div class="pullLeft">-3T6</div>
+            <div class="pullLeft">-4T6</div>
+        </div>
+    </div>
+
+    <div>
+        <div class="headline">Blödning</div>        
+        <div class="clear">
+            <div class="pullLeft caption">Blödningstakt</div>
+            <div class="pullLeft resource-box" data-value="" data-name="">
+                {{#numFromLoop 1 3}}
+                    <span class="resource-value" data-index="{{this}}" data-type="" data-value=""></span>
+                {{/numFromLoop}}
+            </div>
+        </div>
+        <div class="clear">
+            <div class="pullLeft caption">Svårighet</div>
+            <div class="pullLeft"><input name="" class="attribute-value" type="text" value="" /></div>
+        </div>
+    </div>
+
+    <div>
+        <div class="headline">Infektion</div>        
+        <div class="clear">
+            <div class="pullLeft caption">Infektionsnivå</div>
+            <div class="pullLeft resource-box"><input name="" class="attribute-value" type="text" value="" /></div>
+        </div>
+        <div class="clear">
+            <div class="pullLeft caption">Svårighet</div>
+            <div class="pullLeft"><input name="" class="attribute-value" type="text" value="" /></div>
+        </div>
+    </div>
+
+    <div>
+        <div class="headline">Inre skada</div>        
+        <div class="resource-box" data-value="" data-name="">
+            {{#numFromLoop 1 3}}
+                <span class="resource-value" data-index="{{this}}" data-type="" data-value=""></span>
+            {{/numFromLoop}}
+        </div>
+    </div>
+</div>

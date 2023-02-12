@@ -1,4 +1,5 @@
 import DiceHelper from "./dice-helper.js";
+import DialogHelper from "./dialog-helper.js";
 import CreateHelper from "./create-helper.js";
 
 export class EonActorSheet extends ActorSheet {
@@ -130,7 +131,23 @@ export class EonActorSheet extends ActorSheet {
         html
             .find(".resource-box > .resource-value")
             .click(this._clickedCircle.bind(this));
+
+        // Rollable stuff
+		html
+            .find(".vrollable")
+            .click(this._onRollDialog.bind(this));
     }
+
+    _onRollDialog(event) {		
+		event.preventDefault();
+
+		const element = event.currentTarget;
+		const dataset = element.dataset;
+
+        if (dataset.source == "skill") {
+            DialogHelper.SkillDialog(event, this.actor);
+        }        
+	}
 
     async _onsheetChange(event) {
 		event.preventDefault();

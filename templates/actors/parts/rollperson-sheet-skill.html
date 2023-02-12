@@ -1,8 +1,8 @@
 <div class="skill-area">
     {{#each EON.CONFIG.fardighetgrupper as |grupp key|}}
-        <div class="skill-headline skill clear">
+        <div class="skill clear">
             <div class="pullLeft skill-headline headline">{{grupp}}</div>
-            <div class="pullLeft"><input name="system.fardigheter.{{key}}.erf" class="skill-value" type="number" value="{{getActorSkillGroupExp ../actor.system.fardigheter key}}" min="0" max="50"></div>
+            <div class="pullLeft"><input name="system.fardigheter.{{key}}.erf" class="skill-value" type="number" value="{{getActorSkillGroupExp ../actor.system.fardigheter key}}" min="0" max="50" /></div>
             {{#if (eqAny key "mystik" "sprak" "ovriga")}}
                 <div class="pullLeft"><i class="fa-solid fa-square-plus green"></i></div>
             {{/if}}
@@ -20,14 +20,14 @@
                         <div class="tic">&nbsp;</div>
                     {{/if}}
                 </div>
-                <div class="pullLeft caption">{{fardighet.name}}</div>                
+                <div class="vrollable pullLeft caption" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div>                
                 <div class="pullLeft attribute-value">
                     <!-- <div class="pullLeft tic-container">
                         <div class="tic"><i class="fa-solid fa-sort-up tic-top"></i></div>
                         <div class="tic"><i class="fa-solid fa-sort-down tic-down"></i></div>
                     </div> -->
                     <div class="pullLeft">
-                        <input class="skill-value" type="text" value="{{getDiceValue fardighet.system.varde}}" readonly data-type="fardigheter" data-group="{{fardighet.system.grupp}}" data-source="{{fardighet.name}}">
+                        <input class="skill-value" type="text" value="{{getDiceValue fardighet.system.varde}}" readonly data-type="fardigheter" data-group="{{fardighet.system.grupp}}" data-source="{{fardighet.name}}" />
                     </div>
                     <!-- <div class="pullLeft tic-container">
                         <div class="tic"><i class="fa-solid fa-sort-up tic-top"></i></div>

@@ -33,6 +33,7 @@
     --font-small: 12px;
     --font-large: 16px;
     --font-x-large: 24px;
+    --font-tabsize: 14px;
 
     --main-full-color: rgba(121, 8, 19, 1);
     --back-color-inputs: rgb(237, 235, 235);
@@ -42,11 +43,7 @@
 
 /* Sheet */
 
-.tabButton:hover,
-.tabButton:focus,
-.tabButton.active {
-	text-shadow: 0 0 10px var(--main-full-color);
-}
+
 
 .rollperson:not(.minimized) {
     min-width: 800px;
@@ -93,6 +90,32 @@ select {
 
 .smalltext {
     font-size: var(--font-xsmall);
+}
+
+.caption {
+    width:40%;
+    line-height: 23px;
+}
+
+.headline {
+    font-family: var(--main-rubrik);
+    font-size: var(--font-large);    
+    margin-bottom: 5px;    
+    border-bottom: 1px solid black;
+}
+
+.large-headline {
+    font-family: var(--main-rubrik);
+    font-size: var(--font-x-large);   
+}
+
+.large-main-headline {
+    font-family: var(--main-stor-rubrik); 
+    font-size: var(--font-x-large);   
+}
+
+.number-value-text {
+    font-family: var(--main-font-siffror);
 }
 
 .pullLeft {
@@ -147,29 +170,11 @@ i.tic-top {
   cursor: pointer;
 }
 
-.caption {
-    width:40%;
-    line-height: 23px;
-}
-
-.headline {
-    font-size: var(--font-large);    
-    margin-bottom: 5px;
-    font-family: var(--main-rubrik);
-}
-
-.large-headline {
-    font-family: var(--main-stor-rubrik); 
-    font-size: var(--font-x-large);         
-}
-
-.headlineTabs {
-    font-size: 20px;    
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    border-top-style: solid;
-    border-top-width: 1px;
-    height: 30px;
+.vrollable:hover,
+.vrollable:focus {
+    color: #000;  
+    cursor: pointer;
+    text-shadow: 0 0 10px var(--main-full-color);
 }
 
 .green {
@@ -178,6 +183,45 @@ i.tic-top {
 
 .red {
     color: var(--color-bad);
+}
+
+/* Navigation */
+
+.tab-area {
+    display:flex;
+}
+
+.tabButton:hover,
+.tabButton:focus,
+.tabButton.active {
+	/* text-shadow: 0 0 10px var(--main-full-color); */
+    background-color: var(--back-color-inputs);
+}
+
+.tabButton {
+    width: 14%;
+    min-width: 105px;
+    text-align: center;
+    line-height: 30px;
+}
+
+.tabIcon {
+    width: 25px;
+    min-width: 25px;
+}
+
+.tabboxleft {
+    border-left-style: solid;
+    border-left-width: 1px;
+}
+
+.headlineTabs {
+    font-size: var(--font-tabsize);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-top-style: solid;
+    border-top-width: 1px;
+    height: 30px;
 }
 
 /* Rutor / cirklar */
@@ -253,7 +297,7 @@ i.tic-top {
 
 .attribute-area {
     width: 98%;
-    border-bottom: 1px solid black;
+    /* border-bottom: 1px solid black; */
 }
 
 .navigation {

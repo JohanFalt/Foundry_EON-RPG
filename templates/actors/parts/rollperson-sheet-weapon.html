@@ -1,131 +1,18 @@
 <div class="weapon-area">
     <div style="min-height: 100px;">
-        <div>
-            <div class="clear">
-                <div class="pullLeft large-headline">Närstridsvapen</div>
-                <div class="pullLeft"><i class="fa-solid fa-square-plus green"></i></div>
-            </div>
-            <div class="clear headline" style="line-height: 25px; width:100%;">
-                <div class="pullLeft" style="width: 100px;">Namn</div>
-                <div class="pullLeft" style="width: 75px;">Färdighet</div>
-                <div class="pullLeft" style="width: 50px;">1H</div>
-                <div class="pullLeft" style="width: 50px;">2H</div>
-                <div class="pullLeft" style="width: 50px;">Hugg</div>
-                <div class="pullLeft" style="width: 50px;">Kross</div>
-                <div class="pullLeft" style="width: 50px;">Stick</div>
-                <div class="pullLeft" style="width: 50px;">Längd</div>
-                <div class="pullLeft" style="width: 50px;">Kg</div>
-                <div class="pullLeft">Egenskaper</div>
-            </div>
-        </div>
-        <div>
-            
-            {{#each actor.system.listdata.vapen.narstrid as |vapen key|}}
-            <div class="clear" style="line-height: 25px; width:100%;">
-                <div class="pullLeft" style="width: 100px;">{{vapen.name}}</div>
-                <div class="pullLeft weapon-value" style="width: 75px;">{{getDiceValue (getActorSkillGroupValue ../actor vapen.system.attribut "strid")}}</div>
-                <div class="pullLeft weapon-value" style="width: 50px;">{{getDiceValue vapen.system.enhand}}</div>
-                <div class="pullLeft weapon-value" style="width: 50px;">{{getDiceValue vapen.system.tvahand}}</div>
-                <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.hugg.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.hugg ../actor.system.harleddegenskaper.grundskada)}}{{/if}}</div>
-                <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.kross.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.kross ../actor.system.harleddegenskaper.grundskada)}}{{/if}}</div>
-                <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.stick.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.stick ../actor.system.harleddegenskaper.grundskada)}}{{/if}}</div>
-                <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.langd 0)}}-{{else}}{{vapen.system.langd}}cm{{/if}}</div>
-                <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.vikt 0)}}-{{else}}{{vapen.system.vikt}}{{/if}}</div>
-                <div class="pullLeft">{{getLista vapen.system.egenskaper}}</div>
-            </div>
-            {{/each}}
-            
-        </div>
+        {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-close.html"}}
     </div>
 
     <div style="min-height: 100px;">
-        <div>
-            <div class="clear">
-                <div class="pullLeft large-headline">Stridskonst</div>
-                <div class="pullLeft"><i class="fa-solid fa-square-plus green"></i></div>
-            </div>
-        </div>
-    </div>
-        
-    <div style="min-height: 100px;">
-        <div>
-            <div class="clear">
-                <div class="pullLeft large-headline">Avståndsvapen</div>
-                <div class="pullLeft"><i class="fa-solid fa-square-plus green"></i></div>
-            </div>
-            <div class="clear headline" style="line-height: 25px; width:100%;">
-                <div class="pullLeft" style="width: 100px;">Namn</div>
-                <div class="pullLeft" style="width: 75px;">Färdighet</div>
-                <div class="pullLeft" style="width: 50px;">1H</div>
-                <div class="pullLeft" style="width: 50px;">2H</div>
-                <div class="pullLeft" style="width: 75px;">Räckvidd</div>
-                <div class="pullLeft" style="width: 35px;">Typ</div>
-                <div class="pullLeft" style="width: 50px;">Skada</div>
-                <div class="pullLeft" style="width: 50px;">Längd</div>
-                <div class="pullLeft" style="width: 40px;">Kg</div>
-                <div class="pullLeft">Egenskaper</div>
-            </div>
-        </div>
-        <div>
-            {{#each actor.system.listdata.vapen.avstand as |vapen key|}}
-                <div class="pullLeft" style="width: 100px;">{{vapen.name}}</div>
-                <div class="pullLeft weapon-value" style="width: 75px;">{{getDiceValue (getActorSkillGroupValue ../actor vapen.system.attribut "strid")}}</div>
-                <div class="pullLeft weapon-value" style="width: 50px;">{{getDiceValue vapen.system.enhand}}</div>
-                <div class="pullLeft weapon-value" style="width: 50px;">{{getDiceValue vapen.system.tvahand}}</div>
-                <div class="pullLeft weapon-value" style="width: 50px;">{{vapen.system.rackvidd}}</div>
-                <div class="pullLeft weapon-value" style="width: 50px;">{{vapen.system.typ}}</div>
-                <div class="pullLeft weapon-value" style="width: 50px;">{{getDiceValue vapen.system.skada}}</div>
-                <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.langd 0)}}-{{else}}{{vapen.system.langd}}cm{{/if}}</div>
-                <div class="pullLeft weapon-value" style="width: 40px;">{{#if (eq vapen.system.vikt 0)}}-{{else}}{{vapen.system.vikt}}{{/if}}</div>
-                <div class="pullLeft">{{getLista vapen.system.egenskaper}}</div>
-            {{/each}}
-        </div>
-    </div>
-    
-    <div style="min-height: 100px;">
-        <div>
-            <div class="clear">
-                <div class="pullLeft large-headline">Försvar</div>
-                <div class="pullLeft"><i class="fa-solid fa-square-plus green"></i></div>
-            </div>
-            <div class="clear headline" style="line-height: 25px; width:100%;">
-                <div class="pullLeft" style="width: 100px;">Namn</div>
-                <div class="pullLeft" style="width: 75px;">Färdighet</div>
-                <div class="pullLeft" style="width: 40px;">1H</div>
-                <div class="pullLeft" style="width: 40px;">2H</div>
-                <div class="pullLeft" style="width: 65px;">Närstrid</div>
-                <div class="pullLeft" style="width: 65px;">Avstånd</div>
-                <div class="pullLeft" style="width: 50px;">Skydd</div>
-                <div class="pullLeft" style="width: 50px;">Längd</div>
-                <div class="pullLeft" style="width: 40px;">Kg</div>
-                <div class="pullLeft">Egenskaper</div>
-            </div>
-        </div>
-        <div>
-            {{#each actor.system.listdata.vapen.forsvar as |vapen key|}}
-                <div class="pullLeft" style="width: 100px;">{{vapen.name}}</div>
-                <div class="pullLeft weapon-value" style="width: 75px;">{{getDiceValue (getActorSkillValue ../actor vapen.system.attribut ../EON.CONFIG)}}</div>
-                <div class="pullLeft weapon-value" style="width: 40px;">{{getDiceValue vapen.system.enhand}}</div>
-                <div class="pullLeft weapon-value" style="width: 40px;">{{getDiceValue vapen.system.tvahand}}</div>
-                <div class="pullLeft weapon-value" style="width: 65px;">{{getDiceValue vapen.system.narstrid}}</div>
-                <div class="pullLeft weapon-value" style="width: 65px;">{{getDiceValue vapen.system.avstand}}</div>
-                <div class="pullLeft weapon-value" style="width: 50px;">{{vapen.system.skydd}}</div>
-                <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.langd 0)}}-{{else}}{{vapen.system.langd}}cm{{/if}}</div>
-                <div class="pullLeft weapon-value" style="width: 40px;">{{#if (eq vapen.system.vikt 0)}}-{{else}}{{vapen.system.vikt}}{{/if}}</div>
-                <div class="pullLeft">{{getLista vapen.system.egenskaper}}</div>
-            {{/each}}
-        </div>
+        {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-martial.html"}}
     </div>
 
     <div style="min-height: 100px;">
-        <div class="clear">
-            <div class="pullLeft large-headline">Ammunition</div>
-            <div class="pullLeft"><i class="fa-solid fa-square-plus green"></i></div>
-        </div>
-        <div class="clear headline" style="line-height: 25px; width:100%;">
-            <div class="pullLeft" style="width: 100px;">Beskrivning</div>
-            <div class="pullLeft" style="width: 50px;">Antal</div>
-        </div>
+        {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-ranged.html"}}
+    </div>
+
+    <div style="min-height: 100px;">
+        {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-defence.html"}}
     </div>
 
     <div class="clear">
@@ -144,16 +31,21 @@
 
     <div class="clear">
         <div class="pullLeft caption">Grundskada</div>
-        <div class="pullLeft attribute-value"><input class="weapon-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.grundskada}}" readonly></div>
+        <div class="pullLeft attribute-value"><input class="weapon-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.grundskada}}" readonly /></div>
     </div>
     
     <div class="clear">
         <div class="pullLeft caption">Grundrustning</div>
-        <div class="pullLeft attribute-value"><input class="weapon-value" type="text" value="{{actor.system.harleddegenskaper.grundrustning}}" readonly></div>
+        <div class="pullLeft attribute-value"><input class="weapon-value" type="text" value="{{actor.system.harleddegenskaper.grundrustning}}" readonly /></div>
     </div>
 
     <div class="clear">
         <div class="pullLeft caption">Läkningstakt</div>
-        <div class="pullLeft attribute-value"><input class="weapon-value" type="number" name="system.strid.lakningstakt" value="{{actor.system.strid.lakningstakt}}" min="0" max="50"></div>
+        <div class="pullLeft attribute-value"><input class="weapon-value" type="number" name="system.strid.lakningstakt" value="{{actor.system.strid.lakningstakt}}" min="0" max="50" /></div>
     </div>
+
+    <div>
+        {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-health.html"}}
+    </div>
+
 </div>

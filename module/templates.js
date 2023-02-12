@@ -9,13 +9,16 @@ export const PreloadHandlebarsTemplates = async function () {
     const templatePaths = [
         // Actor Sheet Partials
 		"systems/eon-rpg/templates/actors/parts/navigation.html",
-		"systems/eon-rpg/templates/actors/parts/navigation-combat.html",
 		"systems/eon-rpg/templates/actors/parts/navigation-mystic.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-top.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-bio.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-trait.html",
-		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-combat.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon.html",
+		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-close.html",
+		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-martial.html",
+		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-ranged.html",
+		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-defence.html",
+		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-health.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-armor.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-equipment.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-mystic.html",

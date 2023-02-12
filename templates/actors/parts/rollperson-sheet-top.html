@@ -2,7 +2,7 @@
     <div>
         <div class="headline">
             <div class="clear attribute-area">
-                <div class="pullLeft large-headline">{{actor.name}}</div>
+                <div class="pullLeft large-main-headline">{{actor.name}}</div>
             </div>
         </div>
 
@@ -20,7 +20,7 @@
                             <div class="tic"><i class="fa-solid fa-sort-down tic-down"></i></div>
                         </div> -->
                         <div class="pullLeft">
-                            <input class="attribute-value" type="text" value="{{getDiceValue (getActorAttribute ../data key)}}" readonly>
+                            <input class="attribute-value" type="text" value="{{getDiceValue (getActorAttribute ../data key)}}" readonly />
                         </div>
                         <!-- <div class="pullLeft tic-container">
                             <div class="tic"><i class="fa-solid fa-sort-up tic-top"></i></div>
@@ -43,31 +43,31 @@
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Förflyttning</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.forflyttning}}" readonly></div>
+                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.forflyttning}}" readonly /></div>
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Intryck</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.intryck}}" readonly></div>
+                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.intryck}}" readonly /></div>
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Kroppsbyggnad</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.kroppsbyggnad}}" readonly></div>
+                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.kroppsbyggnad}}" readonly /></div>
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Reaktion</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.reaktion}}" readonly></div>
+                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.reaktion}}" readonly /></div>
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Självkontroll</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.sjalvkontroll}}" readonly></div>
+                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.sjalvkontroll}}" readonly /></div>
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Vaksamhet</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.vaksamhet}}" readonly></div>
+                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.vaksamhet}}" readonly /></div>
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Livskraft</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.livskraft}}" readonly></div>
+                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.livskraft}}" readonly /></div>
             </div>            
         </div>  
 
@@ -82,7 +82,7 @@
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Välmående</div>
-                <div class="pullLeft attribute-value"><input name="system.egenskap.fokus.max" class="attribute-value" type="number" value="{{actor.system.egenskap.fokus.max}}" min="0" max="10"></div>
+                <div class="pullLeft attribute-value"><input name="system.egenskap.fokus.max" class="attribute-value" type="number" value="{{actor.system.egenskap.fokus.max}}" min="0" max="10" /></div>
             </div>
             <div class="headline">
                 <div class="attribute-area">Avtrubbning</div>
@@ -114,7 +114,7 @@
                 </div>
                 <div class="clear sheet-box">
                     <div class="pullLeft caption">&nbsp;</div>
-                    <div class="smalltext pullLeft">
+                    <div class="smalltext pullLeft number-value-text">
                         <div class="pullLeft resource-box-text">+5</div>
                         <div class="pullLeft resource-box-text">+10</div>
                         <div class="pullLeft resource-box-text">+15</div>
