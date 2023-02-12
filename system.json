@@ -36,10 +36,10 @@
     "gridUnits": "m",
     "primaryTokenAttribute": "resources.health",
     "secondaryTokenAttribute": "resources.power",
-    "url": "",
-    "manifest": "",
-    "download": "",
-    "bugs": "",
+    "url": "https://github.com/JohanFalt/Foundry_EON-RPG",
+    "manifest": "https://raw.githubusercontent.com/JohanFalt/Foundry_EON-RPG/main/system.json",
+    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/archive/refs/tags/alpha-1.zip",
+    "bugs": "https://github.com/JohanFalt/Foundry_EON-RPG/issues",
     "changelog": "",
     "license": "LICENSE.txt"    
 }
