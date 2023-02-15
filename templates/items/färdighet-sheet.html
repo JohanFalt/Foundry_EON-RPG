@@ -1,0 +1,51 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+	<div class="sheet-item">
+		<header class="sheet-header">
+			<div>
+				<img src="systems/eon-rpg/assets/img/archive-register.svg" class="item" />
+			</div>
+		</header>
+		
+		<section class="item-body">
+			<div class="clear">
+				<div class="pullLeft" style="width: 150px;">Grupp</div>
+				<div class="pullLeft">{{data.system.grupp}}</div>
+			</div>
+            <div>
+				<input name="system.svarighet" type="checkbox" {{#if (eq data.system.svarighet 'L')}} checked {{/if}}>Lättlärd</input>
+			</div>
+            <div>
+				<input name="system.svarighet" type="checkbox" {{#if (eq data.system.svarighet 'S')}} checked {{/if}}>Svårlärd</input>
+			</div>            
+			<div class="clear">
+				<div class="pullLeft" style="width: 150px;">Referens</div>
+				<div class="pullLeft">{{data.system.referens}}</div>
+			</div>
+			<div class="clear">
+				<div class="pullLeft" style="width: 150px;">Färdighetsvärde</div>
+				<div class="pullLeft tic-container">
+                    <div><i class="fa-solid fa-sort-up tic tic-top green" data-ticType="tvarde" data-ticDirection="up"></i></div>
+                    <div><i class="fa-solid fa-sort-down tic tic-down red" data-ticType="tvarde" data-ticDirection="down"></i></div>
+                </div>
+
+				{{#if (eq data.system.varde.bonus 0)}}
+					<div class="pullLeft">{{data.system.varde.tvarde}}T6</div>
+				{{/if}}
+				{{#if (gt data.system.varde.bonus 0)}}
+					<div class="pullLeft">{{data.system.varde.tvarde}}T6+{{data.system.varde.bonus}}</div>
+				{{/if}}
+				{{#if (lt data.system.varde.bonus 0)}}
+					<div class="pullLeft">{{data.system.varde.tvarde}}T6-{{data.system.varde.bonus}}</div>
+				{{/if}}
+				
+				<div class="pullLeft tic-container">
+                    <div><i class="fa-solid fa-sort-up tic tic-top green" data-ticType="bonus" data-ticDirection="up"></i></div>
+                    <div><i class="fa-solid fa-sort-down tic tic-down red" data-ticType="bonus" data-ticDirection="down"></i></div>
+                </div>
+			</div>
+			<!-- <div>Bonus</div> -->
+		</section>
+
+	</div>
+</form>

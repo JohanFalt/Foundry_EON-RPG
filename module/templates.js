@@ -60,6 +60,9 @@ export async function Setup()
 		fileData = await fetch(`systems/eon-rpg/packs/fardigheter.json`).then((response) => response.json());
 		Object.assign(importData, fileData);
 
+		fileData = await fetch(`systems/eon-rpg/packs/vapen.json`).then((response) => response.json());
+		Object.assign(importData, fileData);
+
 		return importData;		
     } catch(err) {
         return
@@ -143,21 +146,38 @@ export const RegisterHandlebarsHelpers = function () {
 	});
 
 	// skickar ut en lista i läsbart skick
-	Handlebars.registerHelper("getLista", function(lista) {
+	Handlebars.registerHelper("getPropertyList", function(lista) {
 		let text = "";
 
 		for (const item of lista) {
+			let name = item[0];
+			let value = 0;
+
+			if (item.length > 1) {				
+				value = item[1];
+			}
+
 			if (text != "") {
 				text += ", ";
 			}
 
-			text += item;
+			for (const egenskap in game.EON.egenskaper) {
+				if (egenskap == name) {
+					text += game.EON.egenskaper[name].namn;
+
+					if (value > 0) {
+						text += " " + value;
+					}
+
+					break;
+				}
+			}			
 		}
 
 		return text;
 	});
 
-	Handlebars.registerHelper("getBodypart", function(nr) {
+	Handlebars.registerHelper("getBodypart", function(nr, config) {
 		let text = "";
 		let bodynr = parseInt(nr);
 

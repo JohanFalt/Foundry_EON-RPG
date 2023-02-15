@@ -157,9 +157,14 @@
             "templates": [
 				"installningar"
 			],            
+            "installningar":{
+                "lattlard": false,
+                "svarlard": false,
+                "normal": true
+            },
+            "nyckel": "",
             "attribut": "",
-            "grupp": "",
-            "svarighet": "N",
+            "grupp": "",            
             "varde": {
                 "tvarde": 0,
                 "bonus": 0

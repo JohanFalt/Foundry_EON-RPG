@@ -2,7 +2,7 @@
     "id": "eon-rpg",
     "title": "Eon IV RPG",
     "description": "",
-    "version": "Alpha 1.1",
+    "version": "Alpha 1.2",
     "compatibility": {
         "minimum": "10",
         "verified": "10",
@@ -38,7 +38,7 @@
     "secondaryTokenAttribute": "resources.power",
     "url": "https://github.com/JohanFalt/Foundry_EON-RPG",
     "manifest": "https://raw.githubusercontent.com/JohanFalt/Foundry_EON-RPG/main/system.json",
-    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/archive/refs/tags/alpha-1.1.zip",
+    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/archive/refs/tags/alpha-1.2.zip",
     "bugs": "https://github.com/JohanFalt/Foundry_EON-RPG/issues",
     "changelog": "",
     "license": "LICENSE.txt"    

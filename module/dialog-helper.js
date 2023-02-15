@@ -1,4 +1,4 @@
-//import { DialogSkillRoll, SkillRoll } from "./dialogs/dialog-skill-roll.js";
+import { DialogSkillRoll, SkillRoll } from "./dialogs/dialog-skill-roll.js";
 
 export default class classDialogHelper {
     static async SkillDialog(event, actor) {
@@ -6,10 +6,9 @@ export default class classDialogHelper {
 
 		const element = event.currentTarget;
 		const dataset = element.dataset; 
-
         const item = await actor.getEmbeddedDocument("Item", dataset.itemid);
 
-        const roll = new SkillRoll(dataset.key, dataset.source);
+        const roll = new SkillRoll(item);
 		let skillRollUse = new DialogSkillRoll(actor, roll);
 		skillRollUse.render(true);
     }

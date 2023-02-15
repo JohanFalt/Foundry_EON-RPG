@@ -45,3 +45,18 @@ eon.fardighetgrupper = {
     vildmark: "Vildmarksfärdigheter",
     ovriga: "Övriga färdigheter"
 }
+
+eon.vapengrupper = {
+    slagsmal: "Slagsmål",
+    dolkar: "Dolkar",
+    kedjevapen: "Kedjevapen",
+    spjut: "Spjut",
+    stavar: "Stavar",
+    svard: "Svärd",
+    yxor: "Yxor",
+    armborst: "Armborst",
+    bagar: "Bågar",
+    kastvapen: "Kastvapen",
+    skoldar: "Sköldar",
+    manover: "Manöver"
+}

@@ -1,0 +1,247 @@
+{
+    "egenskaper": {
+        "begransad": {
+            "namn": "Begränsad"
+        },
+        "obevapand": {
+            "namn": "Obeväpnad"
+        },
+        "sargande": {
+            "namn": "Sargande"
+        },
+        "snabb": {
+            "namn": "Snabb"
+        },
+        "vadlig": {
+            "namn": "Vådlig"
+        }
+    },
+    "narstridsvapen": {
+        "slagsmal": {
+            "genvernavar": {
+                "namn": "Genvernävar",
+                "attribut": "slagsmal",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "stick": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "langd": 0,
+                "vikt": 0,
+                "egenskaper": [["begransad"], ["obevapand"], ["sargande"], ["snabb"]]
+            },
+            "obevapnad": {
+                "namn": "Obeväpnad",
+                "attribut": "slagsmal",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "stick": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "langd": 0,
+                "vikt": 0,
+                "egenskaper": [["begransad"], ["obevapand"], ["snabb"]]
+            },
+            "tirakklor": {
+                "namn": "Tirakklor",
+                "attribut": "slagsmal",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "stick": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "langd": 0,
+                "vikt": 0,
+                "egenskaper": [["begransad"], ["obevapand"], ["snabb"], ["vadlig"]]
+            }
+        },
+        "dolkar": {
+            "kniv": {
+                "namn": "Kniv",
+                "attribut": "dolk",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 1
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "stick": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 2
+                },
+                "langd": 20,
+                "vikt": 0.2,
+                "egenskaper": [["begransad"], ["precis", 2]]
+            },
+            "dolk": {
+                "namn": "Dolk",
+                "attribut": "dolk",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 1
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 1
+                },
+                "stick": {
+                    "aktiv": true,
+                    "tvarde": 1,
+                    "bonus": 0
+                },
+                "langd": 30,
+                "vikt": 0.3,
+                "egenskaper": [["begransad"], ["precis"], ["vadlig"]]
+            }
+        },
+        "kedjevapen": {            
+
+        },
+        "klubbor": {
+
+        },
+        "spjut": {
+
+        },
+        "stavar": {
+
+        },
+        "svard": {
+
+        },
+        "yxor": {
+
+        }
+    },
+    "avstandsvapen": {     
+        "armborst": {
+
+        },
+        "bagar": {
+
+        },
+        "kastvapen": {
+
+        }
+    },
+    "forsvar": {
+        "skoldar": {
+
+        },
+        "manover": {
+            "undvika": {
+                "namn": "Undvika",
+                "attribut": "undvika",
+                "egenskaper": [],
+                "langd": 0,
+                "vikt": 0,
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "narstrid": {
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "avstand": {
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "skydd": 0
+            }
+        }
+    }
+}

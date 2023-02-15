@@ -43,7 +43,9 @@
 
 /* Sheet */
 
-
+.itemsheet:not(.minimized) {
+    min-height: 500px;
+}
 
 .rollperson:not(.minimized) {
     min-width: 800px;
@@ -87,6 +89,10 @@ select {
 }
 
 /* General */
+
+img.item {
+    max-width: 100px;
+}
 
 .smalltext {
     font-size: var(--font-xsmall);
@@ -170,6 +176,8 @@ i.tic-top {
   cursor: pointer;
 }
 
+.item-edit:hover,
+.item-edit:focus,
 .vrollable:hover,
 .vrollable:focus {
     color: #000;  
@@ -364,6 +372,11 @@ input.skill-value {
 .skill-short {
     margin-left: 5px;
     line-height: 25px;
+    width: 30px;
+}
+
+.skill-icon {
+    margin-left: 15px;
 }
 
 /* VAPEN */
@@ -383,8 +396,13 @@ input.weapon-value {
     font-family: var(--main-font-siffror);
 }
 
-@media all and (max-width : 1280px)
-{
+@media all and (max-height : 1200px) {
+    .rollperson:not(.minimized) {
+        min-height: 400px;
+    }
+}
+
+@media all and (max-width : 1280px) {
     .rollperson:not(.minimized) {
         min-width: 400px;
     }

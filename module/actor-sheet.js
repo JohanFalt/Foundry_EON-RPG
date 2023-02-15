@@ -56,7 +56,8 @@ export class EonActorSheet extends ActorSheet {
             const version = game.data.system.version;
 
             await CreateHelper.SkapaFardigheter(this.actor, CONFIG.EON, version);
-            await CreateHelper.SkapaVapen(this.actor, version);
+            await CreateHelper.SkapaNarstridsvapen(this.actor, game.EON, "slagsmal", "obevapnad", version);
+            await CreateHelper.SkapaForsvarsvapen(this.actor, game.EON, "manover", "undvika", version);
 
             actorData.system.installningar.skapad = true;
             actorData.system.installningar.version = version;
@@ -136,6 +137,11 @@ export class EonActorSheet extends ActorSheet {
 		html
             .find(".vrollable")
             .click(this._onRollDialog.bind(this));
+
+        // item handling
+        html
+			.find(".item-edit")
+			.click(this._onItemEdit.bind(this));
     }
 
     _onRollDialog(event) {		
@@ -146,7 +152,38 @@ export class EonActorSheet extends ActorSheet {
 
         if (dataset.source == "skill") {
             DialogHelper.SkillDialog(event, this.actor);
-        }        
+
+			return;
+        }      
+        
+        console.log(dataset);
+		ui.notifications.error("Slag saknar funktion");
+
+		return;
+	}
+
+    async _onItemEdit(event) {
+		var _a;
+
+		event.preventDefault();
+        event.stopPropagation();
+
+        const element = event.currentTarget;
+		const dataset = element.dataset;
+        const itemid = dataset.itemid;
+		const item = this.actor.getEmbeddedDocument("Item", itemid);		
+
+		if (item instanceof Item) {
+            _a = item.sheet;
+
+            if ((_a === null) || (_a === void 0)) {
+                void 0;
+            }                
+            else {
+                //_a.title = item.system.namn;
+                _a.render(true);  
+            }
+		}
 	}
 
     async _onsheetChange(event) {

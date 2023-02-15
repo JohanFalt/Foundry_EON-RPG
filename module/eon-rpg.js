@@ -1,6 +1,7 @@
 import { eon } from "./config.js";
 import * as Templates from "./templates.js";
 import { EonActorSheet } from "./actor-sheet.js";
+import { EonItemSheet } from "./item-sheet.js";
 
 /* ------------------------------------ */
 /* 1. Init system						*/
@@ -12,7 +13,9 @@ Hooks.once("init", async function() {
 
     Actors.registerSheet("EON", EonActorSheet, { types: ["Rollperson"], makeDefault: true });
 
-    //Items.unregisterSheet("core", ItemSheet);
+    Items.unregisterSheet("core", ItemSheet);
+
+    Items.registerSheet("EOB", EonItemSheet, { makeDefault: true });
 
     Templates.PreloadHandlebarsTemplates();
     Templates.RegisterHandlebarsHelpers();

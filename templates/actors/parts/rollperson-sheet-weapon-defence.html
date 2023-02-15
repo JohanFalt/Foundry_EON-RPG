@@ -1,32 +1,34 @@
-<div>
-    <div class="clear">
-        <div class="pullLeft large-headline">Försvar</div>
-        <div class="pullLeft"><i class="fa-solid fa-square-plus green"></i></div>
+<div style="min-height: 100px;">
+    <div>
+        <div class="clear">
+            <div class="pullLeft large-headline">Försvar</div>
+            <div class="pullLeft"><i class="fa-solid fa-square-plus green"></i></div>
+        </div>
+        <div class="clear headline" style="line-height: 25px; width:100%;">
+            <div class="pullLeft" style="width: 100px;">Namn</div>
+            <div class="pullLeft" style="width: 75px;">Färdighet</div>
+            <div class="pullLeft" style="width: 40px;">1H</div>
+            <div class="pullLeft" style="width: 40px;">2H</div>
+            <div class="pullLeft" style="width: 65px;">Närstrid</div>
+            <div class="pullLeft" style="width: 65px;">Avstånd</div>
+            <div class="pullLeft" style="width: 50px;">Skydd</div>
+            <div class="pullLeft" style="width: 50px;">Längd</div>
+            <div class="pullLeft" style="width: 40px;">Kg</div>
+            <div class="pullLeft">Egenskaper</div>
+        </div>
     </div>
-    <div class="clear headline" style="line-height: 25px; width:100%;">
-        <div class="pullLeft" style="width: 100px;">Namn</div>
-        <div class="pullLeft" style="width: 75px;">Färdighet</div>
-        <div class="pullLeft" style="width: 40px;">1H</div>
-        <div class="pullLeft" style="width: 40px;">2H</div>
-        <div class="pullLeft" style="width: 65px;">Närstrid</div>
-        <div class="pullLeft" style="width: 65px;">Avstånd</div>
-        <div class="pullLeft" style="width: 50px;">Skydd</div>
-        <div class="pullLeft" style="width: 50px;">Längd</div>
-        <div class="pullLeft" style="width: 40px;">Kg</div>
-        <div class="pullLeft">Egenskaper</div>
+    <div>
+        {{#each actor.system.listdata.vapen.forsvar as |vapen key|}}
+            <div class="pullLeft" style="width: 100px;">{{vapen.name}}</div>
+            <div class="pullLeft weapon-value" style="width: 75px;">{{getDiceValue (getActorSkillValue ../actor vapen.system.attribut ../EON.CONFIG)}}</div>
+            <div class="pullLeft weapon-value" style="width: 40px;">{{#if (eq vapen.system.enhand.aktiv false)}}-{{else}}{{getDiceValue vapen.system.enhand}}{{/if}}</div>
+            <div class="pullLeft weapon-value" style="width: 40px;">{{#if (eq vapen.system.hugg.aktiv false)}}-{{else}}{{getDiceValue vapen.system.tvahand}}{{/if}}</div>
+            <div class="pullLeft weapon-value" style="width: 65px;">{{getDiceValue vapen.system.narstrid}}</div>
+            <div class="pullLeft weapon-value" style="width: 65px;">{{getDiceValue vapen.system.avstand}}</div>
+            <div class="pullLeft weapon-value" style="width: 50px;">{{vapen.system.skydd}}</div>
+            <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.langd 0)}}-{{else}}{{vapen.system.langd}}cm{{/if}}</div>
+            <div class="pullLeft weapon-value" style="width: 40px;">{{#if (eq vapen.system.vikt 0)}}-{{else}}{{vapen.system.vikt}}{{/if}}</div>
+            <div class="pullLeft">{{getPropertyList vapen.system.egenskaper}}</div>
+        {{/each}}
     </div>
-</div>
-<div>
-    {{#each actor.system.listdata.vapen.forsvar as |vapen key|}}
-        <div class="pullLeft" style="width: 100px;">{{vapen.name}}</div>
-        <div class="pullLeft weapon-value" style="width: 75px;">{{getDiceValue (getActorSkillValue ../actor vapen.system.attribut ../EON.CONFIG)}}</div>
-        <div class="pullLeft weapon-value" style="width: 40px;">{{getDiceValue vapen.system.enhand}}</div>
-        <div class="pullLeft weapon-value" style="width: 40px;">{{getDiceValue vapen.system.tvahand}}</div>
-        <div class="pullLeft weapon-value" style="width: 65px;">{{getDiceValue vapen.system.narstrid}}</div>
-        <div class="pullLeft weapon-value" style="width: 65px;">{{getDiceValue vapen.system.avstand}}</div>
-        <div class="pullLeft weapon-value" style="width: 50px;">{{vapen.system.skydd}}</div>
-        <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.langd 0)}}-{{else}}{{vapen.system.langd}}cm{{/if}}</div>
-        <div class="pullLeft weapon-value" style="width: 40px;">{{#if (eq vapen.system.vikt 0)}}-{{else}}{{vapen.system.vikt}}{{/if}}</div>
-        <div class="pullLeft">{{getLista vapen.system.egenskaper}}</div>
-    {{/each}}
 </div>
