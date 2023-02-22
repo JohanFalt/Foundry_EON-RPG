@@ -47,16 +47,56 @@ eon.fardighetgrupper = {
 }
 
 eon.vapengrupper = {
-    slagsmal: "Slagsmål",
-    dolkar: "Dolkar",
-    kedjevapen: "Kedjevapen",
-    spjut: "Spjut",
-    stavar: "Stavar",
-    svard: "Svärd",
-    yxor: "Yxor",
-    armborst: "Armborst",
-    bagar: "Bågar",
-    kastvapen: "Kastvapen",
-    skoldar: "Sköldar",
-    manover: "Manöver"
+    slagsmal: {
+        namn: "Slagsmål",
+        typ: "narstridsvapen"
+    },
+    dolkar: {
+        namn:"Dolkar",
+        typ: "narstridsvapen"
+    },
+    kedjevapen: {
+        namn:"Kedjevapen",
+        typ: "narstridsvapen"
+    },
+    klubbor: {
+        namn:"Klubbor",
+        typ: "narstridsvapen"
+    },
+    spjut: {
+        namn:"Spjut",
+        typ: "narstridsvapen"
+    },
+    stavar: {
+        namn:"Stavar",
+        typ: "narstridsvapen"
+    },
+    svard: {
+        namn:"Svärd",
+        typ: "narstridsvapen"
+    },
+    yxor: {
+        namn:"Yxor",
+        typ: "narstridsvapen"
+    },
+    armborst: {
+        namn:"Armborst",
+        typ: "avstandsvapen"
+    },
+    bagar: {
+        namn:"Bågar",
+        typ: "avstandsvapen"
+    },
+    kastvapen: {
+        namn:"Kastvapen",
+        typ: "avstandsvapen"
+    },
+    skoldar: {
+        namn:"Sköldar",
+        typ: "forsvar"
+    },
+    manover: {
+        namn:"Manöver",
+        typ: "forsvar"
+    }
 }

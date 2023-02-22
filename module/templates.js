@@ -94,6 +94,26 @@ export const RegisterHandlebarsHelpers = function () {
 		return fardighetgrupp[grupp];
 	});
 
+	// hämtar en särskild grupp av vapnen
+	Handlebars.registerHelper("getWeaponGroup", function(vapengrupp, grupp) {
+		return vapengrupp[grupp];
+	});
+
+	// kontrollerar om en viss egenhet finns i listan
+	Handlebars.registerHelper("checkProperty", function(egenheter, namn) {
+		let exists = false;
+
+		for (const item of egenheter) {
+			if (item[0] == namn) {
+				return true;
+			}
+		}
+
+		return false;
+	});
+
+	
+
 	// lägger ihop två tärningspooler till en.
 	Handlebars.registerHelper("addDiceValues", function(fardighet1, fardighet2) {
 		return DiceHelper.AdderaVarden(fardighet1, fardighet2);
@@ -126,9 +146,7 @@ export const RegisterHandlebarsHelpers = function () {
 			"tvarde": 0,
 			"bonus": 0
 		}
-	});
-
-	
+	});	
 
 	// hämtar erfarenhetspoängen på en särskild färdighet.
 	Handlebars.registerHelper("getActorSkillGroupExp", function(fardighetgrupp, grupp) {

@@ -2,49 +2,72 @@
 
 	<div class="sheet-item">
 		<header class="sheet-header">
-			<div>
-				<img src="systems/eon-rpg/assets/img/archive-register.svg" class="item" />
-			</div>
+			
 		</header>
 		
 		<section class="item-body">
-			<div class="clear">
-				<div class="pullLeft" style="width: 150px;">Grupp</div>
-				<div class="pullLeft">{{data.system.grupp}}</div>
+			<div class="pullLeft">
+				<img src="systems/eon-rpg/assets/img/archive-register.svg" class="item img-block" />
 			</div>
-            <div>
-				<input name="system.svarighet" type="checkbox" {{#if (eq data.system.svarighet 'L')}} checked {{/if}}>Lättlärd</input>
-			</div>
-            <div>
-				<input name="system.svarighet" type="checkbox" {{#if (eq data.system.svarighet 'S')}} checked {{/if}}>Svårlärd</input>
-			</div>            
-			<div class="clear">
-				<div class="pullLeft" style="width: 150px;">Referens</div>
-				<div class="pullLeft">{{data.system.referens}}</div>
-			</div>
-			<div class="clear">
-				<div class="pullLeft" style="width: 150px;">Färdighetsvärde</div>
-				<div class="pullLeft tic-container">
-                    <div><i class="fa-solid fa-sort-up tic tic-top green" data-ticType="tvarde" data-ticDirection="up"></i></div>
-                    <div><i class="fa-solid fa-sort-down tic tic-down red" data-ticType="tvarde" data-ticDirection="down"></i></div>
-                </div>
 
-				{{#if (eq data.system.varde.bonus 0)}}
-					<div class="pullLeft">{{data.system.varde.tvarde}}T6</div>
-				{{/if}}
-				{{#if (gt data.system.varde.bonus 0)}}
-					<div class="pullLeft">{{data.system.varde.tvarde}}T6+{{data.system.varde.bonus}}</div>
-				{{/if}}
-				{{#if (lt data.system.varde.bonus 0)}}
-					<div class="pullLeft">{{data.system.varde.tvarde}}T6-{{data.system.varde.bonus}}</div>
-				{{/if}}
+			<div class="item-area pullLeft">
+				<div class="item-top">
+					<div class="clear">
+						<div class="pullLeft item-headline">Namn</div>
+						<div class="pullLeft"><input name="system.namn" type="text" value="{{data.system.namn}}"  /></div>
+					</div>
+					<div class="clear">
+						<div class="pullLeft item-headline">Grupp</div>
+						<div class="pullLeft item-headline">{{getActorSkillGroup EON.CONFIG.fardighetgrupper data.system.grupp}}</div>
+					</div>
+					<div class="clear">
+						<div class="pullLeft item-headline">Referens</div>
+						<div class="pullLeft item-headline">{{data.system.referens}}</div>
+					</div>
+				</div>
+
+				<div class="item-mid">
+					<div class="clear">
+						<div class="pullLeft item-headline">Lättlärd</div>
+						<div class="pullLeft"><input class="svarighet pointer item-headline" type="checkbox" data-value="L" {{#if data.system.installningar.lattlard}} checked {{/if}} /></div>
+					</div>
+					<div class="clear">
+						<div class="pullLeft item-headline">Svårlärd</div>
+						<div class="pullLeft"><input class="svarighet pointer item-headline" type="checkbox" data-value="S" {{#if data.system.installningar.svarlard}} checked {{/if}} /></div>
+					</div>   
+				</div>         
 				
-				<div class="pullLeft tic-container">
-                    <div><i class="fa-solid fa-sort-up tic tic-top green" data-ticType="bonus" data-ticDirection="up"></i></div>
-                    <div><i class="fa-solid fa-sort-down tic tic-down red" data-ticType="bonus" data-ticDirection="down"></i></div>
-                </div>
+				<div class="clear item-bottom tic-container">
+					<div class="pullLeft">
+						<div class="pointer tic tic-area tic-left tic-top" data-ticType="tvarde" data-ticDirection="up">
+							<i class="fa-solid fa-sort-up tic-up green"></i>
+						</div>
+						<div class="pointer tic tic-area tic-left tic-bottom" data-ticType="tvarde" data-ticDirection="down">
+							<i class="fa-solid fa-sort-down tic-down red"></i>
+						</div>
+					</div>
+
+					{{#if (eq data.system.varde.bonus 0)}}
+						<div class="pullLeft number-value-text fardighetsvarde">ob {{data.system.varde.tvarde}}T6</div>
+					{{/if}}
+					{{#if (gt data.system.varde.bonus 0)}}
+						<div class="pullLeft number-value-text fardighetsvarde">ob {{data.system.varde.tvarde}}T6+{{data.system.varde.bonus}}</div>
+					{{/if}}
+					{{#if (lt data.system.varde.bonus 0)}}
+						<div class="pullLeft number-value-text fardighetsvarde">ob {{data.system.varde.tvarde}}T6-{{data.system.varde.bonus}}</div>
+					{{/if}}
+					
+					<div class="pullLeft">
+						<div class="pointer tic tic-area tic-right tic-top" data-ticType="bonus" data-ticDirection="up">
+							<i class="fa-solid fa-sort-up tic-up green"></i>
+						</div>
+						<div class="pointer tic tic-area tic-right tic-bottom" data-ticType="bonus" data-ticDirection="down">
+							<i class="fa-solid fa-sort-down tic-down red"></i>
+						</div>
+					</div>
+				</div>
+				<!-- <div>Bonus</div> -->
 			</div>
-			<!-- <div>Bonus</div> -->
 		</section>
 
 	</div>

@@ -15,27 +15,13 @@
                 <div class="clear">
                     <div class="pullLeft caption">{{attribute.namn}}</div>
                     <div class="pullLeft attribute-value">
-                        <!-- <div class="pullLeft tic-container">
-                            <div class="tic"><i class="fa-solid fa-sort-up tic-top"></i></div>
-                            <div class="tic"><i class="fa-solid fa-sort-down tic-down"></i></div>
-                        </div> -->
                         <div class="pullLeft">
                             <input class="attribute-value" type="text" value="{{getDiceValue (getActorAttribute ../data key)}}" readonly />
                         </div>
-                        <!-- <div class="pullLeft tic-container">
-                            <div class="tic"><i class="fa-solid fa-sort-up tic-top"></i></div>
-                            <div class="tic"><i class="fa-solid fa-sort-down tic-down"></i></div>
-                        </div> -->
                     </div>
                 </div>
             {{/each}}
 
-            <!-- <div class="clear headline">
-                <div class="pullLeft attribute-area">Oanvänd erfarenhet <span class="pullRight">0</span></div>
-            </div> -->
-
-            
-            
         </div>
         <div class="three-column pullLeft">
             <div class="headline">
@@ -75,14 +61,14 @@
             <div class="headline">
                 <div class="attribute-area">Focus</div>
             </div>
-            <div class="resource-circle" data-value="{{actor.system.egenskap.fokus.varde}}" data-name="egenskap">
-                {{#numFromLoop 1 actor.system.egenskap.fokus.max}}
+            <div id="fokus_dots" class="resource-circle" data-value="{{actor.system.egenskap.fokus.varde}}" data-name="egenskap">
+                {{#numFromLoop 1 10}}
                     <span class="resource-value" data-index="{{this}}" data-type="fokus" data-value="varde"></span>
                 {{/numFromLoop}}
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Välmående</div>
-                <div class="pullLeft attribute-value"><input name="system.egenskap.fokus.max" class="attribute-value" type="number" value="{{actor.system.egenskap.fokus.max}}" min="0" max="10" /></div>
+                <div class="pullLeft attribute-value"><input id="fokus_varde" name="system.egenskap.fokus.max" class="attribute-value inputdata" type="number" value="{{actor.system.egenskap.fokus.max}}" min="0" max="10" data-source="valmaende" data-value="{{actor.system.egenskap.fokus.varde}}" /></div>
             </div>
             <div class="headline">
                 <div class="attribute-area">Avtrubbning</div>

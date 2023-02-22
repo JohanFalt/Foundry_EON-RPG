@@ -1,6 +1,7 @@
 import DiceHelper from "./dice-helper.js";
 import DialogHelper from "./dialog-helper.js";
 import CreateHelper from "./create-helper.js";
+import CalculateHelper from "./calculate-helper.js";
 
 export class EonActorSheet extends ActorSheet {
 
@@ -63,6 +64,10 @@ export class EonActorSheet extends ActorSheet {
             actorData.system.installningar.version = version;
             await this.actor.update(actorData);
 		}	
+        else {
+            await CalculateHelper.hanteraBerakningar(actorData);
+            await this.actor.update(actorData);
+        }
 
         const data = await super.getData();	
 
@@ -140,6 +145,10 @@ export class EonActorSheet extends ActorSheet {
 
         // item handling
         html
+			.find(".item-create")
+			.click(this._onItemEdit.bind(this));
+
+        html
 			.find(".item-edit")
 			.click(this._onItemEdit.bind(this));
     }
@@ -180,7 +189,6 @@ export class EonActorSheet extends ActorSheet {
                 void 0;
             }                
             else {
-                //_a.title = item.system.namn;
                 _a.render(true);  
             }
 		}
@@ -240,6 +248,22 @@ export class EonActorSheet extends ActorSheet {
 		    this.render();
             return;
         }		
+        if (source == "valmaende") {
+            let ruta = document.getElementById("fokus_varde");
+
+            const oldIndex = Number(dataset.value);
+            const newIndex = Number(ruta.value);
+
+            if (newIndex < oldIndex) {
+
+                actorData.system.egenskap.fokus.varde = newIndex;
+                actorData.system.egenskap.fokus.max = newIndex;
+                
+                await this.actor.update(actorData);
+                this.render();
+                return;                
+            }            
+        }
 	}
 
     _setupDotCounters(html) {
@@ -278,10 +302,6 @@ export class EonActorSheet extends ActorSheet {
 		const steps = parent.find(".resource-value");
 
         const fieldStrings = parent[0].dataset.name;
-
-        /* if (this.locked)
-            return;
-        } */
 
         if (index < 0 || index > steps.length) {
             return;

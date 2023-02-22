@@ -1,16 +1,40 @@
 {
     "egenskaper": {
+        "avvapnande": {
+            "namn": "Avväpnande"
+        },
         "begransad": {
             "namn": "Begränsad"
         },
+        "brutal": {
+            "namn": "Brutal"
+        },
+        "bracklig": {
+            "namn": "Bräcklig"
+        },
+        "bojlig": {
+            "namn": "Böjlig"
+        },   
+        "mattande": {
+            "namn": "Måttande"
+        },
         "obevapand": {
             "namn": "Obeväpnad"
+        },
+        "otymplig": {
+            "namn": "Otymplig"
+        },
+        "rackvidd": {
+            "namn": "Räckvidd"
         },
         "sargande": {
             "namn": "Sargande"
         },
         "snabb": {
             "namn": "Snabb"
+        },
+        "splittrande": {
+            "namn": "Splittrande"
         },
         "vadlig": {
             "namn": "Vådlig"
@@ -181,14 +205,427 @@
                 "egenskaper": [["begransad"], ["precis"], ["vadlig"]]
             }
         },
-        "kedjevapen": {            
-
+        "kedjevapen": {     
+            "petya": {
+                "namn": "Petya",
+                "attribut": "kedjevapen",
+                "enhand": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "stick": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "langd": 360,
+                "vikt": 3.5,
+                "egenskaper": [["avvapnande", 1], ["bojlig"], ["rackvidd", 2]]
+            },
+            "stridsgissel": {
+                "namn": "Stridsgissel",
+                "attribut": "kedjevapen",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 4,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 3,
+                    "bonus": 0
+                },
+                "stick": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "langd": 90,
+                "vikt": 2,
+                "egenskaper": [["bojlig"]]
+            } 
         },
         "klubbor": {
-
+            "genverklubba": {
+                "namn": "Genverklubba",
+                "attribut": "klubbor",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 4,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 3,
+                    "bonus": 2
+                },
+                "stick": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "langd": 120,
+                "vikt": 3.1,
+                "egenskaper": [["brutal"]]
+            },
+            "morgonstjarna": {
+                "namn": "Morgonstjärna",
+                "attribut": "klubbor",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 4,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 3,
+                    "bonus": 1
+                },
+                "stick": {
+                    "aktiv": true,
+                    "tvarde": 1,
+                    "bonus": 0
+                },
+                "langd": 110,
+                "vikt": 2.9,
+                "egenskaper": [["sargande"]]
+            },
+            "pak": {
+                "namn": "Påk",
+                "attribut": "klubbor",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 1,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 1,
+                    "bonus": 2
+                },
+                "stick": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "langd": 100,
+                "vikt": 1.5,
+                "egenskaper": [["bracklig"], ["mattande", 1]]
+            },
+            "storhammare": {
+                "namn": "Storhammare",
+                "attribut": "klubbor",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 6,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 3,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 4,
+                    "bonus": 0
+                },
+                "stick": {
+                    "aktiv": true,
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "langd": 140,
+                "vikt": 3.5,
+                "egenskaper": [["splittrande", 2], ["otymplig"]]
+            },
+            "stridshammare": {
+                "namn": "Stridshammare",
+                "attribut": "klubbor",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 3,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 3,
+                    "bonus": 0
+                },
+                "stick": {
+                    "aktiv": true,
+                    "tvarde": 1,
+                    "bonus": 2
+                },
+                "langd": 80,
+                "vikt": 2.5,
+                "egenskaper": [["splittrande", 1]]
+            },
+            "stridsklubba": {
+                "namn": "Stridsklubba",
+                "attribut": "klubbor",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 1,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 2,
+                    "bonus": 3
+                },
+                "stick": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "langd": 70,
+                "vikt": 2.5,
+                "egenskaper": [["mattande", 1]]
+            },
+            "tillhygge": {
+                "namn": "Tillhygge",
+                "attribut": "klubbor",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 1,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 1,
+                    "bonus": 0
+                },
+                "stick": {
+                    "aktiv": false,
+                    "tvarde": 0,
+                    "bonus": 0
+                },
+                "langd": 0,
+                "vikt": 0,
+                "egenskaper": [["begransad"], ["bracklig"]]
+            }
         },
         "spjut": {
-
+            "jaktspjut": {
+                "namn": "Jaktspjut",
+                "attribut": "spjut",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 5,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 3,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 1
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 2
+                },
+                "stick": {
+                    "aktiv": true,
+                    "tvarde": 3,
+                    "bonus": 2
+                },
+                "langd": 200,
+                "vikt": 3.5,
+                "egenskaper": [["bracklig"], ["rackvidd", 2], ["sargande"]]
+            },
+            "jargbila": {
+                "namn": "Jargbila",
+                "attribut": "spjut",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 7,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 3,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": true,
+                    "tvarde": 4,
+                    "bonus": 0
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 1,
+                    "bonus": 0
+                },
+                "stick": {
+                    "aktiv": true,
+                    "tvarde": 1,
+                    "bonus": 0
+                },
+                "langd": 260,
+                "vikt": 3.5,
+                "egenskaper": [["bracklig"], ["otymplig"], ["rackvidd", 3]]
+            },
+            "kamorspjut": {
+                "namn": "Kamorspjut",
+                "attribut": "spjut",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 3,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 1,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": true,
+                    "tvarde": 1,
+                    "bonus": 0
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 1
+                },
+                "stick": {
+                    "aktiv": true,
+                    "tvarde": 2,
+                    "bonus": 1
+                },
+                "langd": 150,
+                "vikt": 2,
+                "egenskaper": [["bracklig"], ["mattande", 1], ["rackvidd", 1]]
+            },
+            "stridsspjut": {
+                "namn": "Stridsspjut",
+                "attribut": "spjut",
+                "enhand": {
+                    "aktiv": true,
+                    "tvarde": 4,
+                    "bonus": 0
+                },
+                "tvahand": {
+                    "aktiv": true,
+                    "tvarde": 2,
+                    "bonus": 0
+                },
+                "hugg": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 1
+                },
+                "kross": {
+                    "aktiv": true,
+                    "tvarde": 0,
+                    "bonus": 1
+                },
+                "stick": {
+                    "aktiv": true,
+                    "tvarde": 3,
+                    "bonus": 0
+                },
+                "langd": 180,
+                "vikt": 2.2,
+                "egenskaper": [["bracklig"], ["rackvidd", 2]]
+            }
         },
         "stavar": {
 

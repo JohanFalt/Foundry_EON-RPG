@@ -2,9 +2,10 @@
     <div>
         <div class="clear">
             <div class="pullLeft large-headline">Närstridsvapen</div>
-            <div class="pullLeft"><i class="fa-solid fa-square-plus green"></i></div>
+            <div class="pullLeft pointer"><a class="item-create" title="Lägg till vapen" data-source="close-weapon"><i class="fa-solid fa-square-plus green"></i></a></div>
         </div>
         <div class="clear headline" style="line-height: 25px; width:100%;">
+            <div class="pullLeft skill-icon"></div>
             <div class="pullLeft" style="width: 100px;">Namn</div>
             <div class="pullLeft" style="width: 75px;">Färdighet</div>
             <div class="pullLeft" style="width: 50px;">1H</div>
@@ -19,18 +20,19 @@
     </div>
     <div>    
         {{#each actor.system.listdata.vapen.narstrid as |vapen key|}}
-        <div class="clear" style="line-height: 25px; width:100%;">
-            <div class="pullLeft" style="width: 100px;">{{vapen.name}}</div>
-            <div class="pullLeft weapon-value" style="width: 75px;">{{getDiceValue (getActorSkillGroupValue ../actor vapen.system.attribut "strid")}}</div>
-            <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.enhand.aktiv false)}}-{{else}}{{getDiceValue vapen.system.enhand}}{{/if}}</div>
-            <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.tvahand.aktiv false)}}-{{else}}{{getDiceValue vapen.system.tvahand}}{{/if}}</div>
-            <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.hugg.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.hugg ../actor.system.harleddegenskaper.grundskada)}}{{/if}}</div>
-            <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.kross.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.kross ../actor.system.harleddegenskaper.grundskada)}}{{/if}}</div>
-            <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.stick.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.stick ../actor.system.harleddegenskaper.grundskada)}}{{/if}}</div>
-            <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.langd 0)}}-{{else}}{{vapen.system.langd}}cm{{/if}}</div>
-            <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.vikt 0)}}-{{else}}{{vapen.system.vikt}}{{/if}}</div>
-            <div class="pullLeft">{{getPropertyList vapen.system.egenskaper}}</div>
-        </div>
+            <div class="clear" style="line-height: 25px; width:100%;">
+                <div class="pointer pullLeft skill-icon"><a class="item-edit" title="Editera vapen" data-source="weapon" data-itemid="{{vapen._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+                <div class="pullLeft" style="width: 100px;">{{vapen.system.namn}}</div>
+                <div class="pullLeft weapon-value" style="width: 75px;">{{getDiceValue (getActorSkillGroupValue ../actor vapen.system.attribut "strid")}}</div>
+                <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.enhand.aktiv false)}}-{{else}}{{getDiceValue vapen.system.enhand}}{{/if}}</div>
+                <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.tvahand.aktiv false)}}-{{else}}{{getDiceValue vapen.system.tvahand}}{{/if}}</div>
+                <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.hugg.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.hugg ../actor.system.harleddegenskaper.grundskada)}}{{/if}}</div>
+                <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.kross.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.kross ../actor.system.harleddegenskaper.grundskada)}}{{/if}}</div>
+                <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.stick.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.stick ../actor.system.harleddegenskaper.grundskada)}}{{/if}}</div>
+                <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.langd 0)}}-{{else}}{{vapen.system.langd}}cm{{/if}}</div>
+                <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.vikt 0)}}-{{else}}{{vapen.system.vikt}}{{/if}}</div>
+                <div class="pullLeft">{{getPropertyList vapen.system.egenskaper}}</div>
+            </div>
         {{/each}}    
     </div>
 </div>

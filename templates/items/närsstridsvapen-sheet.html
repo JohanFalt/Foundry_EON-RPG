@@ -1,0 +1,123 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+	<div class="sheet-item">
+		<header class="sheet-header">
+			
+		</header>
+		
+		<section class="item-body">
+			<div class="pullLeft">
+                {{#if (eq item.system.attribut "slagsmal")}}
+                    <img src="systems/eon-rpg/assets/img/fist.svg" class="item img-block" />
+                {{/if}}
+                {{#if (eq item.system.attribut "dolkar")}}
+                    <img src="systems/eon-rpg/assets/img/plain-dagger.svg" class="item img-block" />
+                {{/if}}
+                {{#if (eq item.system.attribut "kedjevapen")}}
+                    <img src="systems/eon-rpg/assets/img/flail.svg" class="item img-block" />
+                {{/if}}
+                {{#if (eq item.system.attribut "klubbor")}}
+                    <img src="systems/eon-rpg/assets/img/flanged-mace.svg" class="item img-block" />
+                {{/if}}
+                {{#if (eq item.system.attribut "spjut")}}
+                    <img src="systems/eon-rpg/assets/img/arrowhead.svg" class="item img-block" />
+                {{/if}}
+                {{#if (eq item.system.attribut "stavar")}}
+                    <img src="systems/eon-rpg/assets/img/bo.svg" class="item img-block" />
+                {{/if}}
+                {{#if (eq item.system.attribut "svard")}}
+                    <img src="systems/eon-rpg/assets/img/broadsword.svg" class="item img-block" />
+                {{/if}}				
+                {{#if (eq item.system.attribut "yxor")}}
+                    <img src="systems/eon-rpg/assets/img/battle-axe.svg" class="item img-block" />
+                {{/if}}	
+			</div>
+
+			<div class="item-area pullLeft">
+				<div class="item-top">
+					<div class="clear">
+						<div class="pullLeft item-headline">Namn</div>
+						<div class="pullLeft"><input name="system.namn" type="text" value="{{#if (eq data.system.namn '')}}{{data.name}}{{else}}{{data.system.namn}}{{/if}}"  /></div>
+					</div>
+					<div class="clear">
+						<div class="pullLeft item-headline">Attribut</div>
+                        <div class="pullLeft">
+                            <select name="system.attribut">
+                                <option value="">- Välj -</option>
+                                {{#select item.system.attribut}}
+                                    {{#each EON.CONFIG.vapengrupper as |vapengrupp key|}}
+                                        {{#if (eq vapengrupp.typ "narstridsvapen")}}
+                                            <option value="{{key}}">{{vapengrupp.namn}}</option>
+                                        {{/if}}
+                                    {{/each}}
+                                {{/select}}
+                            </select>
+                        </div>
+					</div>
+                    <div class="clear">
+						<div class="pullLeft item-headline">Typ</div>
+                        <div class="pullLeft">
+                            <select name="system.nyckel">
+                                <option value="">- Välj -</option>    
+                                {{#select item.name}}    
+                                    {{#each (getWeaponGroup EON.narstridsvapen item.system.attribut) as |vapen key|}}     
+                                        <option value="{{key}}">{{vapen.namn}}</option>               
+                                    {{/each}}
+                                {{/select}}
+                            </select>
+                        </div>
+					</div>
+
+                    <div class="clear">
+						<div class="pullLeft item-headline">1H</div>
+                        <div class="pullLeft"><input type="checkbox" {{#if data.system.enhand.aktiv}} checked {{/if}} /></div>
+                        <div class="pullLeft weapon-value"><input type="text" value="{{getDiceValue item.system.enhand}}" readonly /></div>
+					</div>
+                    <div class="clear">
+						<div class="pullLeft item-headline">2H</div>
+                        <div class="pullLeft"><input type="checkbox" {{#if data.system.tvahand.aktiv}} checked {{/if}} /></div>
+                        <div class="pullLeft weapon-value"><input type="text" value="{{getDiceValue item.system.tvahand}}" readonly /></div>
+					</div>
+
+                    <div class="clear">
+						<div class="pullLeft item-headline">Hugg</div>
+                        <div class="pullLeft"><input type="checkbox" {{#if data.system.hugg.aktiv}} checked {{/if}} /></div>
+                        <div class="pullLeft weapon-value"><input type="text" value="{{getDiceValue item.system.hugg}}" readonly /></div>
+					</div>
+                    <div class="clear">
+						<div class="pullLeft item-headline">Kross</div>
+                        <div class="pullLeft"><input type="checkbox" {{#if data.system.kross.aktiv}} checked {{/if}} /></div>
+                        <div class="pullLeft weapon-value"><input type="text" value="{{getDiceValue item.system.kross}}" readonly /></div>
+					</div>
+                    <div class="clear">
+						<div class="pullLeft item-headline">Stick</div>
+                        <div class="pullLeft"><input type="checkbox" {{#if data.system.stick.aktiv}} checked {{/if}} /></div>
+                        <div class="pullLeft weapon-value"><input type="text" value="{{getDiceValue item.system.stick}}" readonly /></div>
+					</div>
+
+					<div class="item-headline">Egenskaper</div>
+                    {{#each EON.egenskaper as |egenhet key|}}                        
+                        <div class="clear">
+                            <div class="pullLeft item-headline">{{egenhet.namn}}</div>
+                            <div class="pullLeft"><input type="checkbox" {{#if (checkProperty ../item.system.egenskaper key)}} checked {{/if}} /></div>
+                        </div>
+                    {{/each}}
+
+                    <div class="clear">
+						<div class="pullLeft item-headline">Längd</div>
+                        <div class="pullLeft item-headline weapon-value"><input name="system.langd" type="text" value="{{data.system.langd}}" /></div>
+					</div>
+                    <div class="clear">
+						<div class="pullLeft item-headline">Vikt</div>
+                        <div class="pullLeft item-headline weapon-value"><input name="system.vikt" type="text" value="{{data.system.vikt}}" /></div>
+					</div>
+                    <div class="clear">
+						<div class="pullLeft item-headline">Beskrivning</div>
+                        <div class="pullLeft item-headline"><input name="system.beskrivning" type="text" value="{{data.system.beskrivning}}" /></div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+	</div>
+</form>

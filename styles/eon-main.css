@@ -52,6 +52,7 @@
     min-height: 1200px;
 }
 
+.sheet-item,
 .sheet-character {
     font-family: var(--main-font);
 }
@@ -157,19 +158,7 @@ img.item {
     line-height: 23px;
 }
 
-i.tic-down,
-i.tic-top {
-    scale: 1.3;
-}
 
-.tic-container {    
-    display: flex; 
-    flex-direction: column;
-}
-
-.tic {
-    height: 5px;
-}
 
 .pointer:hover,
 .pointer:focus {
@@ -379,6 +368,10 @@ input.skill-value {
     margin-left: 15px;
 }
 
+.normalskill {
+    margin-left: 8px;
+}
+
 /* VAPEN */
 
 .weapon-value {
@@ -394,6 +387,79 @@ input.weapon-value {
     margin-left: 5px;
     margin-right: 5px;
     font-family: var(--main-font-siffror);
+}
+
+/* ITEMS */
+
+.item-headline {
+    line-height: 28px;
+    width: 150px;
+    height: 26px;
+}
+
+.item-top {
+    margin-bottom: 30px;
+}
+
+.item-bottom {
+    margin-top: 30px;
+}
+
+.tic-container {    
+    position: absolute;
+    top: 240px;
+    left: 110px;
+    width: 230px;
+    height: 45px;
+}
+
+.tic-top,
+.tic-bottom,
+.tic-right,
+.tic-left {
+    position: absolute;
+}
+
+.tic-up,
+.tic-down {
+    scale: 2;
+}
+
+.tic-right {
+    right: 5px;
+}
+
+.tic-left {
+    left: 5px;
+}
+
+.tic-top {
+    top: 5px;
+}
+
+.tic-bottom {
+    bottom: 5px;
+}
+
+.tic-area {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+}
+
+.img-block {
+    width: 100px;
+}
+
+.item-area {
+    margin-left: 10px;
+}
+
+.fardighetsvarde {
+    font-size: 40px;
+    position: absolute;
+    left: 30px;
+    top: -3px;
 }
 
 @media all and (max-height : 1200px) {

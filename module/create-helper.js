@@ -15,7 +15,7 @@ export default class CreateHelper {
             if (grupp == vapengrupp) {
                 for (const vapen in config.narstridsvapen[grupp]) {
                     if (vapen == vapennamn) {
-                        let itemData = await this._SkapaNarstridsvapenItem(game.EON.narstridsvapen[grupp][vapen], version);
+                        let itemData = await this._SkapaNarstridsvapenItem(game.EON.narstridsvapen[grupp][vapen], vapen, version);
                         await actor.createEmbeddedDocuments("Item", [itemData]);
                         break;
                     }
@@ -66,10 +66,10 @@ export default class CreateHelper {
         return itemData;
     }
 
-    static async _SkapaNarstridsvapenItem(vapen, version) {
+    static async _SkapaNarstridsvapenItem(vapen, nyckel, version) {
 
         let itemData = {
-            name: vapen.namn,
+            name: nyckel,
             type: "Närsstridsvapen",
             
             data: {
@@ -77,9 +77,11 @@ export default class CreateHelper {
                     skapad: true,
                     version: version
                 },
+                namn: vapen.namn,
                 enhand: vapen.enhand,
                 tvahand: vapen.tvahand,
                 attribut: vapen.attribut,
+                referens: vapen.referens,
                 hugg: vapen.hugg,
                 kross: vapen.kross,
                 stick: vapen.stick,

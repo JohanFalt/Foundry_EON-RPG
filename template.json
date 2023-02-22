@@ -134,7 +134,10 @@
                 "installningar":{
                     "skapad": false,
                     "version": ""
-                }
+                },
+                "attribut": "",
+                "referens": "",
+                "beskrivning": ""
             },
             "vapen": {
                 "attribut": "",
@@ -162,9 +165,6 @@
                 "svarlard": false,
                 "normal": true
             },
-            "nyckel": "",
-            "attribut": "",
-            "grupp": "",            
             "varde": {
                 "tvarde": 0,
                 "bonus": 0
@@ -175,6 +175,18 @@
 				"installningar",
                 "vapen"
 			],
+            "langd": 0,
+            "vikt": 0,
+            "enhand": {
+                "aktiv": true,
+                "tvarde": 0,
+                "bonus": 0
+            },
+            "tvahand": {
+                "aktiv": true,
+                "tvarde": 0,
+                "bonus": 0
+            },
             "hugg": {
                 "aktiv": true,
                 "tvarde": 0,
