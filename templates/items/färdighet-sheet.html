@@ -37,15 +37,15 @@
 					</div>   
 				</div>         
 				
-				<div class="clear item-bottom tic-container">
-					<div class="pullLeft">
+				<div class="clear item-bottom tic-container tic pointer" data-property="varde" data-limit="true">
+				<!-- 	<div class="pullLeft">
 						<div class="pointer tic tic-area tic-left tic-top" data-ticType="tvarde" data-ticDirection="up">
 							<i class="fa-solid fa-sort-up tic-up green"></i>
 						</div>
 						<div class="pointer tic tic-area tic-left tic-bottom" data-ticType="tvarde" data-ticDirection="down">
 							<i class="fa-solid fa-sort-down tic-down red"></i>
 						</div>
-					</div>
+					</div> -->
 
 					{{#if (eq data.system.varde.bonus 0)}}
 						<div class="pullLeft number-value-text fardighetsvarde">ob {{data.system.varde.tvarde}}T6</div>
@@ -57,14 +57,14 @@
 						<div class="pullLeft number-value-text fardighetsvarde">ob {{data.system.varde.tvarde}}T6-{{data.system.varde.bonus}}</div>
 					{{/if}}
 					
-					<div class="pullLeft">
+				<!-- 	<div class="pullLeft">
 						<div class="pointer tic tic-area tic-right tic-top" data-ticType="bonus" data-ticDirection="up">
 							<i class="fa-solid fa-sort-up tic-up green"></i>
 						</div>
 						<div class="pointer tic tic-area tic-right tic-bottom" data-ticType="bonus" data-ticDirection="down">
 							<i class="fa-solid fa-sort-down tic-down red"></i>
 						</div>
-					</div>
+					</div> -->
 				</div>
 				<!-- <div>Bonus</div> -->
 			</div>

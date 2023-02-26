@@ -40,6 +40,11 @@ Hooks.on("renderActorSheet", (sheet) => {
 });
 
 Hooks.on("renderItemSheet", (sheet) => { 
+    clearHTML(sheet);
+
+    if ((sheet.object.type.toLowerCase().replace(" ", "") == "närstridsvapen") || (sheet.object.type.toLowerCase().replace(" ", "") == "avståndsvapen")) {
+        sheet.element[0].classList.add("vapen");
+    }	
 });
 
 /* ------------------------------------ */
@@ -47,3 +52,7 @@ Hooks.on("renderItemSheet", (sheet) => {
 /* ------------------------------------ */
 Hooks.on("renderFormApplication", (sheet) => { 
 });
+
+function clearHTML(sheet) {
+	sheet.element[0].classList.remove("vapen");
+}

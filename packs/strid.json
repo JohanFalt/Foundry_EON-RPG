@@ -10,11 +10,11 @@
         },
         "brutal": {
             "namn": "Brutal",
-            "harniva": false
+            "harniva": true
         },
         "bracklig": { 
             "namn": "Bräcklig",
-            "harniva": false
+            "harniva": true
         },
         "bagpil": {
             "namn": "Bågpil",
@@ -23,9 +23,13 @@
         "bojlig": {
             "namn": "Böjlig",
             "harniva": false
-        },    
+        },         
         "dubbelfattning": {
             "namn": "Dubbelfattning",
+            "harniva": false
+        },
+        "fangar": {
+            "namn": "Fångar",
             "harniva": false
         },
         "genomslag_hugg": {
@@ -40,8 +44,16 @@
             "namn": "Giftränna",
             "harniva": false
         },
+        "kontrande": {
+            "namn": "Kontrande",
+            "harniva": false
+        },
         "kraftfull": {
             "namn": "Kraftfull",
+            "harniva": false
+        },
+        "lans": {
+            "namn": "Lans",
             "harniva": false
         },
         "lattsiktad": {
@@ -68,9 +80,17 @@
             "namn": "Otymplig",
             "harniva": false
         },
+        "pik": {
+            "namn": "Pik",
+            "harniva": false
+        },
         "precis": {
             "namn": "Precis",
             "harniva": true
+        },
+        "ryttarbage": {
+            "namn": "Ryttarbåge",
+            "harniva": false
         },
         "rackvidd": {
             "namn": "Räckvidd",
@@ -78,16 +98,24 @@
         },
         "sargande": {               
             "namn": "Sargande",
-            "harniva": false
+            "harniva": true
+        },
+        "skarande": {
+            "namn": "Skärande",
+            "harniva": true
         },
         "snabbdragen": {
             "namn": "Snabbdragen",
             "harniva": false
         },
+        "snabbskjuten": {
+            "namn": "Snabbskjuten",
+            "harniva": false
+        },
         "snabb": {
             "namn": "Snabb",
             "harniva": false
-        },       
+        },        
         "snarjande": {            
             "namn": "Snärjande",
             "harniva": true
@@ -95,7 +123,15 @@
         "splittrande": {
             "namn": "Splittrande",
             "harniva": true
-        },        
+        },
+        "svag": {
+            "namn": "Svag",
+            "harniva": false
+        },
+        "saker": {
+            "namn": "Säker",
+            "harniva": false
+        },
         "utmanovrerande": {
             "namn": "Utmanövrerande",
             "harniva": false
@@ -145,7 +181,7 @@
                 },
                 "langd": 0,
                 "vikt": 0,
-                "egenskaper": [["begransad"], ["obevapand"], ["sargande"], ["snabb"]]
+                "egenskaper": [["begransad"], ["obevapand"], ["sargande", 1], ["snabb"]]
             },    
             "obevapnad": {
                 "namn": "Obeväpnad",
@@ -375,7 +411,7 @@
                 },
                 "langd": 120,
                 "vikt": 3.1,
-                "egenskaper": [["brutal"]]
+                "egenskaper": [["brutal", 1]]
             },
             "morgonstjarna": {
                 "namn": "Morgonstjärna",
@@ -407,7 +443,7 @@
                 },
                 "langd": 110,
                 "vikt": 2.9,
-                "egenskaper": [["bracklig"], ["sargande"]]
+                "egenskaper": [["bracklig", 4], ["sargande", 1]]
             },
             "pak": {
                 "namn": "Påk",
@@ -439,7 +475,7 @@
                 },
                 "langd": 100,
                 "vikt": 1.5,
-                "egenskaper": [["bracklig"], ["mattande", 1]]
+                "egenskaper": [["bracklig", 3], ["mattande", 1]]
             },
             "storhammare": {
                 "namn": "Storhammare",
@@ -567,7 +603,7 @@
                 },
                 "langd": 0,
                 "vikt": 0,
-                "egenskaper": [["begransad"], ["bracklig"]]
+                "egenskaper": [["begransad"], ["bracklig", 3]]
             }
         },
         "spjut": {
@@ -601,7 +637,7 @@
                 },
                 "langd": 180,
                 "vikt": 3.0,
-                "egenskaper": [["bracklig"], ["rackvidd", 2], ["sargande"]]
+                "egenskaper": [["bracklig", 3], ["rackvidd", 2], ["sargande", 1]]
             },
             "jargbila": {
                 "namn": "Jargbila",
@@ -633,7 +669,7 @@
                 },
                 "langd": 260,
                 "vikt": 3.5,
-                "egenskaper": [["bracklig"], ["otymplig"], ["rackvidd", 3]]
+                "egenskaper": [["bracklig", 3], ["otymplig"], ["rackvidd", 3]]
             },
             "kamorspjut": {
                 "namn": "Kamorspjut",
@@ -665,7 +701,7 @@
                 },
                 "langd": 150,
                 "vikt": 2,
-                "egenskaper": [["bracklig"], ["mattande", 1], ["rackvidd", 1]]
+                "egenskaper": [["bracklig", 3], ["mattande", 1], ["rackvidd", 1]]
             },
             "stridsspjut": {
                 "namn": "Stridsspjut",
@@ -697,7 +733,7 @@
                 },
                 "langd": 180,
                 "vikt": 2.2,
-                "egenskaper": [["bracklig"], ["rackvidd", 2]]
+                "egenskaper": [["bracklig", 3], ["rackvidd", 2]]
             }
         },
         "stav": {
@@ -731,7 +767,7 @@
                 },
                 "langd": 150,
                 "vikt": 1.5,
-                "egenskaper": [["bracklig"], ["mattande", 1], ["snabb"]]
+                "egenskaper": [["bracklig", 3], ["mattande", 1], ["snabb"]]
             }
         },
         "svard": {
@@ -1055,7 +1091,7 @@
                 },
                 "langd": 50,
                 "vikt": 1,
-                "egenskaper": [["bracklig"]]
+                "egenskaper": [["bracklig", 3]]
             },
             "krell-kharz": {
                 "namn": "Krell-Kharz",
@@ -1242,7 +1278,7 @@
                 },
                 "langd": 95,
                 "vikt": 3.2,
-                "egenskaper": [["bracklig"], ["lattsiktad"], ["omladdning", 6]]
+                "egenskaper": [["bracklig", 2], ["lattsiktad"], ["omladdning", 6]]
             },
             "tungarmborst": {
                 "namn": "Tung armborst",
@@ -1265,7 +1301,7 @@
                 },
                 "langd": 100,
                 "vikt": 5.5,
-                "egenskaper": [["bracklig"], ["genomslag_stick", 10], ["omladdning", 14]]
+                "egenskaper": [["bracklig", 2], ["genomslag_stick", 10], ["omladdning", 14]]
             }
         },
         "bage": {
@@ -1290,7 +1326,7 @@
                 },
                 "langd": 120,
                 "vikt": 0.9,
-                "egenskaper": [["bracklig"], ["bagpil"]]
+                "egenskaper": [["bracklig", 2], ["bagpil"]]
             },
             "langbage": {
                 "namn": "Långbåge",
@@ -1313,7 +1349,7 @@
                 },
                 "langd": 180,
                 "vikt": 1.4,
-                "egenskaper": [["bracklig"], ["bagpil"]]
+                "egenskaper": [["bracklig", 2], ["bagpil"]]
             },
             "stridsbage": {
                 "namn": "Stridsbåge",
@@ -1336,7 +1372,7 @@
                 },
                 "langd": 150,
                 "vikt": 1.2,
-                "egenskaper": [["bracklig"], ["bagpil"]]
+                "egenskaper": [["bracklig", 2], ["bagpil"]]
             }
         },
         "kastvapen": {
@@ -1384,7 +1420,7 @@
                 },
                 "langd": 170,
                 "vikt": 0.6,
-                "egenskaper": [["bracklig"]]
+                "egenskaper": [["bracklig", 3]]
             },
             "kastyxa": {
                 "namn": "Kastyxa",
@@ -1407,7 +1443,7 @@
                 },
                 "langd": 65,
                 "vikt": 1.3,
-                "egenskaper": [["bracklig"]]
+                "egenskaper": [["bracklig", 3]]
             },
             "tillhygge": {
                 "namn": "Tillhygge",
@@ -1430,7 +1466,7 @@
                 },
                 "langd": 0,
                 "vikt": 0,
-                "egenskaper": [["begransad"], ["bracklig"]]
+                "egenskaper": [["begransad"], ["bracklig", 3]]
             }
         }
     },

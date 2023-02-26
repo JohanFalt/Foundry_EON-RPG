@@ -44,6 +44,8 @@ export async function Setup()
 			Object.assign(importData, fileData);
         }*/
 
+		const harStrid = false;
+
 		let importData = {};
 		let fileData = await fetch(`systems/eon-rpg/packs/karaktarsdrag.json`).then((response) => response.json());
 		Object.assign(importData, fileData);
@@ -60,8 +62,14 @@ export async function Setup()
 		fileData = await fetch(`systems/eon-rpg/packs/fardigheter.json`).then((response) => response.json());
 		Object.assign(importData, fileData);
 
-		fileData = await fetch(`systems/eon-rpg/packs/vapen.json`).then((response) => response.json());
-		Object.assign(importData, fileData);
+		if (!harStrid) {
+			fileData = await fetch(`systems/eon-rpg/packs/vapen.json`).then((response) => response.json());
+			Object.assign(importData, fileData);		
+		}
+		else {
+			fileData = await fetch(`systems/eon-rpg/packs/strid.json`).then((response) => response.json());
+			Object.assign(importData, fileData);		
+		}
 
 		return importData;		
     } catch(err) {
@@ -82,7 +90,12 @@ export const RegisterHandlebarsHelpers = function () {
 		dice = dice + "T6";
 
 		if ((value?.bonus != undefined) && (value?.bonus != 0)) {
-			dice = dice + "+" + value?.bonus;
+			if (value?.bonus > 0) {
+				return dice + "+" + value?.bonus;
+			}
+			if (value?.bonus < 0) {
+				return dice + value?.bonus;
+			}			
 		}
 
 		//return "ob" + dice;
@@ -99,10 +112,26 @@ export const RegisterHandlebarsHelpers = function () {
 		return vapengrupp[grupp];
 	});
 
+	// hämtar en särskild vapenskada
+	Handlebars.registerHelper("getWeaponDamageType", function(vapenskador, skada) {
+		if (skada == "") {
+			return "";
+		}
+
+		return vapenskador[skada];
+	});
+
+	// hämtar en särskild räckvidd
+	Handlebars.registerHelper("getRange", function(rackviddlista, rackvidd) {
+		if (rackvidd == "") {
+			return "";
+		}
+
+		return rackviddlista[rackvidd].namn;
+	});
+
 	// kontrollerar om en viss egenhet finns i listan
 	Handlebars.registerHelper("checkProperty", function(egenheter, namn) {
-		let exists = false;
-
 		for (const item of egenheter) {
 			if (item[0] == namn) {
 				return true;
@@ -112,7 +141,16 @@ export const RegisterHandlebarsHelpers = function () {
 		return false;
 	});
 
-	
+	// hämtar ut nivån för egenheten
+	Handlebars.registerHelper("getPropertyLevel", function(egenheter, namn) {
+		for (const item of egenheter) {
+			if (item[0] == namn) {
+				return item[1];
+			}
+		}
+
+		return 0;
+	});	
 
 	// lägger ihop två tärningspooler till en.
 	Handlebars.registerHelper("addDiceValues", function(fardighet1, fardighet2) {

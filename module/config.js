@@ -46,53 +46,78 @@ eon.fardighetgrupper = {
     ovriga: "Övriga färdigheter"
 }
 
+eon.vapenskador = {
+    hugg: "Hugg",
+    kross: "Kross",
+    stick: "Stick"
+}
+
+eon.vapenavstand = {
+    kort: {
+        namn: "Kort",
+        svarighet: 6
+    },
+    medellangt: {
+        namn: "Medellångt",
+        svarighet: 10
+    },
+    langt: {
+        namn: "Långt",
+        svarighet: 14
+    },
+    mycketlangt: {
+        namn: "Mycket långt",
+        svarighet: 18
+    }
+}
+
 eon.vapengrupper = {
     slagsmal: {
         namn: "Slagsmål",
         typ: "narstridsvapen"
     },
-    dolkar: {
-        namn:"Dolkar",
+    dolk: {
+        namn:"Dolk",
         typ: "narstridsvapen"
     },
     kedjevapen: {
         namn:"Kedjevapen",
         typ: "narstridsvapen"
     },
-    klubbor: {
-        namn:"Klubbor",
+    klubba: {
+        namn:"Klubba",
         typ: "narstridsvapen"
     },
     spjut: {
         namn:"Spjut",
         typ: "narstridsvapen"
     },
-    stavar: {
-        namn:"Stavar",
+    stava: {
+        namn:"Stav",
         typ: "narstridsvapen"
     },
     svard: {
         namn:"Svärd",
         typ: "narstridsvapen"
     },
-    yxor: {
-        namn:"Yxor",
+    yxa: {
+        namn:"Yxa",
         typ: "narstridsvapen"
     },
     armborst: {
         namn:"Armborst",
         typ: "avstandsvapen"
     },
-    bagar: {
-        namn:"Bågar",
+    bage: {
+        namn:"Båge",
         typ: "avstandsvapen"
     },
     kastvapen: {
         namn:"Kastvapen",
         typ: "avstandsvapen"
     },
-    skoldar: {
-        namn:"Sköldar",
+    skold: {
+        namn:"Sköld",
         typ: "forsvar"
     },
     manover: {

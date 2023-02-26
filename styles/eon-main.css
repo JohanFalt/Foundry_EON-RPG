@@ -47,6 +47,11 @@
     min-height: 500px;
 }
 
+.itemsheet.vapen:not(.minimized) {
+    min-width: 950px;
+    min-height: 1000px;
+}
+
 .rollperson:not(.minimized) {
     min-width: 800px;
     min-height: 1200px;
@@ -157,8 +162,6 @@ img.item {
 .attribute-value {
     line-height: 23px;
 }
-
-
 
 .pointer:hover,
 .pointer:focus {
@@ -321,7 +324,6 @@ input.attribute-value {
     text-align: center;
     margin-left: 5px;
     margin-right: 5px;
-    font-family: var(--main-font-siffror);
 }
 
 .avtrubbning-column {
@@ -338,7 +340,6 @@ input.skill-value {
     height: 23px;
     margin-left: 5px;
     margin-right: 5px;
-    font-family: var(--main-font-siffror);
 }
 
 .skill-area {
@@ -347,6 +348,7 @@ input.skill-value {
     flex-direction: column;
     max-height: 700px;
 } 
+
 
 .skill {
     flex-grow: 1;
@@ -374,19 +376,8 @@ input.skill-value {
 
 /* VAPEN */
 
-.weapon-value {
-    font-family: var(--main-font-siffror);
-}
-
-input.weapon-value {
-    border-top-style: none;
-    border-left-style: none;
-    width: 45px;
-    text-align: center;
-    height: 23px;
-    margin-left: 5px;
-    margin-right: 5px;
-    font-family: var(--main-font-siffror);
+.weapon-icon {
+    width: 20px;
 }
 
 /* ITEMS */
@@ -394,7 +385,7 @@ input.weapon-value {
 .item-headline {
     line-height: 28px;
     width: 150px;
-    height: 26px;
+    height: 30px;
 }
 
 .item-top {
@@ -413,14 +404,21 @@ input.weapon-value {
     height: 45px;
 }
 
-.tic-top,
+.property-area {
+    display: flex; 
+    flex-wrap: wrap;
+    flex-direction: column;
+    max-height: 400px;
+}
+
+/* .tic-top,
 .tic-bottom,
 .tic-right,
 .tic-left {
     position: absolute;
-}
+} */
 
-.tic-up,
+/* .tic-up,
 .tic-down {
     scale: 2;
 }
@@ -431,8 +429,8 @@ input.weapon-value {
 
 .tic-left {
     left: 5px;
-}
-
+} */
+/* 
 .tic-top {
     top: 5px;
 }
@@ -440,12 +438,12 @@ input.weapon-value {
 .tic-bottom {
     bottom: 5px;
 }
-
-.tic-area {
+ */
+/* .tic-area {
     width: 20px;
     height: 20px;
     text-align: center;
-}
+} */
 
 .img-block {
     width: 100px;
@@ -453,6 +451,7 @@ input.weapon-value {
 
 .item-area {
     margin-left: 10px;
+    width: calc(95% - 100px);
 }
 
 .fardighetsvarde {
@@ -462,14 +461,35 @@ input.weapon-value {
     top: -3px;
 }
 
+.weapon-value {
+    width: 45px;
+    line-height: 20px;
+    background-color: var(--back-color-inputs);
+    border-radius: 3px;
+    border-bottom: 1px solid black;
+    height: 20px;
+    margin: 3px 5px;
+    text-align: center;
+}
+
 @media all and (max-height : 1200px) {
     .rollperson:not(.minimized) {
+        min-height: 400px;
+    }
+
+    .itemsheet.vapen:not(.minimized),
+    .itemsheet:not(.minimized) {
         min-height: 400px;
     }
 }
 
 @media all and (max-width : 1280px) {
     .rollperson:not(.minimized) {
+        min-width: 400px;
+    }
+
+    .itemsheet.vapen:not(.minimized),
+    .itemsheet:not(.minimized) {
         min-width: 400px;
     }
 }

@@ -213,7 +213,7 @@ export async function RollDice(diceRoll) {
         text = `<div class="tray-roll-area"><h2>Slår ${number}${type}-${bonus}</h2></div><div class="tray-dice-row">${label}</div>`;
     }
 
-    if (numDices > 1) {
+    if (numDices > 0) {
         text += `<div class="tray-result-area">Totalt: ${result}</div>`;
     }
 

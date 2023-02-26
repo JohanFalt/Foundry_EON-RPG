@@ -94,7 +94,7 @@ export class EonActorSheet extends ActorSheet {
             if (item.type == "Färdighet") {
                 data.actor.system.listdata.fardigheter[item.system.grupp].push(item);
             }        
-            if (item.type == "Närsstridsvapen") {    
+            if (item.type == "Närstridsvapen") {    
                 data.actor.system.listdata.vapen.narstrid.push(item);
             }
             if (item.type == "Avståndsvapen") {    
@@ -146,7 +146,7 @@ export class EonActorSheet extends ActorSheet {
         // item handling
         html
 			.find(".item-create")
-			.click(this._onItemEdit.bind(this));
+			.click(this._onItemCreate.bind(this));
 
         html
 			.find(".item-edit")
@@ -159,17 +159,71 @@ export class EonActorSheet extends ActorSheet {
 		const element = event.currentTarget;
 		const dataset = element.dataset;
 
+        if (dataset.source == "attribute") {
+            DialogHelper.AttributeDialog(this.actor, dataset.type, dataset.key);
+
+            return;
+        }
+
         if (dataset.source == "skill") {
             DialogHelper.SkillDialog(event, this.actor);
 
 			return;
         }      
         
-        console.log(dataset);
 		ui.notifications.error("Slag saknar funktion");
-
-		return;
 	}
+
+    async _onItemCreate(event) {
+		event.preventDefault();
+
+		const header = event.currentTarget;
+		const type = header.dataset.type;
+        const version = game.data.system.version;
+        let found = false;
+
+		let itemData;        
+
+		if (type == "närstridsvapen") {
+            found = true;
+
+			itemData = {
+                name: "Nytt närstridsvapen",
+                type: "Närstridsvapen",
+                
+                data: {
+                    installningar: {
+                        skapad: true,
+                        version: version
+                    }                    
+                }
+            };
+		}
+
+        if (type == "avståndsvapen") {
+            found = true;
+
+			itemData = {
+                name: "Nytt avståndsvapen",
+                type: "Avståndsvapen",
+                
+                data: {
+                    installningar: {
+                        skapad: true,
+                        version: version
+                    }                    
+                }
+            };
+		}        
+
+        if (found) {
+            await this.actor.createEmbeddedDocuments("Item", [itemData]);
+
+            return;
+        }
+
+        ui.notifications.error("Typen som skall skapas saknar funktion");
+    }
 
     async _onItemEdit(event) {
 		var _a;

@@ -69,15 +69,15 @@ export default class CreateHelper {
     static async _SkapaNarstridsvapenItem(vapen, nyckel, version) {
 
         let itemData = {
-            name: nyckel,
-            type: "Närsstridsvapen",
+            name: vapen.namn,
+            type: "Närstridsvapen",
             
             data: {
                 installningar: {
                     skapad: true,
                     version: version
                 },
-                namn: vapen.namn,
+                typ: nyckel,
                 enhand: vapen.enhand,
                 tvahand: vapen.tvahand,
                 attribut: vapen.attribut,

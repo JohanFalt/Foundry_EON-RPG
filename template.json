@@ -125,7 +125,7 @@
     "Item": {
         "types": [
             "Färdighet",
-            "Närsstridsvapen",
+            "Närstridsvapen",
             "Avståndsvapen",
             "Försvar"
         ],
@@ -133,8 +133,10 @@
             "installningar": {
                 "installningar":{
                     "skapad": false,
-                    "version": ""
+                    "version": "",
+                    "borttagen": false
                 },
+                "typ": "",
                 "attribut": "",
                 "referens": "",
                 "beskrivning": ""
@@ -170,23 +172,11 @@
                 "bonus": 0
             }
         },
-        "Närsstridsvapen": {
+        "Närstridsvapen": {
             "templates": [
 				"installningar",
                 "vapen"
 			],
-            "langd": 0,
-            "vikt": 0,
-            "enhand": {
-                "aktiv": true,
-                "tvarde": 0,
-                "bonus": 0
-            },
-            "tvahand": {
-                "aktiv": true,
-                "tvarde": 0,
-                "bonus": 0
-            },
             "hugg": {
                 "aktiv": true,
                 "tvarde": 0,
@@ -209,7 +199,7 @@
                 "vapen"
 			],
             "rackvidd": "",
-            "typ": "",
+            "skadetyp": "",
             "skada": {
                 "tvarde": 0,
                 "bonus": 0

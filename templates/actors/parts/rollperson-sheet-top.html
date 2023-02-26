@@ -13,8 +13,8 @@
 
             {{#each EON.CONFIG.grundegenskaper as |attribute key|}}            
                 <div class="clear">
-                    <div class="pullLeft caption">{{attribute.namn}}</div>
-                    <div class="pullLeft attribute-value">
+                    <div class="vrollable pullLeft caption" data-source="attribute" data-type="grundegenskaper" data-key="{{key}}">{{attribute.namn}}</div>
+                    <div class="pullLeft attribute-value number-value-text">
                         <div class="pullLeft">
                             <input class="attribute-value" type="text" value="{{getDiceValue (getActorAttribute ../data key)}}" readonly />
                         </div>
@@ -28,32 +28,32 @@
                 <div class="attribute-area">Härledda attribut</div>
             </div>
             <div class="clear">
-                <div class="pullLeft caption">Förflyttning</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.forflyttning}}" readonly /></div>
+                <div class="vrollable pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="forflyttning">Förflyttning</div>
+                <div class="pullLeft attribute-value number-value-text"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.forflyttning}}" readonly /></div>
             </div>
             <div class="clear">
-                <div class="pullLeft caption">Intryck</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.intryck}}" readonly /></div>
+                <div class="vrollable pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="intryck">Intryck</div>
+                <div class="pullLeft attribute-value number-value-text"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.intryck}}" readonly /></div>
             </div>
             <div class="clear">
-                <div class="pullLeft caption">Kroppsbyggnad</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.kroppsbyggnad}}" readonly /></div>
+                <div class="vrollable pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="kroppsbyggnad">Kroppsbyggnad</div>
+                <div class="pullLeft attribute-value number-value-text"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.kroppsbyggnad}}" readonly /></div>
             </div>
             <div class="clear">
-                <div class="pullLeft caption">Reaktion</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.reaktion}}" readonly /></div>
+                <div class="vrollable pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="reaktion">Reaktion</div>
+                <div class="pullLeft attribute-value number-value-text"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.reaktion}}" readonly /></div>
             </div>
             <div class="clear">
-                <div class="pullLeft caption">Självkontroll</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.sjalvkontroll}}" readonly /></div>
+                <div class="vrollable pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="sjalvkontroll">Självkontroll</div>
+                <div class="pullLeft attribute-value number-value-text"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.sjalvkontroll}}" readonly /></div>
             </div>
             <div class="clear">
-                <div class="pullLeft caption">Vaksamhet</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.vaksamhet}}" readonly /></div>
+                <div class="vrollable pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="vaksamhet">Vaksamhet</div>
+                <div class="pullLeft attribute-value number-value-text"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.vaksamhet}}" readonly /></div>
             </div>
             <div class="clear">
-                <div class="pullLeft caption">Livskraft</div>
-                <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.livskraft}}" readonly /></div>
+                <div class="vrollable pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="livskraft">Livskraft</div>
+                <div class="pullLeft attribute-value number-value-text"><input class="attribute-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.livskraft}}" readonly /></div>
             </div>            
         </div>  
 
@@ -68,7 +68,7 @@
             </div>
             <div class="clear">
                 <div class="pullLeft caption">Välmående</div>
-                <div class="pullLeft attribute-value"><input id="fokus_varde" name="system.egenskap.fokus.max" class="attribute-value inputdata" type="number" value="{{actor.system.egenskap.fokus.max}}" min="0" max="10" data-source="valmaende" data-value="{{actor.system.egenskap.fokus.varde}}" /></div>
+                <div class="pullLeft attribute-value number-value-text"><input id="fokus_varde" name="system.egenskap.fokus.max" class="attribute-value inputdata" type="number" value="{{actor.system.egenskap.fokus.max}}" min="0" max="10" data-source="valmaende" data-value="{{actor.system.egenskap.fokus.varde}}" /></div>
             </div>
             <div class="headline">
                 <div class="attribute-area">Avtrubbning</div>
@@ -109,6 +109,11 @@
                     </div>
                 </div>
             </div>
+            <div class="headline">
+                <div class="attribute-area">Utmattning</div>
+            </div>
+            <div class="attribute-value number-value-text"><input class="attribute-value" type="text" value="0" readonly /></div>
+            
         </div>
     </div>
 </div>

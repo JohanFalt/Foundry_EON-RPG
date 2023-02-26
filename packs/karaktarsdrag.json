@@ -1,5 +1,9 @@
 {
     "karaktarsdrag": {
+        "droger" : {
+            "namn": "Droger",
+            "referens": "s144"
+        },
         "aggression" : {
             "namn": "Aggression",
             "referens": "s144"
@@ -7,11 +11,7 @@
         "arrogans" : {
             "namn": "Arrogans",
             "referens": "s144"
-        },
-        "droger" : {
-            "namn": "Droger",
-            "referens": "s144"
-        },
+        },        
         "dupera" : {
             "namn": "Dupera",
             "referens": "s144"
