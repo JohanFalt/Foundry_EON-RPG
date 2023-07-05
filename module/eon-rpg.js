@@ -95,7 +95,7 @@ Hooks.once("ready", async () => {
         if ((installedVersion !== systemVersion || installedVersion === null)) {
             if (_compareVersion(installedVersion, systemVersion)) {        
                 await doNotice(systemVersion);
-                //game.settings.set("eon-rpg", "systemVersion", systemVersion);
+                game.settings.set("eon-rpg", "systemVersion", systemVersion);
             }
         }
     } 
