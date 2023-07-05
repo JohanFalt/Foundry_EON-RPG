@@ -1,8 +1,10 @@
+import CreateHelper from "./create-helper.js";
+
 export class EonItemSheet extends ItemSheet {
 	
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
-			classes: ["itemsheet"]
+			classes: ["EON itemsheet"]
 		});
 	}
 
@@ -11,8 +13,6 @@ export class EonItemSheet extends ItemSheet {
 
 		this.isCharacter = false;	
 		this.isGM = game.user.isGM;			
-
-		console.log("WoD | Item Sheet constructor");
 	}
 
 	/** @override */
@@ -33,7 +33,7 @@ export class EonItemSheet extends ItemSheet {
 			}
 		}
 
-		return "Editera " + title;
+		return "Editera " + title.toLowerCase();
 	}
 
 	/** @override */
@@ -41,10 +41,11 @@ export class EonItemSheet extends ItemSheet {
 		const itemData = duplicate(this.item);		
 
 		if (!itemData.system.installningar.skapad) {
-			itemData.system.installningar.version = game.data.system.version;
+			const version = game.data.system.version;
+
+			itemData.system.installningar.version = version;
 			itemData.system.installningar.skapad = true;
-			itemData.name
-			this.item.update(itemData);
+			await this.item.update(itemData);
 		}
 
 		const data = await super.getData();
@@ -81,7 +82,6 @@ export class EonItemSheet extends ItemSheet {
 		html
             .find('.tic')
 			.click(this._ticValueUp.bind(this));
-            //.click(this._ticValue.bind(this));
 
 		html
 			.find('.tic')
@@ -94,6 +94,10 @@ export class EonItemSheet extends ItemSheet {
 		html
             .find('.svarighet')
             .click(this._setSvarighet.bind(this));	
+
+		html
+			.find('.item-property')
+			.click(this._setValue.bind(this));	
 
 		html
             .find('.weapon-property')
@@ -125,21 +129,26 @@ export class EonItemSheet extends ItemSheet {
 		const dataset = element.dataset;
         const itemid = dataset.itemid;
 		const item = this.actor.getEmbeddedDocument("Item", itemid);
+		const namn = (item.name == "ny" ? item.system.namn : item.name);
 
-        if (!item)
+        if (!item) {
             return;
+		}
 
         const performDelete = await new Promise((resolve) => {
+			
+
             Dialog.confirm({
-                title: "Tar bort " + item.name,
+                title: "Tar bort " + namn,
                 yes: () => resolve(true),
                 no: () => resolve(false),
-                content: "Är du säker du vill ta bort " + item.name,
+                content: "Är du säker du vill ta bort " + namn,
             });
         });
 
-        if (!performDelete)
+        if (!performDelete) {
             return;
+		}
 
 		await this.actor.deleteEmbeddedDocuments("Item", [itemid]);        
 	}
@@ -152,17 +161,11 @@ export class EonItemSheet extends ItemSheet {
 
 		const itemData = duplicate(this.item);
 		const property = dataset.property;
-		const limit = dataset.limit == "true" ? true : false;
 
 		itemData.system[property].bonus += 1;
 	
-		if ((itemData.system[property].bonus > 3) && ((itemData.system[property].tvarde < 5) || (!limit)))  {
+		if (itemData.system[property].bonus > 3)  {
 			itemData.system[property].tvarde += 1;
-			itemData.system[property].bonus = 0;
-		}
-
-		if ((itemData.system[property].tvarde >= 5) && (limit)) {
-			itemData.system[property].tvarde = 5;
 			itemData.system[property].bonus = 0;
 		}
 
@@ -222,6 +225,21 @@ export class EonItemSheet extends ItemSheet {
 		this.render();
 	}
 
+	async _setValue(event) {
+		event.preventDefault();
+
+		const element = event.currentTarget;
+		const dataset = element.dataset;
+		const itemData = duplicate(this.item);
+
+		if (dataset.type == "boolean") {
+			itemData.system[dataset.field] = !itemData.system[dataset.field];
+		}
+
+		await this.item.update(itemData);
+		this.render();
+	}
+
 	async _setVapenEgenhet(event) {
 		event.preventDefault();
 		const element = event.currentTarget;
@@ -232,13 +250,10 @@ export class EonItemSheet extends ItemSheet {
 
 		el.find(".weapon-property").each(function () {
 			if ($(this).is(':checked')) {
-				//const sibling = $(this).siblings();							
 				const sibling = $(this).parent().siblings();
 				let newPropery = [];
 
 				if (sibling.length > 0) {
-					//if (Number.isInteger(parseInt(sibling[0].value))) {
-						//newPropery = [this.value, parseInt(sibling[0].value)];
 					if (Number.isInteger(parseInt(sibling[0].children[0].value))) {
 						newPropery = [this.value, parseInt(sibling[0].children[0].value)];
 						
@@ -278,7 +293,7 @@ export class EonItemSheet extends ItemSheet {
 			const itemData = duplicate(this.item);
 			itemData.name = vapen.namn;
 			itemData.system.typ = vapenmall;
-			itemData.system.attribute = vapen.attribut;
+			itemData.system.attribut = vapen.attribut;
 			itemData.system.enhand = vapen.enhand;
 			itemData.system.tvahand = vapen.tvahand;
 			itemData.system.hugg = vapen.hugg;
@@ -301,7 +316,7 @@ export class EonItemSheet extends ItemSheet {
 			const itemData = duplicate(this.item);
 			itemData.name = vapen.namn;
 			itemData.system.typ = vapenmall;
-			itemData.system.attribute = vapen.attribut;
+			itemData.system.attribut = vapen.attribut;
 			itemData.system.enhand = vapen.enhand;
 			itemData.system.tvahand = vapen.tvahand;
 			itemData.system.rackvidd = vapen.rackvidd;
@@ -310,6 +325,74 @@ export class EonItemSheet extends ItemSheet {
 			itemData.system.langd = vapen.langd;
 			itemData.system.vikt = vapen.vikt;
 			itemData.system.egenskaper = vapen.egenskaper;
+			await this.item.update(itemData);
+			this.render();
+
+			return;
+		}
+
+		if (source == "shield") {
+			const typ = this.item.system.attribut;
+			const vapenmall = element.value;
+			const vapen = game.EON.forsvar[typ][vapenmall];
+
+			const itemData = duplicate(this.item);
+			itemData.name = vapen.namn;
+			itemData.system.typ = vapenmall;
+			itemData.system.attribut = vapen.attribut;
+			itemData.system.enhand = vapen.enhand;
+			itemData.system.tvahand = vapen.tvahand;
+			itemData.system.narstrid = vapen.narstrid;
+			itemData.system.avstand = vapen.avstand;
+			itemData.system.skydd = vapen.skydd;
+			itemData.system.skadetyp = vapen.skadetyp;
+			itemData.system.skada = vapen.skada;
+			itemData.system.langd = vapen.langd;
+			itemData.system.vikt = vapen.vikt;
+			itemData.system.egenskaper = vapen.egenskaper;
+			await this.item.update(itemData);
+			this.render();
+
+			return;
+		}
+
+		if (source == "armor") {
+			const rustningsmall = element.value;
+			let hugg = 0;
+			let kross = 0;
+			let stick = 0;
+			let belastning = 0;
+			let namn = "";
+
+			const typ = dataset.typ;
+			const itemData = duplicate(this.item);
+			itemData.system.belastning = 0;
+			itemData.system.tacker = [];
+
+			if (rustningsmall != "") {
+				const rustning = game.EON.forsvar.rustningsmaterial[rustningsmall];
+				hugg = rustning.hugg;
+				kross = rustning.kross;
+				stick = rustning.stick;
+				belastning = rustning.belastning * game.EON.CONFIG.kroppsdelsfaktor[typ];
+				namn = rustning.namn;
+			}
+
+			for (const del of itemData.system.kroppsdel) {
+				if (del.typ == typ) {
+					del.material = rustningsmall;
+					del.hugg = hugg;
+					del.kross = kross;
+					del.stick = stick;
+					del.belastning = belastning;
+				}
+
+				itemData.system.belastning += del.belastning;
+				if (del.material != "") {
+					itemData.system.tacker.push(del.namn);
+				}
+			}
+
 			await this.item.update(itemData);
 			this.render();
 

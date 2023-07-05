@@ -2,31 +2,48 @@
     {{#each EON.CONFIG.fardighetgrupper as |grupp key|}}
         <div class="skill clear">
             <div class="pullLeft skill-headline headline">{{grupp}}</div>
-            <div class="pullLeft number-value-text"><input name="system.fardigheter.{{key}}.erf" title="Erfarenhet" class="skill-value" type="number" value="{{getActorSkillGroupExp ../actor.system.fardigheter key}}" min="0" max="50" /></div>
+            <div class="pullLeft number-value-text floating-label-group">
+                <input class="skill-value editable-box skill-label" name="system.fardigheter.{{key}}.erf" type="text" value="{{getActorSkillGroupExp ../actor.system.fardigheter key}}" data-dtype="Number" />
+                <span class="floating-label skill-label">Erfarenhet</span>
+            </div>
+
             {{#if (eqAny key "mystik" "sprak" "ovriga")}}
-                <div class="pullLeft pointer"><i class="fa-solid fa-square-plus green"></i></div>
+                <div class="pullLeft pointer">
+                    <a class="item-create" title="Lägg till färdighet" data-type="färdighet" data-subtype="{{key}}">
+                        <i class="fa-solid fa-square-plus green"></i>
+                    </a>
+                </div>
             {{/if}}
         </div>
         {{#each (getActorSkillGroup ../actor.system.listdata.fardigheter key) as |fardighet key|}}
             <div class="skill clear">
-                <div class="pullLeft" >
-                    {{#if fardighet.system.installningar.lattlard}}
-                        <div style="width: 8px;"><i class="fa-solid fa-sort-up green"></i></div>
-                    {{/if}}
-                    {{#if fardighet.system.installningar.svarlard}}
-                        <div style="width: 8px; line-height: 18px;"><i class="fa-solid fa-sort-down red"></i></div>
-                    {{/if}}
-                </div>
-                <div class="vrollable pullLeft caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.system.namn}}</div>                
-                <div class="pullLeft attribute-value number-value-text">                    
-                    <div class="pullLeft">
-                        <input class="skill-value" type="text" value="{{getDiceValue fardighet.system.varde}}" readonly data-type="fardigheter" data-group="{{fardighet.system.grupp}}" data-source="{{fardighet.name}}" />
-                    </div>                    
-                </div>
-                <div class="pullLeft skill-short">({{getAttributeShortName fardighet.system.attribut}})</div>
-                <div class="pointer pullLeft skill-icon">
-                    <a class="item-edit" title="Editera färdighet" data-source="skill" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
-                </div>
+                {{#if (eq fardighet.type "Språk")}}   
+                    <div class="pullLeft caption normalskill">{{fardighet.system.namn}}</div>
+                    <div class="resource-box pullLeft">
+                        <span class="resource-value {{#if fardighet.system.talabrytning}}active{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="talabrytning" data-type="boolean" title="Talar med brytning"></span>
+                        <span class="resource-value {{#if fardighet.system.talaflytande}}active{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="talaflytande" data-type="boolean" title="Talar flytande"></span>
+                        <span class="resource-value {{#if fardighet.system.lasaskriva}}active{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="lasaskriva" data-type="boolean" title="Kan läsa och skriva"></span>
+                    </div>
+                    <div class="pointer pullLeft skill-icon">
+                        <a class="item-edit" title="Editera språk" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
+                    </div>
+                {{else}}
+                    <div class="pullLeft" >
+                        {{#if fardighet.system.installningar.lattlard}}
+                            <div style="width: 8px;"><i class="fa-solid fa-sort-up green"></i></div>
+                        {{/if}}
+                        {{#if fardighet.system.installningar.svarlard}}
+                            <div style="width: 8px; line-height: 18px;"><i class="fa-solid fa-sort-down red"></i></div>
+                        {{/if}}
+                    </div>
+                    <div class="vrollable pullLeft caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.system.namn}}</div> 
+                           
+                    <div class="pullLeft dice-value tic pointer" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
+                    <div class="pullLeft skill-short">({{getAttributeShortName fardighet.system.attribut}})</div>
+                    <div class="pointer pullLeft skill-icon">
+                        <a class="item-edit" title="Editera färdighet" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
+                    </div>
+                {{/if}}
             </div>
         {{/each}}
     {{/each}}

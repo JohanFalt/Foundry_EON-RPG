@@ -1,0 +1,55 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+	<div class="sheet-item">
+		<header class="sheet-header">			
+			
+		</header>
+		
+		<section class="item-body">
+
+			<div style="display: flex;">
+				<div class="pullLeft">
+					<img src="{{EON.CONFIG.ikoner.sprak}}" class="item img-block" />
+				</div>
+
+				<div class="item-area pullLeft">
+					<div class="item-top">
+						<div class="number-value-text floating-label-group">
+							<input class="text-value editable" name="system.namn" type="text" value="{{data.system.namn}}" data-dtype="String" autocomplete="off" autofocus required />
+							<span class="floating-label">Namn</span>
+						</div>
+						
+						<div class="clear">
+							<div class="pullLeft item-headline">Referens</div>
+							<div class="pullLeft item-headline">{{data.system.referens}}</div>
+						</div>
+					</div>
+
+					<div class="item-mid">
+						<div class="clear">
+							<div class="pullLeft item-headline">Talar med brytning</div>
+							<div class="pullLeft"><input class="item-property pointer item-headline" type="checkbox" data-type="boolean" data-field="talabrytning" {{#if data.system.talabrytning}} checked {{/if}} data-dtype="Boolean" /></div>
+						</div>
+						<div class="clear">
+							<div class="pullLeft item-headline">Talar flytande</div>
+							<div class="pullLeft"><input class="item-property pointer item-headline" type="checkbox" data-type="boolean" data-field="talaflytande" {{#if data.system.talaflytande}} checked {{/if}} data-dtype="Boolean" /></div>
+						</div>   
+                        <div class="clear">
+							<div class="pullLeft item-headline">Kan läsa och skriva</div>
+							<div class="pullLeft"><input class="item-property pointer item-headline" type="checkbox" data-type="boolean" data-field="lasaskriva" {{#if data.system.lasaskriva}} checked {{/if}} data-dtype="Boolean" /></div>
+						</div>
+					</div>         
+				</div>
+
+				{{#if hasActor}}
+					{{#if (eq item.name "ny")}}
+						<div class="pointer red item-delete" style="text-align: right;" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
+					{{/if}}
+				{{/if}}
+
+			</div>
+			
+		</section>
+
+	</div>
+</form>

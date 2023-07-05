@@ -1,3 +1,5 @@
+import DiceHelper from "./dice-helper.js";
+
 export default class CalculateHelper {
     static async hanteraBerakningar(actorData) {
 
@@ -14,5 +16,58 @@ export default class CalculateHelper {
             actorData.system.egenskap.fokus.varde = parseInt(actorData.system.egenskap.fokus.max);
         }
 
+        // Utmattningberäkning
+        if (!Number.isInteger(actorData.system.skada.utmattning.grund)) {
+            actorData.system.skada.utmattning.grund = 0;
+        }
+        if (!Number.isInteger(actorData.system.skada.infektion)) {
+            actorData.system.skada.infektion = 0;
+        }
+
+        const grundUtmattningRustning = this._beraknaRustningBelastning(actorData.items.filter(rustning => rustning.type === "Rustning" && rustning.system.installningar.buren));
+
+        actorData.system.skada.utmattning.grund = actorData.system.skada.infektion + grundUtmattningRustning;
+
+        if (!Number.isInteger(actorData.system.skada.utmattning.varde)) {
+            actorData.system.skada.utmattning.varde = parseInt(actorData.system.skada.utmattning.grund);
+        }
+        if (actorData.system.skada.utmattning.varde < actorData.system.skada.utmattning.grund) {
+            actorData.system.skada.utmattning.varde = parseInt(actorData.system.skada.utmattning.grund);
+        }
+    }
+
+    static async BeraknaHarleddEgenskaper(actorData) {
+        actorData.system.harleddegenskaper.forflyttning = await DiceHelper.BeraknaMedelvarde(actorData.system.grundegenskaper.rorlighet, actorData.system.grundegenskaper.talighet);
+        actorData.system.harleddegenskaper.intryck = await DiceHelper.BeraknaMedelvarde(actorData.system.grundegenskaper.utstralning, actorData.system.grundegenskaper.visdom);
+        actorData.system.harleddegenskaper.kroppsbyggnad = await DiceHelper.BeraknaMedelvarde(actorData.system.grundegenskaper.styrka, actorData.system.grundegenskaper.talighet);
+        actorData.system.harleddegenskaper.reaktion = await DiceHelper.BeraknaMedelvarde(actorData.system.grundegenskaper.rorlighet, actorData.system.grundegenskaper.uppfattning);
+        actorData.system.harleddegenskaper.sjalvkontroll = await DiceHelper.BeraknaMedelvarde(actorData.system.grundegenskaper.psyke, actorData.system.grundegenskaper.vilja);
+        actorData.system.harleddegenskaper.vaksamhet = await DiceHelper.BeraknaMedelvarde(actorData.system.grundegenskaper.psyke, actorData.system.grundegenskaper.uppfattning);
+        actorData.system.harleddegenskaper.livskraft = await DiceHelper.BeraknaLivskraft(actorData.system.grundegenskaper.styrka, actorData.system.grundegenskaper.talighet);
+        actorData.system.harleddegenskaper.grundskada = await DiceHelper.BeraknaGrundskada(actorData.system.grundegenskaper.styrka);
+        actorData.system.harleddegenskaper.grundrustning = await DiceHelper.BeraknaGrundrustning(actorData.system.grundegenskaper.styrka, actorData.system.grundegenskaper.talighet);
+        actorData.system.harleddegenskaper.initiativ = await DiceHelper.BeraknaInitiativ(actorData);        
+    }
+
+    static _beraknaRustningBelastning(rustning) {
+        let grundUtmattning = 0;
+
+        for (const item of rustning) {
+            if (item.system.belastning < 9) {
+                grundUtmattning = 0;
+            }
+            else if ((item.system.belastning >= 9) || (item.system.belastning <= 32)) {
+                grundUtmattning = 3;
+            }
+            else if ((item.system.belastning >= 33) || (item.system.belastning <= 40)) {
+                grundUtmattning = 6;
+            }
+            else {
+                const number = item.system.belastning - 40;
+                grundUtmattning = Math.floor(number / 8) * 3;
+            }
+        }
+
+        return grundUtmattning;
     }
 }

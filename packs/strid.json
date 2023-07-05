@@ -636,7 +636,7 @@
                     "bonus": 2
                 },
                 "langd": 180,
-                "vikt": 3.0,
+                "vikt": 3,
                 "egenskaper": [["bracklig", 3], ["rackvidd", 2], ["sargande", 1]]
             },
             "jargbila": {

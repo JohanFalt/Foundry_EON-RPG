@@ -9,126 +9,116 @@
                         <img src="{{item.img}}" class="item img-block" />
                     {{/if}}
                     {{#if (eq item.system.attribut "armborst")}}
-                        <img src="systems/eon-rpg/assets/img/crossbow.svg" class="item img-block" />
+                        <img src="{{EON.CONFIG.ikoner.foremal_armborst}}" class="item img-block" />
                     {{/if}}
                     {{#if (eq item.system.attribut "bage")}}
-                        <img src="systems/eon-rpg/assets/img/high-shot.svg" class="item img-block" />
+                        <img src="{{EON.CONFIG.ikoner.foremal_bage}}" class="item img-block" />
                     {{/if}}
                     {{#if (eq item.system.attribut "kastvapen")}}
-                        <img src="systems/eon-rpg/assets/img/thrown-spear.svg" class="item img-block" />
+                        <img src="{{EON.CONFIG.ikoner.foremal_kastvapen}}" class="item img-block" />
                     {{/if}}
                 </div>
 
-                <div style="min-width: 350px;">
-                    <div class="clear">
-                        <div class="pullLeft">
-                            <div class="pullLeft item-headline">Namn</div>
-                            <div class="pullLeft"><input name="name" type="text" value="{{item.name}}" /></div>
-                        </div>
-                        
+                <div class="pullLeft" style="min-width: 350px;">
+                    <div class="number-value-text floating-label-group">
+                        <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
+                        <span class="floating-label">Namn</span>
                     </div>
 
-                    <div class="clear">
-                        <div class="pullLeft item-headline">Färdighet</div>
-                        <div class="pullLeft">
-                            <select name="system.attribut">
-                                <option value="">- Välj -</option>
-                                {{#select item.system.attribut}}
-                                    {{#each EON.CONFIG.vapengrupper as |vapengrupp key|}}
-                                        {{#if (eq vapengrupp.typ "avstandsvapen")}}
-                                            <option value="{{key}}">{{vapengrupp.namn}}</option>
-                                        {{/if}}
-                                    {{/each}}
-                                {{/select}}
-                            </select>
-                        </div>
+                    <div class="number-value-text floating-label-group">
+                        <select name="system.attribut">
+                            <option value="">- Välj -</option>
+                            {{#select item.system.attribut}}
+                                {{#each EON.CONFIG.vapengrupper as |vapengrupp key|}}
+                                    {{#if (eq vapengrupp.typ "avstandsvapen")}}
+                                        <option value="{{key}}">{{vapengrupp.namn}}</option>
+                                    {{/if}}
+                                {{/each}}
+                            {{/select}}
+                        </select>
+                        <span class="floating-label">Färdighet</span>
                     </div>
 
-                    <div class="clear">
-                        <div class="pullLeft item-headline">Vapenmall</div>
-                        <div class="pullLeft">
-                            <select class="inputdata" name="system.typ" data-source="weapon-range">
-                                <option value="">- Välj -</option>                                       
-                                {{#select item.system.typ}}    
-                                    <option value="{{item._id}}">- Skräddarsytt -</option> 
-                                    {{#each (getWeaponGroup EON.avstandsvapen item.system.attribut) as |vapen key|}}     
-                                        <option value="{{key}}">{{vapen.namn}}</option>               
-                                    {{/each}}
-                                {{/select}}
-                            </select>
-                        </div>
-                    </div>                        
+                    <div class="number-value-text floating-label-group">
+                        <select class="inputdata" name="system.typ" data-source="weapon-range">
+                            <option value="">- Välj -</option>                                       
+                            {{#select item.system.typ}}    
+                                <option value="{{item._id}}">- Skräddarsytt -</option> 
+                                {{#each (getWeaponGroup EON.avstandsvapen item.system.attribut) as |vapen key|}}     
+                                    <option value="{{key}}">{{vapen.namn}}</option>               
+                                {{/each}}
+                            {{/select}}
+                        </select>
+                        <span class="floating-label">Vapenmall</span>
+                    </div>    
+                    
+                    <div class="number-value-text floating-label-group">
+                        <input class="attribute-value editable" name="system.langd" type="text" value="{{data.system.langd}}" data-dtype="Number" />
+                        <span class="floating-label">Längd (cm)</span>
+                    </div>
+
+                    <div class="number-value-text floating-label-group">
+                        <input class="attribute-value editable" name="system.vikt" type="text" value="{{data.system.vikt}}" data-dtype="Number" />
+                        <span class="floating-label">Vikt (kg)</span>
+                    </div>
+
+                    <div class="number-value-text floating-label-group">
+                        <select class="inputdata" name="system.rackvidd" data-source="weapon-close">
+                            <option value="">- Välj -</option>
+                            {{#select item.system.rackvidd}}
+                                {{#each EON.CONFIG.vapenavstand as |vapenavstand key|}}
+                                    <option value="{{key}}">{{vapenavstand.namn}}</option>
+                                {{/each}}
+                            {{/select}}
+                        </select>
+                        <span class="floating-label">Räckvidd</span>
+                    </div>
+
+                    <div class="number-value-text floating-label-group">
+                        <select class="inputdata" name="system.skadetyp" data-source="weapon-close">
+                            <option value="">- Välj -</option>
+                            {{#select item.system.skadetyp}}
+                                {{#each EON.CONFIG.vapenskador as |skadetyp key|}}
+                                    <option value="{{key}}">{{skadetyp}}</option>
+                                {{/each}}
+                            {{/select}}
+                        </select>
+                        <span class="floating-label">Skadetyp</span>
+                    </div>
 
                     <div class="clear">
                         <div class="pullLeft item-headline">1H</div>
-                        <div class="pullLeft"><input class="item-active" name="item.system.enhand.aktiv" type="checkbox" data-property="enhand" {{#if data.system.enhand.aktiv}} checked {{/if}} /></div>
-                        <div class="pullLeft weapon-value number-value-text tic pointer" data-property="enhand" data-limit="false">{{getDiceValue item.system.enhand}}</div>
+                        <div class="pullLeft"><input class="item-active" name="item.system.enhand.aktiv" type="checkbox" data-property="enhand" {{#if data.system.enhand.aktiv}} checked {{/if}} data-dtype="String" /></div>
+                        <div class="pullLeft dice-value number-value-text tic pointer" data-property="enhand">{{getDiceValue item.system.enhand}}</div>
                     </div>
                     <div class="clear">
                         <div class="pullLeft item-headline">2H</div>
-                        <div class="pullLeft"><input class="item-active" name="item.system.tvahand.aktiv" type="checkbox" data-property="tvahand" {{#if data.system.tvahand.aktiv}} checked {{/if}} /></div>
-                        <div class="pullLeft weapon-value number-value-text tic pointer" data-property="tvahand" data-limit="false">{{getDiceValue item.system.tvahand}}</div>
-                    </div>
-
-                    <div class="clear">
-                        <div class="pullLeft item-headline">Skadetyp</div>
-                        <div class="pullLeft">
-                            <select class="inputdata" name="system.skadetyp" data-source="weapon-close">
-                                <option value="">- Välj -</option>
-                                {{#select item.system.skadetyp}}
-                                    {{#each EON.CONFIG.vapenskador as |skadetyp key|}}
-                                        <option value="{{key}}">{{skadetyp}}</option>
-                                    {{/each}}
-                                {{/select}}
-                            </select>
-                        </div>
-                    </div>
+                        <div class="pullLeft"><input class="item-active" name="item.system.tvahand.aktiv" type="checkbox" data-property="tvahand" {{#if data.system.tvahand.aktiv}} checked {{/if}} data-dtype="String" /></div>
+                        <div class="pullLeft dice-value number-value-text tic pointer" data-property="tvahand">{{getDiceValue item.system.tvahand}}</div>
+                    </div>                    
 
                     <div class="clear">
                         <div class="pullLeft item-headline">Skada</div>
-                        <div class="pullLeft weapon-value number-value-text tic pointer" data-property="skada" data-limit="false">{{getDiceValue item.system.skada}}</div>
-                    </div>
-
-                    <div class="clear">
-                        <div class="pullLeft item-headline">Räckvidd</div>
-                        <div class="pullLeft">
-                            <select class="inputdata" name="system.rackvidd" data-source="weapon-close">
-                                <option value="">- Välj -</option>
-                                {{#select item.system.rackvidd}}
-                                    {{#each EON.CONFIG.vapenavstand as |vapenavstand key|}}
-                                        <option value="{{key}}">{{vapenavstand.namn}}</option>
-                                    {{/each}}
-                                {{/select}}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="clear">
-                        <div class="pullLeft item-headline">Längd (cm)</div>
-                        <div class="pullLeft item-headline number-value-text"><input style="width: 50px;" name="system.langd" type="text" value="{{data.system.langd}}" /></div>
-                    </div>
-                    <div class="clear">
-                        <div class="pullLeft item-headline">Vikt (kg)</div>
-                        <div class="pullLeft item-headline number-value-text"><input style="width: 50px;" name="system.vikt" type="text" value="{{data.system.vikt}}" /></div>
-                    </div>
-                </div>
-
-                <div style="display: inline-block; align-self: flex-end;">
-                    <div class="item-headline">Beskrivning *</div>
-                    <div class="editor-box">
-                        {{editor data.beskrivning target="system.beskrivning" button=false owner=owner editable=true}}
-                    </div>
-                    <div>* För att spara din beskrivning glöm inte trycka på spara-ikonen.</div>
-                </div>
+                        <div class="pullLeft dice-value number-value-text tic pointer" data-property="skada">{{getDiceValue item.system.skada}}</div>
+                    </div>                                       
+                </div>                
 
                 {{#if hasActor}}
-                    <div class="pointer red item-delete" style="text-align: right;" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
+                    <div class="pullRight pointer red item-delete" style="text-align: right;" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
                 {{/if}}
             </div>
 			
 		</header>
 		
-		<section class="item-body">                        
+		<section class="item-body">      
+            
+            <div style="display: inline-block; align-self: flex-end;">
+                <div class="item-headline">Beskrivning *</div>
+                <div class="editor-box">
+                    {{editor data.beskrivning target="system.beskrivning" button=false owner=owner editable=true}}
+                </div>
+                <div>* För att spara din beskrivning glöm inte trycka på spara-ikonen.</div>
+            </div>
 
             <div class="item-headline headline">Egenskaper</div>
             <div class="property-area">                

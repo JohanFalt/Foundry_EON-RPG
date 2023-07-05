@@ -67,7 +67,7 @@
                 }
             },
             "harleddegenskaper": {
-                "forflyttning": {
+                "forflyttning": {                    
                     "tvarde": 0,
                     "bonus": 0
                 },
@@ -99,6 +99,11 @@
                     "tvarde": 0,
                     "bonus": 0
                 },
+                "initiativ": {
+                    "tarning": "0d6",
+                    "tvarde": 0,
+                    "bonus": 0
+                },
                 "grundrustning": 0
             },
             "egenskap": {
@@ -114,20 +119,46 @@
                 }
             },
             "bakgrund": {
+                "sysselsattning": "",
+                "arketyp": "",
+                "miljo": "",                
                 "folkslag": ""
             },
             "strid": {
                 "vapenarm": "",
                 "lakningstakt": 0
+            },
+            "skada":{
+                "utmattning": {
+                    "grund": 0,
+                    "varde": 0
+                },
+                "sar": {
+                    "huvud": 0,
+                    "torso": 0,
+                    "vansterarm": 0,
+                    "hogerarm": 0,
+                    "vansterben": 0,
+                    "hogerben": 0
+                },
+                "smarta": 0,
+                "blodning": 0,
+                "blodningsvarighet": 0,
+                "infektion": 0,
+                "infektionsvarighet": 0,
+                "inreskada": 0
             }
         }        
     },
     "Item": {
         "types": [
             "Färdighet",
+            "Språk",
             "Närstridsvapen",
             "Avståndsvapen",
-            "Försvar"
+            "Sköld",
+            "Rustning",
+            "Skada"
         ],
         "templates": {
             "installningar": {
@@ -141,11 +172,18 @@
                 "referens": "",
                 "beskrivning": ""
             },
-            "vapen": {
-                "attribut": "",
+            "foremal": {
+                "installningar": {
+                    "buren": false,
+                    "aktiv": false,
+                    "typ": "utrustning"
+                },
                 "egenskaper": [],
+                "vikt": 0
+            },
+            "vapen": {
+                "attribut": "",                
                 "langd": 0,
-                "vikt": 0,
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 0,
@@ -172,9 +210,18 @@
                 "bonus": 0
             }
         },
+        "Språk": {
+            "templates": [
+				"installningar"
+			],
+            "talabrytning": false,
+            "talaflytande": false,
+            "lasaskriva": false
+        },
         "Närstridsvapen": {
             "templates": [
 				"installningar",
+                "foremal",
                 "vapen"
 			],
             "hugg": {
@@ -196,18 +243,21 @@
         "Avståndsvapen": {
             "templates": [
 				"installningar",
+                "foremal",
                 "vapen"
 			],
             "rackvidd": "",
             "skadetyp": "",
             "skada": {
+                "aktiv": true,
                 "tvarde": 0,
                 "bonus": 0
             }
         },
-        "Försvar": {
+        "Sköld": {
             "templates": [
 				"installningar",
+                "foremal",
                 "vapen"
 			],
             "narstrid": {
@@ -218,7 +268,26 @@
                 "tvarde": 0,
                 "bonus": 0
             },
-            "skydd": 0
+            "skydd": 0,
+            "skadetyp": "",
+            "skada": {
+                "aktiv": true,
+                "tvarde": 0,
+                "bonus": 0
+            }
+        },
+        "Rustning": {
+            "templates": [
+				"installningar",
+                "foremal"
+			],
+            "kroppsdel": [],            
+            "belastning": 0
+        },
+        "Skada": {
+            "templates": [
+				"installningar"
+			]
         }
     }
 }

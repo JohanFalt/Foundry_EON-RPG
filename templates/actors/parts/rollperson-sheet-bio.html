@@ -4,72 +4,85 @@
     <div class="two-column pullLeft">
         <div class="clear">
             <div class="pullLeft caption">Namn</div>
-            <div class="pullLeft attribute-value"><input class="attribute-value" type="text" value="ROLLPERSONENS NAMN" /></div>
+            <div class="pullLeft attribute-value editable"><input name="name" class="attribute-value editable" type="text" value="{{actor.name}}" data-dtype="String" /></div>
         </div>
         <div class="clear">
             <div class="pullLeft caption">Kön</div>
-            <div class="pullLeft attribute-value"><input class="attribute-value" type="text" /></div>
+            <div class="pullLeft attribute-value editable"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
         </div>
         <div class="clear">
             <div class="pullLeft caption">Ålder</div>
-            <div class="pullLeft attribute-value number-value-text"><input class="attribute-value" type="text" /></div>
+            <div class="pullLeft attribute-value editable number-value-text"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
         </div>
         <div class="clear">
             <div class="pullLeft caption">Religion</div>
-            <div class="pullLeft attribute-value"><input class="attribute-value" type="text" /></div>
+            <div class="pullLeft attribute-value editable"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
         </div>
         <div class="clear">
             <div class="pullLeft caption">Värv</div>
-            <div class="pullLeft attribute-value"><input class="attribute-value" type="text" /></div>
+            <div class="pullLeft attribute-value editable"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
         </div>
         <div class="clear">
             <div class="pullLeft caption">Hemort</div>
-            <div class="pullLeft attribute-value"><input class="attribute-value" type="text" /></div>
+            <div class="pullLeft attribute-value editable"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
         </div>
         <div class="clear">
             <div class="pullLeft caption">Längd</div>
-            <div class="pullLeft attribute-value number-value-text"><input class="attribute-value" type="text" /></div>
+            <div class="pullLeft attribute-value editable number-value-text"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
         </div>
         <div class="clear">
             <div class="pullLeft caption">Vikt</div>
-            <div class="pullLeft attribute-value number-value-text"><input class="attribute-value" type="text" /></div>
+            <div class="pullLeft attribute-value editable number-value-text"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
         </div>
         <div class="clear">
             <div class="pullLeft caption">Vapenarm</div>
-            <div class="pullLeft attribute-value"><input class="attribute-value" type="text" /></div>
+            <div class="pullLeft attribute-value editable">
+                <select class="" name="system.strid.vapenarm" id="system.strid.vapenarm">
+                    <option>- Välj -</option>
+                    {{#select data.system.strid.vapenarm}}                                        
+                        <option value="hoger">Höger</option>
+                        <option value="vanster">Vänster</option>
+                        <option value="annat">Annat</option>
+                    {{/select}}
+                </select>
+            </div>
         </div>
     </div>
 
     <div class="two-column pullLeft">
         <div class="clear">
             <div class="pullLeft caption">Arketyp</div>
-            <div class="pullLeft attribute-value">
-                <select>
+            <div class="pullLeft attribute-value editable">
+                <select name="system.bakgrund.arketyp">
                     <option>- Välj -</option>
-                    {{#each EON.arketyper as |arketyp key|}}
-                        <option value="{{key}}">{{arketyp.namn}}</option>
-                    {{/each}}
+                    {{#select data.system.bakgrund.arketyp}}
+                        {{#each EON.arketyper as |arketyp key|}}
+                            <option value="{{key}}">{{arketyp.namn}}</option>
+                        {{/each}}
+                    {{/select}}
                 </select>
             </div>
         </div>
         <div class="clear">
             <div class="pullLeft caption">Miljö</div>
-            <div class="pullLeft attribute-value">
-                <select>
+            <div class="pullLeft attribute-value editable">
+                <select name="system.bakgrund.miljo">
                     <option>- Välj -</option>
-                    {{#each EON.miljoer as |miljo key|}}
-                        <option value="{{key}}">{{miljo.namn}}</option>
-                    {{/each}}
+                    {{#select data.system.bakgrund.miljo}}
+                        {{#each EON.miljoer as |miljo key|}}
+                            <option value="{{key}}">{{miljo.namn}}</option>
+                        {{/each}}
+                    {{/select}}
                 </select>
             </div>
         </div>
         <div class="clear">
             <div class="pullLeft caption">Bakgrund</div>
-            <div class="pullLeft attribute-value"><input class="attribute-value" type="text" /></div>
+            <div class="pullLeft attribute-value editable"><input name="system.bakgrund.sysselsattning" value="{{data.system.bakgrund.sysselsattning}}" class="attribute-value editable" type="text" data-dtype="String" /></div>
         </div>
         <div class="clear">
             <div class="pullLeft caption">Folkslag</div>
-            <div class="pullLeft attribute-value">
+            <div class="pullLeft attribute-value editable">
                 <select id="folkslag" class="inputdata" data-source="folkslag">
                     <option>- Välj -</option>
                     {{#select actor.system.bakgrund.folkslag}}
@@ -97,5 +110,5 @@
 <div><textarea></textarea></div>
 <div class="clear">
     <div class="pullLeft caption">Oanvänd erfarenhet</div>
-    <div class="pullLeft attribute-value number-value-text"><input class="attribute-value" type="text" /></div>
+    <div class="pullLeft attribute-value editable number-value-text"><input class="attribute-value editable" type="text" data-dtype="Number" /></div>
 </div>

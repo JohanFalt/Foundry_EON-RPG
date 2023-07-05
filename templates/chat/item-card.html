@@ -1,0 +1,63 @@
+<div class="worldbuilding chat-card attack-card" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}" {{#if tokenId}}data-token-id="{{tokenId}}" {{/if}} 
+     {{#if data.spellFactors}} data-arcanum="{{data.arcanum}}" data-level="{{data.level}}" data-practice="{{data.practice}}" data-primFactor="{{data.primaryFactor}}" data-withstand="{{data.withstand}}" data-img="{{item.img}}" {{/if}}>
+
+  
+  <div class="card-header">
+    {{#if data.spellFactors}}
+    <div class="flexrow"> 
+      <button data-action="addActiveSpell" class="button stoneButton imprSpell"> Add to Active Spells </button>
+    </div>
+    {{/if}}
+    <div class="flexrow">
+      <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="36" height="36" />
+      <h3 class="item-name">{{item.name}}</h3>
+    </div>
+    {{#if data.arcanum}} <div class="flexrow arcanum"><h5>{{translate data.arcanum}} {{data.level}}</h5></div>{{/if}}
+    <div class="card-description">
+      {{{data.description}}}
+    </div>
+  </div>
+  
+
+  <div class="card-content">
+    {{#if data.information}}
+      {{#each data.information}}
+        <div class="information-line"> {{name}}: {{value}} </div>
+      {{/each}}
+    {{/if}}
+
+    {{#if data.spellFactors}}
+    <ul class="spell-factors">
+      {{#each data.spellFactors}}
+      <li data-advanced="{{advanced}}"> {{name}}: {{value}} {{advString}} </li>
+      {{/each}}
+    </ul>
+    {{/if}}
+    
+    {{#each data.rolls}}
+    <div class="item-roll"> 
+      <h4> {{title}} </h4>
+      {{{html}}}
+    </div>
+      
+    {{/each}}
+  </div>
+
+  {{#if data.summary}}
+    <div class="card-summary">
+      {{{data.summary}}}
+    </div>
+  {{/if}}
+
+  <div class="card-buttons">
+  </div>
+
+  {{#if data.modifiers}}
+    <footer class="card-footer">
+      {{#each data.modifiers}}
+        <span>{{this}}</span>
+      {{/each}}
+    </footer>
+  {{/if}}
+
+</div>

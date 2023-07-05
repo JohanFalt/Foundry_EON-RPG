@@ -90,12 +90,20 @@ export const RegisterHandlebarsHelpers = function () {
 		dice = dice + "T6";
 
 		if ((value?.bonus != undefined) && (value?.bonus != 0)) {
+			if (dice == "0T6") {
+				dice = "";
+			}
+
 			if (value?.bonus > 0) {
 				return dice + "+" + value?.bonus;
 			}
 			if (value?.bonus < 0) {
 				return dice + value?.bonus;
 			}			
+		}
+
+		if (dice == "0T6") {
+			dice = "0";
 		}
 
 		//return "ob" + dice;
@@ -115,7 +123,7 @@ export const RegisterHandlebarsHelpers = function () {
 	// hämtar en särskild vapenskada
 	Handlebars.registerHelper("getWeaponDamageType", function(vapenskador, skada) {
 		if (skada == "") {
-			return "";
+			return "&nbsp;";
 		}
 
 		return vapenskador[skada];
@@ -124,7 +132,7 @@ export const RegisterHandlebarsHelpers = function () {
 	// hämtar en särskild räckvidd
 	Handlebars.registerHelper("getRange", function(rackviddlista, rackvidd) {
 		if (rackvidd == "") {
-			return "";
+			return "&nbsp;";
 		}
 
 		return rackviddlista[rackvidd].namn;
@@ -171,6 +179,14 @@ export const RegisterHandlebarsHelpers = function () {
 		}
 	});
 
+	Handlebars.registerHelper("getActorSkillId", function(actor, fardighet, grupp) {
+		const id = actor.system.listdata.fardigheter[grupp].filter(skill => skill.name == fardighet);
+
+		return id[0]._id;
+	});
+
+	
+
 	Handlebars.registerHelper("getActorSkillValue", function(actor, fardighet, config) {
 		for (const grupp in config.fardighetgrupper) {
 			for (const item of actor.system.listdata.fardigheter[grupp]) {
@@ -194,14 +210,22 @@ export const RegisterHandlebarsHelpers = function () {
 	// hämtar ett attribut med egenskaper
 	Handlebars.registerHelper("getActorAttribute", function(actor, key) {
 		return actor.system.grundegenskaper[key];
-	});
+	});	
 
 	// hämtar ett attributs kortnamn
 	Handlebars.registerHelper("getAttributeShortName", function(attribut) {
+		if (attribut == "") {
+			return "";
+		}
+
 		return CONFIG.EON.grundegenskaper[attribut].kort;
 	});
 
-	// skickar ut en lista i läsbart skick
+	Handlebars.registerHelper("getActorSar", function(actor, key) {
+		return actor.system.skada.sar[key];
+	});
+
+	// skickar ut en egenskapslista i läsbart skick
 	Handlebars.registerHelper("getPropertyList", function(lista) {
 		let text = "";
 
@@ -321,10 +345,16 @@ export const RegisterHandlebarsHelpers = function () {
 
 		return text;
 	});
+
+	Handlebars.registerHelper("getArmorType", function(armor) {
+		if (armor == "") {
+			return "";
+		}
+
+		return game.EON.forsvar.rustningsmaterial[armor].namn;
+	});
 	
 	Handlebars.registerHelper("setVariable", function(varName, varValue, options) {
-		//console.log("WoD | setVariable " + varName + " value " + varValue);
-		
 		options.data.root[varName] = varValue;
 	});
 		

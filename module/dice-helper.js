@@ -93,6 +93,19 @@ export default class DiceHelper {
         return varde;
     }
 
+    static async BeraknaInitiativ(actorData) {
+        const totalTarning = actorData.system.grundegenskaper.rorlighet.tvarde;
+        const totalBonus = actorData.system.grundegenskaper.rorlighet.bonus;
+        const tarning = `${totalTarning}d6`;
+
+
+        return {
+            tarning: tarning,
+            tvarde: totalTarning,            
+            bonus: totalBonus
+        };
+    }
+
     static AdderaVarden(tarning1, tarning2) {
         let totalTarning = parseInt(tarning1.tvarde) + parseInt(tarning2.tvarde);
         let totalBonus = parseInt(tarning1.bonus) + parseInt(tarning2.bonus);
@@ -115,11 +128,13 @@ export default class DiceHelper {
 
 /* klassen som man använder för att skicka in information in i RollDice */
 export class DiceRollContainer {
-    constructor(actor) {
+    constructor(actor, config) {
+        this.config = config;
 		this.actor = actor;  			// rolling actor
+        this.info = [];
 		this.number = 0;
 		this.bonus = 0;
-		this.type = "d6";
+		this.dicetype = "d6";
 		this.obRoll = true;
     }
 }
@@ -128,102 +143,105 @@ export class DiceRollContainer {
 export async function RollDice(diceRoll) {
     const number = diceRoll.number;
     const bonus = diceRoll.bonus;
-    const type = diceRoll.type;
+    let dicetype = diceRoll.dicetype;
     const obRoll = diceRoll.obRoll;
+    const typeRoll = diceRoll.typeroll;
+    const action = diceRoll.action;
+    const color = game.settings.get("eon-dice-roller", "diceColor");
+    
 
     let canRoll = number > 0;
     let result = 0;
     let diceResult = [];
-    let label = "";
+    let rollInfo = "";
+
+    // egenskaper
+    if ((typeRoll == game.EON.CONFIG.slag.vapen) && (diceRoll.info.length > 0)) {
+        for (const egenskap of diceRoll.info) {
+            if (rollInfo != "") {
+                rollInfo += ", ";
+            }
+            rollInfo += game.EON.egenskaper[egenskap].namn;
+        }
+    }
 
     let numDices = number;
     let rolledDices = 0;
 
-    const allRolls = [];
+    const allDices = [];
 
     while (numDices > rolledDices) {
-        let roll = new Roll("1" + type);
-        allRolls.push(roll);
+        let roll = await new Roll("1" + dicetype);
         roll.evaluate({async:true});	
+        allDices.push(roll);
         
         roll.terms[0].results.forEach((dice) => {
-        rolledDices += 1;
+            rolledDices += 1;
 
-        if ((type == "d6") && (dice.result == 6) && (obRoll)) {
-            numDices += 1;
-            rolledDices -= 1;
-        }
-        else {
-            result += parseInt(dice.result);
-        }
+            if ((dicetype == "d6") && (dice.result == 6) && (obRoll)) {
+                numDices += 1;
+                rolledDices -= 1;
+            }
+            else {
+                result += parseInt(dice.result);
+            }
 
-        diceResult.push(dice.result);
+            diceResult.push(dice.result);
         });
     }
 
+    const diceList = [];
+
     if (canRoll) {
         diceResult.forEach((dice) => {
-            let diceicon = "";
-            if (type == "d6") {
-                
-
-                switch (dice) {
-                case 1:
-                    diceicon = `<i class="fa-solid fa-dice-one tray-dice"></i>`;
-                    break;
-                case 2:
-                    diceicon = `<i class="fa-solid fa-dice-two tray-dice"></i>`;
-                    break;
-                case 3:
-                    diceicon = `<i class="fa-solid fa-dice-three tray-dice"></i>`;
-                    break;
-                case 4:
-                    diceicon = `<i class="fa-solid fa-dice-four tray-dice"></i>`;
-                    break;
-                case 5:
-                    diceicon = `<i class="fa-solid fa-dice-five tray-dice"></i>`;
-                    break;
-                case 6:
-                    if (obRoll) {
-                    diceicon = `<i class="fa-solid fa-dice-six tray-dice tray-dice-max"></i>`;
-                    }
-                    else {
-                    diceicon = `<i class="fa-solid fa-dice-six tray-dice"></i>`;
-                    }
-                    
-                    break;
-                }
-            } 
-            else {
-                diceicon = `<span class="tray-dice-text">${dice}</span>`;
-            }       
-
-            label += `<div class="tray-dice-area">${diceicon}</div>`;
+            diceList.push(dice);
         });
 
         result += parseInt(bonus);
     }
+    else {
+        result = parseInt(bonus);
+    }
 
-    let text = `<div class="tray-roll-area"><h2>Slår ${number}${type}</h2></div><div class="tray-dice-row">${label}</div>`;
+    dicetype = dicetype.replace("d", "T");
+    let text = `Slår ${number}${dicetype}`;
 
     if (bonus > 0) {
-        text = `<div class="tray-roll-area"><h2>Slår ${number}${type}+${bonus}</h2></div><div class="tray-dice-row">${label}</div>`;
+        text = `Slår ${number}${dicetype}+${bonus}`;
     }
     else if (bonus < 0) {
-        text = `<div class="tray-roll-area"><h2>Slår ${number}${type}-${bonus}</h2></div><div class="tray-dice-row">${label}</div>`;
+        text = `Slår ${number}${dicetype}-${bonus}`;
     }
 
-    if (numDices > 0) {
-        text += `<div class="tray-result-area">Totalt: ${result}</div>`;
-    }
-
-    const chatOpt = {
-        type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-        rolls: allRolls,
-        rollMode: game.settings.get('core', 'rollMode'),
-        content: text
+    const templateData = {
+        data: {
+            info: rollInfo,
+            config: diceRoll.config,
+            actor: diceRoll.actor,
+            dicecolor: color,
+            isrollable: canRoll,
+            type: typeRoll,
+            action: action,
+            title: text,
+            diceresult: diceList,
+            result: result,
+            obroll: obRoll
+        }
     };
-    ChatMessage.create(chatOpt);
+
+    // Render the chat card template
+    const template = `modules/eon-dice-roller/templates/roll-template.html`;
+    const html = await renderTemplate(template, templateData);
+
+    const chatData = {
+        type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+        rolls: allDices,
+        content: html,
+        speaker: ChatMessage.getSpeaker(),
+        rollMode: game.settings.get("core", "rollMode")        
+    };
+    ChatMessage.applyRollMode(chatData, "roll");
+    ChatMessage.create(chatData);
 
     return result;
 }

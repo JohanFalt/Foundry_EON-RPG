@@ -9,11 +9,38 @@ export default class CreateHelper {
         }       
     }
 
+    static async SkapaKroppsdelar(config, version) {
+
+        let bok = "grund";
+        let kroppsdelar = [];
+
+        if (config.settings.bookCombat) {
+            bok = "strid";
+        }
+
+        for (const kroppsdel in config.kroppsdelar[bok]) {
+            let del = {
+                namn: config.kroppsdelar[bok][kroppsdel],
+                typ: kroppsdel,
+                version: version,
+                material: "",                
+                stick: 0,
+                kross: 0,
+                hugg: 0,
+                belastning: 0
+            };
+
+            kroppsdelar.push(del);
+        }  
+
+        return kroppsdelar;
+    }
+
     static async SkapaNarstridsvapen(actor, config, vapengrupp, vapennamn, version) {
 
-        for (const grupp in config.narstridsvapen) {
+        for (const grupp in config.vapengrupper) {
             if (grupp == vapengrupp) {
-                for (const vapen in config.narstridsvapen[grupp]) {
+                for (const vapen in game.EON.narstridsvapen[grupp]) {
                     if (vapen == vapennamn) {
                         let itemData = await this._SkapaNarstridsvapenItem(game.EON.narstridsvapen[grupp][vapen], vapen, version);
                         await actor.createEmbeddedDocuments("Item", [itemData]);
@@ -25,21 +52,32 @@ export default class CreateHelper {
         }       
     }
 
-    static async SkapaForsvarsvapen(actor, config, vapengrupp, vapennamn, version) {
+    /* static async SkapaRustningsdelar(actor, item, config, version) {
+        let bok = "grund";
 
-        for (const grupp in config.forsvar) {
-            if (grupp == vapengrupp) {
-                for (const vapen in config.forsvar[grupp]) {
-                    if (vapen == vapennamn) {
-                        let itemData = await this._SkapaForsvarsvapenItem(game.EON.forsvar[grupp][vapen], version);
-                        await actor.createEmbeddedDocuments("Item", [itemData]);
-                        break;
-                    }
+        if (config.settings.bookCombat) {
+            bok = "strid";
+        }
+
+        for (const kroppsdel in config.kroppsdelar[bok]) {
+            let itemDel = {
+                name: config.kroppsdelar[bok][kroppsdel],
+                type: "Rustning",
+                
+                data: {
+                    installningar: {
+                        skapad: true,
+                        version: version,
+                        buren: item.system.installningar.buren
+                    },
+                    typ: "rustningsdel",
+                    kroppsdel: kroppsdel
                 }
-                break;
-            }
-        }       
-    }
+            };
+
+            await actor.createEmbeddedDocuments("Item", [itemDel]);
+        } 
+    } */
 
     static async _SkapaFardighetItem(grupp, fardighet, nyckel, worldVersion) {
 
@@ -55,7 +93,7 @@ export default class CreateHelper {
                 namn: fardighet.namn,
                 attribut: fardighet.attribut,
                 referens: fardighet.referens,
-                grupp: grupp,
+                typ: grupp,
                 varde: {
                     tvarde: parseInt(fardighet.grund.tvarde),
                     bonus: parseInt(fardighet.grund.bonus)
@@ -94,28 +132,23 @@ export default class CreateHelper {
         return itemData;
     }
 
-    static async _SkapaForsvarsvapenItem(vapen, version) {
+    
+
+    /* static async _SkapaKroppsdelItem(kroppsdel, omrade, version) {
 
         let itemData = {
-            name: vapen.namn,
-            type: "Försvar",
+            name: kroppsdel,
+            type: "Rustning",
             
             data: {
                 installningar: {
                     skapad: true,
                     version: version
                 },
-                enhand: vapen.enhand,
-                tvahand: vapen.tvahand,
-                attribut: vapen.attribut,
-                narstrid: vapen.narstrid,
-                avstand: vapen.avstand,
-                langd: vapen.langd,
-                vikt: vapen.vikt,
-                egenskaper: vapen.egenskaper                    
+                kroppsdel: omrade
             }
         };
 
         return itemData;
-    }
+    } */
 }

@@ -2,38 +2,52 @@ import { DiceRollContainer } from "../dice-helper.js";
 import { RollDice } from "../dice-helper.js";
 
 export class AttributeRoll {
-    constructor(actor, type, key) {
+    constructor(actor, type, key, title) {
         this.grundTarning = parseInt(actor.system[type][key].tvarde);
         this.grundBonus = parseInt(actor.system[type][key].bonus);
         this.namn = actor.name;
+        this.title = title;
+        this.key = key;
+        this.attributenamn = "";
         this.close = false;
     }
 }
 
 export class DialogAttributeRoll extends FormApplication {
-    constructor(actor, roll) {
-        super(roll, {submitOnChange: true, closeOnSubmit: false});
-        this.actor = actor;     
-        this.isDialog = true;  
-        this.options.title = `${actor.name}`;        
-    }
 
-    /**
-        * Extend and override the default options used by the 5e Actor Sheet
-        * @returns {Object}
-    */
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
-            classes: ["general-dialog"],
-            template: "systems/eon-rpg/templates/dialogs/dialog-attribute-roll.html",
+            classes: ["EON general-dialog"],
             closeOnSubmit: false,
             submitOnChange: true,
             resizable: true
         });
     }
 
-    async getData() {
+    constructor(actor, roll) {
+        super(roll, {submitOnChange: true, closeOnSubmit: false});
+        this.actor = actor;     
+        this.config = game.EON.CONFIG;   
+        this.isDialog = true;  
+
+        this.options.title = `${actor.name}`;        
+    }
+
+    /** @override */
+	get template() {
+        return "systems/eon-rpg/templates/dialogs/dialog-attribute-roll.html";
+	}     
+
+    getData() {
         const data = super.getData();
+
+        if (data.object.title == "") {
+            data.object.namn = CONFIG.EON.grundegenskaper[data.object.key].namn;
+        }
+        else {
+            data.object.namn = this.object.title;
+        }
+
         return data;
     }
 
@@ -65,7 +79,9 @@ export class DialogAttributeRoll extends FormApplication {
             return;
         }
 
-        const roll = new DiceRollContainer(this.actor);
+        const roll = new DiceRollContainer(this.actor, this.config);
+        roll.typeroll = CONFIG.EON.slag.grundegenskap;
+        roll.action = this.object.namn;
         roll.number = parseInt(this.object.grundTarning);
         roll.bonus = parseInt(this.object.grundBonus);
         const result = RollDice(roll);
@@ -90,28 +106,30 @@ export class SkillRoll {
 }
 
 export class DialogSkillRoll extends FormApplication {
-    constructor(actor, roll) {
-        super(roll, {submitOnChange: true, closeOnSubmit: false});
-        this.actor = actor;     
-        this.isDialog = true;  
-        this.options.title = `${actor.name}`;        
-    }
 
-    /**
-        * Extend and override the default options used by the 5e Actor Sheet
-        * @returns {Object}
-    */
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
-            classes: ["general-dialog"],
-            template: "systems/eon-rpg/templates/dialogs/dialog-skill-roll.html",
+            classes: ["EON general-dialog"],
             closeOnSubmit: false,
             submitOnChange: true,
             resizable: true
         });
     }
 
-    async getData() {
+    constructor(actor, roll) {
+        super(roll, {submitOnChange: true, closeOnSubmit: false});
+        this.actor = actor;     
+        this.config = game.EON.CONFIG;      
+        this.isDialog = true;  
+        this.options.title = `${actor.name}`;        
+    }
+
+    /** @override */
+	get template() {
+        return "systems/eon-rpg/templates/dialogs/dialog-skill-roll.html";
+	}  
+
+    getData() {
         const data = super.getData();
         return data;
     }
@@ -144,7 +162,9 @@ export class DialogSkillRoll extends FormApplication {
             return;
         }
 
-        const roll = new DiceRollContainer(this.actor);
+        const roll = new DiceRollContainer(this.actor, this.config);
+        roll.typeroll = CONFIG.EON.slag.fardighet;
+        roll.action = this.object.namn;
         roll.number = parseInt(this.object.grundTarning);
         roll.bonus = parseInt(this.object.grundBonus);
         const result = RollDice(roll);

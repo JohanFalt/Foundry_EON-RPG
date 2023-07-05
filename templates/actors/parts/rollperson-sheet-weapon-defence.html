@@ -1,34 +1,40 @@
-<div style="min-height: 100px;">
+<div style="min-height: 100px; margin-bottom: 25px;">
     <div>
         <div class="clear">
-            <div class="pullLeft large-headline">Försvar</div>
-            <div class="pullLeft pointer"><i class="fa-solid fa-square-plus green"></i></div>
+            <div class="pullLeft large-headline">Sköld</div>
+            <div class="pullLeft pointer"><a class="item-create" title="Lägg till sköld" data-type="sköld"><i class="fa-solid fa-square-plus green"></i></a></div>
         </div>
         <div class="clear headline" style="line-height: 25px; width:100%;">
-            <div class="pullLeft" style="width: 100px;">Namn</div>
+            <div class="pullLeft weapon-icon">&nbsp;</div>
+            <div class="pullLeft" style="width: 125px;">Namn</div>
             <div class="pullLeft" style="width: 75px;">Färdighet</div>
             <div class="pullLeft" style="width: 40px;">1H</div>
             <div class="pullLeft" style="width: 40px;">2H</div>
             <div class="pullLeft" style="width: 65px;">Närstrid</div>
             <div class="pullLeft" style="width: 65px;">Avstånd</div>
             <div class="pullLeft" style="width: 50px;">Skydd</div>
-            <div class="pullLeft" style="width: 50px;">Längd</div>
-            <div class="pullLeft" style="width: 40px;">Kg</div>
+            <div class="pullLeft" style="width: 50px;">Typ</div>
+            <div class="pullLeft" style="width: 50px;">Skada</div>
+            <div class="pullLeft" style="width: 40px;">Vikt</div>
             <div class="pullLeft">Egenskaper</div>
         </div>
     </div>
     <div>
-        {{#each actor.system.listdata.vapen.forsvar as |vapen key|}}
-            <div class="pullLeft" style="width: 100px;">{{vapen.name}}</div>
-            <div class="pullLeft weapon-value" style="width: 75px;">{{getDiceValue (getActorSkillValue ../actor vapen.system.attribut ../EON.CONFIG)}}</div>
-            <div class="pullLeft weapon-value" style="width: 40px;">{{#if (eq vapen.system.enhand.aktiv false)}}-{{else}}{{getDiceValue vapen.system.enhand}}{{/if}}</div>
-            <div class="pullLeft weapon-value" style="width: 40px;">{{#if (eq vapen.system.hugg.aktiv false)}}-{{else}}{{getDiceValue vapen.system.tvahand}}{{/if}}</div>
-            <div class="pullLeft weapon-value" style="width: 65px;">{{getDiceValue vapen.system.narstrid}}</div>
-            <div class="pullLeft weapon-value" style="width: 65px;">{{getDiceValue vapen.system.avstand}}</div>
-            <div class="pullLeft weapon-value" style="width: 50px;">{{vapen.system.skydd}}</div>
-            <div class="pullLeft weapon-value" style="width: 50px;">{{#if (eq vapen.system.langd 0)}}-{{else}}{{vapen.system.langd}}cm{{/if}}</div>
-            <div class="pullLeft weapon-value" style="width: 40px;">{{#if (eq vapen.system.vikt 0)}}-{{else}}{{vapen.system.vikt}}{{/if}}</div>
-            <div class="pullLeft">{{getPropertyList vapen.system.egenskaper}}</div>
+        {{#each actor.system.listdata.utrustning.vapen.skold as |skold key|}}
+        <div class="clear" style="line-height: 25px; width:100%;">
+            <div class="pointer pullLeft weapon-icon"><a class="item-edit" title="Editera sköld" data-source="defence" data-itemid="{{skold._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="pullLeft vrollable" style="width: 125px;" data-source="weapon" data-itemid="{{skold._id}}">{{skold.name}}</div>
+            <div class="pullLeft number-value-text" style="width: 75px;">{{getDiceValue (getActorSkillValue ../actor skold.system.attribut ../EON.CONFIG)}}</div>
+            <div class="pullLeft number-value-text" style="width: 40px;">{{#if (eq skold.system.enhand.aktiv false)}}-{{else}}{{getDiceValue skold.system.enhand}}{{/if}}</div>
+            <div class="pullLeft number-value-text" style="width: 40px;">{{#if (eq skold.system.tvahand.aktiv false)}}-{{else}}{{getDiceValue skold.system.tvahand}}{{/if}}</div>
+            <div class="pullLeft number-value-text" style="width: 65px;">{{getDiceValue skold.system.narstrid}}</div>
+            <div class="pullLeft number-value-text" style="width: 65px;">{{getDiceValue skold.system.avstand}}</div>
+            <div class="pullLeft number-value-text" style="width: 50px;">{{skold.system.skydd}}</div>
+            <div class="pullLeft number-value-text" style="width: 50px;">{{#if (eq skold.system.skadetyp "")}}-{{else}}{{getWeaponDamageType ../EON.CONFIG.vapenskador skold.system.skadetyp}}{{/if}}</div>
+            <div class="pullLeft number-value-text" style="width: 50px;">{{#if (eq skold.system.skada.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues skold.system.skada ../actor.system.harleddegenskaper.grundskada)}}{{/if}}</div>
+            <div class="pullLeft number-value-text" style="width: 40px;">{{#if (eq skold.system.vikt 0)}}-{{else}}{{skold.system.vikt}}kg{{/if}}</div>
+            <div class="pullLeft number-value-text">{{getPropertyList skold.system.egenskaper}}</div>
+        </div>
         {{/each}}
     </div>
 </div>

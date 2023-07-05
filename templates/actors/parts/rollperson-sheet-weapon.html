@@ -1,51 +1,30 @@
 <div class="weapon-area">
-    <div>
-        {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-close.html"}}
+
+    <div class="clear" style="margin-bottom: 25px;">
+        <button class="vrollable pullLeft three-column large-headline" title="{{getDiceValue (getActorSkillGroupValue actor 'undvika' 'rorelse')}}" data-source="skill" data-itemid="{{getActorSkillId actor 'undvika' 'rorelse'}}">UNDVIKA</button>
     </div>
 
-    <div>
-        {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-martial.html"}}
-    </div>
-
-    <div>
-        {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-ranged.html"}}
-    </div>
-
-    <div>
-        {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-defence.html"}}
-    </div>
-
-    <div class="clear">
-        <div class="pullLeft caption">Vapenarm</div>
-        <div class="pullLeft attribute-value">
-            <select name="system.strid.vapenarm" id="system.strid.vapenarm">
-                {{#select data.system.strid.vapenarm}}
-                    <option value="">- Välj -</option>                
-                    <option value="hoger">Höger</option>
-                    <option value="vanster">Vänster</option>
-                    <option value="annat">Annat</option>
-                {{/select}}
-            </select>
+    <div class="clear attribute" style="margin-bottom: 25px;">
+        <div class="pullLeft three-column">
+            <div class="pullLeft headline">Grundskada</div>
+            <div class="pullLeft number-value-text"><input class="attribute-value editable" type="text" value="{{getDiceValue data.system.harleddegenskaper.grundskada}}" disabled readonly /></div>
+        </div>   
+        <div class="pullLeft three-column">
+            <div class="pullLeft headline">Grundrustning</div>
+            <div class="pullLeft number-value-text"><input class="attribute-value editable" type="text" value="{{actor.system.harleddegenskaper.grundrustning}}" disabled readonly /></div>
+        </div>     
+        <div class="pullLeft three-column">
+            <div class="pullLeft headline">Läkningstakt</div>
+            <div class="pullLeft number-value-text"><input class="skill-value" type="number" name="system.strid.lakningstakt" value="{{actor.system.strid.lakningstakt}}" data-dtype="Number" /></div> <!-- min="0" max="50" -->
         </div>
     </div>
-
-    <div class="clear">
-        <div class="pullLeft caption">Grundskada</div>
-        <div class="pullLeft attribute-value"><input class="weapon-value" type="text" value="{{getDiceValue data.system.harleddegenskaper.grundskada}}" readonly /></div>
-    </div>
     
-    <div class="clear">
-        <div class="pullLeft caption">Grundrustning</div>
-        <div class="pullLeft attribute-value"><input class="weapon-value" type="text" value="{{actor.system.harleddegenskaper.grundrustning}}" readonly /></div>
-    </div>
+    {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-close.html"}}
 
-    <div class="clear">
-        <div class="pullLeft caption">Läkningstakt</div>
-        <div class="pullLeft attribute-value"><input class="weapon-value" type="number" name="system.strid.lakningstakt" value="{{actor.system.strid.lakningstakt}}" min="0" max="50" /></div>
-    </div>
+    {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-martial.html"}}
 
-    <div>
-        {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-health.html"}}
-    </div>
+    {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-ranged.html"}}
+
+    {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-defence.html"}}    
 
 </div>

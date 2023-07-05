@@ -1,0 +1,76 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+	<div class="sheet-item">
+		<header class="sheet-header item-top">
+
+            <div class="clear" style="display: flex;">
+                <div class="pullLeft" style="min-width: 110px;">
+                    <img src="{{EON.CONFIG.ikoner.foremal_rustning}}" class="item img-block" />
+                </div>
+
+                <div class="pullLeft" style="min-width: 350px;">
+                    <div class="number-value-text floating-label-group">
+                        <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
+                        <span class="floating-label">Namn</span>
+                    </div>
+
+                    <div class="number-value-text floating-label-group">
+                        <input class="attribute-value" type="text" value="{{data.system.belastning}}" data-dtype="Number" disabled readonly />
+                        <span class="floating-label">Belastning</span>
+                    </div>                                      
+                </div>  
+                
+                {{#if hasActor}}
+                    <div class="pullRight pointer red item-delete" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
+                {{/if}}
+            </div>
+			
+		</header>
+		
+		<section class="item-body">    
+            
+            <div class="clear">
+                <div class="pullLeft">
+                    <div class="clear headline">
+                        <div class="pullLeft" style="width: 100px;">Delområde</div>
+                        <div class="pullLeft" style="width: 150px;">Material</div>
+                        <div class="pullLeft centerText" style="width: 50px;">Hugg</div>
+                        <div class="pullLeft centerText" style="width: 50px;">Kross</div>
+                        <div class="pullLeft centerText" style="width: 50px;">Stick</div>
+                        <div class="pullLeft">Belastning</div>
+                    </div>
+
+                    {{#each item.system.kroppsdel as |rustning key|}}
+                        <div class="clear" style="line-height: 25px; width:100%;">
+                            <div class="pullLeft" style="width: 100px;">{{rustning.namn}}</div>
+                            <div class="pullLeft" style="width: 150px;">
+                                <select class="inputdata" data-source="armor" data-typ="{{rustning.typ}}" style="width: 125px;">                                
+                                    {{#select rustning.material}}
+                                        <option value="">- Inget -</option>
+                                        {{#each ../EON.forsvar.rustningsmaterial as |material key|}}     
+                                            <option value="{{key}}">{{material.namn}}</option>               
+                                        {{/each}}
+                                    {{/select}}
+                                </select>
+                            </div>
+                            <div class="pullLeft centerText number-value-text" style="width: 50px;">{{rustning.hugg}}</div>
+                            <div class="pullLeft centerText number-value-text" style="width: 50px;">{{rustning.kross}}</div>
+                            <div class="pullLeft centerText number-value-text" style="width: 50px;">{{rustning.stick}}</div>
+                            <div class="pullLeft centerText number-value-text" style="width: 50px;">{{rustning.belastning}}</div>
+                        </div>                    
+                    {{/each}}
+                </div>
+            </div>
+
+            <div style="display: inline-block; align-self: flex-end;">
+                <div class="item-headline">Beskrivning *</div>
+                <div class="editor-box">
+                    {{editor data.beskrivning target="system.beskrivning" button=false owner=owner editable=true}}
+                </div>
+                <div>* För att spara din beskrivning glöm inte trycka på spara-ikonen.</div>
+            </div>            
+
+		</section>
+
+	</div>
+</form>

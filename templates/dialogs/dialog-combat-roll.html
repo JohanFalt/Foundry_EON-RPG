@@ -1,0 +1,14 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+    <div class="dialog-area centerText">
+        <button class="mode {{#if object.isdistance}}active{{/if}}" data-type="initiative_distance">Avstånd</button>
+        <button class="mode {{#if object.isclose}}active{{/if}}" data-type="initiative_close">Närstrid</button>
+        <button class="mode {{#if object.ismystic}}active{{/if}}" data-type="initiative_mystic">Mysik</button>
+        <button class="mode {{#if object.isother}}active{{/if}}" data-type="initiative_other">Övrigt</button>
+
+        <button id="initiativeButton" class="pullLeft initiativebutton {{#if object.canroll}}show{{else}}hide{{/if}}">Slå reaktion</button>
+
+        <button id="closeButton" class="pullLeft closebutton">Stäng</button>
+    </div>
+
+</form>
