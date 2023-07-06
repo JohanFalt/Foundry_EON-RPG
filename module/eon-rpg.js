@@ -34,8 +34,12 @@ import { EonItemSheet } from "./item-sheet.js";
     newVersion = newVersion.toLowerCase().replace(" ", "");
   }
 
+  if (oldVersion == "1") {
+    return true;
+  } 
+
   if (oldVersion == newVersion) {
-      return false;
+    return false;
   }
 
   try {
