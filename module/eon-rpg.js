@@ -4,6 +4,56 @@ import * as Templates from "./templates.js";
 import { EonActorSheet } from "./actor-sheet.js";
 import { EonItemSheet } from "./item-sheet.js";
 
+ /**
+ * Compares two version numbers to see if the new one is newer than the old one
+ * @param oldVersion   The existing version no: e.g. 1.5.9
+ * @param newVersion   The new version no: e.g. 1.5.10
+ */
+ function _compareVersion(oldVersion, newVersion) {
+  if (newVersion == "") {
+      return false;
+  }
+
+  if (newVersion == undefined) {
+      return false;
+  }
+
+  if (oldVersion == "") {
+      return true;
+  }
+
+  if (oldVersion.toLowerCase().includes("alpha")) {
+    oldVersion = oldVersion.toLowerCase().replace("alpha", "");
+    oldVersion = oldVersion.toLowerCase().replace("-", "");
+    oldVersion = oldVersion.toLowerCase().replace(" ", "");
+  }
+
+  if (newVersion.toLowerCase().includes("alpha")) {
+    newVersion = newVersion.toLowerCase().replace("alpha", "");
+    newVersion = newVersion.toLowerCase().replace("-", "");
+    newVersion = newVersion.toLowerCase().replace(" ", "");
+  }
+
+  if (oldVersion == newVersion) {
+      return false;
+  }
+
+  try {
+      const newfields = newVersion.split(".");
+      const oldfields = oldVersion.split(".");
+
+      for (let i = 0; i <= 2; i++) {
+          if (parseInt(newfields[i]) > parseInt(oldfields[i])) {
+              return true;
+          }
+      }
+  }
+  catch {
+  }
+
+  return false
+}
+
 async function doNotice(systemVersion) {
     if (!game.user.isGM) {
       return;
@@ -33,6 +83,10 @@ async function doNotice(systemVersion) {
           <li>Tärningsslag</li>
           <li>Grafik</li>
         </ul>
+      </div>
+      <div class="tray-title-area">Stöd mitt arbete</div>
+      <div class="tray-action-area">
+        <a href="https://ko-fi.com/johanfk"><img src="https://ko-fi.com/img/githubbutton_sm.svg" /></a>
       </div>
       <div class="tray-title-area">Länkar</div>
       <div class="tray-action-area">
@@ -89,16 +143,16 @@ Hooks.once("setup", function () {
 Hooks.once("ready", async () => {
     // Do anything once the system is ready
 	const installedVersion = game.settings.get("eon-rpg", "systemVersion");
-    const systemVersion = game.data.system.version;
+  const systemVersion = game.data.system.version;
   
-    if (game.user.isGM) {
-        if ((installedVersion !== systemVersion || installedVersion === null)) {
-            if (_compareVersion(installedVersion, systemVersion)) {        
-                await doNotice(systemVersion);
-                game.settings.set("eon-rpg", "systemVersion", systemVersion);
-            }
-        }
-    } 
+  if (game.user.isGM) {
+      if ((installedVersion !== systemVersion || installedVersion === null)) {
+          if (_compareVersion(installedVersion, systemVersion)) {        
+              await doNotice(systemVersion);
+              game.settings.set("eon-rpg", "systemVersion", systemVersion);
+          }
+      }
+  } 
 });
 
 Hooks.on("renderActorSheet", (sheet) => { 
