@@ -2,7 +2,7 @@
     "id": "eon-rpg",
     "title": "Eon IV RPG",
     "description": "",
-    "version": "Alpha-1.5.2",
+    "version": "Alpha-1.5.3",
     "compatibility": {
         "minimum": "10",
         "verified": "11",
@@ -10,8 +10,7 @@
     },
     "authors": [{
         "name": "Johan Fält",
-        "discord": "johanfk#0054",
-        "flags": {}
+        "discord": "johanfk#0054"
     }],
     "scripts": [],
     "esmodules": [
@@ -27,14 +26,16 @@
         {
             "id": "eon-dice-roller",
             "type": "module",
-            "compatibility": {}
+            "manifest": "https://raw.githubusercontent.com/JohanFalt/Foundry_EonDiceRoller/main/module.json",
+            "compatibility": {
+                "minimum": "1.4.0",
+                "verified": "1.4.0",
+                "maximum": "2"
+            }
         }]
     },
     "languages": [],
     "socket": false,
-
-
-
     "initiative": "@harleddegenskaper.initiativ.tarning + @harleddegenskaper.initiativ.bonus",
     "gridDistance": 2,
     "gridUnits": "m",
@@ -42,7 +43,7 @@
     "secondaryTokenAttribute": "",
     "url": "https://github.com/JohanFalt/Foundry_EON-RPG",
     "manifest": "https://raw.githubusercontent.com/JohanFalt/Foundry_EON-RPG/main/system.json",
-    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/archive/refs/tags/alpha-1.5.2.zip",
+    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/archive/refs/tags/alpha-1.5.3.zip",
     "bugs": "https://github.com/JohanFalt/Foundry_EON-RPG/issues",
     "changelog": "",
     "license": "LICENSE.txt"    

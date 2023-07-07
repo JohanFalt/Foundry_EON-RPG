@@ -7,6 +7,7 @@ export class AttributeRoll {
         this.grundBonus = parseInt(actor.system[type][key].bonus);
         this.namn = actor.name;
         this.title = title;
+        this.type = type;
         this.key = key;
         this.attributenamn = "";
         this.close = false;
@@ -42,7 +43,7 @@ export class DialogAttributeRoll extends FormApplication {
         const data = super.getData();
 
         if (data.object.title == "") {
-            data.object.namn = CONFIG.EON.grundegenskaper[data.object.key].namn;
+            data.object.namn = CONFIG.EON[data.object.type][data.object.key].namn;
         }
         else {
             data.object.namn = this.object.title;

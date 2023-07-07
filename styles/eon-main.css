@@ -96,16 +96,18 @@
 }
 
 span.resource-value,
-input[type="text"],
-input[type="number"],
-select {
+.EON input[type="text"],
+.EON input[type="number"],
+.EON select {
     background: var(--back-color-inputs);
     background-color: var(--back-color-inputs);
     color: var(--text-normal-color);    
+    height: var(--line-height-default);
+    line-height: var(--line-height-default);
 }
 
-input[type="text"]:disabled,
-input[type="number"]:disabled {
+.EON input[type="text"]:disabled,
+.EON input[type="number"]:disabled {
     background: rgba(255, 255, 255, 0.4);
     cursor: not-allowed;
     border-top-style: none;
@@ -116,12 +118,12 @@ input[type="number"]:disabled {
     border-right-width: 1px;
 }
 
-select option {
+.EON select option {
     background: var(--back-color-inputs);
     color: var(--text-normal-color);
 }
 
-select option[value=""] {
+.EON select option[value=""] {
     background: var(--select-empty-background-color);
     color: var(--select-empty-text-color);
 }
@@ -264,11 +266,6 @@ img.item {
 
 .red {
     color: var(--color-bad);
-}
-
-.editable-box {
-    /* color: #000;   */
-    /* text-shadow: 0 0 10px var(--main-full-color); */
 }
 
 .dice-value {
@@ -465,12 +462,11 @@ input.editable {
     border-right-width: 1px;
     margin-left: 5px;
     margin-right: 5px;
-    height: var(--line-height-default);
 }
 
 input.attribute-value {    
     width: 50px;
-    text-align: center;    
+    text-align: center;  
 }
 
 input.text-value {
@@ -488,7 +484,6 @@ input.skill-value {
     border-left-style: none;
     width: 40px;
     text-align: center;
-    height: var(--line-height-default);
     margin-left: 5px;
     margin-right: 5px;
 }
@@ -562,7 +557,7 @@ input.skill-value {
     display: flex; 
     flex-wrap: wrap;
     flex-direction: column;
-    max-height: 400px;
+    max-height: 430px;
 }
 
 .img-block {

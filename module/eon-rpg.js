@@ -10,52 +10,64 @@ import { EonItemSheet } from "./item-sheet.js";
  * @param newVersion   The new version no: e.g. 1.5.10
  */
  function _compareVersion(oldVersion, newVersion) {
-  if (newVersion == "") {
-      return false;
-  }
+    if (newVersion == "") {
+        return false;
+    }
 
-  if (newVersion == undefined) {
-      return false;
-  }
+    if (newVersion == undefined) {
+        return false;
+    }
 
-  if (oldVersion == "") {
-      return true;
-  }
+    if (oldVersion == "") {
+        return true;
+    }
 
-  if (oldVersion.toLowerCase().includes("alpha")) {
-    oldVersion = oldVersion.toLowerCase().replace("alpha", "");
-    oldVersion = oldVersion.toLowerCase().replace("-", "");
-    oldVersion = oldVersion.toLowerCase().replace(" ", "");
-  }
+    if (oldVersion.toLowerCase().includes("alpha")) {
+        oldVersion = oldVersion.toLowerCase().replace("alpha", "");
+        oldVersion = oldVersion.toLowerCase().replace("-", "");
+        oldVersion = oldVersion.toLowerCase().replace(" ", "");
+    }
 
-  if (newVersion.toLowerCase().includes("alpha")) {
-    newVersion = newVersion.toLowerCase().replace("alpha", "");
-    newVersion = newVersion.toLowerCase().replace("-", "");
-    newVersion = newVersion.toLowerCase().replace(" ", "");
-  }
+    if (newVersion.toLowerCase().includes("alpha")) {
+        newVersion = newVersion.toLowerCase().replace("alpha", "");
+        newVersion = newVersion.toLowerCase().replace("-", "");
+        newVersion = newVersion.toLowerCase().replace(" ", "");
+    }
 
-  if (oldVersion == "1") {
-    return true;
-  } 
+    if (oldVersion == "1") {
+        return true;
+    } 
 
-  if (oldVersion == newVersion) {
-    return false;
-  }
+    if (oldVersion == newVersion) {
+        return false;
+    }
 
-  try {
-      const newfields = newVersion.split(".");
-      const oldfields = oldVersion.split(".");
+    try {
+        const newfields = newVersion.split(".");
+        const oldfields = oldVersion.split(".");
 
-      for (let i = 0; i <= 2; i++) {
-          if (parseInt(newfields[i]) > parseInt(oldfields[i])) {
-              return true;
-          }
-      }
-  }
-  catch {
-  }
+        for (let i = 0; i <= 2; i++) {
+        let varde1 = 0;
+        let varde2 = 0;
+        
+        if (newfields[i] != undefined) {
+            varde1 = newfields[i];
+        }
+        if (oldfields[i] != undefined) {
+            varde2 = oldfields[i];
+        }
+        if (parseInt(varde1) > parseInt(varde2)) {
+            return true;
+        }
+        else if (parseInt(varde1) < parseInt(varde2)) {
+            return false;
+        }
+        }
+    }
+    catch {
+    }
 
-  return false
+    return false
 }
 
 async function doNotice(systemVersion) {
@@ -78,7 +90,14 @@ async function doNotice(systemVersion) {
           <li>v1.0 - När rollformuläret kan hålla information för de saker som finns i grundboken så kommer jag släppa första versionen.</li>
         </ul>
       </div>
-      <div class="tray-title-area">Nya saker sedan förra versionen</div>
+      <div class="tray-title-area">Nya saker sedan Alpha 1.5</div>
+      <div class="tray-action-area">
+        <ul style="margin-top: 0">
+          <li>Slå Härledda attribut.</li>
+          <li>Fixat så man nu ser alla egenskaperna på vapen.</li>
+        </ul>
+      </div>
+      <div class="tray-title-area">Nya saker sedan Alpha 1.4</div>
       <div class="tray-action-area">
         <ul style="margin-top: 0">
           <li>Stöd för Dice So Nice.</li>
@@ -148,7 +167,7 @@ Hooks.once("ready", async () => {
     // Do anything once the system is ready
 	const installedVersion = game.settings.get("eon-rpg", "systemVersion");
   const systemVersion = game.data.system.version;
-  
+
   if (game.user.isGM) {
       if ((installedVersion !== systemVersion || installedVersion === null)) {
           if (_compareVersion(installedVersion, systemVersion)) {        
@@ -165,7 +184,9 @@ Hooks.on("renderActorSheet", (sheet) => {
 Hooks.on("renderItemSheet", (sheet) => { 
     clearHTML(sheet);
 
-    if ((sheet.object.type.toLowerCase().replace(" ", "") == "närstridsvapen") || (sheet.object.type.toLowerCase().replace(" ", "") == "avståndsvapen") || (sheet.object.type.toLowerCase().replace(" ", "") == "sköld")) {
+    if ((sheet.object.type.toLowerCase().replace(" ", "") == "närstridsvapen") || 
+            (sheet.object.type.toLowerCase().replace(" ", "") == "avståndsvapen") || 
+            (sheet.object.type.toLowerCase().replace(" ", "") == "sköld")) {
         sheet.element[0].classList.add("vapen");
     }	
 });

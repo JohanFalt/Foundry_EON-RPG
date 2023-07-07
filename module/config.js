@@ -67,6 +67,31 @@ eon.grundegenskaper = {
     }
 }
 
+eon.harleddegenskaper = {
+    forflyttning: {
+        namn: "Förflyttning"
+    },
+    intryck: {
+        namn: "Intryck"
+    },
+    kroppsbyggnad: {
+        namn: "Kroppsbyggnad"
+    },
+    reaktion: {
+        namn: "Reaktion"
+    },
+    sjalvkontroll: {
+        namn: "Självkontroll"
+    },
+    vaksamhet: {
+        namn: "Vaksamhet"
+    },
+    livskraft: {
+        namn: "Livskraft"
+
+    }
+}
+
 eon.fardighetgrupper = {
     strid: "Stridsfärdigheter",
     rorelse: "Rörelsefärdigheter",
