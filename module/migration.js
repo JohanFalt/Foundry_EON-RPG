@@ -104,6 +104,7 @@ export async function DoNotice(systemVersion) {
       <div class="tray-action-area">
         <ul style="margin-top: 0">
           <li>Fliken Utrustning</li>
+          <li>Utrustningslistorna från grundboken</li>
           <li>Börjat med Varelseformuläret</li>
           <li>Färdigheter som har kännetecken, hantverk eller expertis</li>
           <li>Färdigheter kan ha - inget - Attribut som värde</li>          
