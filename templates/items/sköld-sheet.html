@@ -5,10 +5,10 @@
 
             <div class="clear" style="display: flex;">
                 <div style="min-width: 110px;">
-                    {{#if (eq item.system.attribut "")}}
+                    {{#if (eq item.system.grupp "")}}
                         <img src="{{item.img}}" class="item img-block" />
                     {{/if}}
-                    {{#if (eq item.system.attribut "skold")}}
+                    {{#if (eq item.system.grupp "skold")}}
                         <img src="{{EON.CONFIG.ikoner.foremal_skold}}" class="item img-block" />
                     {{/if}}	
                 </div>
@@ -21,11 +21,11 @@
                     </div>
 
                     <div class="number-value-text floating-label-group">
-                        <select name="system.attribut">                                
-                            {{#select item.system.attribut}}
+                        <select name="system.grupp">                                
+                            {{#select item.system.grupp}}
                                 <option value="">- Välj -</option>
                                 {{#each EON.CONFIG.vapengrupper as |vapengrupp key|}}
-                                    {{#if (eq vapengrupp.typ "forsvar")}}
+                                    {{#if (eq vapengrupp.grupp "forsvar")}}
                                         <option value="{{key}}">{{vapengrupp.namn}}</option>
                                     {{/if}}
                                 {{/each}}
@@ -35,11 +35,11 @@
                     </div>
 
                     <div class="number-value-text floating-label-group">
-                        <select class="inputdata" name="system.typ" data-source="shield">
+                        <select class="inputdata" name="system.mall" data-source="shield">
                             <option value="">- Välj -</option>                                       
-                            {{#select item.system.typ}}    
+                            {{#select item.system.mall}}    
                                 <option value="{{item._id}}">- Skräddarsytt -</option> 
-                                {{#each (getWeaponGroup EON.forsvar item.system.attribut) as |vapen key|}}     
+                                {{#each (getWeaponGroup EON.forsvar item.system.grupp) as |vapen key|}}     
                                     <option value="{{key}}">{{vapen.namn}}</option>               
                                 {{/each}}
                             {{/select}}
@@ -58,19 +58,24 @@
                     </div>
 
                     <div class="number-value-text floating-label-group ">
+                        <input class="attribute-value editable" name="system.pris" type="text" value="{{data.system.pris}}" data-dtype="Number" />
+                        <span class="floating-label">Pris (silver)</span>
+                    </div>
+
+                    <div class="number-value-text floating-label-group ">
                         <input class="attribute-value editable" name="system.skydd" type="text" value="{{data.system.skydd}}" data-dtype="Number" />
                         <span class="floating-label">Skydd</span>
                     </div>
 
                     <div class="clear">
                         <div class="pullLeft item-headline caption">1H</div>
-                        <div class="pullLeft"><input class="item-active" name="item.system.enhand.aktiv" type="checkbox" data-property="enhand" {{#if data.system.enhand.aktiv}} checked {{/if}} data-dtype="Boolean" /></div>
+                        <div class="pullLeft"><input class="item-active" name="system.enhand.aktiv" type="checkbox" data-property="enhand" {{isChecked data.system.enhand.aktiv}} data-dtype="Boolean" /></div>
                         <div class="pullLeft dice-value number-value-text tic pointer" data-property="enhand">{{getDiceValue item.system.enhand}}</div>
                     </div>
 
                     <div class="clear">
                         <div class="pullLeft item-headline caption">2H</div>
-                        <div class="pullLeft"><input class="item-active" name="item.system.tvahand.aktiv" type="checkbox" data-property="tvahand" {{#if data.system.tvahand.aktiv}} checked {{/if}} data-dtype="Boolean" /></div>
+                        <div class="pullLeft"><input class="item-active" name="system.tvahand.aktiv" type="checkbox" data-property="tvahand" {{isChecked data.system.tvahand.aktiv}} data-dtype="Boolean" /></div>
                         <div class="pullLeft dice-value number-value-text tic pointer" data-property="tvahand">{{getDiceValue item.system.tvahand}}</div>
                     </div>
 

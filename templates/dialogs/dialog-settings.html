@@ -3,7 +3,7 @@
     <label>{{this.name}}</label>
     <div class="form-fields">
         {{#if this.isBoolean}}
-            <input type="checkbox" name="{{this.scope}}.{{this.key}}" data-dtype="Boolean" {{checked this.value}} />
+            <input type="checkbox" name="{{this.scope}}.{{this.key}}" data-dtype="Boolean" {{isChecked this.value}} />
         {{else if this.isSelect}}
             <select name="{{this.scope}}.{{this.key}}">
             {{#select this.value}} 

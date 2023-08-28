@@ -1,9 +1,9 @@
 .editor-box {
-  border: 1px solid black;
+  border: 1px solid var(--eon-border-color);
   border-radius: 3px; 
   color: black;
   min-height: 200px;
-  background-color: var(--back-color-inputs) !important;
+  background-color: var(--eon-back-color-inputs) !important;
 }
 
 .editor-content {

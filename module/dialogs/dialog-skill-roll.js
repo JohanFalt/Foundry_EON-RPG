@@ -102,6 +102,9 @@ export class SkillRoll {
         this.grundTarning = item.system.varde["tvarde"];
         this.grundBonus = item.system.varde["bonus"];
         this.namn = item.system["namn"];
+        this.hantverk = item.system["hantverk"];
+        this.kannetecken = item.system["kannetecken"];
+        this.expertis = item.system["expertis"];
         this.close = false;
     }
 }
@@ -163,11 +166,25 @@ export class DialogSkillRoll extends FormApplication {
             return;
         }
 
+        var info = [];
+
+        if (this.object.hantverk) {
+            info.push("Hantverk");
+        }
+        if (this.object.kannetecken) {
+            info.push("Kännetecken");
+        }
+        if (this.object.expertis) {
+            info.push("Expertis");
+        }
+
         const roll = new DiceRollContainer(this.actor, this.config);
         roll.typeroll = CONFIG.EON.slag.fardighet;
         roll.action = this.object.namn;
         roll.number = parseInt(this.object.grundTarning);
         roll.bonus = parseInt(this.object.grundBonus);
+        roll.info = info;        
+
         const result = RollDice(roll);
 
         this.object.close = true;

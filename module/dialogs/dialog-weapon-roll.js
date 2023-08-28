@@ -35,7 +35,7 @@ export class WeaponRoll {
 
         // läs in värdena för vapenfärdigheten
         for (const fardighet of actor.system.listdata.fardigheter.strid) {
-			if (fardighet.name == item.system.attribut) {
+			if (fardighet.name == item.system.grupp) {
 				this.actorAttribut = fardighet.system.varde;
                 this.actorAttributNamn = fardighet.system.namn;
                 break;

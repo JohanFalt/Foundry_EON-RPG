@@ -20,15 +20,16 @@
 
 						<div class="clear">
 							<div class="pullLeft item-headline">Grupp</div>
-							<div class="pullLeft item-headline">{{getActorSkillGroup EON.CONFIG.fardighetgrupper data.system.typ}}</div>
+							<div class="pullLeft item-headline">{{getActorSkillGroup EON.CONFIG.fardighetgrupper data.system.grupp}}</div>
 						</div>
 
 						<div class="clear">
 							<div class="pullLeft item-headline">Attribut</div>
 							<div class="pullLeft">
 								<select name="system.attribut">
-									{{#select item.system.attribut}}
-										<option value="">- Välj -</option>
+									<option value="">- Välj -</option>
+									{{#select item.system.attribut}}										
+										<option value="">- Inget attribut -</option>
 										{{#each EON.CONFIG.grundegenskaper as |grundegenskap key|}}
 											<option value="{{key}}">{{grundegenskap.namn}}</option>
 										{{/each}}
@@ -46,12 +47,26 @@
 					<div class="item-mid">
 						<div class="clear">
 							<div class="pullLeft item-headline">Lättlärd</div>
-							<div class="pullLeft"><input class="svarighet pointer item-headline" type="checkbox" data-value="L" {{#if data.system.installningar.lattlard}} checked {{/if}} data-dtype="String" /></div>
+							<div class="pullLeft"><input class="svarighet pointer item-headline" type="checkbox" data-value="L" {{isChecked data.system.installningar.lattlard}} data-dtype="String" /></div>
 						</div>
 						<div class="clear">
 							<div class="pullLeft item-headline">Svårlärd</div>
-							<div class="pullLeft"><input class="svarighet pointer item-headline" type="checkbox" data-value="S" {{#if data.system.installningar.svarlard}} checked {{/if}} data-dtype="String" /></div>
-						</div>   
+							<div class="pullLeft"><input class="svarighet pointer item-headline" type="checkbox" data-value="S" {{isChecked data.system.installningar.svarlard}} data-dtype="String" /></div>
+						</div> 
+						{{#if (eq item.system.grupp "ovriga")}}
+							<div class="clear">
+								<div class="pullLeft item-headline">Hantverk</div>
+								<div class="pullLeft"><input class="item-property pointer item-headline" type="checkbox" {{isChecked data.system.hantverk}} data-dtype="Boolean" data-field="hantverk" /></div>
+							</div>
+							<div class="clear">
+								<div class="pullLeft item-headline">Expertis</div>
+								<div class="pullLeft"><input class="item-property pointer item-headline" type="checkbox" {{isChecked data.system.expertis}} data-dtype="Boolean" data-field="expertis" /></div>
+							</div>  
+							<div class="clear">
+								<div class="pullLeft item-headline">Kännetecken</div>
+								<div class="pullLeft"><input class="item-property pointer item-headline" type="checkbox" {{isChecked data.system.kannetecken}} data-dtype="Boolean" data-field="kannetecken" /></div>
+							</div>
+						{{/if}}
 					</div>         
 				</div>
 

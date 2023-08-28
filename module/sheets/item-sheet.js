@@ -1,6 +1,6 @@
-import CreateHelper from "./create-helper.js";
+import CreateHelper from "../create-helper.js";
 
-export class EonItemSheet extends ItemSheet {
+export default class EonItemSheet extends ItemSheet {
 	
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
@@ -111,7 +111,7 @@ export class EonItemSheet extends ItemSheet {
 		const element = event.currentTarget;
 		const dataset = element.dataset;
 		
-		let active = this.item.system[dataset.property].aktiv;
+		let active = this.item.system[dataset.property];
 
 		const itemData = duplicate(this.item);
 
@@ -232,7 +232,7 @@ export class EonItemSheet extends ItemSheet {
 		const dataset = element.dataset;
 		const itemData = duplicate(this.item);
 
-		if (dataset.type == "boolean") {
+		if (dataset.dtype.toLowerCase() == "boolean") {
 			itemData.system[dataset.field] = !itemData.system[dataset.field];
 		}
 
@@ -251,20 +251,29 @@ export class EonItemSheet extends ItemSheet {
 		el.find(".weapon-property").each(function () {
 			if ($(this).is(':checked')) {
 				const sibling = $(this).parent().siblings();
-				let newPropery = [];
+				let newPropery;
 
+				// Om ruta för nivå av egenskap finns
 				if (sibling.length > 0) {
 					if (Number.isInteger(parseInt(sibling[0].children[0].value))) {
-						newPropery = [this.value, parseInt(sibling[0].children[0].value)];
-						
+						newPropery = {
+							namn: this.value,
+							varde: parseInt(sibling[0].children[0].value)
+						}
 					}
 					else {
-						newPropery = [this.value, 0];
+						newPropery = {
+							namn: this.value,
+							varde: 0
+						}
 						ui.notifications.warn("Egenskapsvärdet måste vara ett heltal.");
 					}				
 				}
 				else {
-					newPropery = [this.value];
+					newPropery = {
+						namn: this.value,
+						varde: 0
+					}
 				}
 
 				properties.push(newPropery);
@@ -286,14 +295,14 @@ export class EonItemSheet extends ItemSheet {
 		const source = dataset.source;
 
 		if (source == "weapon-close") {
-			const typ = this.item.system.attribut;
+			const typ = this.item.system.grupp;
 			const vapenmall = element.value;
 			const vapen = game.EON.narstridsvapen[typ][vapenmall];
 
 			const itemData = duplicate(this.item);
 			itemData.name = vapen.namn;
-			itemData.system.typ = vapenmall;
-			itemData.system.attribut = vapen.attribut;
+			itemData.system.mall = vapenmall;
+			itemData.system.grupp = vapen.grupp;
 			itemData.system.enhand = vapen.enhand;
 			itemData.system.tvahand = vapen.tvahand;
 			itemData.system.hugg = vapen.hugg;
@@ -301,6 +310,7 @@ export class EonItemSheet extends ItemSheet {
 			itemData.system.stick = vapen.stick;
 			itemData.system.langd = vapen.langd;
 			itemData.system.vikt = vapen.vikt;
+			itemData.system.pris = vapen.pris;
 			itemData.system.egenskaper = vapen.egenskaper;
 			await this.item.update(itemData);
 			this.render();
@@ -309,14 +319,14 @@ export class EonItemSheet extends ItemSheet {
 		}
 
 		if (source == "weapon-range") {
-			const typ = this.item.system.attribut;
+			const typ = this.item.system.grupp;
 			const vapenmall = element.value;
 			const vapen = game.EON.avstandsvapen[typ][vapenmall];
 
 			const itemData = duplicate(this.item);
 			itemData.name = vapen.namn;
-			itemData.system.typ = vapenmall;
-			itemData.system.attribut = vapen.attribut;
+			itemData.system.mall = vapenmall;
+			itemData.system.grupp = vapen.grupp;
 			itemData.system.enhand = vapen.enhand;
 			itemData.system.tvahand = vapen.tvahand;
 			itemData.system.rackvidd = vapen.rackvidd;
@@ -324,6 +334,7 @@ export class EonItemSheet extends ItemSheet {
 			itemData.system.skada = vapen.skada;
 			itemData.system.langd = vapen.langd;
 			itemData.system.vikt = vapen.vikt;
+			itemData.system.pris = vapen.pris;
 			itemData.system.egenskaper = vapen.egenskaper;
 			await this.item.update(itemData);
 			this.render();
@@ -332,14 +343,14 @@ export class EonItemSheet extends ItemSheet {
 		}
 
 		if (source == "shield") {
-			const typ = this.item.system.attribut;
+			const typ = this.item.system.grupp;
 			const vapenmall = element.value;
 			const vapen = game.EON.forsvar[typ][vapenmall];
 
 			const itemData = duplicate(this.item);
 			itemData.name = vapen.namn;
-			itemData.system.typ = vapenmall;
-			itemData.system.attribut = vapen.attribut;
+			itemData.system.mall = vapenmall;
+			itemData.system.grupp = vapen.grupp;
 			itemData.system.enhand = vapen.enhand;
 			itemData.system.tvahand = vapen.tvahand;
 			itemData.system.narstrid = vapen.narstrid;
@@ -349,6 +360,7 @@ export class EonItemSheet extends ItemSheet {
 			itemData.system.skada = vapen.skada;
 			itemData.system.langd = vapen.langd;
 			itemData.system.vikt = vapen.vikt;
+			itemData.system.pris = vapen.pris;
 			itemData.system.egenskaper = vapen.egenskaper;
 			await this.item.update(itemData);
 			this.render();
@@ -364,7 +376,7 @@ export class EonItemSheet extends ItemSheet {
 			let belastning = 0;
 			let namn = "";
 
-			const typ = dataset.typ;
+			const kroppsdel = dataset.kroppsdel;
 			const itemData = duplicate(this.item);
 			itemData.system.belastning = 0;
 			itemData.system.tacker = [];
@@ -374,12 +386,12 @@ export class EonItemSheet extends ItemSheet {
 				hugg = rustning.hugg;
 				kross = rustning.kross;
 				stick = rustning.stick;
-				belastning = rustning.belastning * game.EON.CONFIG.kroppsdelsfaktor[typ];
+				belastning = rustning.belastning * game.EON.CONFIG.kroppsdelsfaktor[kroppsdel];
 				namn = rustning.namn;
 			}
 
 			for (const del of itemData.system.kroppsdel) {
-				if (del.typ == typ) {
+				if (del.kroppsdel == kroppsdel) {
 					del.material = rustningsmall;
 					del.hugg = hugg;
 					del.kross = kross;
@@ -399,10 +411,36 @@ export class EonItemSheet extends ItemSheet {
 			return;
 		}
 
+		if (source == "equipment") {
+			const typ = this.item.system.grupp;
+			const utrustningmall = element.value;
+			const utrustning = game.EON.utrustning[typ][utrustningmall];
+
+			const itemData = duplicate(this.item);
+			itemData.name = utrustning.namn;			
+			itemData.system.mall = utrustningmall;
+			itemData.system.grupp = typ;
+			itemData.system.vikt = utrustning.vikt;
+			itemData.system.pris = utrustning.pris;
+
+			if (utrustning.installningar.behallare) {
+				itemData.system.installningar.behallare = utrustning.installningar.behallare;
+				itemData.system.volym.enhet = utrustning.volym.enhet;
+				itemData.system.volym.antal = utrustning.volym.antal;
+				itemData.system.volym.max = utrustning.volym.max;
+			}
+			await this.item.update(itemData);
+			this.render();
+
+			return;
+		}
+
 		if (source == "weapon-property") {
 			this._setVapenEgenhet(event);
 
 			return;
 		}
+
+		ui.notifications.error("Saknar _onsheetChange source typ");
 	}
 }

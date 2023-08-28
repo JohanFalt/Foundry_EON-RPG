@@ -21,7 +21,7 @@ export default class CreateHelper {
         for (const kroppsdel in config.kroppsdelar[bok]) {
             let del = {
                 namn: config.kroppsdelar[bok][kroppsdel],
-                typ: kroppsdel,
+                kroppsdel: kroppsdel,
                 version: version,
                 material: "",                
                 stick: 0,
@@ -36,13 +36,13 @@ export default class CreateHelper {
         return kroppsdelar;
     }
 
-    static async SkapaNarstridsvapen(actor, config, vapengrupp, vapennamn, version) {
+    static async SkapaNarstridsvapen(actor, config, vapengrupp, vapennamn, version, buren = false) {
 
         for (const grupp in config.vapengrupper) {
             if (grupp == vapengrupp) {
                 for (const vapen in game.EON.narstridsvapen[grupp]) {
                     if (vapen == vapennamn) {
-                        let itemData = await this._SkapaNarstridsvapenItem(game.EON.narstridsvapen[grupp][vapen], vapen, version);
+                        let itemData = await this._SkapaNarstridsvapenItem(game.EON.narstridsvapen[grupp][vapen], vapen, version, buren);
                         await actor.createEmbeddedDocuments("Item", [itemData]);
                         break;
                     }
@@ -51,33 +51,6 @@ export default class CreateHelper {
             }
         }       
     }
-
-    /* static async SkapaRustningsdelar(actor, item, config, version) {
-        let bok = "grund";
-
-        if (config.settings.bookCombat) {
-            bok = "strid";
-        }
-
-        for (const kroppsdel in config.kroppsdelar[bok]) {
-            let itemDel = {
-                name: config.kroppsdelar[bok][kroppsdel],
-                type: "Rustning",
-                
-                data: {
-                    installningar: {
-                        skapad: true,
-                        version: version,
-                        buren: item.system.installningar.buren
-                    },
-                    typ: "rustningsdel",
-                    kroppsdel: kroppsdel
-                }
-            };
-
-            await actor.createEmbeddedDocuments("Item", [itemDel]);
-        } 
-    } */
 
     static async _SkapaFardighetItem(grupp, fardighet, nyckel, worldVersion) {
 
@@ -93,7 +66,7 @@ export default class CreateHelper {
                 namn: fardighet.namn,
                 attribut: fardighet.attribut,
                 referens: fardighet.referens,
-                typ: grupp,
+                grupp: grupp,
                 varde: {
                     tvarde: parseInt(fardighet.grund.tvarde),
                     bonus: parseInt(fardighet.grund.bonus)
@@ -104,7 +77,7 @@ export default class CreateHelper {
         return itemData;
     }
 
-    static async _SkapaNarstridsvapenItem(vapen, nyckel, version) {
+    static async _SkapaNarstridsvapenItem(vapen, nyckel, version, buren = false) {
 
         let itemData = {
             name: vapen.namn,
@@ -113,12 +86,13 @@ export default class CreateHelper {
             data: {
                 installningar: {
                     skapad: true,
-                    version: version
+                    version: version,
+                    buren: buren
                 },
-                typ: nyckel,
+                mall: nyckel,
                 enhand: vapen.enhand,
                 tvahand: vapen.tvahand,
-                attribut: vapen.attribut,
+                grupp: vapen.grupp,
                 referens: vapen.referens,
                 hugg: vapen.hugg,
                 kross: vapen.kross,

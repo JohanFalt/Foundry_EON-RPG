@@ -1,8 +1,8 @@
 <div class="weapon-area">
 
-    <div class="clear" style="margin-bottom: 25px;">
+<!--     <div class="clear" style="margin-bottom: 25px;">
         <button class="vrollable pullLeft three-column large-headline" title="{{getDiceValue (getActorSkillGroupValue actor 'undvika' 'rorelse')}}" data-source="skill" data-itemid="{{getActorSkillId actor 'undvika' 'rorelse'}}">UNDVIKA</button>
-    </div>
+    </div> -->
 
     <div class="clear attribute" style="margin-bottom: 25px;">
         <div class="pullLeft three-column">
@@ -11,11 +11,11 @@
         </div>   
         <div class="pullLeft three-column">
             <div class="pullLeft headline">Grundrustning</div>
-            <div class="pullLeft number-value-text"><input class="attribute-value editable" type="text" value="{{actor.system.harleddegenskaper.grundrustning}}" disabled readonly /></div>
+            <div class="pullLeft number-value-text"><input class="attribute-value editable" type="text" value="{{data.system.harleddegenskaper.grundrustning}}" disabled readonly /></div>
         </div>     
         <div class="pullLeft three-column">
             <div class="pullLeft headline">Läkningstakt</div>
-            <div class="pullLeft number-value-text"><input class="skill-value" type="number" name="system.strid.lakningstakt" value="{{actor.system.strid.lakningstakt}}" data-dtype="Number" /></div> <!-- min="0" max="50" -->
+            <div class="pullLeft number-value-text"><input class="skill-value" type="number" name="system.strid.lakningstakt" value="{{data.system.strid.lakningstakt}}" data-dtype="Number" /></div> <!-- min="0" max="50" -->
         </div>
     </div>
     

@@ -151,50 +151,83 @@ eon.vapenavstand = {
 eon.vapengrupper = {
     slagsmal: {
         namn: "Slagsmål",
-        typ: "narstridsvapen"
+        grupp: "narstridsvapen"
     },
     dolk: {
         namn:"Dolk",
-        typ: "narstridsvapen"
+        grupp: "narstridsvapen"
     },
     kedjevapen: {
         namn:"Kedjevapen",
-        typ: "narstridsvapen"
+        grupp: "narstridsvapen"
     },
     klubba: {
         namn:"Klubba",
-        typ: "narstridsvapen"
+        grupp: "narstridsvapen"
     },
     spjut: {
         namn:"Spjut",
-        typ: "narstridsvapen"
+        grupp: "narstridsvapen"
     },
-    stava: {
+    stav: {
         namn:"Stav",
-        typ: "narstridsvapen"
+        grupp: "narstridsvapen"
     },
     svard: {
         namn:"Svärd",
-        typ: "narstridsvapen"
+        grupp: "narstridsvapen"
     },
     yxa: {
         namn:"Yxa",
-        typ: "narstridsvapen"
+        grupp: "narstridsvapen"
     },
     armborst: {
         namn:"Armborst",
-        typ: "avstandsvapen"
+        grupp: "avstandsvapen"
     },
     bage: {
         namn:"Båge",
-        typ: "avstandsvapen"
+        grupp: "avstandsvapen"
     },
     kastvapen: {
         namn:"Kastvapen",
-        typ: "avstandsvapen"
+        grupp: "avstandsvapen"
     },
     skold: {
         namn:"Sköld",
-        typ: "forsvar"
+        grupp: "forsvar"
     }
+}
+
+eon.utrustningsgrupper = {
+    personlig: "Personlig utrustning",
+    husgrad: "Husgråd",
+    spel: "Spel",
+    belysning: "Belysning & elddon",
+    forvaring: "Förvaring",
+    special: "Specialutrustning",
+    vapen: "Vapentillbehör",
+    lakare: "Läkareutrustning",
+    typ: "Tyg & skinn",
+    huvudbonad: "Huvudbonader",
+    klader: "Kläder",
+    skodon: "Skodon",
+    vildmark: "Vildmarksutrustning",
+    jakt: "Jaktutrustning",
+    fiske: "Fiskeutrustning",
+    klatter: "Klätterutrustning",
+    verktyg: "Verktyg",
+    musik: "Musikinstrument",
+    behallare: "Behållare",
+    skrivdon: "Skrivdon",
+    dryck: "Dryck",
+    mat: "Måltider",
+    proviant: "Proviant"
+}
+
+eon.djurgrupper = {
+    litenvarelse: "Liten varelse",
+    meddelstorvarelse: "Medelstor varelse",
+    storvarelse: "Stor varelse",
+    mycketstorvarelse: "Mycket stor varelse"
 }

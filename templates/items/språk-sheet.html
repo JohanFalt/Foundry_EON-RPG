@@ -28,15 +28,15 @@
 					<div class="item-mid">
 						<div class="clear">
 							<div class="pullLeft item-headline">Talar med brytning</div>
-							<div class="pullLeft"><input class="item-property pointer item-headline" type="checkbox" data-type="boolean" data-field="talabrytning" {{#if data.system.talabrytning}} checked {{/if}} data-dtype="Boolean" /></div>
+							<div class="pullLeft"><input class="item-property pointer item-headline" type="checkbox" data-type="boolean" data-field="talabrytning" {{isChecked data.system.talabrytning}} data-dtype="Boolean" /></div>
 						</div>
 						<div class="clear">
 							<div class="pullLeft item-headline">Talar flytande</div>
-							<div class="pullLeft"><input class="item-property pointer item-headline" type="checkbox" data-type="boolean" data-field="talaflytande" {{#if data.system.talaflytande}} checked {{/if}} data-dtype="Boolean" /></div>
+							<div class="pullLeft"><input class="item-property pointer item-headline" type="checkbox" data-type="boolean" data-field="talaflytande" {{isChecked data.system.talaflytande}} data-dtype="Boolean" /></div>
 						</div>   
                         <div class="clear">
 							<div class="pullLeft item-headline">Kan läsa och skriva</div>
-							<div class="pullLeft"><input class="item-property pointer item-headline" type="checkbox" data-type="boolean" data-field="lasaskriva" {{#if data.system.lasaskriva}} checked {{/if}} data-dtype="Boolean" /></div>
+							<div class="pullLeft"><input class="item-property pointer item-headline" type="checkbox" data-type="boolean" data-field="lasaskriva" {{isChecked data.system.lasaskriva}} data-dtype="Boolean" /></div>
 						</div>
 					</div>         
 				</div>

@@ -11,79 +11,87 @@
     src: url('../assets/fonts/vinque rg.otf') format("opentype");
 }
 
-@font-face {
-    font-family: "eon-font";
-    src: url('../assets/fonts/OFLGoudyStMTT.ttf') format("truetype");
-}
-
-@font-face {
-    font-family: "eon-font-siffror";
-    src: url('../assets/fonts/Sukhumala Regular.otf') format("opentype");
-}
-
 /* ROOT and variables */
-
 :root {
-    --main-font: "eon-font", Arial, Helvetica, sans-serif;
-    --main-font-siffror: "eon-font-siffror", Arial, Helvetica, sans-serif;
-    --main-rubrik: "rubrik", Arial, Helvetica, sans-serif;
-    --main-stor-rubrik: "stor-rubrik", Arial, Helvetica, sans-serif;
+   
+    --eon-main-font: Verdana, Helvetica, sans-serif;    
+    --eon-main-headline: "rubrik", Helvetica, sans-serif;
+    --eon-main-large-headline: "stor-rubrik", Helvetica, sans-serif;
 
-    --image-width: 105px;
+    --eon-image-width: 105px;
 
-    --font-xsmall: 10px;
-    --font-small: 12px;
-    --font-large: 16px;
-    --font-x-large: 24px;
-    --font-tabsize: 14px;
+    --eon-box-headline-size: 6px;
+    --eon-font-xsmall: 8px;
+    --eon-font-small: 12px;
+    --eon-font-large: 16px;
+    --eon-font-x-large: 24px;
+    --eon-font-tabsize: 14px;
 
-    --line-height-default: 23px;
-    --line-height-floattext: 30px;
+    --eon-line-height-default: 23px;
+    --eon-line-height-floattext: 30px;
 
-    --sheet-background-color: url('../assets/img/graphics/background.jpg');
-    --sheet-text-color: black;
-    --main-full-color: rgba(121, 8, 19, 1);
-    --back-color-inputs: white;
-    --text-normal-color: black;
+    --eon-sheet-background-color: url('../assets/img/graphics/background.jpg');
+    --eon-sheet-text-color: black;
+    --eon-main-full-color: rgba(121, 8, 19, 1);
+    --eon-back-color-inputs: white;
+    --eon-back-readonly-color-inputs: rgb(242, 242, 242, 1);
+    --eon-text-normal-color: black;
+    --eon-border-color: black;
 
-    --item-background-color: white;
+    --eon-item-background-color: url('../assets/img/graphics/background.jpg');
 
-    --select-empty-background-color: black;
-    --select-empty-text-color: white;
+    --eon-select-empty-background-color: black;
+    --eon-select-empty-text-color: white;
     
-    --color-good: rgb(2, 106, 2);
-    --color-bad: rgb(151, 3, 3);
+    --eon-color-good: rgb(2, 106, 2);
+    --eon-color-bad: rgb(151, 3, 3);
 }
 
 /* Sheet */
 
 .rollperson:not(.minimized) {
     min-width: 800px;
+    width: 800px;
     min-height: 1200px;
+    height: 1200px;
+}
+
+.varelse:not(.minimized) {
+    min-width: 600px;
+    width: 600px;
+    min-height: 600px;
+    height: 600px;
 }
 
 .itemsheet:not(.minimized) {
     min-width: 500px;
-    min-height: 650px;
+    width: 500px;
+    min-height: 600px;
+    height: 600px;
+}
+
+.itemsheet.vapen:not(.minimized) {
+    min-width: 700px;
+    width: 700px;
 }
 
 .general-dialog:not(.minimized) {
     min-width: 500px;
     min-height: 500px;
+    height: 500px;
 }
 
-.rollperson .window-content {
-    background: var(--sheet-background-color) no-repeat;
+.rollperson .window-content,
+.varelse .window-content {
+    background: var(--eon-sheet-background-color) no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
 }
 
-
-
 .itemsheet .window-content {
-    background: var(--item-background-color) no-repeat;
+    background: var(--eon-item-background-color) no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -92,23 +100,24 @@
 
 .sheet-item,
 .sheet-character {
-    font-family: var(--main-font);
+    font-family: var(--eon-main-font);
+    color: var(--eon-sheet-text-color);
 }
 
 span.resource-value,
 .EON input[type="text"],
 .EON input[type="number"],
 .EON select {
-    background: var(--back-color-inputs);
-    background-color: var(--back-color-inputs);
-    color: var(--text-normal-color);    
-    height: var(--line-height-default);
-    line-height: var(--line-height-default);
+    background: var(--eon-back-color-inputs);
+    background-color: var(--eon-back-color-inputs);
+    color: var(--eon-text-normal-color);    
+    height: var(--eon-line-height-default);
+    line-height: var(--eon-line-height-default);
 }
 
 .EON input[type="text"]:disabled,
 .EON input[type="number"]:disabled {
-    background: rgba(255, 255, 255, 0.4);
+    background: var(--eon-back-readonly-color-inputs);
     cursor: not-allowed;
     border-top-style: none;
     border-left-style: none;
@@ -119,17 +128,17 @@ span.resource-value,
 }
 
 .EON select option {
-    background: var(--back-color-inputs);
-    color: var(--text-normal-color);
+    background: var(--eon-back-color-inputs);
+    color: var(--eon-text-normal-color);
 }
 
 .EON select option[value=""] {
-    background: var(--select-empty-background-color);
-    color: var(--select-empty-text-color);
+    background: var(--eon-select-empty-background-color);
+    color: var(--eon-select-empty-text-color);
 }
 
 .sheet-character {
-    font-size: var(--font-small);
+    font-size: var(--eon-font-small);
     font-weight: normal;
 }
 
@@ -155,38 +164,50 @@ span.resource-value,
 
 /* General */
 
+.EON .item-box {
+    min-height: 100px; 
+    margin-bottom: 25px;
+}
+
 img.item {
     max-width: 100px;
 }
 
 .smalltext {
-    font-size: var(--font-xsmall);
+    font-size: var(--eon-font-xsmall);
 }
 
 .caption {
-    width:40%;
-    line-height: var(--line-height-default);
+    width:45%;
+    line-height: var(--eon-line-height-default);
+}
+
+.avtrubbning-column .caption {
+    width:50%;
 }
 
 .headline {
-    font-family: var(--main-rubrik);
-    font-size: var(--font-large);    
+    font-family: var(--eon-main-headline);
+    font-size: var(--eon-font-large);    
+    font-weight: normal;
     margin-bottom: 5px;    
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--eon-border-color);
 }
 
 .large-headline {
-    font-family: var(--main-rubrik);
-    font-size: var(--font-x-large);   
+    font-family: var(--eon-main-headline);
+    font-size: var(--eon-font-x-large);   
+    font-weight: normal;
 }
 
 .large-main-headline {
-    font-family: var(--main-stor-rubrik); 
-    font-size: var(--font-x-large);   
+    font-family: var(--eon-main-large-headline); 
+    font-size: var(--eon-font-x-large);   
+    font-weight: normal;
 }
 
 .number-value-text {
-    font-family: var(--main-font-siffror);
+    font-family: var(--eon-main-font);
 }
 
 .EON .pullLeft {
@@ -235,7 +256,7 @@ img.item {
 }
 
 .attribute-value {
-    line-height: var(--line-height-default);
+    line-height: var(--eon-line-height-default);
 }
 
 .pointer:hover,
@@ -249,7 +270,7 @@ img.item {
 .vrollable:focus {
     color: #000;  
     cursor: pointer;
-    text-shadow: 0 0 10px var(--main-full-color);
+    text-shadow: 0 0 10px var(--eon-main-full-color);
 }
 
 .vrollable:hover,
@@ -261,24 +282,24 @@ img.item {
 }
 
 .green {
-    color: var(--color-good);
+    color: var(--eon-color-good);
 }
 
 .red {
-    color: var(--color-bad);
+    color: var(--eon-color-bad);
 }
 
 .dice-value {
-    background-color: var(--back-color-inputs);
-    font-family: var(--main-font-siffror);
+    background-color: var(--eon-back-color-inputs);
+    font-family: var(--eon-main-font);
     width: 50px;
     text-align: center;
     margin-left: 5px;
     margin-right: 5px;
     border-radius: 3px;
-    border: 1px solid black;
-    height: var(--line-height-default);
-    line-height: var(--line-height-default);
+    border: 1px solid var(--eon-border-color);
+    height: var(--eon-line-height-default);
+    line-height: var(--eon-line-height-default);
 }
 
 .macroBtn {
@@ -288,6 +309,14 @@ img.item {
     margin-right: 5px;
     padding-right: 0px;
 }
+
+.EON .information-area {
+    font-size: 10px;
+    color: #7e7e7e;
+    width: 100%;
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
 
 /* Slå tärning */
 
@@ -311,7 +340,7 @@ button.three-button {
 }
 
 button.active {
-    background-color: var(--back-color-inputs);
+    background-color: var(--eon-back-color-inputs);
 }
 
 /* Navigation */
@@ -323,14 +352,14 @@ button.active {
 .tabButton:hover,
 .tabButton:focus,
 .tabButton.active {
-    background-color: var(--back-color-inputs);
+    background-color: var(--eon-back-color-inputs);
 }
 
 .tabButton {
-    width: 14%;
+    width: 16%;
     min-width: 105px;
     text-align: center;
-    line-height: 30px;
+    line-height: var(--eon-line-height-floattext);
 }
 
 .tabIcon {
@@ -344,7 +373,8 @@ button.active {
 }
 
 .headlineTabs {
-    font-size: var(--font-tabsize);    
+    font-family: var(--eon-main-headline);
+    font-size: var(--eon-font-tabsize);    
     border-bottom-style: solid;
     border-bottom-width: 1px;
     border-top-style: solid;
@@ -363,13 +393,13 @@ button.active {
 }
 
 .resource-circle {
-  line-height: 30px;
+    line-height: var(--eon-line-height-floattext);
 }
 
 .resource-circle .resource-value {
   height: 14px;
   width: 14px;
-  border: 1px solid black;
+  border: 1px solid var(--eon-border-color);
   display: inline-block;
   border-radius: 50%;
   cursor: pointer;
@@ -378,13 +408,13 @@ button.active {
 .resource-box .resource-value {
     height: 16px;
     width: 16px;
-    border: 1px solid black;
+    border: 1px solid var(--eon-border-color);
     display: inline-block;
     cursor: pointer;
 }
 
 span.resource-box-center {
-    margin-top: calc(var(--line-height-floattext) / 4);
+    margin-top: calc(var(--eon-line-height-floattext) / 4);
 }
 
 .resource-value.active {
@@ -418,18 +448,18 @@ span.resource-box-center {
 
 .resource-box-text {
     width: 16px;
-    margin: 1px;
+    margin-right: 4px;
     text-align: center;
 }
 
 .image-column {
     display: inline-block;
-    width: var(--image-width);
+    width: var(--eon-image-width);
 }
 
 .remaining-width {
     display: inline-block;
-    width: calc(100% - var(--image-width));
+    width: calc(100% - var(--eon-image-width));
 }
 
 .attribute-area {
@@ -460,8 +490,6 @@ input.editable {
     border-bottom-width: 1px;
     border-right-style: solid;
     border-right-width: 1px;
-    margin-left: 5px;
-    margin-right: 5px;
 }
 
 input.attribute-value {    
@@ -474,7 +502,7 @@ input.text-value {
 }
 
 .avtrubbning-column {
-    width: 80%
+    width: 90%
 }
 
 /* FÄRDIGHETER */
@@ -502,7 +530,7 @@ input.skill-value {
 }
 
 .skill-headline.headline {
-    width: 65%;
+    width: 71%;
 }
 
 .skill-short {
@@ -579,9 +607,9 @@ input.skill-value {
 .weapon-value {
     width: 45px;
     line-height: 20px;
-    background-color: var(--back-color-inputs);
+    background-color: var(--eon-back-color-inputs);
     border-radius: 3px;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--eon-border-color);
     height: 20px;
     margin: 3px 5px;
     text-align: center;
@@ -595,21 +623,22 @@ input.skill-value {
 .floating-label-group .floating-div-label {
   position: absolute;
   pointer-events: none;
-  font-size: 7px;
+  font-size: var(--eon-box-headline-size);
   left: 5px;
   top: 2px;  
 }
 .floating-label-group .floating-label {
     position: absolute;
     pointer-events: none;
-    font-size: 7px;
+    font-size: var(--eon-box-headline-size);
     top: 0px;
-    left: 8px;
+    left: 3px;
     transition: all 0.2s ease;
     opacity: 1;
 }
 .floating-label-group .floating-label.skill-label {
-    top: -7px;
+    top: -8px;
+    left: 7px;
 }
 .floating-label-group input:focus ~ .floating-label,
 .floating-label-group input:disabled ~ .floating-label,
@@ -628,31 +657,33 @@ input.skill-value {
 .floating-label-group input,
 .floating-label-group select {
   padding-left: 7px;
-  height: var(--line-height-floattext);
+  height: var(--eon-line-height-floattext);
   padding: 4px 0 0 0;
 }
 .floating-label-group input.skill-label {
-    height: var(--line-height-default);
-    padding: 8px 0 0 0;
+    height: var(--eon-line-height-default);
+    padding: 4px 0 0 0;
 }
 
 @media all and (max-height : 1200px) {
-    .rollperson:not(.minimized) {
+    .rollperson:not(.minimized),
+    .varelse:not(.minimized) {
         min-height: 400px;
     }
 
-    .itemsheet.utrustning.vapen:not(.minimized),
+    .itemsheet.vapen:not(.minimized),
     .itemsheet:not(.minimized) {
         min-height: 400px;
     }
 }
 
 @media all and (max-width : 1280px) {
-    .rollperson:not(.minimized) {
+    .rollperson:not(.minimized),
+    .varelse:not(.minimized) {
         min-width: 400px;
     }
 
-    .itemsheet.utrustning.vapen:not(.minimized),
+    .itemsheet.vapen:not(.minimized),
     .itemsheet:not(.minimized) {
         min-width: 400px;
     }

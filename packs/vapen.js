@@ -1,4 +1,4 @@
-{
+export const datavapen = {
     "egenskaper": {
         "avvapnande": {
             "namn": "Avväpnande",
@@ -117,7 +117,7 @@
         "slagsmal": {
             "genvernavar": {
                 "namn": "Genvernävar",
-                "attribut": "slagsmal",
+                "grupp": "slagsmal",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 0,
@@ -145,11 +145,12 @@
                 },
                 "langd": 0,
                 "vikt": 0,
-                "egenskaper": [["begransad"], ["obevapand"], ["sargande"], ["snabb"]]
+                "pris": 0,
+                "egenskaper": [{namn: "begransad"}, {namn: "obevapand"}, {namn: "sargande"}, {namn: "snabb"}]
             },    
             "obevapnad": {
                 "namn": "Obeväpnad",
-                "attribut": "slagsmal",
+                "grupp": "slagsmal",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 0,
@@ -177,11 +178,12 @@
                 },
                 "langd": 0,
                 "vikt": 0,
-                "egenskaper": [["begransad"], ["obevapand"], ["snabb"]]
+                "pris": 0,
+                "egenskaper": [{namn: "begransad"}, {namn: "obevapand"}, {namn: "snabb"}]
             },        
             "tirakklor": {
                 "namn": "Tirakklor",
-                "attribut": "slagsmal",
+                "grupp": "slagsmal",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 0,
@@ -209,13 +211,14 @@
                 },
                 "langd": 0,
                 "vikt": 0,
-                "egenskaper": [["begransad"], ["obevapand"], ["snabb"], ["vadlig"]]
+                "pris": 0,
+                "egenskaper": [{namn: "begransad"}, {namn: "obevapand"}, {namn: "snabb"}, {namn: "vadlig"}]
             }
         },
         "dolk": {
             "kniv": {
                 "namn": "Kniv",
-                "attribut": "dolk",
+                "grupp": "dolk",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 0,
@@ -243,11 +246,12 @@
                 },
                 "langd": 20,
                 "vikt": 0.2,
-                "egenskaper": [["begransad"], ["precis", 2]]
+                "pris": 3,
+                "egenskaper": [{namn: "begransad"}, {namn: "precis", varde: 2}]
             },
             "dolk": {
                 "namn": "Dolk",
-                "attribut": "dolk",
+                "grupp": "dolk",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 0,
@@ -275,13 +279,14 @@
                 },
                 "langd": 30,
                 "vikt": 0.3,
-                "egenskaper": [["begransad"], ["precis", 2], ["vadlig"]]
+                "pris": 10,
+                "egenskaper": [{namn: "begransad"}, {namn: "precis", varde: 2}, {namn: "vadlig"}]
             }
         },
         "kedjevapen": {     
             "petya": {
                 "namn": "Petya",
-                "attribut": "kedjevapen",
+                "grupp": "kedjevapen",
                 "enhand": {
                     "aktiv": false,
                     "tvarde": 0,
@@ -309,11 +314,12 @@
                 },
                 "langd": 360,
                 "vikt": 3.5,
-                "egenskaper": [["avvapnande", 1], ["bojlig"], ["rackvidd", 2]]
+                "pris": 50,
+                "egenskaper": [{namn: "avvapnande", varde: 1}, {namn: "bojlig"}, {namn: "rackvidd", varde: 2}]
             },
             "stridsgissel": {
                 "namn": "Stridsgissel",
-                "attribut": "kedjevapen",
+                "grupp": "kedjevapen",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 4,
@@ -341,13 +347,14 @@
                 },
                 "langd": 90,
                 "vikt": 2,
-                "egenskaper": [["bojlig"]]
+                "pris": 70,
+                "egenskaper": [{namn: "bojlig"}]
             } 
         },
         "klubba": {
             "genverklubba": {
                 "namn": "Genverklubba",
-                "attribut": "klubba",
+                "grupp": "klubba",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 4,
@@ -375,11 +382,12 @@
                 },
                 "langd": 120,
                 "vikt": 3.1,
-                "egenskaper": [["brutal"]]
+                "pris": 10,
+                "egenskaper": [{namn: "brutal"}]
             },
             "morgonstjarna": {
                 "namn": "Morgonstjärna",
-                "attribut": "klubba",
+                "grupp": "klubba",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 4,
@@ -407,11 +415,12 @@
                 },
                 "langd": 110,
                 "vikt": 2.9,
-                "egenskaper": [["bracklig"], ["sargande"]]
+                "pris": 60,
+                "egenskaper": [{namn: "bracklig"}, {namn: "sargande"}]
             },
             "pak": {
                 "namn": "Påk",
-                "attribut": "klubba",
+                "grupp": "klubba",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 2,
@@ -439,11 +448,12 @@
                 },
                 "langd": 100,
                 "vikt": 1.5,
-                "egenskaper": [["bracklig"], ["mattande", 1]]
+                "pris": 1,
+                "egenskaper": [{namn: "bracklig"}, {namn: "mattande", varde: 1}]
             },
             "storhammare": {
                 "namn": "Storhammare",
-                "attribut": "klubba",
+                "grupp": "klubba",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 6,
@@ -471,11 +481,12 @@
                 },
                 "langd": 140,
                 "vikt": 3.5,
-                "egenskaper": [["splittrande", 2], ["otymplig"]]
+                "pris": 80,
+                "egenskaper": [{namn: "splittrande", varde: 2}, {namn: "otymplig"}]
             },
             "stridshammare": {
                 "namn": "Stridshammare",
-                "attribut": "klubba",
+                "grupp": "klubba",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 3,
@@ -503,11 +514,12 @@
                 },
                 "langd": 80,
                 "vikt": 2.5,
-                "egenskaper": [["splittrande", 1]]
+                "pris": 40,
+                "egenskaper": [{namn: "splittrande", varde: 1}]
             },
             "stridsklubba": {
                 "namn": "Stridsklubba",
-                "attribut": "klubba",
+                "grupp": "klubba",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 2,
@@ -535,11 +547,12 @@
                 },
                 "langd": 70,
                 "vikt": 2.5,
-                "egenskaper": [["mattande", 1]]
+                "pris": 30,
+                "egenskaper": [{namn: "mattande", varde: 1}]
             },
             "tillhygge": {
                 "namn": "Tillhygge",
-                "attribut": "klubba",
+                "grupp": "klubba",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 1,
@@ -567,13 +580,14 @@
                 },
                 "langd": 0,
                 "vikt": 0,
-                "egenskaper": [["begransad"], ["bracklig"]]
+                "pris": 0,
+                "egenskaper": [{namn: "begransad"}, {namn: "bracklig"}]
             }
         },
         "spjut": {
             "jaktspjut": {
                 "namn": "Jaktspjut",
-                "attribut": "spjut",
+                "grupp": "spjut",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 5,
@@ -601,11 +615,12 @@
                 },
                 "langd": 180,
                 "vikt": 3,
-                "egenskaper": [["bracklig"], ["rackvidd", 2], ["sargande"]]
+                "pris": 10,
+                "egenskaper": [{namn: "bracklig"}, {namn: "rackvidd", varde: 2}, {namn: "sargande"}]
             },
             "jargbila": {
                 "namn": "Jargbila",
-                "attribut": "spjut",
+                "grupp": "spjut",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 7,
@@ -633,11 +648,12 @@
                 },
                 "langd": 260,
                 "vikt": 3.5,
-                "egenskaper": [["bracklig"], ["otymplig"], ["rackvidd", 3]]
+                "pris": 28,
+                "egenskaper": [{namn: "bracklig"}, {namn: "otymplig"}, {namn: "rackvidd", varde: 3}]
             },
             "kamorspjut": {
                 "namn": "Kamorspjut",
-                "attribut": "spjut",
+                "grupp": "spjut",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 3,
@@ -665,11 +681,12 @@
                 },
                 "langd": 150,
                 "vikt": 2,
-                "egenskaper": [["bracklig"], ["mattande", 1], ["rackvidd", 1]]
+                "pris": 5,
+                "egenskaper": [{namn: "bracklig"}, {namn: "mattande", varde: 1}, {namn: "rackvidd", varde: 1}]
             },
             "stridsspjut": {
                 "namn": "Stridsspjut",
-                "attribut": "spjut",
+                "grupp": "spjut",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 4,
@@ -697,13 +714,14 @@
                 },
                 "langd": 180,
                 "vikt": 2.2,
-                "egenskaper": [["bracklig"], ["rackvidd", 2]]
+                "pris": 8,
+                "egenskaper": [{namn: "bracklig"}, {namn: "rackvidd", varde: 2}]
             }
         },
         "stav": {
             "trastav": {
                 "namn": "Trästav",
-                "attribut": "stav",
+                "grupp": "stav",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 5,
@@ -731,13 +749,14 @@
                 },
                 "langd": 150,
                 "vikt": 1.5,
-                "egenskaper": [["bracklig"], ["mattande", 1], ["snabb"]]
+                "pris": 1,
+                "egenskaper": [{namn: "bracklig"}, {namn: "mattande", varde: 1}, {namn: "snabb"}]
             }
         },
         "svard": {
             "adasierhuggare": {
                 "namn": "Adasierhuggare",
-                "attribut": "svard",
+                "grupp": "svard",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 2,
@@ -765,11 +784,12 @@
                 },
                 "langd": 100,
                 "vikt": 1.1,
-                "egenskaper": [["giftranna"], ["snabb"]]
+                "pris": 60,
+                "egenskaper": [{namn: "giftranna"}, {namn: "snabb"}]
             },
             "kortsvärd": {
                 "namn": "Kortsvärd",
-                "attribut": "svard",
+                "grupp": "svard",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 1,
@@ -797,11 +817,12 @@
                 },
                 "langd": 60,
                 "vikt": 0.9,
-                "egenskaper": [["precis", 1], ["vadlig"]]
+                "pris": 50,
+                "egenskaper": [{namn: "precis", varde: 1}, {namn: "vadlig"}]
             },
             "kroksabel": {
                 "namn": "Kroksabel",
-                "attribut": "svard",
+                "grupp": "svard",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 2,
@@ -829,11 +850,12 @@
                 },
                 "langd": 100,
                 "vikt": 1.1,
-                "egenskaper": [["mattande", 1]]
+                "pris": 90,
+                "egenskaper": [{namn: "mattande", varde: 1}]
             },
             "melorsvard": {
                 "namn": "Melorsvärd",
-                "attribut": "svard",
+                "grupp": "svard",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 5,
@@ -861,11 +883,12 @@
                 },
                 "langd": 140,
                 "vikt": 1.9,
-                "egenskaper": [["rackvidd", 1], ["utmanovrerande"]]
+                "pris": 300,
+                "egenskaper": [{namn: "rackvidd", varde: 1}, {namn: "utmanovrerande"}]
             },
             "niamh": {
                 "namn": "Niamh",
-                "attribut": "svard",
+                "grupp": "svard",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 1,
@@ -893,11 +916,12 @@
                 },
                 "langd": 70,
                 "vikt": 1,
-                "egenskaper": [["snabb"], ["vadlig"]]
+                "pris": 100,
+                "egenskaper": [{namn: "snabb"}, {namn: "vadlig"}]
             },
             "slagsvard": {
                 "namn": "Slagsvärd",
-                "attribut": "svard",
+                "grupp": "svard",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 4,
@@ -925,11 +949,12 @@
                 },
                 "langd": 120,
                 "vikt": 1.7,
-                "egenskaper": [["dubbelfattning"]]
+                "pris": 180,
+                "egenskaper": [{namn: "dubbelfattning"}]
             },
             "storsvard": {
                 "namn": "Storsvärd",
-                "attribut": "svard",
+                "grupp": "svard",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 6,
@@ -957,11 +982,12 @@
                 },
                 "langd": 150,
                 "vikt": 2.8,
-                "egenskaper": [["splittrande", 1], ["rackvidd", 1]]
+                "pris": 250,
+                "egenskaper": [{namn: "splittrande", varde: 1}, {namn: "rackvidd", varde: 1}]
             },
             "stridssvard": {
                 "namn": "Stridssvärd",
-                "attribut": "svard",
+                "grupp": "svard",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 2,
@@ -989,13 +1015,14 @@
                 },
                 "langd": 95,
                 "vikt": 1.2,
-                "egenskaper": [["mattande", 1], ["precis", 1]]
+                "pris": 100,
+                "egenskaper": [{namn: "mattande", varde: 1}, {namn: "precis", varde: 1}]
             }
         },
         "yxa": {
             "bredyxa": {
                 "namn": "Bredyxa",
-                "attribut": "yxa",
+                "grupp": "yxa",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 3,
@@ -1023,11 +1050,12 @@
                 },
                 "langd": 60,
                 "vikt": 2.2,
-                "egenskaper": [["splittrande", 1]]
+                "pris": 24,
+                "egenskaper": [{namn: "splittrande", varde: 1}]
             },
             "handyxa": {
                 "namn": "Handyxa",
-                "attribut": "yxa",
+                "grupp": "yxa",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 1,
@@ -1055,11 +1083,12 @@
                 },
                 "langd": 50,
                 "vikt": 1,
-                "egenskaper": [["bracklig"]]
+                "pris": 5,
+                "egenskaper": [{namn: "bracklig"}]
             },
             "krell-kharz": {
                 "namn": "Krell-Kharz",
-                "attribut": "yxa",
+                "grupp": "yxa",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 4,
@@ -1087,11 +1116,12 @@
                 },
                 "langd": 85,
                 "vikt": 2.5,
-                "egenskaper": [["dubbelfattning"]]
+                "pris": 210,
+                "egenskaper": [{namn: "dubbelfattning"}]
             },
             "storyxa": {
                 "namn": "Storyxa",
-                "attribut": "yxa",
+                "grupp": "yxa",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 7,
@@ -1119,11 +1149,12 @@
                 },
                 "langd": 140,
                 "vikt": 3.2,
-                "egenskaper": [["splittrande", 2], ["otymplig"]]
+                "pris": 75,
+                "egenskaper": [{namn: "splittrande", varde: 2}, {namn: "otymplig"}]
             },
             "stridshacka": {
                 "namn": "Stridshacka",
-                "attribut": "yxa",
+                "grupp": "yxa",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 3,
@@ -1151,11 +1182,12 @@
                 },
                 "langd": 65,
                 "vikt": 2,
-                "egenskaper": [["genomslag_stick", 5]]
+                "pris": 35,
+                "egenskaper": [{namn: "genomslag_stick", varde: 5}]
             },
             "stridsyxa": {
                 "namn": "Stridsyxa",
-                "attribut": "yxa",
+                "grupp": "yxa",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 4,
@@ -1183,11 +1215,12 @@
                 },
                 "langd": 90,
                 "vikt": 2.5,
-                "egenskaper": [["splittrande", 1]]
+                "pris": 40,
+                "egenskaper": [{namn: "splittrande", varde: 1}]
             },
             "tirakkrok": {
                 "namn": "Tirakkrok",
-                "attribut": "yxa",
+                "grupp": "yxa",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 4,
@@ -1215,7 +1248,8 @@
                 },
                 "langd": 85,
                 "vikt": 2.4,
-                "egenskaper": [["splittrande", 1]]
+                "pris": 24,
+                "egenskaper": [{namn: "splittrande", varde: 1}]
             }
         }
     },
@@ -1223,7 +1257,7 @@
         "armborst": {
             "lattarmborst": {
                 "namn": "Lätt armborst",
-                "attribut": "armborst",
+                "grupp": "armborst",
                 "enhand": {
                     "aktiv": false,
                     "tvarde": 0,
@@ -1242,11 +1276,12 @@
                 },
                 "langd": 95,
                 "vikt": 3.2,
-                "egenskaper": [["bracklig"], ["lattsiktad"], ["omladdning", 6]]
+                "pris": 30,
+                "egenskaper": [{namn: "bracklig"}, {namn: "lattsiktad"}, {namn: "omladdning", varde: 6}]
             },
             "tungarmborst": {
                 "namn": "Tung armborst",
-                "attribut": "armborst",
+                "grupp": "armborst",
                 "enhand": {
                     "aktiv": false,
                     "tvarde": 0,
@@ -1265,13 +1300,14 @@
                 },
                 "langd": 100,
                 "vikt": 5.5,
-                "egenskaper": [["bracklig"], ["genomslag_stick", 10], ["omladdning", 14]]
+                "pris": 200,
+                "egenskaper": [{namn: "bracklig"}, {namn: "genomslag_stick", varde: 10}, {namn: "omladdning", varde: 14}]
             }
         },
         "bage": {
             "kortbage": {
                 "namn": "Kortbåge",
-                "attribut": "bage",
+                "grupp": "bage",
                 "enhand": {
                     "aktiv": false,
                     "tvarde": 0,
@@ -1290,11 +1326,12 @@
                 },
                 "langd": 120,
                 "vikt": 0.9,
-                "egenskaper": [["bracklig"], ["bagpil"]]
+                "pris": 10,
+                "egenskaper": [{namn: "bracklig"}, {namn: "bagpil"}]
             },
             "langbage": {
                 "namn": "Långbåge",
-                "attribut": "bage",
+                "grupp": "bage",
                 "enhand": {
                     "aktiv": false,
                     "tvarde": 0,
@@ -1313,11 +1350,12 @@
                 },
                 "langd": 180,
                 "vikt": 1.4,
-                "egenskaper": [["bracklig"], ["bagpil"]]
+                "pris": 80,
+                "egenskaper": [{namn: "bracklig"}, {namn: "bagpil"}]
             },
             "stridsbage": {
                 "namn": "Stridsbåge",
-                "attribut": "bage",
+                "grupp": "bage",
                 "enhand": {
                     "aktiv": false,
                     "tvarde": 0,
@@ -1336,13 +1374,14 @@
                 },
                 "langd": 150,
                 "vikt": 1.2,
-                "egenskaper": [["bracklig"], ["bagpil"]]
+                "pris": 25,
+                "egenskaper": [{namn: "bracklig"}, {namn: "bagpil"}]
             }
         },
         "kastvapen": {
             "kastkniv": {
                 "namn": "Kastkniv",
-                "attribut": "kastvapen",
+                "grupp": "kastvapen",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 1,
@@ -1361,11 +1400,12 @@
                 },
                 "langd": 25,
                 "vikt": 0.2,
-                "egenskaper": [["snabbdragen"]]
+                "pris": 10,
+                "egenskaper": [{namn: "snabbdragen"}]
             },
             "kastspjut": {
                 "namn": "Kastspjut",
-                "attribut": "kastvapen",
+                "grupp": "kastvapen",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 2,
@@ -1384,11 +1424,12 @@
                 },
                 "langd": 170,
                 "vikt": 0.6,
-                "egenskaper": [["bracklig"]]
+                "pris": 8,
+                "egenskaper": [{namn: "bracklig"}]
             },
             "kastyxa": {
                 "namn": "Kastyxa",
-                "attribut": "kastvapen",
+                "grupp": "kastvapen",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 3,
@@ -1407,11 +1448,12 @@
                 },
                 "langd": 65,
                 "vikt": 1.3,
-                "egenskaper": [["bracklig"]]
+                "pris": 15,
+                "egenskaper": [{namn: "bracklig"}]
             },
             "tillhygge": {
                 "namn": "Tillhygge",
-                "attribut": "kastvapen",
+                "grupp": "kastvapen",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 1,
@@ -1430,7 +1472,8 @@
                 },
                 "langd": 0,
                 "vikt": 0,
-                "egenskaper": [["begransad"], ["bracklig"]]
+                "pris": 0,
+                "egenskaper": [{namn: "begransad"}, {namn: "bracklig"}]
             }
         }
     },
@@ -1438,7 +1481,7 @@
         "skold": {
             "bucklare": {
                 "namn": "Bucklare",
-                "attribut": "skold",
+                "grupp": "skold",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 1,
@@ -1466,11 +1509,12 @@
                 },
                 "langd": 0,
                 "vikt": 1,
+                "pris": 10,
                 "egenskaper": []
             },
             "litenrundskold": {
                 "namn": "Liten rundsköld",
-                "attribut": "skold",
+                "grupp": "skold",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 2,
@@ -1498,11 +1542,12 @@
                 },
                 "langd": 0,
                 "vikt": 1.8,
-                "egenskaper": [["bracklig"]]
+                "pris": 5,
+                "egenskaper": [{namn: "bracklig"}]
             },
             "riddarskold": {
                 "namn": "Riddarsköld",
-                "attribut": "skold",
+                "grupp": "skold",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 3,
@@ -1530,11 +1575,12 @@
                 },
                 "langd": 0,
                 "vikt": 3.2,
-                "egenskaper": [["bracklig"]]
+                "pris": 10,
+                "egenskaper": [{namn: "bracklig"}]
             },
             "storrundskold": {
                 "namn": "Stor rundsköld",
-                "attribut": "skold",
+                "grupp": "skold",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 3,
@@ -1562,11 +1608,12 @@
                 },
                 "langd": 0,
                 "vikt": 3,
-                "egenskaper": [["bracklig"]]
+                "pris": 7,
+                "egenskaper": [{namn: "bracklig"}]
             },
             "valvdskold": {
                 "namn": "Välvd sköld",
-                "attribut": "skold",
+                "grupp": "skold",
                 "enhand": {
                     "aktiv": true,
                     "tvarde": 3,
@@ -1594,7 +1641,8 @@
                 },
                 "langd": 0,
                 "vikt": 5,
-                "egenskaper": [["bracklig"]]
+                "pris": 15,
+                "egenskaper": [{namn: "bracklig"}]
             }
         },
         "rustningsmaterial": {

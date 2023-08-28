@@ -41,10 +41,11 @@
                     </div>
 
                     {{#each item.system.kroppsdel as |rustning key|}}
+                        {{log rustning}}
                         <div class="clear" style="line-height: 25px; width:100%;">
                             <div class="pullLeft" style="width: 100px;">{{rustning.namn}}</div>
                             <div class="pullLeft" style="width: 150px;">
-                                <select class="inputdata" data-source="armor" data-typ="{{rustning.typ}}" style="width: 125px;">                                
+                                <select class="inputdata" data-source="armor" data-kroppsdel="{{rustning.kroppsdel}}" style="width: 125px;">                                
                                     {{#select rustning.material}}
                                         <option value="">- Inget -</option>
                                         {{#each ../EON.forsvar.rustningsmaterial as |material key|}}     

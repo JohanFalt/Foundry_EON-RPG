@@ -1,30 +1,19 @@
-import DiceHelper from "./dice-helper.js";
-import DialogHelper from "./dialog-helper.js";
-import CreateHelper from "./create-helper.js";
-import CalculateHelper from "./calculate-helper.js";
+//import DiceHelper from "./dice-helper.js";
+import DialogHelper from "../dialog-helper.js";
+import CreateHelper from "../create-helper.js";
+import CalculateHelper from "../calculate-helper.js";
 
-export class EonActorSheet extends ActorSheet {
+export default class EonActorSheet extends ActorSheet {
 
     /** @override */
     static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
-			classes: ["EON rollperson"],
+            classes: ["EON rollperson"],
             tabs: [{
-                    navSelector: ".sheet-tabs",
-                    contentSelector: ".sheet-body",
-                    initial: "skill",
-			    },
-                {
-                    navSelector: ".sheet-combat-tabs",
-                    contentSelector: ".sheet-combat-body",
-                    initial: "weapon",
-                },
-                {
-                    navSelector: ".sheet-mystic-tabs",
-                    contentSelector: ".sheet-mystic-body",
-                    initial: "magic",
-                }
-            ]
+                navSelector: ".sheet-tabs",
+                contentSelector: ".sheet-body",
+                initial: "skill",
+            }]
 		});
 	}
   
@@ -56,7 +45,7 @@ export class EonActorSheet extends ActorSheet {
 
 		if (!actorData.system.installningar.skapad) {
             await CreateHelper.SkapaFardigheter(this.actor, CONFIG.EON, version);
-            await CreateHelper.SkapaNarstridsvapen(this.actor, CONFIG.EON, "slagsmal", "obevapnad", version);
+            await CreateHelper.SkapaNarstridsvapen(this.actor, CONFIG.EON, "slagsmal", "obevapnad", version, true);
 
             actorData.system.installningar.skapad = true;
             actorData.system.installningar.version = version;
@@ -88,26 +77,43 @@ export class EonActorSheet extends ActorSheet {
         data.actor.system.listdata.utrustning.vapen.narstrid = [];
         data.actor.system.listdata.utrustning.vapen.avstand = [];
         data.actor.system.listdata.utrustning.vapen.skold = [];
+        data.actor.system.listdata.utrustning.mynt = [];
+        data.actor.system.listdata.utrustning.foremal = [];
         data.actor.system.listdata.kroppsdelar = [];
         data.actor.system.listdata.kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, version);
         data.actor.system.listdata.skador = [];
 
+        let totalVikt = 0;
+        let totalViktVapen = 0;
+        let totalViktUtrustning = 0;
 
         for (const item of this.actor.items) {
             if (item.type == "Färdighet") {
-                data.actor.system.listdata.fardigheter[item.system.typ].push(item);
+                data.actor.system.listdata.fardigheter[item.system.grupp].push(item);
             }        
             if (item.type == "Språk") {
                 data.actor.system.listdata.fardigheter.sprak.push(item);
             }
             if (item.type == "Närstridsvapen") {    
                 data.actor.system.listdata.utrustning.vapen.narstrid.push(item);
+                if (item.system.installningar.buren) {
+                    totalVikt += parseFloat(item.system.vikt);   
+                    totalViktVapen += parseFloat(item.system.vikt);               
+                }
             }
             if (item.type == "Avståndsvapen") {    
-                    data.actor.system.listdata.utrustning.vapen.avstand.push(item);
+                data.actor.system.listdata.utrustning.vapen.avstand.push(item);
+                if (item.system.installningar.buren) {
+                    totalVikt += parseFloat(item.system.vikt);   
+                    totalViktVapen += parseFloat(item.system.vikt);               
+                }
             }
             if (item.type == "Sköld") {    
                 data.actor.system.listdata.utrustning.vapen.skold.push(item);
+                if (item.system.installningar.buren) {
+                    totalVikt += parseFloat(item.system.vikt);    
+                    totalViktVapen += parseFloat(item.system.vikt);              
+                }
             }
             if (item.type == "Rustning") {    
                 data.actor.system.listdata.utrustning.rustning.push(item);
@@ -118,9 +124,23 @@ export class EonActorSheet extends ActorSheet {
                     }                   
                 }
             }
+            if (item.type == "Utrustning") {
+                if (item.system.typ == "mynt") {
+                    data.actor.system.listdata.utrustning.mynt.push(item);
+                }
+                else {
+                    data.actor.system.listdata.utrustning.foremal.push(item);
+                }                
+
+                if (item.system.installningar.buren) {
+                    totalVikt += parseFloat(item.system.vikt);    
+                    totalViktUtrustning += parseFloat(item.system.vikt);              
+                }
+            }
             if (item.type == "Skada") {    
                 data.actor.system.listdata.skador.push(item);
             }
+            
         }
 
         for (const grupp in CONFIG.EON.fardighetgrupper) {
@@ -130,12 +150,45 @@ export class EonActorSheet extends ActorSheet {
         data.actor.system.listdata.utrustning.vapen.narstrid = data.actor.system.listdata.utrustning.vapen.narstrid.sort((a, b) => a.name.localeCompare(b.name));
         data.actor.system.listdata.utrustning.vapen.avstand = data.actor.system.listdata.utrustning.vapen.avstand.sort((a, b) => a.name.localeCompare(b.name));
         data.actor.system.listdata.utrustning.vapen.skold = data.actor.system.listdata.utrustning.vapen.skold.sort((a, b) => a.name.localeCompare(b.name));
+        data.actor.system.listdata.utrustning.rustning = data.actor.system.listdata.utrustning.rustning.sort((a, b) => a.name.localeCompare(b.name));
 
         data.actor.system.berakning = [];
         data.actor.system.berakning.utmattning = [];
         data.actor.system.berakning.utmattning.perrunda = this.actor.system.skada.blodning;
         data.actor.system.berakning.svarighet = [];
-        data.actor.system.berakning.svarighet.smarta = this.actor.system.skada.smarta;       
+        data.actor.system.berakning.svarighet.smarta = this.actor.system.skada.smarta;   
+        data.actor.system.berakning.belastning = [];
+
+        data.actor.system.berakning.belastning.vapen = 0;            
+        data.actor.system.berakning.belastning.utrustning = 0;
+        data.actor.system.berakning.belastning.rustning = 0;
+        data.actor.system.berakning.belastning.riddjur = 0;
+
+        if (data.actor.system.listdata.utrustning.rustning.length > 0) {
+            const items = data.actor.system.listdata.utrustning.rustning.filter(rustning => rustning.type === "Rustning" && rustning.system.installningar.buren);
+            let varde = 0;
+            
+            for (const i of items) {
+                varde += i.system.belastning;
+            }
+
+            data.actor.system.berakning.belastning.rustning = varde;
+        }
+
+        if (data.EON.CONFIG.settings.weightRules) {
+            if (totalViktVapen > 0) {
+                data.actor.system.berakning.belastning.vapen = Math.round(totalViktVapen);
+            }
+            if (totalViktUtrustning > 0) {
+                data.actor.system.berakning.belastning.utrustning = Math.round(totalViktUtrustning);
+            }
+
+            const totalVarde = data.actor.system.berakning.belastning.vapen + data.actor.system.berakning.belastning.rustning + data.actor.system.berakning.belastning.utrustning;
+            data.actor.system.berakning.belastning.totaltavdrag = CalculateHelper.BeraknaBelastningAvdrag(totalVarde);
+        }
+        else {
+            data.actor.system.berakning.belastning.totaltavdrag = CalculateHelper.BeraknaBelastningAvdrag(data.actor.system.berakning.belastning.rustning);
+        }
 
         console.log(data.actor);
         console.log(data.EON);
@@ -191,8 +244,8 @@ export class EonActorSheet extends ActorSheet {
 			.click(this._onItemEdit.bind(this));
 
         html
-			.find(".item-active")
-			.click(this._onItemActive.bind(this));
+			.find(".item-alter")
+            .change(event => this._onItemAlter(event));
     }
 
     async _ticValueUp(event) {
@@ -371,7 +424,7 @@ export class EonActorSheet extends ActorSheet {
                             version: version
                         },
                         namn: "Ny färdighet",
-                        typ: skilltype
+                        grupp: skilltype
                     }
                 };
             }			
@@ -423,7 +476,7 @@ export class EonActorSheet extends ActorSheet {
                         version: version
                     },
                     typ: "utrustning",
-                    attribut: "skold"
+                    grupp: "skold"
                 }
             };
 		}
@@ -441,6 +494,42 @@ export class EonActorSheet extends ActorSheet {
                     },
                     typ: "utrustning",
                     kroppsdel: kroppsdelar
+                }
+            };
+		}
+
+        if (type == "utrustning") {
+            found = true;
+
+			itemData = {
+                name: "Nytt föremål",
+                type: "Utrustning",                
+                data: {
+                    installningar: {
+                        version: version
+                    },
+                    typ: "utrustning"
+                }
+            };
+		}
+
+        if (type == "mynt") {
+            found = true;
+
+			itemData = {
+                name: "Silvermynt",
+                type: "Utrustning",                
+                data: {
+                    installningar: {
+                        version: version,
+                        behallare: true
+                    },
+                    typ: "mynt",
+                    volym: {
+                        enhet: "st",
+                        antal: 0,
+                        max: 50
+                    }
                 }
             };
 		}
@@ -478,7 +567,11 @@ export class EonActorSheet extends ActorSheet {
         const element = event.currentTarget;
 		const dataset = element.dataset;
         const itemid = dataset.itemid;
-		const item = this.actor.getEmbeddedDocument("Item", itemid);		
+		const item = this.actor.getEmbeddedDocument("Item", itemid);	
+        
+        if (dataset.property != undefined) {
+            return;
+        }
 
 		if (item instanceof Item) {
             _a = item.sheet;
@@ -490,6 +583,45 @@ export class EonActorSheet extends ActorSheet {
                 _a.render(true);  
             }
 		}
+	}
+
+    async _onItemAlter(event) {
+		event.preventDefault();
+        event.stopPropagation();
+
+        const element = event.currentTarget;
+		const dataset = element.dataset;
+        const itemid = dataset.itemid;			
+        
+        if (dataset.property != undefined) {
+            const fieldStrings = dataset.property;
+			const fields = fieldStrings.split(".");
+
+            var value = element.value;
+
+            if (dataset.datatype == "Integer") {
+                value = parseInt(value);
+            }
+            else if (dataset.datatype == "Number") {
+                value = parseFloat(value);
+            }
+
+            const item = this.actor.getEmbeddedDocument("Item", itemid);
+            const itemData = duplicate(item);
+
+            if (fields.length == 1) {
+                itemData.system[fields[0]] = value;
+            }   
+            else if (fields.length == 2) {    
+                itemData.system[fields[0]][fields[1]] = value;                    
+            }
+
+            await item.update(itemData);
+            this.render();
+        }
+        else {
+            return;
+        }
 	}
 
     async _onItemActive(event) {		
@@ -679,3 +811,4 @@ export class EonActorSheet extends ActorSheet {
         this.actor.update(actorData);
     }
 }
+

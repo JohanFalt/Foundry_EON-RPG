@@ -1,4 +1,10 @@
 import DiceHelper from "./dice-helper.js";
+import { dataskapa } from "../packs/skapa.js";
+import { datafardigheter } from "../packs/fardigheter.js";
+import { datavapen } from "../packs/vapen.js";
+import { datastrid } from "../packs/strid.js";
+import { datautrustning } from "../packs/utrustning.js";
+import { datadjur } from "../packs/djur.js";
 
 /**
  * Define a set of template paths to pre-load
@@ -26,6 +32,7 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-religion.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-setting.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-skill.html",
+		"systems/eon-rpg/templates/actors/parts/varelse-sheet-top.html",
     ];
 
     /* Load the template parts
@@ -47,7 +54,29 @@ export async function Setup()
 		const harStrid = false;
 
 		let importData = {};
-		let fileData = await fetch(`systems/eon-rpg/packs/karaktarsdrag.json`).then((response) => response.json());
+		
+		let fileData = dataskapa;
+		Object.assign(importData, fileData);
+
+		fileData = datafardigheter;
+		Object.assign(importData, fileData);
+
+		if (!harStrid) {
+			fileData = datavapen;
+		}
+		else {
+			fileData = datastrid;
+		}
+		Object.assign(importData, fileData);
+
+		fileData = datautrustning;
+		Object.assign(importData, fileData);
+
+		fileData = datadjur;
+		Object.assign(importData, fileData);
+
+
+		/* let fileData = await fetch(`systems/eon-rpg/packs/karaktarsdrag.json`).then((response) => response.json());
 		Object.assign(importData, fileData);
 
 		fileData = await fetch(`systems/eon-rpg/packs/arketyper.json`).then((response) => response.json());
@@ -57,19 +86,25 @@ export async function Setup()
 		Object.assign(importData, fileData);
 
 		fileData = await fetch(`systems/eon-rpg/packs/folkslag.json`).then((response) => response.json());
-		Object.assign(importData, fileData);
+		Object.assign(importData, fileData); */
 
-		fileData = await fetch(`systems/eon-rpg/packs/fardigheter.json`).then((response) => response.json());
+		/* fileData = await fetch(`systems/eon-rpg/packs/fardigheter.json`).then((response) => response.json());
 		Object.assign(importData, fileData);
-
-		if (!harStrid) {
+ */
+		/* if (!harStrid) {
 			fileData = await fetch(`systems/eon-rpg/packs/vapen.json`).then((response) => response.json());
 			Object.assign(importData, fileData);		
 		}
 		else {
 			fileData = await fetch(`systems/eon-rpg/packs/strid.json`).then((response) => response.json());
 			Object.assign(importData, fileData);		
-		}
+		} */
+
+		/* fileData = await fetch(`systems/eon-rpg/packs/utrustning.json`).then((response) => response.json());
+		Object.assign(importData, fileData); */
+
+		/* fileData = await fetch(`systems/eon-rpg/packs/djur.json`).then((response) => response.json());
+		Object.assign(importData, fileData); */
 
 		return importData;		
     } catch(err) {
@@ -141,7 +176,7 @@ export const RegisterHandlebarsHelpers = function () {
 	// kontrollerar om en viss egenhet finns i listan
 	Handlebars.registerHelper("checkProperty", function(egenheter, namn) {
 		for (const item of egenheter) {
-			if (item[0] == namn) {
+			if (item.namn == namn) {
 				return true;
 			}
 		}
@@ -152,13 +187,18 @@ export const RegisterHandlebarsHelpers = function () {
 	// hämtar ut nivån för egenheten
 	Handlebars.registerHelper("getPropertyLevel", function(egenheter, namn) {
 		for (const item of egenheter) {
-			if (item[0] == namn) {
-				return item[1];
+			if (item.namn == namn) {
+				return item.varde;
 			}
 		}
 
 		return 0;
 	});	
+
+	// hämtar en särskild grupp av utrustning
+	Handlebars.registerHelper("getEquipmentGroup", function(utrustningsgrupp, grupp) {
+		return utrustningsgrupp[grupp];
+	});
 
 	// lägger ihop två tärningspooler till en.
 	Handlebars.registerHelper("addDiceValues", function(fardighet1, fardighet2) {
@@ -230,12 +270,12 @@ export const RegisterHandlebarsHelpers = function () {
 		let text = "";
 
 		for (const item of lista) {
-			let name = item[0];
-			let value = 0;
+			let name = item.namn;
+			let value = item.varde;
 
-			if (item.length > 1) {				
+			/* if (item.length > 1) {				
 				value = item[1];
-			}
+			} */
 
 			if (text != "") {
 				text += ", ";
@@ -243,7 +283,7 @@ export const RegisterHandlebarsHelpers = function () {
 
 			for (const egenskap in game.EON.egenskaper) {
 				if (egenskap == name) {
-					text += game.EON.egenskaper[name].namn;
+					text += game.EON.egenskaper[egenskap].namn;
 
 					if (value > 0) {
 						text += " " + value;
@@ -353,6 +393,14 @@ export const RegisterHandlebarsHelpers = function () {
 
 		return game.EON.forsvar.rustningsmaterial[armor].namn;
 	});
+
+	Handlebars.registerHelper("isChecked", function(value) {
+		if (value) {
+			return "checked";
+		}
+
+		return "";
+	});
 	
 	Handlebars.registerHelper("setVariable", function(varName, varValue, options) {
 		options.data.root[varName] = varValue;
@@ -388,53 +436,14 @@ export const RegisterHandlebarsHelpers = function () {
 		return ret;
 	});
 
-	/* Handlebars.registerHelper("iff", function (a, operator, b, opts) {
-		var bool = false;
-		switch (operator) {
-			case "==":
-				bool = a == b;
-				break;
-			case ">":
-				bool = a > b;
-				break;
-			case "<":
-				bool = a < b;
-				break;
-			case ">=":
-				bool = parseInt(a) >= parseInt(b);
-				break;
-			case "<=":
-				bool = a <= b;
-				break;
-			case "!=":
-				bool = a != b;
-				break;
-			case "contains":
-				if (a && b) {
-					bool = a.includes(b);
-				} else {
-					bool = false;
-				}
-				break;
-			default:
-			throw "Unknown operator " + operator;
-		}
-
-		if (bool) {
-			return opts.fn(this);
-		} else {
-			return opts.inverse(this);
-		}
-	}); */
-
-	Handlebars.registerHelper('eqAny', function () {
-		for(let i = 1; i < arguments.length; i++) {
-		  	if(arguments[0] === arguments[i]) {
-				return true;
-		  	}
-		}
-		return false;
-	});
+-	Handlebars.registerHelper('eqAny', function () {
+	for(let i = 1; i < arguments.length; i++) {
+		  if(arguments[0] === arguments[i]) {
+			return true;
+		  }
+	}
+	return false;
+});
 
 	Handlebars.registerHelper('neAny', function () {
 		let found = false;

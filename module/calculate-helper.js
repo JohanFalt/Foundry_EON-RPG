@@ -49,6 +49,59 @@ export default class CalculateHelper {
         actorData.system.harleddegenskaper.initiativ = await DiceHelper.BeraknaInitiativ(actorData);        
     }
 
+    static BeraknaBelastningAvdrag(varde) {
+        let avdrag = {
+			"tvarde": 0,
+			"bonus": 0
+		};
+
+        if ((varde >= 17) && (varde <= 20)) {
+            avdrag = {
+                "tvarde": 0,
+                "bonus": 2
+            };
+        }
+        else if ((varde >= 21) && (varde <= 24)) {
+            avdrag = {
+                "tvarde": 1,
+                "bonus": 0
+            };
+        }
+        else if ((varde >= 25) && (varde <= 28)) {
+            avdrag = {
+                "tvarde": 1,
+                "bonus": 2
+            };
+        }
+        else if ((varde >= 29) && (varde <= 48)) {
+            avdrag = {
+                "tvarde": 2,
+                "bonus": 0
+            };
+        }
+        else if (varde >= 48) {
+            let totalt = Math.floor((varde - 48) / 4);
+            let bonus = totalt + 1;
+
+            if (bonus > 3) {
+                const tarning = {
+                    tvarde: 2,
+                    bonus: 0
+                }
+
+                avdrag = DiceHelper.BeraknaBonus(tarning, bonus);
+            }
+            else {
+                avdrag = {
+                    tvarde: 2,
+                    bonus: bonus
+                }
+            }            
+        }
+
+        return avdrag;
+    }
+
     static _beraknaRustningBelastning(rustning) {
         let grundUtmattning = 0;
 

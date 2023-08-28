@@ -124,6 +124,24 @@ export default class DiceHelper {
             bonus: totalBonus
         };
     }    
+
+    static BeraknaBonus(tarning, bonus) {
+        let tvarde = 0;
+        bonus = tarning.bonus + bonus;
+
+        while (bonus > 3) {
+            tvarde += 1;
+            bonus -= 4;
+        }
+
+        let totalTarning = parseInt(tarning.tvarde) + parseInt(tvarde);
+        let totalBonus = parseInt(bonus);
+
+        return {
+            tvarde: totalTarning,
+            bonus: totalBonus
+        }
+    }
 }
 
 /* klassen som man använder för att skicka in information in i RollDice */
@@ -161,7 +179,22 @@ export async function RollDice(diceRoll) {
             if (rollInfo != "") {
                 rollInfo += ", ";
             }
-            rollInfo += game.EON.egenskaper[egenskap].namn;
+            if(egenskap.varde > 0) {
+                rollInfo += game.EON.egenskaper[egenskap.namn].namn + " " + egenskap.varde;
+            }
+            else {
+                rollInfo += game.EON.egenskaper[egenskap.namn].namn;
+            }
+            
+        }
+    }
+    if ((typeRoll == game.EON.CONFIG.slag.fardighet) && (diceRoll.info.length > 0)) {
+        for (const egenskap of diceRoll.info) {
+            if (rollInfo != "") {
+                rollInfo += ", ";
+            }
+
+            rollInfo += egenskap;
         }
     }
 

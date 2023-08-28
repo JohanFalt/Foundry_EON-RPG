@@ -1,4 +1,4 @@
-{
+export const datafardigheter = {
     "fardigheter":{
         "strid": {
             "armborst": {
