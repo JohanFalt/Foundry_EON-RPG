@@ -100,7 +100,14 @@ export async function DoNotice(systemVersion) {
           <li>v1.0 - När rollformuläret kan hålla information för de saker som finns i grundboken så kommer jag släppa första versionen.</li>
         </ul>
       </div>
-      <div class="tray-title-area">Nya saker sedan Alpha 1.6</div>
+      <div class="tray-title-area">Bugg fix sedan Alpha 1.6</div>
+      <div class="tray-action-area">
+        <ul style="margin-top: 0">
+          <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/76">#76 - Skapa rustning utanför rollformulär blir fel</a></li>
+          <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/75">#75 - Kan inte aktivera rustning</a></li>          
+        </ul>
+      </div>
+      <div class="tray-title-area">Nya saker i Alpha 1.6</div>
       <div class="tray-action-area">
         <ul style="margin-top: 0">
           <li>Fliken Utrustning</li>
@@ -111,24 +118,6 @@ export async function DoNotice(systemVersion) {
           <li>Lagt till pris på föremål</li>          
           <li>Beräkningar av totalvikt</li>
           <li>Anpassningar för Foundry v11</li>
-          <li>Grafik</li>
-        </ul>
-      </div>
-      <div class="tray-title-area">Nya saker sedan Alpha 1.5</div>
-      <div class="tray-action-area">
-        <ul style="margin-top: 0">
-          <li>Slå Härledda attribut.</li>
-          <li>Fixat så man nu ser alla egenskaperna på vapen.</li>
-          <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/66">#66 - Anfalla med vapen med egenskaper med värden</a></li>
-        </ul>
-      </div>
-      <div class="tray-title-area">Nya saker sedan Alpha 1.4</div>
-      <div class="tray-action-area">
-        <ul style="margin-top: 0">
-          <li>Stöd för Dice So Nice.</li>
-          <li>Vapen-fliken</li>
-          <li>Rustningar-fliken</li>
-          <li>Tärningsslag</li>
           <li>Grafik</li>
         </ul>
       </div>
@@ -153,4 +142,23 @@ export async function DoNotice(systemVersion) {
       content: enrichedMessage,
       type: CONST.CHAT_MESSAGE_TYPES.OTHER
     });
+
+    /* <div class="tray-title-area">Nya saker i Alpha 1.5</div>
+    <div class="tray-action-area">
+      <ul style="margin-top: 0">
+        <li>Slå Härledda attribut.</li>
+        <li>Fixat så man nu ser alla egenskaperna på vapen.</li>
+        <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/66">#66 - Anfalla med vapen med egenskaper med värden</a></li>
+      </ul>
+    </div>
+    <div class="tray-title-area">Nya saker i Alpha 1.4</div>
+    <div class="tray-action-area">
+      <ul style="margin-top: 0">
+        <li>Stöd för Dice So Nice.</li>
+        <li>Vapen-fliken</li>
+        <li>Rustningar-fliken</li>
+        <li>Tärningsslag</li>
+        <li>Grafik</li>
+      </ul>
+    </div> */
 }

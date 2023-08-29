@@ -30,7 +30,6 @@ export default class EonRustning extends foremal {
                 nullable: false,
         }));
 
-        //schema.kroppsdel = new fields.ArrayField(new fields.ObjectField());
         schema.belastning = new fields.NumberField({...valueInteger});  
         
         return schema;

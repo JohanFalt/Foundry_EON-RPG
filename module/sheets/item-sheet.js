@@ -45,6 +45,12 @@ export default class EonItemSheet extends ItemSheet {
 
 			itemData.system.installningar.version = version;
 			itemData.system.installningar.skapad = true;
+
+			if (itemData.type == "Rustning") {
+				const kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, game.data.system.version);
+				itemData.system.kroppsdel = kroppsdelar;
+			}
+
 			await this.item.update(itemData);
 		}
 

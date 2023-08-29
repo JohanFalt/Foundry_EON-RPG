@@ -244,6 +244,10 @@ export default class EonActorSheet extends ActorSheet {
 			.click(this._onItemEdit.bind(this));
 
         html
+			.find(".item-active")
+			.click(this._onItemActive.bind(this));
+
+        html
 			.find(".item-alter")
             .change(event => this._onItemAlter(event));
     }
