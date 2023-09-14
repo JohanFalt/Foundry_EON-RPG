@@ -3,6 +3,9 @@ export {default as EonVarelse} from "./actor/varelse.js";
 
 export {default as EonFardighet} from "./item/fardighet.js";
 export {default as EonSprak} from "./item/sprak.js";
+export {default as EonMysterie} from "./item/mysterie.js";
+export {default as EonAvvisning} from "./item/avvisning.js";
+export {default as EonBesvarjelse} from "./item/besvarjelse.js";
 
 export {default as EonNarstridsvapen} from "./item/narstridsvapen.js";
 export {default as EonAvstandsvapen} from "./item/avstandsvapen.js";

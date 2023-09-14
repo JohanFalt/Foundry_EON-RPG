@@ -20,6 +20,9 @@ Hooks.once("init", async function() {
 
     CONFIG.Item.dataModels.Färdighet = models.EonFardighet;
     CONFIG.Item.dataModels.Språk = models.EonSprak;
+    CONFIG.Item.dataModels.Mysterie = models.EonMysterie;
+    CONFIG.Item.dataModels.Avvisning = models.EonAvvisning;
+    CONFIG.Item.dataModels.Besvärjelse = models.EonBesvarjelse;
     CONFIG.Item.dataModels.Närstridsvapen = models.EonNarstridsvapen;
     CONFIG.Item.dataModels.Avståndsvapen = models.EonAvstandsvapen;
     CONFIG.Item.dataModels.Sköld = models.EonSkold;

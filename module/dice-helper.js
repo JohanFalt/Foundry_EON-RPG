@@ -94,10 +94,9 @@ export default class DiceHelper {
     }
 
     static async BeraknaInitiativ(actorData) {
-        const totalTarning = actorData.system.grundegenskaper.rorlighet.tvarde;
-        const totalBonus = actorData.system.grundegenskaper.rorlighet.bonus;
+        const totalTarning = actorData.system.grundegenskaper.rorlighet.totalt.tvarde;
+        const totalBonus = actorData.system.grundegenskaper.rorlighet.totalt.bonus;
         const tarning = `${totalTarning}d6`;
-
 
         return {
             tarning: tarning,
@@ -142,6 +141,8 @@ export default class DiceHelper {
             bonus: totalBonus
         }
     }
+
+    
 }
 
 /* klassen som man använder för att skicka in information in i RollDice */
@@ -152,6 +153,7 @@ export class DiceRollContainer {
         this.info = [];
 		this.number = 0;
 		this.bonus = 0;
+        this.svarighet = 0;
 		this.dicetype = "d6";
 		this.obRoll = true;
     }
@@ -161,6 +163,7 @@ export class DiceRollContainer {
 export async function RollDice(diceRoll) {
     const number = diceRoll.number;
     const bonus = diceRoll.bonus;
+    const difficulty = diceRoll.svarighet;
     let dicetype = diceRoll.dicetype;
     const obRoll = diceRoll.obRoll;
     const typeRoll = diceRoll.typeroll;
@@ -172,9 +175,10 @@ export async function RollDice(diceRoll) {
     let result = 0;
     let diceResult = [];
     let rollInfo = "";
+    let resulttext = "";
 
     // egenskaper
-    if ((typeRoll == game.EON.CONFIG.slag.vapen) && (diceRoll.info.length > 0)) {
+    if ((typeRoll == CONFIG.EON.slag.vapen) && (diceRoll.info.length > 0)) {
         for (const egenskap of diceRoll.info) {
             if (rollInfo != "") {
                 rollInfo += ", ";
@@ -188,7 +192,16 @@ export async function RollDice(diceRoll) {
             
         }
     }
-    if ((typeRoll == game.EON.CONFIG.slag.fardighet) && (diceRoll.info.length > 0)) {
+    if ((typeRoll == CONFIG.EON.slag.grundegenskap) && (diceRoll.info.length > 0)) {
+        for (const egenskap of diceRoll.info) {
+            if (rollInfo != "") {
+                rollInfo += ", ";
+            }
+
+            rollInfo += egenskap;
+        }
+    }
+    if ((typeRoll == CONFIG.EON.slag.fardighet) && (diceRoll.info.length > 0)) {
         for (const egenskap of diceRoll.info) {
             if (rollInfo != "") {
                 rollInfo += ", ";
@@ -243,7 +256,15 @@ export async function RollDice(diceRoll) {
         text = `Slår ${number}${dicetype}+${bonus}`;
     }
     else if (bonus < 0) {
-        text = `Slår ${number}${dicetype}-${bonus}`;
+        let sbonus = bonus * -1;
+        text = `Slår ${number}${dicetype}-${sbonus}`;
+    }
+
+    if ((difficulty > 0) && (result >= difficulty)) {
+        resulttext = "LYCKAT SLAG";
+    }
+    else if ((difficulty > 0) && (result < difficulty)) {
+        resulttext = "MISSLYCKAT SLAG";
     }
 
     const templateData = {
@@ -257,7 +278,9 @@ export async function RollDice(diceRoll) {
             action: action,
             title: text,
             diceresult: diceList,
+            difficulty: difficulty,
             result: result,
+            resulttext: resulttext,
             obroll: obRoll
         }
     };

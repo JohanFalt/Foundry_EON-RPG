@@ -14,41 +14,140 @@ export default class harleddegenskaper extends foundry.abstract.DataModel {
 
       return {
         forflyttning: new fields.SchemaField({
-            tvarde: new fields.NumberField({...valueInteger}),
-            bonus: new fields.NumberField({...bonusInteger})
+            grund: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            totalt: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            bonuslista: new fields.ArrayField(
+                new fields.ObjectField({
+                    initial: {},
+                    nullable: false,
+            }))
         }),
         intryck: new fields.SchemaField({
-            tvarde: new fields.NumberField({...valueInteger}),
-            bonus: new fields.NumberField({...bonusInteger})
+            grund: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            totalt: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            bonuslista: new fields.ArrayField(
+                new fields.ObjectField({
+                    initial: {},
+                    nullable: false,
+            }))
         }),
         kroppsbyggnad: new fields.SchemaField({
-            tvarde: new fields.NumberField({...valueInteger}),
-            bonus: new fields.NumberField({...bonusInteger})
+            grund: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            totalt: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            bonuslista: new fields.ArrayField(
+                new fields.ObjectField({
+                    initial: {},
+                    nullable: false,
+            }))
         }),
         reaktion: new fields.SchemaField({
-            tvarde: new fields.NumberField({...valueInteger}),
-            bonus: new fields.NumberField({...bonusInteger})
+            grund: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            totalt: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            bonuslista: new fields.ArrayField(
+                new fields.ObjectField({
+                    initial: {},
+                    nullable: false,
+            }))
         }),
         sjalvkontroll: new fields.SchemaField({
-            tvarde: new fields.NumberField({...valueInteger}),
-            bonus: new fields.NumberField({...bonusInteger})
+            grund: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            totalt: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            bonuslista: new fields.ArrayField(
+                new fields.ObjectField({
+                    initial: {},
+                    nullable: false,
+            }))
         }),
         vaksamhet: new fields.SchemaField({
-            tvarde: new fields.NumberField({...valueInteger}),
-            bonus: new fields.NumberField({...bonusInteger})
+            grund: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            totalt: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            bonuslista: new fields.ArrayField(
+                new fields.ObjectField({
+                    initial: {},
+                    nullable: false,
+            }))
         }),
         livskraft: new fields.SchemaField({
-            tvarde: new fields.NumberField({...valueInteger}),
-            bonus: new fields.NumberField({...bonusInteger})
+            grund: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            totalt: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            bonuslista: new fields.ArrayField(
+                new fields.ObjectField({
+                    initial: {},
+                    nullable: false,
+            }))
         }),
         grundskada: new fields.SchemaField({
-            tvarde: new fields.NumberField({...valueInteger}),
-            bonus: new fields.NumberField({...bonusInteger})
+            grund: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            totalt: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            bonuslista: new fields.ArrayField(
+                new fields.ObjectField({
+                    initial: {},
+                    nullable: false,
+            }))
         }),
         initiativ: new fields.SchemaField({
+            grund: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
+            totalt: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
             tarning: new fields.StringField({required: true, initial: "0d6", blank: false}),
-            tvarde: new fields.NumberField({...valueInteger}),
-            bonus: new fields.NumberField({...bonusInteger})
+            bonuslista: new fields.ArrayField(
+                new fields.ObjectField({
+                    initial: {},
+                    nullable: false,
+            }))
         }),
         grundrustning: new fields.NumberField({required: true, nullable: false, integer: true, initial: 0, min: 0})
       };

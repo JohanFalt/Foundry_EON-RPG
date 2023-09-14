@@ -18,7 +18,7 @@
         {{#each (getActorSkillGroup ../actor.system.listdata.fardigheter key) as |fardighet key|}}
             <div class="skill clear">
                 {{#if (eq fardighet.type "Språk")}}   
-                    <div class="pullLeft caption normalskill">{{fardighet.system.namn}}</div>
+                    <div class="pullLeft caption normalskill">{{fardighet.name}}</div>
                     <div class="resource-box pullLeft">
                         <span class="resource-value {{#if fardighet.system.talabrytning}}active{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="talabrytning" data-type="boolean" title="Talar med brytning"></span>
                         <span class="resource-value {{#if fardighet.system.talaflytande}}active{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="talaflytande" data-type="boolean" title="Talar flytande"></span>
@@ -36,7 +36,7 @@
                             <div style="width: 8px; line-height: 18px;"><i class="fa-solid fa-sort-down red"></i></div>
                         {{/if}}
                     </div>
-                    <div class="vrollable pullLeft caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.system.namn}}</div> 
+                    <div class="vrollable pullLeft caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div> 
                            
                     <div class="pullLeft dice-value tic pointer" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
                     <div class="pullLeft skill-short">({{getAttributeShortName fardighet.system.attribut}})</div>

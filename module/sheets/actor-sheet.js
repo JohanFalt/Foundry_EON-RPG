@@ -71,6 +71,9 @@ export default class EonActorSheet extends ActorSheet {
         data.actor.system.listdata.fardigheter.sprak = [];
         data.actor.system.listdata.fardigheter.vildmark = [];
         data.actor.system.listdata.fardigheter.ovriga = [];
+        data.actor.system.listdata.religion = [];
+        data.actor.system.listdata.religion.mysterie = [];
+        data.actor.system.listdata.religion.avvisning = [];
         data.actor.system.listdata.utrustning = [];
         data.actor.system.listdata.utrustning.rustning = [];
         data.actor.system.listdata.utrustning.vapen = [];
@@ -93,6 +96,12 @@ export default class EonActorSheet extends ActorSheet {
             }        
             if (item.type == "Språk") {
                 data.actor.system.listdata.fardigheter.sprak.push(item);
+            }
+            if (item.type == "Mysterie") {
+                data.actor.system.listdata.religion.mysterie.push(item);
+            }
+            if (item.type == "Avvisning") {
+                data.actor.system.listdata.religion.avvisning.push(item);
             }
             if (item.type == "Närstridsvapen") {    
                 data.actor.system.listdata.utrustning.vapen.narstrid.push(item);
@@ -284,11 +293,11 @@ export default class EonActorSheet extends ActorSheet {
 
 		const actorData = duplicate(this.actor);	
 
-		actorData.system[property][type].bonus += 1;
+		actorData.system[property][type].grund.bonus += 1;
 	
-        if (actorData.system[property][type].bonus > 3)  {
-			actorData.system[property][type].tvarde += 1;
-			actorData.system[property][type].bonus = 0;
+        if (actorData.system[property][type].grund.bonus > 3)  {
+			actorData.system[property][type].grund.tvarde += 1;
+			actorData.system[property][type].grund.bonus = 0;
 		}
 
         await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
@@ -378,6 +387,11 @@ export default class EonActorSheet extends ActorSheet {
 			return;
         }   
 
+        if (dataset.source == "mystery") {
+            DialogHelper.MysteryDialog(event, this.actor);
+			return;
+        }        
+
         if (dataset.source == "weapon") {
             DialogHelper.WeaponDialog(event, this.actor);
 			return;
@@ -407,32 +421,64 @@ export default class EonActorSheet extends ActorSheet {
 
             if (skilltype == "sprak") {
                 itemData = {
-                    name: "ny",
+                    name: "Nytt språk",
                     type: "Språk",                
                     data: {
                         installningar: {
                             skapad: true,
-                            version: version
-                        },
-                        namn: "Nytt språk"
+                            version: version,
+                            kantabort: true
+                        }
                     }
                 };
             }
             else {
                 itemData = {
-                    name: "ny",
+                    name: "Ny färdighet",
                     type: "Färdighet",                
                     data: {
                         installningar: {
                             skapad: true,
-                            version: version
+                            version: version,
+                            kantabort: true
                         },
-                        namn: "Ny färdighet",
                         grupp: skilltype
                     }
                 };
             }			
 		}
+
+        if (type == "mysterie") {
+            found = true;
+
+            itemData = {
+                name: "Nytt mysterie",
+                type: "Mysterie",                
+                data: {
+                    installningar: {
+                        skapad: true,
+                        version: version
+                    },
+                    magnitud: 0
+                }
+            };
+        }
+
+        if (type == "avvisning") {
+            found = true;
+
+            itemData = {
+                name: "Ny avvisning",
+                type: "Avvisning",                
+                data: {
+                    installningar: {
+                        skapad: true,
+                        version: version
+                    },
+                    magnitud: 0
+                }
+            };
+        }
 
 		if (type == "närstridsvapen") {
             found = true;
@@ -494,6 +540,7 @@ export default class EonActorSheet extends ActorSheet {
                 type: "Rustning",                
                 data: {
                     installningar: {
+                        skapad: true,
                         version: version
                     },
                     typ: "utrustning",
@@ -510,6 +557,7 @@ export default class EonActorSheet extends ActorSheet {
                 type: "Utrustning",                
                 data: {
                     installningar: {
+                        skapad: true,
                         version: version
                     },
                     typ: "utrustning"
@@ -525,6 +573,7 @@ export default class EonActorSheet extends ActorSheet {
                 type: "Utrustning",                
                 data: {
                     installningar: {
+                        skapad: true,
                         version: version,
                         behallare: true
                     },
@@ -570,6 +619,12 @@ export default class EonActorSheet extends ActorSheet {
 
         const element = event.currentTarget;
 		const dataset = element.dataset;
+
+        if (dataset.type == "attribute") {
+            DialogHelper.AttributeEditDialog(this.actor, dataset.source, dataset.attribute);
+            return;
+        }
+
         const itemid = dataset.itemid;
 		const item = this.actor.getEmbeddedDocument("Item", itemid);	
         
@@ -692,8 +747,9 @@ export default class EonActorSheet extends ActorSheet {
             }
 
             for (const egenskap in data.grundegenskaper) {
-                actorData.system.grundegenskaper[egenskap].tvarde = data.grundegenskaper[egenskap].tvarde;
-                actorData.system.grundegenskaper[egenskap].bonus = data.grundegenskaper[egenskap].bonus;
+                actorData.system.grundegenskaper[egenskap].grund.tvarde = data.grundegenskaper[egenskap].tvarde;
+                actorData.system.grundegenskaper[egenskap].grund.bonus = data.grundegenskaper[egenskap].bonus;
+                actorData.system.grundegenskaper[egenskap].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.grundegenskaper[egenskap]);
             }
 
             await CalculateHelper.BeraknaHarleddEgenskaper(actorData);

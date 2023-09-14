@@ -90,35 +90,24 @@ export async function DoNotice(systemVersion) {
       `
       <div class="tray-title-area">Eon IV - ${systemVersion}</div>
       <div class="tray-action-area">
-          <p>Hej! Detta är en system till det Svenska rollspelet Eon IV. Dock betänk att det är för närvarande i tidig <b>beta-version</b> och skall inte på något sätt tas som en produkt som kan användas skarpt i en kampanj eller liknande.</p> 
+          <p>Hej! Detta är en system till det Svenska rollspelet Eon IV. Dock betänk att det är för närvarande i <b>beta-version</b> och skall inte på något sätt tas som en produkt som kan användas skarpt i en kampanj eller liknande.</p> 
           <p>Grundläggande funktioner kan ändras mellan versionerna och ingen hänsyn tas till detta så om du är intresserad att testa och att utvärdera - varsegod och testa på.</p>
       <div>
       <div class="tray-title-area">Mål</div>
       <div class="tray-action-area">
         <ul style="margin-top: 0">
-          <li>Nästa version - Bakgrundsfliken
-          <li>v1.0 - När rollformuläret kan hålla information för de saker som finns i grundboken så kommer jag släppa första versionen.</li>
+          <li>När rollformuläret kan hålla information för de saker som finns i grundboken så kommer jag släppa första versionen.</li>
         </ul>
       </div>
-      <div class="tray-title-area">Bugg fix sedan Alpha 1.6</div>
+      <div class="tray-title-area">Nya saker i Alpha 1.7</div>
       <div class="tray-action-area">
         <ul style="margin-top: 0">
-          <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/76">#76 - Skapa rustning utanför rollformulär blir fel</a></li>
-          <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/75">#75 - Kan inte aktivera rustning</a></li>          
-        </ul>
-      </div>
-      <div class="tray-title-area">Nya saker i Alpha 1.6</div>
-      <div class="tray-action-area">
-        <ul style="margin-top: 0">
-          <li>Fliken Utrustning</li>
-          <li>Utrustningslistorna från grundboken</li>
-          <li>Börjat med Varelseformuläret</li>
-          <li>Färdigheter som har kännetecken, hantverk eller expertis</li>
-          <li>Färdigheter kan ha - inget - Attribut som värde</li>          
-          <li>Lagt till pris på föremål</li>          
-          <li>Beräkningar av totalvikt</li>
-          <li>Anpassningar för Foundry v11</li>
+          <li>Fliken Religion</li>
+          <li>Lagt in alla utrustningsföremål från grundboken</li>
+          <li>Lägga till permanenta/tillfälliga bonus på attribut</li>
+          <li>Alla Foundry items kan nu skapas i världen</li>
           <li>Grafik</li>
+          <li>En stor hög med buggar</li>
         </ul>
       </div>
       <div class="tray-title-area">Stöd mitt arbete</div>
@@ -142,23 +131,4 @@ export async function DoNotice(systemVersion) {
       content: enrichedMessage,
       type: CONST.CHAT_MESSAGE_TYPES.OTHER
     });
-
-    /* <div class="tray-title-area">Nya saker i Alpha 1.5</div>
-    <div class="tray-action-area">
-      <ul style="margin-top: 0">
-        <li>Slå Härledda attribut.</li>
-        <li>Fixat så man nu ser alla egenskaperna på vapen.</li>
-        <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/66">#66 - Anfalla med vapen med egenskaper med värden</a></li>
-      </ul>
-    </div>
-    <div class="tray-title-area">Nya saker i Alpha 1.4</div>
-    <div class="tray-action-area">
-      <ul style="margin-top: 0">
-        <li>Stöd för Dice So Nice.</li>
-        <li>Vapen-fliken</li>
-        <li>Rustningar-fliken</li>
-        <li>Tärningsslag</li>
-        <li>Grafik</li>
-      </ul>
-    </div> */
 }

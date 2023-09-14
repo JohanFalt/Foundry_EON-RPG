@@ -120,12 +120,11 @@
 		
 		<section class="item-body">   
 
-            <div style="display: inline-block; align-self: flex-end;">
-                <div class="item-headline headline">Beskrivning *</div>
+            <div>
+                <div class="textbox-headline">Beskrivning</div>
                 <div class="editor-box">
-                    {{editor data.beskrivning target="system.beskrivning" button=false owner=owner editable=true}}
+                    {{editor data.system.beskrivning target="system.beskrivning" button=true owner=owner editable=true}}
                 </div>
-                <div>* För att spara din beskrivning glöm inte trycka på spara-ikonen.</div>
             </div>
 
             <div class="item-headline headline">Egenskaper</div>

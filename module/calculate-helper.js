@@ -1,6 +1,44 @@
 import DiceHelper from "./dice-helper.js";
 
 export default class CalculateHelper {
+    static async BeraknaTotaltVarde(attribut) {
+        let totalTarning = parseInt(attribut.grund.tvarde);
+        let totalBonus = parseInt(attribut.grund.bonus);
+
+        if(attribut.bonuslista.length > 0) {
+			for (const bonus of attribut.bonuslista) {
+				totalTarning += bonus.tvarde;
+				totalBonus += bonus.bonus;
+			}
+
+			if (totalBonus > 3) {
+				while (totalBonus > 3) {
+					totalTarning += 1;
+					totalBonus -= 4;
+				}
+			}
+            else if (totalBonus < -1) {
+				while (totalBonus < -1) {
+					totalTarning -= 1;
+					totalBonus += 4;
+				}
+			}
+		}
+
+		if ((totalTarning == 0) && (totalBonus < 0)) {
+			totalBonus = 0;
+		}
+		if (totalTarning < 0) {
+			totalTarning = 0;
+			totalBonus = 0;
+		}
+
+        return {
+            tvarde: totalTarning,
+            bonus: totalBonus
+        }
+    }
+
     static async hanteraBerakningar(actorData) {
 
         // Fokushantering
@@ -37,16 +75,34 @@ export default class CalculateHelper {
     }
 
     static async BeraknaHarleddEgenskaper(actorData) {
-        actorData.system.harleddegenskaper.forflyttning = await DiceHelper.BeraknaMedelvarde(actorData.system.grundegenskaper.rorlighet, actorData.system.grundegenskaper.talighet);
-        actorData.system.harleddegenskaper.intryck = await DiceHelper.BeraknaMedelvarde(actorData.system.grundegenskaper.utstralning, actorData.system.grundegenskaper.visdom);
-        actorData.system.harleddegenskaper.kroppsbyggnad = await DiceHelper.BeraknaMedelvarde(actorData.system.grundegenskaper.styrka, actorData.system.grundegenskaper.talighet);
-        actorData.system.harleddegenskaper.reaktion = await DiceHelper.BeraknaMedelvarde(actorData.system.grundegenskaper.rorlighet, actorData.system.grundegenskaper.uppfattning);
-        actorData.system.harleddegenskaper.sjalvkontroll = await DiceHelper.BeraknaMedelvarde(actorData.system.grundegenskaper.psyke, actorData.system.grundegenskaper.vilja);
-        actorData.system.harleddegenskaper.vaksamhet = await DiceHelper.BeraknaMedelvarde(actorData.system.grundegenskaper.psyke, actorData.system.grundegenskaper.uppfattning);
-        actorData.system.harleddegenskaper.livskraft = await DiceHelper.BeraknaLivskraft(actorData.system.grundegenskaper.styrka, actorData.system.grundegenskaper.talighet);
-        actorData.system.harleddegenskaper.grundskada = await DiceHelper.BeraknaGrundskada(actorData.system.grundegenskaper.styrka);
-        actorData.system.harleddegenskaper.grundrustning = await DiceHelper.BeraknaGrundrustning(actorData.system.grundegenskaper.styrka, actorData.system.grundegenskaper.talighet);
-        actorData.system.harleddegenskaper.initiativ = await DiceHelper.BeraknaInitiativ(actorData);        
+        let styrka = actorData.system.grundegenskaper.styrka.totalt;
+        let rorlighet = actorData.system.grundegenskaper.rorlighet.totalt;
+        let talighet = actorData.system.grundegenskaper.talighet.totalt;
+        let uppfattning = actorData.system.grundegenskaper.uppfattning.totalt;
+        let utstralning = actorData.system.grundegenskaper.utstralning.totalt;
+        let psyke = actorData.system.grundegenskaper.psyke.totalt;
+        let vilja = actorData.system.grundegenskaper.vilja.totalt;
+        let visdom = actorData.system.grundegenskaper.visdom.totalt;
+
+        actorData.system.harleddegenskaper.forflyttning.grund = await DiceHelper.BeraknaMedelvarde(rorlighet, talighet);
+        actorData.system.harleddegenskaper.forflyttning.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.forflyttning);
+        actorData.system.harleddegenskaper.intryck.grund = await DiceHelper.BeraknaMedelvarde(utstralning, visdom);
+        actorData.system.harleddegenskaper.intryck.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.intryck);
+        actorData.system.harleddegenskaper.kroppsbyggnad.grund = await DiceHelper.BeraknaMedelvarde(styrka, talighet);
+        actorData.system.harleddegenskaper.kroppsbyggnad.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.kroppsbyggnad);
+        actorData.system.harleddegenskaper.reaktion.grund = await DiceHelper.BeraknaMedelvarde(rorlighet, uppfattning);
+        actorData.system.harleddegenskaper.reaktion.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.reaktion);
+        actorData.system.harleddegenskaper.sjalvkontroll.grund = await DiceHelper.BeraknaMedelvarde(psyke, vilja);
+        actorData.system.harleddegenskaper.sjalvkontroll.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.sjalvkontroll);
+        actorData.system.harleddegenskaper.vaksamhet.grund = await DiceHelper.BeraknaMedelvarde(psyke, uppfattning);
+        actorData.system.harleddegenskaper.vaksamhet.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.vaksamhet);
+        actorData.system.harleddegenskaper.livskraft.grund = await DiceHelper.BeraknaLivskraft(styrka, talighet);
+        actorData.system.harleddegenskaper.livskraft.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.livskraft);
+        actorData.system.harleddegenskaper.grundskada.grund = await DiceHelper.BeraknaGrundskada(styrka);
+        actorData.system.harleddegenskaper.grundskada.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.grundskada);
+        actorData.system.harleddegenskaper.grundrustning = await DiceHelper.BeraknaGrundrustning(styrka, talighet);
+        actorData.system.harleddegenskaper.initiativ.grund = await DiceHelper.BeraknaInitiativ(actorData);        
+        actorData.system.harleddegenskaper.initiativ.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.initiativ);
     }
 
     static BeraknaBelastningAvdrag(varde) {

@@ -4,8 +4,8 @@ import { RollDice } from "../dice-helper.js";
 export class CombatRoll {
     constructor(actor) {
         this.actorid = actor._id;
-        this.grundInitiativ = parseInt(actor.system.harleddegenskaper.initiativ.tvarde);
-        this.bonusInitiativ = parseInt(actor.system.harleddegenskaper.initiativ.bonus);
+        this.grundInitiativ = parseInt(actor.system.harleddegenskaper.initiativ.totalt.tvarde);
+        this.bonusInitiativ = parseInt(actor.system.harleddegenskaper.initiativ.totalt.bonus);
 
         this.isdistance = false;
         this.isclose = false;

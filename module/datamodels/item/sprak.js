@@ -14,11 +14,10 @@ export default class EonSprak extends basforemal {
         const schema = super.defineSchema();
 
         schema.installningar = new fields.SchemaField({
-            ...installningar(),
-            
+            ...installningar()            
         });
 
-        schema.namn = new fields.StringField({required: true, initial: ""});        
+        //schema.namn = new fields.StringField({required: true, initial: ""});        
         schema.talabrytning = new fields.BooleanField({initial: false});
         schema.talaflytande = new fields.BooleanField({initial: false});
         schema.lasaskriva = new fields.BooleanField({initial: false});

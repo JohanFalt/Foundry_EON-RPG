@@ -1,5 +1,12 @@
 <form class="{{cssClass}}" autocomplete="off">
 
+    <div class="dialog-section-small">
+        <div class="large-main-headline centerText">{{object.vapennamn}}</div>
+        <div class="centerText">
+            Ob{{getDiceValue object.actorAttribut}}
+        </div>
+    </div>
+
     <div class="dialog-area centerText">
         <div class="clear">
             <button class="three-button pullLeft mode {{#if object.isattack}}active{{/if}}" data-type="attack">Anfall</button>
@@ -18,11 +25,15 @@
                 <button class="attacktype three-button pullLeft mode {{#if object.usestick}}active{{/if}}" data-type="stick">Stick</button>
             {{/if}}
         </div>
+    </div>
 
-        <div class="clear">
-            <button id="actionButton {{#if object.canroll}}show{{else}}hide{{/if}}" class="two-button pullLeft actionbutton">Rulla</button>
-            <button id="closeButton" class="two-button pullLeft closebutton">Stäng</button>
+    <div>
+
+        <div class="dice-row">
+            <button id="actionbutton" class="dialog-button four-column actionbutton">Rulla</button>
+            <button id="closeButton" class="dialog-button four-column closebutton">Stäng</button>
         </div>
+        
     </div>
 
 </form>

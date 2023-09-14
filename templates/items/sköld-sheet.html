@@ -109,7 +109,7 @@
                 </div>
 
                 {{#if hasActor}}
-                    <div class="pointer red item-delete" style="text-align: right;" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
+                    <div class="pullRight red item-delete" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
                 {{/if}}
             </div>
 			
@@ -117,12 +117,11 @@
 		
 		<section class="item-body">                        
 
-            <div style="display: inline-block; align-self: flex-end;">
-                <div class="item-headline">Beskrivning *</div>
+            <div>
+                <div class="textbox-headline">Beskrivning</div>
                 <div class="editor-box">
-                    {{editor data.beskrivning target="system.beskrivning" button=false owner=owner editable=true}}
+                    {{editor data.system.beskrivning target="system.beskrivning" button=true owner=owner editable=true}}
                 </div>
-                <div>* För att spara din beskrivning glöm inte trycka på spara-ikonen.</div>
             </div>
 
             <div class="item-headline headline">Egenskaper</div>

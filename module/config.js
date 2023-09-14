@@ -3,6 +3,8 @@ export const eon = {};
 eon.ikoner = { 
     fardighet: "systems/eon-rpg/assets/img/icons/archive-register.svg",
     sprak: "systems/eon-rpg/assets/img/icons/archive-register.svg",
+    mysterie: "systems/eon-rpg/assets/img/icons/prayer.svg",
+    besvarjelse: "systems/eon-rpg/assets/img/icons/spell-book.svg",
     slag_chock: "systems/eon-rpg/assets/img/icons/knockout.svg",
     slag_dod: "systems/eon-rpg/assets/img/icons/half-dead.svg",
     slag_initiative: "systems/eon-rpg/assets/img/icons/swords-emblem.svg",
@@ -29,6 +31,7 @@ eon.ikoner = {
 eon.slag = {
     grundegenskap: "Grundegenskap",
     fardighet: "Färdighet",
+    mysterium: "Mysterium",
     vapen: "Vapen"
 }
 
@@ -208,7 +211,7 @@ eon.utrustningsgrupper = {
     special: "Specialutrustning",
     vapen: "Vapentillbehör",
     lakare: "Läkareutrustning",
-    typ: "Tyg & skinn",
+    tyg: "Tyg & skinn",
     huvudbonad: "Huvudbonader",
     klader: "Kläder",
     skodon: "Skodon",
@@ -220,8 +223,6 @@ eon.utrustningsgrupper = {
     musik: "Musikinstrument",
     behallare: "Behållare",
     skrivdon: "Skrivdon",
-    dryck: "Dryck",
-    mat: "Måltider",
     proviant: "Proviant"
 }
 

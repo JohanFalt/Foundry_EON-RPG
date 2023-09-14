@@ -49,40 +49,40 @@
 
 /* Sheet */
 
-.rollperson:not(.minimized) {
+.EON.rollperson:not(.minimized) {
     min-width: 800px;
     width: 800px;
     min-height: 1200px;
     height: 1200px;
 }
 
-.varelse:not(.minimized) {
+.EON.varelse:not(.minimized) {
     min-width: 600px;
     width: 600px;
     min-height: 600px;
     height: 600px;
 }
 
-.itemsheet:not(.minimized) {
+.EON.itemsheet:not(.minimized) {
     min-width: 500px;
     width: 500px;
     min-height: 600px;
     height: 600px;
 }
 
-.itemsheet.vapen:not(.minimized) {
+.EON.itemsheet.vapen:not(.minimized) {
     min-width: 700px;
     width: 700px;
 }
 
-.general-dialog:not(.minimized) {
+.EON.general-dialog:not(.minimized) {
     min-width: 500px;
     min-height: 500px;
     height: 500px;
 }
 
-.rollperson .window-content,
-.varelse .window-content {
+.EON.rollperson .window-content,
+.EON.varelse .window-content {
     background: var(--eon-sheet-background-color) no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -90,7 +90,7 @@
     background-size: cover;
 }
 
-.itemsheet .window-content {
+.EON.itemsheet .window-content {
     background: var(--eon-item-background-color) no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -98,8 +98,8 @@
     background-size: cover;
 }
 
-.sheet-item,
-.sheet-character {
+.EON .sheet-item,
+.EON .sheet-character {
     font-family: var(--eon-main-font);
     color: var(--eon-sheet-text-color);
 }
@@ -137,28 +137,30 @@ span.resource-value,
     color: var(--eon-select-empty-text-color);
 }
 
-.sheet-character {
+.EON .sheet-character,
+.EON .sheet-item {
     font-size: var(--eon-font-small);
     font-weight: normal;
 }
 
-.sheet-top {
+:EON .sheet-top {
     width: 100%;
 }
 
-.sheet-character {
+.EON .sheet-character,
+.EON .sheet-item {
     width: 100%;
 }
 
-.sheet-header {
+.EON .sheet-header {
     width: 100%;
 }
 
-.sheet-body {
+.EON .sheet-body {
     width: 100%;
 }
 
-.sheet-box {
+.EON .sheet-box {
     width: 100%;
 }
 
@@ -169,24 +171,24 @@ span.resource-value,
     margin-bottom: 25px;
 }
 
-img.item {
+.EON img.item {
     max-width: 100px;
 }
 
-.smalltext {
+.EON .smalltext {
     font-size: var(--eon-font-xsmall);
 }
 
-.caption {
+.EON .caption {
     width:45%;
     line-height: var(--eon-line-height-default);
 }
 
-.avtrubbning-column .caption {
+.EON .avtrubbning-column .caption {
     width:50%;
 }
 
-.headline {
+.EON .headline {
     font-family: var(--eon-main-headline);
     font-size: var(--eon-font-large);    
     font-weight: normal;
@@ -194,19 +196,19 @@ img.item {
     border-bottom: 1px solid var(--eon-border-color);
 }
 
-.large-headline {
+.EON .large-headline {
     font-family: var(--eon-main-headline);
     font-size: var(--eon-font-x-large);   
     font-weight: normal;
 }
 
-.large-main-headline {
+.EON .large-main-headline {
     font-family: var(--eon-main-large-headline); 
     font-size: var(--eon-font-x-large);   
     font-weight: normal;
 }
 
-.number-value-text {
+.EON .number-value-text {
     font-family: var(--eon-main-font);
 }
 
@@ -235,61 +237,61 @@ img.item {
     overflow: hidden !important;
 }
 
-.two-third-column {
+.EON .two-third-column {
     width: 66%;
 }
 
-.two-column {
+.EON .two-column {
     width: 50%;
 }
 
-.three-column {
+.EON .three-column {
     width: 33%;
 }
 
-.four-column {
+.EON .four-column {
     width: 25%;
 }
 
-.five-column {
+.EON .five-column {
     width: 20%;
 }
 
-.attribute-value {
+.EON .attribute-value {
     line-height: var(--eon-line-height-default);
 }
 
-.pointer:hover,
-.pointer:focus {
+.EON .pointer:hover,
+.EON .pointer:focus {
   cursor: pointer;
 }
 
-.item-edit:hover,
-.item-edit:focus,
-.vrollable:hover,
-.vrollable:focus {
+.EON .item-edit:hover,
+.EON .item-edit:focus,
+.EON .vrollable:hover,
+.EON .vrollable:focus {
     color: #000;  
     cursor: pointer;
     text-shadow: 0 0 10px var(--eon-main-full-color);
 }
 
-.vrollable:hover,
-.vrollable:focus {
+.EON .vrollable:hover,
+.EON .vrollable:focus {
     background: url('../assets/img/icons/perspective-dice-six-faces-six.svg');
     background-repeat: no-repeat;
     background-size: contain;
     background-position: right;
 }
 
-.green {
+.EON .green {
     color: var(--eon-color-good);
 }
 
-.red {
+.EON .red {
     color: var(--eon-color-bad);
 }
 
-.dice-value {
+.EON .dice-value {
     background-color: var(--eon-back-color-inputs);
     font-family: var(--eon-main-font);
     width: 50px;
@@ -302,7 +304,7 @@ img.item {
     line-height: var(--eon-line-height-default);
 }
 
-.macroBtn {
+.EON .macroBtn {
     height: 45px;
     width: 45px;
     border: 0px;
@@ -320,59 +322,59 @@ img.item {
 
 /* Slå tärning */
 
-.dialog-area {
+.EON .dialog-area {
     margin-left: 15px;
     margin-bottom: 20px;
 }
 
-button.two-button {
+.EON button.two-button {
     width: 45%;
     max-width: 300px;
     height: 34px;
     margin-bottom: 5px;
 }
 
-button.three-button {
+.EON button.three-button {
     width: 30%;
     max-width: 150px;
     height: 34px;
     margin-bottom: 5px;
 }
 
-button.active {
+.EON button.active {
     background-color: var(--eon-back-color-inputs);
 }
 
 /* Navigation */
 
-.tab-area {
+.EON .tab-area {
     display:flex;
 }
 
-.tabButton:hover,
-.tabButton:focus,
-.tabButton.active {
+.EON .tabButton:hover,
+.EON .tabButton:focus,
+.EON .tabButton.active {
     background-color: var(--eon-back-color-inputs);
 }
 
-.tabButton {
+.EON .tabButton {
     width: 16%;
     min-width: 105px;
     text-align: center;
     line-height: var(--eon-line-height-floattext);
 }
 
-.tabIcon {
+.EON .tabIcon {
     width: 25px;
     min-width: 25px;
 }
 
-.tabboxleft {
+.EON .tabboxleft {
     border-left-style: solid;
     border-left-width: 1px;
 }
 
-.headlineTabs {
+.EON .headlineTabs {
     font-family: var(--eon-main-headline);
     font-size: var(--eon-font-tabsize);    
     border-bottom-style: solid;
@@ -462,17 +464,17 @@ span.resource-box-center {
     width: calc(100% - var(--eon-image-width));
 }
 
-.attribute-area {
+.EON .attribute-area {
     width: 98%;
 }
 
-.navigation {
+.EON .navigation {
     margin-top: 10px;
     margin-bottom: 10px;
     width: 100%;
 }
 
-.sheet-character .profile-img {
+.EON .sheet-character .profile-img {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 100px;
     flex: 0 0 100px;
@@ -483,7 +485,7 @@ span.resource-box-center {
     margin-right: 0;
 }
 
-input.editable {
+.EON input.editable {
     border-top-style: none;
     border-left-style: none;
     border-bottom-style: solid;
@@ -492,12 +494,12 @@ input.editable {
     border-right-width: 1px;
 }
 
-input.attribute-value {    
+.EON input.attribute-value {    
     width: 50px;
     text-align: center;  
 }
 
-input.text-value {
+.EON input.text-value {
     width: 75%;
 }
 
@@ -559,10 +561,31 @@ input.skill-value {
 
 /* ITEMS */
 
+.EON.itemsheet input.text-value {
+    width: 75%;
+    padding: 12px 5px;
+    box-sizing: border-box;
+}
+
+.EON.itemsheet input.attribute-value {
+    text-align: left;
+    padding: 12px 5px;
+    box-sizing: border-box;
+}
+
+.itemsheet .textbox-headline {
+    line-height: 28px;
+    height: 30px;
+}
+
 .item-headline {
     line-height: 28px;
     width: 150px;
     height: 30px;
+}
+
+.item-property-area {
+    height: 28px;
 }
 
 .item-top {
@@ -615,7 +638,6 @@ input.skill-value {
     text-align: center;
 }
 
-
 .floating-label-group {
   position: relative;
   
@@ -663,6 +685,66 @@ input.skill-value {
 .floating-label-group input.skill-label {
     height: var(--eon-line-height-default);
     padding: 4px 0 0 0;
+}
+
+/* Dialogs */
+
+.EON.general-dialog button {
+
+}
+
+.EON.general-dialog button.dialog-button {
+
+}
+
+.EON.general-dialog button.dialog-event-button {
+
+}
+
+/* .EON button .eon-roller__flag {
+    font-size: 14px;
+    height: 18px;
+    line-height: 1;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    border-radius: 4px 4px 0 0;
+    max-height: 18px;
+} */
+
+.EON.general-dialog .window-content {
+    font-family: var(--eon-main-font);
+    color: var(--eon-sheet-text-color);
+    font-size: var(--eon-font-small);
+    font-weight: normal;
+    background: var(--eon-item-background-color) no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.EON.general-dialog .dialog-section-small {
+    min-height: 100px;
+}
+
+.EON.general-dialog .dialog-section {
+    min-height: 150px;
+}
+
+.EON.general-dialog .dice-row {
+    text-align: center;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.EON.general-dialog .two-column {
+    width: 50%;
+}
+
+.EON.general-dialog .four-column {
+    width: 22%;
 }
 
 @media all and (max-height : 1200px) {

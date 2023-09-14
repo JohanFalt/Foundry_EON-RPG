@@ -10,6 +10,13 @@ export default class basforemal extends foundry.abstract.TypeDataModel {
         const fields = foundry.data.fields;
         const schema = {};
 
+        schema.bonuslista = new fields.ArrayField(
+            new fields.ObjectField({
+                initial: {},
+                nullable: false,
+        }));
+
+        schema.id = new fields.StringField({required: true, initial: ""});
         schema.typ = new fields.StringField({required: true, initial: ""});
         schema.grupp = new fields.StringField({required: true, initial: ""});
         schema.mall = new fields.StringField({required: true, initial: ""});

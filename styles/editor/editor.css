@@ -1,9 +1,10 @@
-.editor-box {
+.editor {
   border: 1px solid var(--eon-border-color);
-  border-radius: 3px; 
+  border-radius: 3px;
   color: black;
   min-height: 200px;
-  background-color: var(--eon-back-color-inputs) !important;
+  max-height: 200px;
+  background-color: var(--eon-back-color-inputs);
 }
 
 .editor-content {
@@ -13,3 +14,38 @@
   -ms-flex: 1; /* IE 10 */
   flex: 1; /* NEW, */
 }
+
+/* .editor-box .editor {
+  min-height: 200px;
+} */
+
+.editor .tox-editor-container {
+  min-height: 200px;
+  max-height: 200px;
+} 
+
+.editor .editor-content {
+  min-height: 200px;
+  max-height: 200px;
+}
+
+.editor-box,
+.small-editor-box {
+  padding: 5px;
+}
+
+.small-editor-box .editor {
+  min-height: 150px;
+  max-height: 150px;
+}
+
+.small-editor-box .editor .tox-editor-container {
+  min-height: 150px;
+  max-height: 150px;
+} 
+
+.small-editor-box .editor .editor-content {
+  min-height: 150px;
+  max-height: 150px;
+}
+

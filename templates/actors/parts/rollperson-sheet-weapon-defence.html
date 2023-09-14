@@ -33,9 +33,9 @@
             <div class="pullLeft number-value-text" style="width: 65px;">{{getDiceValue skold.system.avstand}}</div>
             <div class="pullLeft number-value-text" style="width: 50px;">{{skold.system.skydd}}</div>
             <div class="pullLeft number-value-text" style="width: 50px;">{{#if (eq skold.system.skadetyp "")}}-{{else}}{{getWeaponDamageType ../EON.CONFIG.vapenskador skold.system.skadetyp}}{{/if}}</div>
-            <div class="pullLeft number-value-text" style="width: 50px;">{{#if (eq skold.system.skada.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues skold.system.skada ../actor.system.harleddegenskaper.grundskada)}}{{/if}}</div>
+            <div class="pullLeft number-value-text" style="width: 50px;">{{#if (eq skold.system.skada.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues skold.system.skada ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
             <div class="pullLeft number-value-text" style="width: 40px;">{{#if (eq skold.system.vikt 0)}}-{{else}}{{skold.system.vikt}}kg{{/if}}</div>
-            <div class="pullLeft number-value-text">{{getPropertyList skold.system.egenskaper}}</div>
+            <div class="pullLeft number-value-text">{{shorten (getPropertyList skold.system.egenskaper) 25}}</div>
         </div>
         {{/each}}
     </div>

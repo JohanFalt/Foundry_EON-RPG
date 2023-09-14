@@ -1,1 +1,80 @@
-RELIGION
+<div class="item-box three-column">
+
+    <div class="skill-headline headline">Mystikfärdigheter</div>
+
+    {{#each (getActorSkillGroup actor.system.listdata.fardigheter "mystik") as |fardighet key|}}
+        <div class="skill clear">
+            <div class="pullLeft" >
+                {{#if fardighet.system.installningar.lattlard}}
+                    <div style="width: 8px;"><i class="fa-solid fa-sort-up green"></i></div>
+                {{/if}}
+                {{#if fardighet.system.installningar.svarlard}}
+                    <div style="width: 8px; line-height: 18px;"><i class="fa-solid fa-sort-down red"></i></div>
+                {{/if}}
+            </div>
+            <div class="vrollable pullLeft caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div> 
+                    
+            <div class="pullLeft dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
+            <div class="pullLeft skill-short">({{getAttributeShortName fardighet.system.attribut}})</div>
+        </div>
+    {{/each}}
+
+</div>
+
+<div class="item-box">
+
+    <div class="clear">
+        <div class="pullLeft large-headline">Mysterie</div>
+        <div class="pullLeft pointer">
+            <a class="item-create" title="Lägg till mysterie" data-type="mysterie">
+                <i class="fa-solid fa-square-plus green"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="clear headline" style="line-height: 25px; width:100%;">
+        <div class="pullLeft weapon-icon">&nbsp;</div>
+        <div class="pullLeft active-icon">&nbsp;</div>
+        <div class="pullLeft" style="width: 200px;">Namn</div>
+        <div class="pullLeft" style="width: 75px;">Magnitud</div>
+        <div class="pullLeft">Moment</div>
+    </div>
+
+    {{#each actor.system.listdata.religion.mysterie as |kraft key|}}
+        <div class="clear" style="line-height: 25px; width:100%;">
+            <div class="pointer pullLeft weapon-icon"><a class="item-edit" title="Editera mysterie" data-source="mysterie" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="pullLeft active-icon"><input class="pointer item-active" name="kraft.system.installningar.aktiv" type="checkbox" data-itemid="{{kraft._id}}" data-property="aktiv" {{isChecked kraft.system.installningar.aktiv}} /></div>
+            <div class="pullLeft" style="width: 200px;" data-source="mystery" data-itemid="{{kraft._id}}">{{kraft.name}}</div>
+            <div class="pullLeft" style="width: 75px;">{{kraft.system.magnitud}}</div>
+            <div class="pullLeft">{{getMysterySkills kraft.system.moment}}</div>
+        </div>
+    {{/each}}
+
+</div>
+
+<div class="item-box">
+
+    <div class="clear">
+        <div class="pullLeft large-headline">Avvisning</div>
+        <div class="pullLeft pointer">
+            <a class="item-create" title="Lägg till avvisning" data-type="avvisning">
+                <i class="fa-solid fa-square-plus green"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="clear headline" style="line-height: 25px; width:100%;">
+        <div class="pullLeft weapon-icon">&nbsp;</div>
+        <div class="pullLeft" style="width: 200px;">Namn</div>
+        <div class="pullLeft" style="width: 75px;">Magnitud</div>
+    </div>
+
+    {{#each actor.system.listdata.religion.avvisning as |kraft key|}}
+        <div class="clear" style="line-height: 25px; width:100%;">
+            <div class="pointer pullLeft weapon-icon"><a class="item-edit" title="Editera mysterie" data-source="mysterie" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="pullLeft" style="width: 200px;">{{kraft.name}}</div>
+            <div class="pullLeft" style="width: 75px;">{{kraft.system.magnitud}}</div>
+        </div>
+    {{/each}}
+
+</div>

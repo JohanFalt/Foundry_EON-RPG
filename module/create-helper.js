@@ -53,9 +53,8 @@ export default class CreateHelper {
     }
 
     static async _SkapaFardighetItem(grupp, fardighet, nyckel, worldVersion) {
-
         let itemData = {
-            name: nyckel,
+            name: fardighet.namn,
             type: "Färdighet",
             
             data: {
@@ -63,9 +62,9 @@ export default class CreateHelper {
                     skapad: true,
                     version: worldVersion
                 },
-                namn: fardighet.namn,
                 attribut: fardighet.attribut,
                 referens: fardighet.referens,
+                id: nyckel,
                 grupp: grupp,
                 varde: {
                     tvarde: parseInt(fardighet.grund.tvarde),

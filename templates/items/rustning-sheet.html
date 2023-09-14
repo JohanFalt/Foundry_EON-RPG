@@ -41,7 +41,6 @@
                     </div>
 
                     {{#each item.system.kroppsdel as |rustning key|}}
-                        {{log rustning}}
                         <div class="clear" style="line-height: 25px; width:100%;">
                             <div class="pullLeft" style="width: 100px;">{{rustning.namn}}</div>
                             <div class="pullLeft" style="width: 150px;">
@@ -63,12 +62,11 @@
                 </div>
             </div>
 
-            <div style="display: inline-block; align-self: flex-end;">
-                <div class="item-headline">Beskrivning *</div>
+            <div>
+                <div class="textbox-headline">Beskrivning</div>
                 <div class="editor-box">
-                    {{editor data.beskrivning target="system.beskrivning" button=false owner=owner editable=true}}
+                    {{editor data.system.beskrivning target="system.beskrivning" button=true owner=owner editable=true}}
                 </div>
-                <div>* För att spara din beskrivning glöm inte trycka på spara-ikonen.</div>
             </div>            
 
 		</section>

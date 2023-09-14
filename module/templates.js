@@ -41,8 +41,7 @@ export const PreloadHandlebarsTemplates = async function () {
 	return loadTemplates(templatePaths);
 };
 
-export async function Setup()
-{
+export async function Setup() {
     try {        
         /* const {files} = await FilePicker.browse("data", 'systems/eon-rpg/packs');
         let data = await FilePicker.browse("data", "systems/eon-rpg/packs", { bucket: null, extensions: [".json", ".JSON"], wildcard: false }); 
@@ -74,37 +73,6 @@ export async function Setup()
 
 		fileData = datadjur;
 		Object.assign(importData, fileData);
-
-
-		/* let fileData = await fetch(`systems/eon-rpg/packs/karaktarsdrag.json`).then((response) => response.json());
-		Object.assign(importData, fileData);
-
-		fileData = await fetch(`systems/eon-rpg/packs/arketyper.json`).then((response) => response.json());
-		Object.assign(importData, fileData);
-
-		fileData = await fetch(`systems/eon-rpg/packs/miljoer.json`).then((response) => response.json());
-		Object.assign(importData, fileData);
-
-		fileData = await fetch(`systems/eon-rpg/packs/folkslag.json`).then((response) => response.json());
-		Object.assign(importData, fileData); */
-
-		/* fileData = await fetch(`systems/eon-rpg/packs/fardigheter.json`).then((response) => response.json());
-		Object.assign(importData, fileData);
- */
-		/* if (!harStrid) {
-			fileData = await fetch(`systems/eon-rpg/packs/vapen.json`).then((response) => response.json());
-			Object.assign(importData, fileData);		
-		}
-		else {
-			fileData = await fetch(`systems/eon-rpg/packs/strid.json`).then((response) => response.json());
-			Object.assign(importData, fileData);		
-		} */
-
-		/* fileData = await fetch(`systems/eon-rpg/packs/utrustning.json`).then((response) => response.json());
-		Object.assign(importData, fileData); */
-
-		/* fileData = await fetch(`systems/eon-rpg/packs/djur.json`).then((response) => response.json());
-		Object.assign(importData, fileData); */
 
 		return importData;		
     } catch(err) {
@@ -141,8 +109,13 @@ export const RegisterHandlebarsHelpers = function () {
 			dice = "0";
 		}
 
-		//return "ob" + dice;
+		//return "Ob" + dice;
 		return dice;
+	});
+
+	// hämtar en särskild räckvidd
+	Handlebars.registerHelper("getSkillname", function(grupp, skill) {
+		return game.EON.fardigheter[grupp][skill].namn;
 	});
 
 	// hämtar en särskild grupp av färdigheterna
@@ -208,7 +181,7 @@ export const RegisterHandlebarsHelpers = function () {
 	// hämtar värdet på en särskild färdighet som RP har.
 	Handlebars.registerHelper("getActorSkillGroupValue", function(actor, fardighet, grupp) {
 		for (const item of actor.system.listdata.fardigheter[grupp]) {
-			if (item.name == fardighet) {
+			if (item.system.id == fardighet) {
 				return item.system.varde;
 			}
 		}
@@ -219,18 +192,10 @@ export const RegisterHandlebarsHelpers = function () {
 		}
 	});
 
-	Handlebars.registerHelper("getActorSkillId", function(actor, fardighet, grupp) {
-		const id = actor.system.listdata.fardigheter[grupp].filter(skill => skill.name == fardighet);
-
-		return id[0]._id;
-	});
-
-	
-
 	Handlebars.registerHelper("getActorSkillValue", function(actor, fardighet, config) {
 		for (const grupp in config.fardighetgrupper) {
 			for (const item of actor.system.listdata.fardigheter[grupp]) {
-				if (item.name == fardighet) {
+				if (item.system.id == fardighet) {
 					return item.system.varde;
 				}
 			}
@@ -248,8 +213,8 @@ export const RegisterHandlebarsHelpers = function () {
 	});
 
 	// hämtar ett attribut med egenskaper
-	Handlebars.registerHelper("getActorAttribute", function(actor, key) {
-		return actor.system.grundegenskaper[key];
+	Handlebars.registerHelper("getActorAttribute", function(actor, typ, key) {
+		return actor.system[typ][key].totalt;
 	});	
 
 	// hämtar ett attributs kortnamn
@@ -259,6 +224,32 @@ export const RegisterHandlebarsHelpers = function () {
 		}
 
 		return CONFIG.EON.grundegenskaper[attribut].kort;
+	});
+
+	// Hämtar mysteriets färdigheter och listar dessa snyggt
+	Handlebars.registerHelper("getMysterySkills", function(skills) {
+		let list = "";
+
+		for (const skill of skills) {
+			if (list != "") {
+				list = list + ", ";
+			}
+
+			//list = list + CONFIG.EON.fardigheter.mystik[skill.fardighet];
+			list = list + game.EON.fardigheter.mystik[skill.fardighet].namn;
+
+			if (skill.huvud) {
+				list = list + "*";
+			}
+
+			list = list + " " + skill.svarighet;
+
+			if (skill.tid != "") {
+				list = list + " " + skill.tid;
+			}
+		}
+
+		return list;
 	});
 
 	Handlebars.registerHelper("getActorSar", function(actor, key) {
@@ -436,14 +427,14 @@ export const RegisterHandlebarsHelpers = function () {
 		return ret;
 	});
 
--	Handlebars.registerHelper('eqAny', function () {
-	for(let i = 1; i < arguments.length; i++) {
-		  if(arguments[0] === arguments[i]) {
-			return true;
-		  }
-	}
-	return false;
-});
+	Handlebars.registerHelper('eqAny', function () {
+		for(let i = 1; i < arguments.length; i++) {
+			if(arguments[0] === arguments[i]) {
+				return true;
+			}
+		}
+		return false;
+	});
 
 	Handlebars.registerHelper('neAny', function () {
 		let found = false;

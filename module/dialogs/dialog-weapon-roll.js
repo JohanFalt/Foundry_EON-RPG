@@ -26,18 +26,18 @@ export class WeaponRoll {
             this.vapenskada = this.vapen.system.skada;
         }
         else if (item.type == "Sköld") {            
-            this.actorGrundskada = actor.system.harleddegenskaper.grundskada;
+            this.actorGrundskada = actor.system.harleddegenskaper.grundskada.totalt;
             this.vapenskada = DiceHelper.AdderaVarden(this.vapen.system.skada, this.actorGrundskada);
         }
         else {
-            this.actorGrundskada = actor.system.harleddegenskaper.grundskada;
+            this.actorGrundskada = actor.system.harleddegenskaper.grundskada.totalt;
         }
 
         // läs in värdena för vapenfärdigheten
         for (const fardighet of actor.system.listdata.fardigheter.strid) {
-			if (fardighet.name == item.system.grupp) {
+            if (fardighet.system.id == item.system.grupp) {
 				this.actorAttribut = fardighet.system.varde;
-                this.actorAttributNamn = fardighet.system.namn;
+                this.actorAttributNamn = fardighet.name;
                 break;
 			}
 		}

@@ -6,7 +6,6 @@
 		</header>
 		
 		<section class="item-body">
-
 			<div style="display: flex;">
 				<div class="pullLeft">
 					<img src="{{EON.CONFIG.ikoner.sprak}}" class="item img-block" />
@@ -15,7 +14,7 @@
 				<div class="item-area pullLeft">
 					<div class="item-top">
 						<div class="number-value-text floating-label-group">
-							<input class="text-value editable" name="system.namn" type="text" value="{{data.system.namn}}" data-dtype="String" autocomplete="off" autofocus required />
+							<input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
 							<span class="floating-label">Namn</span>
 						</div>
 						
@@ -42,8 +41,8 @@
 				</div>
 
 				{{#if hasActor}}
-					{{#if (eq item.name "ny")}}
-						<div class="pointer red item-delete" style="text-align: right;" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
+					{{#if item.system.installningar.kantabort}}
+						<div class="pullRight red item-delete" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
 					{{/if}}
 				{{/if}}
 

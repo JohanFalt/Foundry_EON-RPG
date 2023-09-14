@@ -6,7 +6,8 @@ const fields = foundry.data.fields;
 const installningar = () => ({
     skapad: new fields.BooleanField({initial: false}),
     borttagen: new fields.BooleanField({initial: false}),
-    version: new fields.StringField({required: true, initial: ""})
+    version: new fields.StringField({required: true, initial: ""}),
+    kantabort: new fields.BooleanField({initial: false})
 });
 
 export default installningar

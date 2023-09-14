@@ -27,11 +27,11 @@ export default class EonItemSheet extends ItemSheet {
 	get title() {
 		let title = this.item.name;
 		
-		if (this.item.system.namn != undefined) {
+		/* if (this.item.system.namn != undefined) {
 			if (this.item.system.namn != "") {
 				title = this.item.system.namn;
 			}
-		}
+		} */
 
 		return "Editera " + title.toLowerCase();
 	}
@@ -46,9 +46,63 @@ export default class EonItemSheet extends ItemSheet {
 			itemData.system.installningar.version = version;
 			itemData.system.installningar.skapad = true;
 
+			if (itemData.type == "Färdighet") {
+				if (itemData.name == "") {
+					itemData.name = "Ny färdighet";
+				}
+				
+				itemData.system.grupp = "ovriga";
+				itemData.system.installningar.kantabort = true;
+			}
+			if (itemData.type == "Språk") {
+				if (itemData.name == "") {
+					itemData.name = "Nytt språk";
+				}
+
+				itemData.system.installningar.kantabort = true;
+			}
+			if (itemData.type == "Närstridsvapen") {
+				if (itemData.name == "") {
+					itemData.name = "Nytt närstridsvapen";
+				}
+
+				itemData.system.typ = "utrustning";
+			}
+			if (itemData.type == "Avståndsvapen") {
+				if (itemData.name == "") {
+					itemData.name = "Nytt avståndsvapen";
+				}
+
+				itemData.system.typ = "utrustning";
+			}
+			if (itemData.type == "Sköld") {
+				if (itemData.name == "") {
+					itemData.name = "Ny sköld";
+				}
+
+				itemData.system.typ = "utrustning";
+				itemData.system.grupp = "skold";
+			}
 			if (itemData.type == "Rustning") {
+				if (itemData.name == "") {
+					itemData.name = "Ny rustning";
+				}
+
 				const kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, game.data.system.version);
 				itemData.system.kroppsdel = kroppsdelar;
+				itemData.system.typ = "utrustning";
+			}
+			if (itemData.type == "Utrustning") {
+				if (itemData.name == "") {
+					itemData.name = "Nytt föremål";
+				}
+
+				itemData.system.typ = "utrustning";
+			}
+			if (itemData.type == "Skada") {
+				if (itemData.name == "") {
+					itemData.name = "Ny skada";
+				}
 			}
 
 			await this.item.update(itemData);
@@ -79,11 +133,7 @@ export default class EonItemSheet extends ItemSheet {
 
 		html
 			.find('.inputdata')
-			.change(event => this._onsheetChange(event));
-
-		html
-			.find(".item-active")
-			.click(this._onItemActive.bind(this));
+			.change(event => this._onsheetChange(event));		
 
 		html
             .find('.tic')
@@ -92,6 +142,14 @@ export default class EonItemSheet extends ItemSheet {
 		html
 			.find('.tic')
 			.on('contextmenu', this._ticValueDown.bind(this));
+
+		html
+			.find(".item-create")
+			.click(this._onItemCreate.bind(this));
+		
+		html
+			.find(".item-active")
+			.click(this._onItemActive.bind(this));
 
 		html
 			.find(".item-delete")
@@ -110,18 +168,54 @@ export default class EonItemSheet extends ItemSheet {
             .click(this._setVapenEgenhet.bind(this));
 	}
 
+	async _onItemCreate(event) {
+		event.preventDefault();
+
+		const header = event.currentTarget;
+		const type = header.dataset.type;
+        const version = game.data.system.version;
+		let itemData;
+
+		if (type == "moment") {
+			let moment = {
+                fardighet: "Nytt moment",
+				huvud: false,
+				svarighet: 0,
+				tid: ""
+            };
+
+			const itemData = duplicate(this.item);
+        	itemData.system.moment.push(moment);
+        	await this.item.update(itemData);
+
+        	this.render();
+
+			return;
+		}
+	}
+
 	async _onItemActive(event) {		
 		event.preventDefault();
         event.stopPropagation();
 
 		const element = event.currentTarget;
-		const dataset = element.dataset;
-		
-		let active = this.item.system[dataset.property];
+		const dataset = element.dataset;		
+
+		if (dataset.source = "moment") {
+			await this._setMysterieMoment(event);
+			return;
+		}
 
 		const itemData = duplicate(this.item);
 
-		itemData.system[dataset.property].aktiv = !active;
+		if (this.item.system.installningar[dataset.property] != undefined) {
+			let active = this.item.system.installningar[dataset.property];
+			itemData.system.installningar[dataset.property] = !active;
+		}
+		else {
+			let active = this.item.system[dataset.property].aktiv;
+			itemData.system[dataset.property].aktiv = !active;
+		}
 		await this.item.update(itemData);
 
 		this.render();
@@ -132,18 +226,35 @@ export default class EonItemSheet extends ItemSheet {
         event.stopPropagation();
 
         const element = event.currentTarget;
-		const dataset = element.dataset;
-        const itemid = dataset.itemid;
+		const dataset = element.dataset;        
+
+		// är det en del av ett item
+		if (dataset.type != undefined) {
+			const type = dataset.type;
+			const key = parseInt(dataset.key);
+
+			if (type == "moment") {
+				const itemData = duplicate(this.item);
+				itemData.system[type].splice(key, 1);
+				await this.item.update(itemData);
+	
+				this.render();
+				return;
+			}
+			
+			return;
+		}    
+		
+		const itemid = dataset.itemid;
 		const item = this.actor.getEmbeddedDocument("Item", itemid);
-		const namn = (item.name == "ny" ? item.system.namn : item.name);
+		const namn = item.name;
 
         if (!item) {
             return;
 		}
 
+		// gäller item i sig
         const performDelete = await new Promise((resolve) => {
-			
-
             Dialog.confirm({
                 title: "Tar bort " + namn,
                 yes: () => resolve(true),
@@ -288,6 +399,36 @@ export default class EonItemSheet extends ItemSheet {
 
 		const itemData = duplicate(this.item);
 		itemData.system.egenskaper = properties;
+		await this.item.update(itemData);
+
+		this.render();
+	}
+
+	async _setMysterieMoment(event) {
+		event.preventDefault();
+		const element = event.currentTarget;
+		const dataset = element.dataset;
+
+		const key = dataset.key;
+		const property = dataset.egenskap;
+
+		const component = "object." + property + "_" + key;
+        var e = document.getElementById(component);
+
+        var newvalue 
+		
+		if (property == "svarighet") {
+			newvalue = parseInt(e.value);
+		}
+		else if (property == "huvud") {
+			newvalue = !(e.value == "true");
+		}
+		else {
+			newvalue = e.value;
+		}
+
+		const itemData = duplicate(this.item);
+		itemData.system.moment[key][property] = newvalue;
 		await this.item.update(itemData);
 
 		this.render();
@@ -442,7 +583,13 @@ export default class EonItemSheet extends ItemSheet {
 		}
 
 		if (source == "weapon-property") {
-			this._setVapenEgenhet(event);
+			await this._setVapenEgenhet(event);
+
+			return;
+		}
+
+		if (source == "moment") {
+			await this._setMysterieMoment(event);
 
 			return;
 		}

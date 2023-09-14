@@ -25,7 +25,7 @@
             </div> -->
             <div class="clear">
                 <div class="pullLeft" style="width: 125px;">Totalt avdrag</div>
-                <div class="pullLeft number-value-text">{{#if (eq (getDiceValue actor.system.berakning.belastning.totaltavdrag) "0")}}0{{else}}-{{getDiceValue actor.system.berakning.belastning.totaltavdrag}}{{/if}}</div>
+                <div class="pullLeft number-value-text">{{#if (eq (getDiceValue actor.system.berakning.belastning.totaltavdrag) "0")}}0{{else}}{{getDiceValue actor.system.berakning.belastning.totaltavdrag}}{{/if}}</div>
             </div>
             <div class="information-area">Alla totalvikter är avrundade till heltal.</div>
         </div>        
@@ -44,7 +44,7 @@
         <div class="clear headline" style="line-height: 25px; width:100%;">
             <div class="pullLeft weapon-icon">&nbsp;</div>
             <div class="pullLeft active-icon">&nbsp;</div>
-            <div class="pullLeft" style="width: 125px;">Namn</div>
+            <div class="pullLeft" style="width: 200px;">Namn</div>
             <div class="pullLeft" style="width: 50px;">Vikt</div>
             <div class="pullLeft">Behållare</div>
         </div>
@@ -53,7 +53,7 @@
             <div class="clear" style="line-height: 25px; width:100%;">
                 <div class="pointer pullLeft weapon-icon"><a class="item-edit" title="Editera utrustning" data-source="utrustning" data-itemid="{{foremal._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
                 <div class="pullLeft active-icon"><input class="pointer item-active" name="foremal.system.installningar.buren" type="checkbox" data-itemid="{{foremal._id}}" data-property="buren" {{isChecked foremal.system.installningar.buren}} /></div>
-                <div class="pullLeft" style="width: 125px;" data-source="utrustning data-itemid="{{foremal._id}}">{{foremal.name}} {{#if (gt foremal.system.antal 1)}}({{foremal.system.antal}} st){{/if}}</div>
+                <div class="pullLeft" style="width: 200px;" data-source="utrustning data-itemid="{{foremal._id}}">{{foremal.name}} {{#if (gt foremal.system.antal 1)}}({{foremal.system.antal}} st){{/if}}</div>
                 <div class="pullLeft" style="width: 50px;">{{foremal.system.vikt}}</div>
                 {{#if foremal.system.installningar.behallare}}
                     <div>{{foremal.system.volym.antal}} {{foremal.system.volym.enhet}} av {{foremal.system.volym.max}} {{foremal.system.volym.enhet}}</div>
