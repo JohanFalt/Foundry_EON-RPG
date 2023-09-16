@@ -201,7 +201,7 @@ export default class EonItemSheet extends ItemSheet {
 		const element = event.currentTarget;
 		const dataset = element.dataset;		
 
-		if (dataset.source = "moment") {
+		if (dataset.source == "moment") {
 			await this._setMysterieMoment(event);
 			return;
 		}
