@@ -748,25 +748,41 @@ input.skill-value {
 }
 
 @media all and (max-height : 1200px) {
-    .rollperson:not(.minimized),
-    .varelse:not(.minimized) {
+    .EON.rollperson:not(.minimized),
+    .EON.varelse:not(.minimized) {
         min-height: 400px;
     }
 
-    .itemsheet.vapen:not(.minimized),
-    .itemsheet:not(.minimized) {
+    .EON.itemsheet.vapen:not(.minimized),
+    .EON.itemsheet:not(.minimized) {
         min-height: 400px;
     }
 }
 
+@media all and (max-height : 1080px) {
+    .EON.rollperson:not(.minimized),
+    .EON.varelse:not(.minimized) {
+        min-height: 400px;
+    }
+
+    .EON.itemsheet.vapen:not(.minimized),
+    .EON.itemsheet:not(.minimized) {
+        min-height: 400px;
+    }
+
+    .EON .skill-area {
+        max-height: 500px;
+    }
+}
+
 @media all and (max-width : 1280px) {
-    .rollperson:not(.minimized),
-    .varelse:not(.minimized) {
+    .EON.rollperson:not(.minimized),
+    .EON.varelse:not(.minimized) {
         min-width: 400px;
     }
 
-    .itemsheet.vapen:not(.minimized),
-    .itemsheet:not(.minimized) {
+    .EON.itemsheet.vapen:not(.minimized),
+    .EON.itemsheet:not(.minimized) {
         min-width: 400px;
     }
 }

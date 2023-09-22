@@ -389,7 +389,7 @@ export const datautrustning = {
                 "installningar": {
                     "behallare": true
                 },
-                "namn": "Glödlåda",
+                "namn": "Lampolja",
                 "vikt": 1,
                 "pris": 2,
                 "volym": {
