@@ -9,6 +9,29 @@ export default class CreateHelper {
         }       
     }
 
+    static async SkapaKaraktarsdrag(actorData) {
+        let drag = {
+            namn: "",
+            niva1: {
+                vald: 0,
+                text: ""
+            },
+            niva2: {
+                vald: 0,
+                text: ""
+            },
+            niva3: {
+                vald: 0,
+                text: ""
+            },
+            last: 0,
+            svaghet: 0,
+            tvivel: 0
+        };
+
+        actorData.system.egenskap.karaktärsdrag.push(drag);
+    }
+
     static async SkapaKroppsdelar(config, version) {
 
         let bok = "grund";

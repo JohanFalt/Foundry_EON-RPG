@@ -82,6 +82,16 @@ export async function Setup() {
 
 export const RegisterHandlebarsHelpers = function () {
 
+	function isEmpty(value) {
+		if ((value == "") || (value == undefined)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+
+	}
+
 	// konverterar det interna värdet till ett T6-värde
 	Handlebars.registerHelper("getDiceValue", function(value) {
 		let dice = "0";
@@ -130,18 +140,24 @@ export const RegisterHandlebarsHelpers = function () {
 
 	// hämtar en särskild vapenskada
 	Handlebars.registerHelper("getWeaponDamageType", function(vapenskador, skada) {
-		if (skada == "") {
+		if (isEmpty(skada)) {
 			return "&nbsp;";
 		}
+		/* if ((skada == "") || (skada == undefined)) {
+			return "&nbsp;";
+		} */
 
 		return vapenskador[skada];
 	});
 
 	// hämtar en särskild räckvidd
 	Handlebars.registerHelper("getRange", function(rackviddlista, rackvidd) {
-		if (rackvidd == "") {
+		if (isEmpty(rackvidd)) {
 			return "&nbsp;";
 		}
+		/* if ((rackvidd == "") || (rackvidd == undefined)) {
+			return "&nbsp;";
+		} */
 
 		return rackviddlista[rackvidd].namn;
 	});

@@ -45,6 +45,8 @@ export default class EonActorSheet extends ActorSheet {
 
 		if (!actorData.system.installningar.skapad) {
             await CreateHelper.SkapaFardigheter(this.actor, CONFIG.EON, version);
+            await CreateHelper.SkapaKaraktarsdrag(actorData);
+            await CreateHelper.SkapaKaraktarsdrag(actorData);
             await CreateHelper.SkapaNarstridsvapen(this.actor, CONFIG.EON, "slagsmal", "obevapnad", version, true);
 
             actorData.system.installningar.skapad = true;
@@ -259,6 +261,10 @@ export default class EonActorSheet extends ActorSheet {
         html
 			.find(".item-alter")
             .change(event => this._onItemAlter(event));
+
+        html
+			.find(".item-delete")
+			.click(this._onItemDelete.bind(this));
     }
 
     async _ticValueUp(event) {
@@ -478,6 +484,13 @@ export default class EonActorSheet extends ActorSheet {
                     magnitud: 0
                 }
             };
+        }
+
+        if (type == "karaktärsdrag") {
+            const actorData = duplicate(this.actor);
+            await CreateHelper.SkapaKaraktarsdrag(actorData);
+            await this.actor.update(actorData);
+            return;
         }
 
 		if (type == "närstridsvapen") {
@@ -715,6 +728,34 @@ export default class EonActorSheet extends ActorSheet {
 		this.render();
 	}
 
+    async _onItemDelete(event) {
+		event.preventDefault();
+        event.stopPropagation();
+
+        const element = event.currentTarget;
+		const dataset = element.dataset;  
+        const source = dataset.source;
+        const index = Number(dataset.index);
+        
+        // gäller item i sig
+        const performDelete = await new Promise((resolve) => {
+            Dialog.confirm({
+                title: "Tar bort " + source,
+                yes: () => resolve(true),
+                no: () => resolve(false),
+                content: "Är du säker du vill ta bort " + source,
+            });
+        });
+
+        if (!performDelete) {
+            return;
+		}     
+
+        const actorData = duplicate(this.actor);
+        actorData.system.egenskap[source].splice(index, 1);
+        await this.actor.update(actorData);
+	}
+
     async _onsheetChange(event) {
 		event.preventDefault();
 
@@ -776,6 +817,18 @@ export default class EonActorSheet extends ActorSheet {
                 this.render();
                 return;                
             }            
+        }
+        if (source == "karaktarsdrag") {
+            const index = Number(dataset.index);
+            const property = dataset.name;
+            let e = document.getElementById(source + "_" + property + "_" + index);
+            const newvalue = e.value
+
+            actorData.system.egenskap.karaktärsdrag[index][property] = newvalue;
+
+            await this.actor.update(actorData);
+            this.render();
+            return;
         }
 	}
 
@@ -848,11 +901,40 @@ export default class EonActorSheet extends ActorSheet {
         steps.removeClass("active");
 
         if (type != undefined) {
-            if ((parseInt(actorData.system[fieldStrings][type][value]) == 1) && (parseInt(index) == 1)) {
-                actorData.system[fieldStrings][type][value] = 0;
+            if (type == "karaktarsdrag") {
+                //let karaktarsdrag = actorData.system.egenskap.karaktärsdrag[index];
+                let fields = dataset.name.split(".");
+                let newvalue = Number(dataset.value);
+
+                if (newvalue == 0) {
+                    newvalue = 1;
+                }
+                else {
+                    newvalue = 0;
+                }
+
+                if (fields.length == 2) {
+                    const setting = fields[0];
+                    const property = fields[1];
+                    actorData.system.egenskap.karaktärsdrag[index][setting][property] = newvalue;
+                }
+                else {
+                    const property = fields;
+                    actorData.system.egenskap.karaktärsdrag[index][property] = newvalue;
+                }    
+		        
+		        await this.actor.update(actorData);
+
+		        this.render();
+                return;
             }
             else {
-                actorData.system[fieldStrings][type][value] = parseInt(index);
+                if ((parseInt(actorData.system[fieldStrings][type][value]) == 1) && (parseInt(index) == 1)) {
+                    actorData.system[fieldStrings][type][value] = 0;
+                }
+                else {
+                    actorData.system[fieldStrings][type][value] = parseInt(index);
+                }
             }
         }
         else if ((actorData.system[fieldStrings][value] == 1) && (parseInt(index) == 1)) {

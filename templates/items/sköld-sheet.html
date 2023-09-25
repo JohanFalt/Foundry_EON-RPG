@@ -115,35 +115,39 @@
 			
 		</header>
 		
-		<section class="item-body">                        
-
-            <div>
-                <div class="textbox-headline">Beskrivning</div>
-                <div class="editor-box">
-                    {{editor data.system.beskrivning target="system.beskrivning" button=true owner=owner editable=true}}
-                </div>
-            </div>
-
-            <div class="item-headline headline">Egenskaper</div>
+		<section class="item-body">   
+            
+            <div class="item-headline large-headline">Egenskaper</div>
             <div class="property-area">                
                 {{#each EON.egenskaper as |egenhet key|}}                        
                     <div class="clear">
                         <div class="pullLeft item-headline">{{egenhet.namn}}</div>
-                        <div class="pullLeft item-headline number-value-text">
+                        <div class="pullLeft number-value-text">
                             <div class="pullLeft">
                                 <input class="weapon-property" type="checkbox" {{#if (checkProperty ../item.system.egenskaper key)}} checked {{/if}} value="{{key}}" />
                             </div>
-                            {{#if (checkProperty ../item.system.egenskaper key)}}
-                                {{#if egenhet.harniva}}
-                                    <div class="pullLeft">
-                                        <input class="inputdata" style="width: 50px;" type="text" value="{{getPropertyLevel ../item.system.egenskaper key}}" data-source="weapon-property" />
-                                    </div>
+                            <div class="pullLeft" style="width: 50px;">
+                                {{#if (checkProperty ../item.system.egenskaper key)}}
+                                    {{#if egenhet.harniva}}
+                                        <input class="inputdata" style="width: 50px;" type="text" value="{{getPropertyLevel ../item.system.egenskaper key}}" data-source="weapon-property" data-dtype="Number" />
+                                    {{else}}
+                                        &nbsp;
+                                    {{/if}}
+                                {{else}}
+                                    &nbsp;
                                 {{/if}}
-                            {{/if}}
+                            </div>                            
                         </div>
                     </div>
                 {{/each}}
             </div>
+
+            <div>
+                <div class="large-headline">Beskrivning</div>
+                <div class="editor-box">
+                    {{editor data.system.beskrivning target="system.beskrivning" button=true owner=owner editable=true}}
+                </div>
+            </div>            
 		</section>
 
 	</div>

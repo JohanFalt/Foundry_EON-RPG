@@ -16,6 +16,18 @@ export async function CompareVersion(oldVersion, newVersion) {
         return true;
     }
 
+    if ((oldVersion.toLowerCase().includes("alpha")) && (!newVersion.toLowerCase().includes("alpha"))) {
+      return true;
+    }
+
+    if ((oldVersion.toLowerCase().includes("alpha")) && (!newVersion.toLowerCase().includes("beta"))) {
+      return true;
+    }
+
+    if ((oldVersion.toLowerCase().includes("beta")) && (!newVersion.toLowerCase().includes("beta"))) {
+      return true;
+    }
+
     if (oldVersion.toLowerCase().includes("alpha")) {
         oldVersion = oldVersion.toLowerCase().replace("alpha", "");
         oldVersion = oldVersion.toLowerCase().replace("-", "");
@@ -84,36 +96,44 @@ export async function DoNotice(systemVersion) {
     if (!game.user.isGM) {
       return;
     }
-    
-    const enrichedMessage = await TextEditor.enrichHTML(
-      /*html*/
-      `
-      <div class="tray-title-area">Eon IV - ${systemVersion}</div>
+
+    let patch200 = false;
+    let partMessage = "";
+
+    try {
+      // add the new setting in settings.js
+      patch200 = game.settings.get('eon-rpg', 'patch200');      
+    } 
+    catch (e) {
+    }
+
+    if (!patch200) {
+      game.settings.set('eon-rpg', 'patch200', true);
+
+      partMessage += `
+        <li>Skarp version</li>
+        <li>Fliken Bakgrund</li>
+        <li>Bonus på tärningsslag med vapen</li>
+        <li>Grafik</li>`;
+    }    
+
+    let intruduction = `
+      <div class="tray-title-area">Version ${systemVersion} installerat</div>
       <div class="tray-action-area">
-          <p>Hej! Detta är en system till det Svenska rollspelet Eon IV. Dock betänk att det är för närvarande i <b>beta-version</b> och skall inte på något sätt tas som en produkt som kan användas skarpt i en kampanj eller liknande.</p> 
-          <p>Grundläggande funktioner kan ändras mellan versionerna och ingen hänsyn tas till detta så om du är intresserad att testa och att utvärdera - varsegod och testa på.</p>
-      <div>
-      <div class="tray-title-area">Mål</div>
+        Systemet är nu uppdaterat till en ny version. Ny funktion kan läsas nedan.
+        <p>Delar av detta system innehåller material som tillhör <a href="https://helmgast.se/">Helmgast AB</a> som äger copyright och trademark. Allt material används med tillåtelse.</p>
+        Detta system är inte en officiell Eon produkt.
+      </div>`;
+
+    let message = `
+      <div class="tray-title-area">Nytt för versionen</div>
       <div class="tray-action-area">
         <ul style="margin-top: 0">
-          <li>När rollformuläret kan hålla information för de saker som finns i grundboken så kommer jag släppa första versionen.</li>
+          ${partMessage}
         </ul>
-      </div>
-      <div class="tray-title-area">Nya saker i Alpha 1.7</div>
-      <div class="tray-action-area">
-        <ul style="margin-top: 0">
-          <li>Fliken Religion</li>
-          <li>Lagt in alla utrustningsföremål från grundboken</li>
-          <li>Lägga till permanenta/tillfälliga bonus på attribut</li>
-          <li>Alla Foundry items kan nu skapas i världen</li>
-          <li>Grafik</li>
-          <li>En stor hög med buggar</li>
-        </ul>
-      </div>
-      <div class="tray-title-area">Stöd mitt arbete</div>
-      <div class="tray-action-area">
-        <a href="https://ko-fi.com/johanfk"><img src="https://ko-fi.com/img/githubbutton_sm.svg" /></a>
-      </div>
+      </div>`;
+
+    let support =  `
       <div class="tray-title-area">Länkar</div>
       <div class="tray-action-area">
         <ul style="margin-top: 0">
@@ -123,9 +143,14 @@ export async function DoNotice(systemVersion) {
           <li><a href="https://raw.githubusercontent.com/JohanFalt/Foundry_EON-RPG/main/LICENSE">Licensierad under MIT Licensen</a></li>
         </ul>
       </div>
-      `,
-      { async: true }
-    );
+      <div class="tray-title-area">Stöd mitt arbete</div>
+      <div class="tray-action-area">
+        <a href="https://ko-fi.com/johanfk"><img src="https://ko-fi.com/img/githubbutton_sm.svg" /></a>
+      </div>`;
+
+    message = intruduction + message + support;
+    
+    const enrichedMessage = await TextEditor.enrichHTML(`${message}`, { async: true });
     await ChatMessage.create({
       user: game.user.id,
       content: enrichedMessage,

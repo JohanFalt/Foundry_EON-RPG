@@ -8,6 +8,8 @@ export class WeaponRoll {
 			"tvarde": 0,
 			"bonus": 0
 		};
+        this.totalTarning = 0;
+        this.totalBonus = 0;
         this.actorAttributNamn = "";
 
         this.vapen = item;
@@ -95,6 +97,10 @@ export class DialogWeaponRoll extends FormApplication {
             .click(this._generalRoll.bind(this));
 
         html
+            .find('.eventbutton')
+            .click(this._eventclick.bind(this));
+
+        html
             .find('.closebutton')
             .click(this._closeForm.bind(this));
     }
@@ -126,6 +132,9 @@ export class DialogWeaponRoll extends FormApplication {
             this.object.isdamage = false;
             this.object.isdefense = false;  
 
+            this.object.totalTarning = this.object.actorAttribut.tvarde;
+            this.object.totalBonus = this.object.actorAttribut.bonus;
+
             if ((this.object.vapen.type="Avståndsvapen") || (this.object.vapen.type="Sköld")) {
                 if (this.object.vapen.system.skadetyp == "hugg") {
                     this.object.usehugg = true;
@@ -141,7 +150,7 @@ export class DialogWeaponRoll extends FormApplication {
         if (type == "damage") {
             this.object.isattack = false;
             this.object.isdamage = true;
-            this.object.isdefense = false;  
+            this.object.isdefense = false; 
             
             if ((this.object.vapen.type="Avståndsvapen") || (this.object.vapen.type="Sköld")) {
                 if (this.object.vapen.system.skadetyp == "hugg") {
@@ -159,6 +168,9 @@ export class DialogWeaponRoll extends FormApplication {
             this.object.isattack = false;
             this.object.isdamage = false;
             this.object.isdefense = true;   
+
+            this.object.totalTarning = this.object.actorAttribut.tvarde;
+            this.object.totalBonus = this.object.actorAttribut.bonus;
         }
         if (type == "hugg") {
             this.object.usehugg = true;
@@ -182,12 +194,76 @@ export class DialogWeaponRoll extends FormApplication {
 
         if (this.object.isdamage) {
             this.object.vapenskada = DiceHelper.AdderaVarden(this.object.vapen.system[type], this.object.actorGrundskada);
+
+            this.object.totalTarning = this.object.vapenskada.tvarde;
+            this.object.totalBonus = this.object.vapenskada.bonus;
         }
         else {
             this.object.vapenskada = {
                 "tvarde": 0,
                 "bonus": 0
             };
+
+            this.object.totalTarning = 0;
+            this.object.totalBonus = 0;
+        }
+
+        this.render();
+    }
+
+    /* something happened on the sheet */
+    _eventclick(event) {
+        event.preventDefault();
+
+        const element = event.currentTarget;
+		const dataset = element.dataset;
+
+        if (dataset?.source == "bonus") {
+            let value = dataset.value;
+
+            if (dataset?.action == "add") {
+                if (value == "1T6") {
+                    this.object.totalTarning += 1;
+                }
+                else {
+                    if (this.object.totalBonus == 3) {
+                        this.object.totalTarning += 1;
+                        this.object.totalBonus = 0;
+                    }
+                    else {
+                        this.object.totalBonus += 1;
+                    }                    
+                }
+            }
+            if (dataset?.action == "remove") {
+                if (value == "1T6") {
+                    if (this.object.totalTarning > 0) {
+                        this.object.totalTarning -= 1;
+                    }
+                }
+                else {
+                    if ((this.object.totalBonus == -1) && (this.object.totalTarning > 0)) {
+                        this.object.totalTarning -= 1;
+                        this.object.totalBonus = 3;
+                    }
+                    else if ((this.object.totalTarning == 0) && (this.object.totalBonus == 0)) {
+                        // gör inget alls
+                    }
+                    else {
+                        this.object.totalBonus -= 1;
+                    }                   
+                }
+            }
+        }
+        if (dataset?.source == "difficulty") {
+            var e = document.getElementById("difficulty");
+            let value = "";
+
+            if (dataset.value != "clear") {
+                value = e.value + dataset.value;
+            }            
+
+            this.object.svarighet = value;
         }
 
         this.render();
@@ -202,10 +278,24 @@ export class DialogWeaponRoll extends FormApplication {
 
         const roll = new DiceRollContainer(this.actor, this.config);
         roll.typeroll = CONFIG.EON.slag.vapen;
-        roll.action = this.object.vapennamn;
+        roll.action = this.object.vapennamn;        
+
         roll.number = parseInt(this.object.actorAttribut.tvarde);
-        roll.bonus = parseInt(this.object.actorAttribut.bonus);
+        roll.bonus = parseInt(this.object.actorAttribut.bonus);       
+
         roll.info = this.object.vapen.system.egenskaper;
+
+        /* if ((this.object.totalTarning != this.object.actorAttribut.tvarde) || (this.object.totalBonus != this.object.actorAttribut.bonus)) {
+            if (this.object.actorAttribut.bonus == 0) {
+                info.push("Basvärde: Ob " + this.object.actorAttribut.tvarde + "T6");
+            }
+            else if (this.object.actorAttribut.bonus > 0) {
+                info.push("Basvärde: Ob " + this.object.actorAttribut.tvarde + "T6+" + this.object.actorAttribut.bonus);
+            }
+            else {
+                info.push("Basvärde: Ob " + this.object.actorAttribut.tvarde + "T6-" + this.object.actorAttribut.bonus);
+            }            
+        } */
 
         if (this.object.isattack)  {
             roll.action = `Anfaller med ${this.object.vapennamn.toLowerCase()}`;            
@@ -240,6 +330,13 @@ export class DialogWeaponRoll extends FormApplication {
             this.object.close = false;
             return;
         }
+
+        roll.number = this.object.totalTarning;
+        roll.bonus = this.object.totalBonus;
+
+        if ((this.object.svarighet != "") && (this.object.svarighet != undefined)) {
+            roll.svarighet = parseInt(this.object.svarighet);
+        }
         
         const result = RollDice(roll);
 
@@ -247,6 +344,9 @@ export class DialogWeaponRoll extends FormApplication {
             this.object.isdamage = true;
             this.object.isattack = false;
             this.object.close = false;
+
+            this.object.totalTarning = 0;
+            this.object.totalBonus = 0;
 
             this.render();
             return;

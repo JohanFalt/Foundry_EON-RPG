@@ -1,59 +1,98 @@
-{{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-trait.html"}}
-
 <div class="clear">
-    <div class="two-column pullLeft">
-        <div class="clear">
-            <div class="pullLeft caption">Namn</div>
-            <div class="pullLeft attribute-value editable"><input name="name" class="attribute-value editable" type="text" value="{{actor.name}}" data-dtype="String" /></div>
+    <div class="large-headline">Allmänt</div>
+
+    <div class="pullLeft info-box" style="display: flex; flex-flow: column; flex-wrap: wrap; max-height: 160px; width: 100%;">
+
+        <div class="bio clear">
+            <div class="number-value-text floating-label-group">
+                <input class="text-value editable skill-label" type="text" name="name" value="{{actor.name}}" data-dtype="String" style="width: 300px" />
+                <span class="floating-label skill-label">Namn</span>
+            </div>
+        </div>        
+
+        <div class="bio clear">
+
+            <div class="pullLeft">
+                <div class="number-value-text floating-label-group">
+                    <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 138px" name="system.bakgrund.kon" value="{{data.system.bakgrund.kon}}" />
+                    <span class="floating-label skill-label">Kön</span>
+                </div>
+            </div>
+
+            <div class="pullLeft">
+                <div class="number-value-text floating-label-group">
+                    <input class="attribute-value editable skill-label" type="text" data-dtype="String" style="width: 50px" name="system.bakgrund.alder" value="{{data.system.bakgrund.alder}}" />
+                    <span class="floating-label skill-label">Ålder</span>
+                </div>
+            </div>
+
+            <div class="pullLeft">
+                <div class="number-value-text floating-label-group">
+                    <input class="attribute-value editable skill-label" type="text" data-dtype="Strinh" style="width: 50px" name="system.bakgrund.langd" value="{{data.system.bakgrund.langd}}" />
+                    <span class="floating-label skill-label">Längd</span>
+                </div>
+            </div>
+
+            <div class="pullLeft">
+                <div class="number-value-text floating-label-group">
+                    <input class="attribute-value editable skill-label" type="text" data-dtype="String" style="width: 50px" name="system.bakgrund.vikt" value="{{data.system.bakgrund.vikt}}" />
+                    <span class="floating-label skill-label">Vikt</span>
+                </div>
+            </div>
         </div>
-        <div class="clear">
-            <div class="pullLeft caption">Kön</div>
-            <div class="pullLeft attribute-value editable"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
-        </div>
-        <div class="clear">
-            <div class="pullLeft caption">Ålder</div>
-            <div class="pullLeft attribute-value editable number-value-text"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
-        </div>
-        <div class="clear">
-            <div class="pullLeft caption">Religion</div>
-            <div class="pullLeft attribute-value editable"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
-        </div>
-        <div class="clear">
-            <div class="pullLeft caption">Värv</div>
-            <div class="pullLeft attribute-value editable"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
-        </div>
-        <div class="clear">
-            <div class="pullLeft caption">Hemort</div>
-            <div class="pullLeft attribute-value editable"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
-        </div>
-        <div class="clear">
-            <div class="pullLeft caption">Längd</div>
-            <div class="pullLeft attribute-value editable number-value-text"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
-        </div>
-        <div class="clear">
-            <div class="pullLeft caption">Vikt</div>
-            <div class="pullLeft attribute-value editable number-value-text"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
-        </div>
-        <div class="clear">
-            <div class="pullLeft caption">Vapenarm</div>
-            <div class="pullLeft attribute-value editable">
-                <select class="" name="system.strid.vapenarm" id="system.strid.vapenarm">
-                    <option>- Välj -</option>
+
+        <div class="bio clear">
+            <div class="floating-label-group">
+                <select class="text-value editable" name="system.strid.vapenarm" id="system.strid.vapenarm" style="width: 300px">
                     {{#select data.system.strid.vapenarm}}                                        
+                        <option value="">- Välj -</option>
                         <option value="hoger">Höger</option>
                         <option value="vanster">Vänster</option>
                         <option value="annat">Annat</option>
                     {{/select}}
                 </select>
+                <span class="floating-label skill-label">Vapenarm</span>
             </div>
         </div>
-    </div>
 
-    <div class="two-column pullLeft">
-        <div class="clear">
-            <div class="pullLeft caption">Arketyp</div>
-            <div class="pullLeft attribute-value editable">
-                <select name="system.bakgrund.arketyp">
+        <div class="bio clear">
+            <div class="number-value-text floating-label-group">
+                <select class="text-value editable inputdata" id="folkslag" name="system.bakgrund.folkslag" data-source="folkslag" style="width: 300px">                    
+                    {{#select data.system.bakgrund.folkslag}}
+                        <option value="">- Välj -</option>
+                        {{#each EON.folkslag as |folkslag key|}}
+                            <option value="{{key}}">{{folkslag.namn}}</option>
+                        {{/each}}
+                    {{/select}}
+                </select>
+                <span class="floating-label skill-label">Folkslag</span>
+            </div>
+        </div>
+
+        <div class="bio clear">
+            <div class="number-value-text floating-label-group">
+                <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.religion" value="{{data.system.bakgrund.religion}}" />
+                <span class="floating-label skill-label">Religion</span>
+            </div>
+        </div>
+
+        <div class="bio clear">
+            <div class="number-value-text floating-label-group">
+                <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.varv" value="{{data.system.bakgrund.varv}}" />
+                <span class="floating-label skill-label">Värv</span>
+            </div>
+        </div>
+
+        <div class="bio clear">
+            <div class="number-value-text floating-label-group">
+                <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.hemort" value="{{data.system.bakgrund.hemort}}" />
+                <span class="floating-label skill-label">Hemort</span>
+            </div>
+        </div>        
+
+        <div class="bio clear">
+            <div class="number-value-text floating-label-group">
+                <select class="text-value editable" name="system.bakgrund.arketyp" style="width: 300px">
                     <option>- Välj -</option>
                     {{#select data.system.bakgrund.arketyp}}
                         {{#each EON.arketyper as |arketyp key|}}
@@ -61,12 +100,13 @@
                         {{/each}}
                     {{/select}}
                 </select>
+                <span class="floating-label skill-label">Arketyp</span>
             </div>
         </div>
-        <div class="clear">
-            <div class="pullLeft caption">Miljö</div>
-            <div class="pullLeft attribute-value editable">
-                <select name="system.bakgrund.miljo">
+
+        <div class="bio clear">
+            <div class="number-value-text floating-label-group">
+                <select class="text-value editable" name="system.bakgrund.miljo" style="width: 300px">
                     <option>- Välj -</option>
                     {{#select data.system.bakgrund.miljo}}
                         {{#each EON.miljoer as |miljo key|}}
@@ -74,41 +114,34 @@
                         {{/each}}
                     {{/select}}
                 </select>
+                <span class="floating-label skill-label">Miljö</span>
             </div>
         </div>
-        <div class="clear">
-            <div class="pullLeft caption">Bakgrund</div>
-            <div class="pullLeft attribute-value editable"><input name="system.bakgrund.sysselsattning" value="{{data.system.bakgrund.sysselsattning}}" class="attribute-value editable" type="text" data-dtype="String" /></div>
-        </div>
-        <div class="clear">
-            <div class="pullLeft caption">Folkslag</div>
-            <div class="pullLeft attribute-value editable">
-                <select id="folkslag" class="inputdata" data-source="folkslag">
-                    <option>- Välj -</option>
-                    {{#select actor.system.bakgrund.folkslag}}
-                        {{#each EON.folkslag as |folkslag key|}}
-                            <option value="{{key}}">{{folkslag.namn}}</option>
-                        {{/each}}
-                    {{/select}}
-                </select>
+
+        <div class="bio clear">
+            <div class="number-value-text floating-label-group">
+                <input class="text-value editable skill-label" type="text" name="system.bakgrund.sysselsattning" value="{{data.system.bakgrund.sysselsattning}}" data-dtype="String" style="width: 300px" />
+                <span class="floating-label skill-label">Sysselsättning</span>
             </div>
-        </div>  
+        </div>
+
+        
     </div>
 </div>
 
-<div class="clear">
-    <div class="headline">Rykten och titlar</div>
-    <div class="headline">Livsregler och eder</div>
-    <div class="headline">Organisationer</div>
-    <div class="headline">Relationer</div>
-    <div class="headline">Tillfälliga kontakter</div>
-    <div class="headline">Släkt</div>
-    <div class="headline">Viktiga datum</div>
+{{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-trait.html"}}
+
+<div class="large-headline">Anteckningar</div>
+<div class="editor-box">
+    {{editor data.system.bakgrund.beskrivning target="system.bakgrund.beskrivning" button=true owner=owner editable=true}}
 </div>
 
-<div class="clear">Anteckningar</div>
-<div><textarea></textarea></div>
-<div class="clear">
-    <div class="pullLeft caption">Oanvänd erfarenhet</div>
-    <div class="pullLeft attribute-value editable number-value-text"><input class="attribute-value editable" type="text" data-dtype="Number" /></div>
-</div>
+<!--<div class="clear">
+    <div class="large-headline">Rykten och titlar</div>
+    <div class="large-headline">Livsregler och eder</div>
+    <div class="large-headline">Organisationer</div>
+    <div class="large-headline">Relationer</div>
+    <div class="headline">Tillfälliga kontakter</div>
+    <div class="headline">Släkt</div>
+    <div class="large-headline">Viktiga datum</div>
+</div> -->

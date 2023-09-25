@@ -372,19 +372,31 @@ export default class EonItemSheet extends ItemSheet {
 
 				// Om ruta för nivå av egenskap finns
 				if (sibling.length > 0) {
-					if (Number.isInteger(parseInt(sibling[0].children[0].value))) {
-						newPropery = {
-							namn: this.value,
-							varde: parseInt(sibling[0].children[0].value)
+					let value = 0;
+
+					if (sibling[0].children.length > 0) {
+						if (Number.isInteger(parseInt(sibling[0].children[0].value))) {
+							value = parseInt(sibling[0].children[0].value);
 						}
+						else {
+							ui.notifications.warn("Egenskapsvärdet måste vara ett heltal.");
+						}
+					}
+
+					newPropery = {
+						namn: this.value,
+						varde: value
+					}
+
+					/* if (Number.isInteger(parseInt(sibling[0].children[0].value))) {
+						
 					}
 					else {
 						newPropery = {
 							namn: this.value,
 							varde: 0
 						}
-						ui.notifications.warn("Egenskapsvärdet måste vara ett heltal.");
-					}				
+					} */				
 				}
 				else {
 					newPropery = {

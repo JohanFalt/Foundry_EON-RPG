@@ -28,7 +28,7 @@
     --eon-font-tabsize: 14px;
 
     --eon-line-height-default: 23px;
-    --eon-line-height-floattext: 30px;
+    --eon-line-height-floattext: 25px;
 
     --eon-sheet-background-color: url('../assets/img/graphics/background.jpg');
     --eon-sheet-text-color: black;
@@ -78,7 +78,7 @@
 .EON.general-dialog:not(.minimized) {
     min-width: 500px;
     min-height: 500px;
-    height: 500px;
+    height: 600px;
 }
 
 .EON.rollperson .window-content,
@@ -111,12 +111,14 @@ span.resource-value,
     background: var(--eon-back-color-inputs);
     background-color: var(--eon-back-color-inputs);
     color: var(--eon-text-normal-color);    
-    height: var(--eon-line-height-default);
-    line-height: var(--eon-line-height-default);
+    width: 98%;
+    /* height: var(--eon-line-height-default);
+    line-height: var(--eon-line-height-default); */
 }
 
 .EON input[type="text"]:disabled,
-.EON input[type="number"]:disabled {
+.EON input[type="number"]:disabled,
+.EON div.disabled {
     background: var(--eon-back-readonly-color-inputs);
     cursor: not-allowed;
     border-top-style: none;
@@ -125,6 +127,8 @@ span.resource-value,
     border-bottom-width: 1px;
     border-right-style: solid;
     border-right-width: 1px;
+    margin-left: 2px;
+    margin-right: 2px;
 }
 
 .EON select option {
@@ -171,6 +175,10 @@ span.resource-value,
     margin-bottom: 25px;
 }
 
+.EON .info-box {
+    padding: 5px;
+}
+
 .EON img.item {
     max-width: 100px;
 }
@@ -206,6 +214,10 @@ span.resource-value,
     font-family: var(--eon-main-large-headline); 
     font-size: var(--eon-font-x-large);   
     font-weight: normal;
+}
+
+.EON .tab .large-headline {
+    margin: 5px;
 }
 
 .EON .number-value-text {
@@ -416,7 +428,7 @@ span.resource-value,
 }
 
 span.resource-box-center {
-    margin-top: calc(var(--eon-line-height-floattext) / 4);
+    margin-top: calc(var(--eon-line-height-floattext) / 7);
 }
 
 .resource-value.active {
@@ -485,22 +497,37 @@ span.resource-box-center {
     margin-right: 0;
 }
 
-.EON input.editable {
-    border-top-style: none;
-    border-left-style: none;
+.EON input.editable,
+.EON select.editable {
     border-bottom-style: solid;
     border-bottom-width: 1px;
     border-right-style: solid;
     border-right-width: 1px;
+    margin-left: 2px;
+    margin-right: 2px;
 }
 
-.EON input.attribute-value {    
+.EON input.attribute-value {   
+    text-align: left;
+    padding: 12px 5px;
+    box-sizing: border-box; 
     width: 50px;
-    text-align: center;  
 }
 
-.EON input.text-value {
+.EON.rollperson input.text-value {   
+    text-align: left;
+    padding: 12px 5px;
+    box-sizing: border-box; 
+}
+
+.EON.itemsheet input.text-value {
     width: 75%;
+}
+
+.EON.rollperson select.text-value {   
+    text-align: left;
+    padding: 0px 0px;
+    box-sizing: border-box; 
 }
 
 .avtrubbning-column {
@@ -518,17 +545,22 @@ input.skill-value {
     margin-right: 5px;
 }
 
-.skill-area {
+.EON .skill-area {
     display: flex; 
     flex-wrap: wrap;
     flex-direction: column;
     max-height: 700px;
 } 
 
-.skill {
+.EON .skill,
+.EON .bio {
     flex-grow: 1;
-    max-height: 25px;
-    line-height: 25px;
+    max-height: 26px;
+    line-height: 26px;
+}
+
+.EON .bio {
+    margin-bottom: 3px;
 }
 
 .skill-headline.headline {
@@ -567,11 +599,12 @@ input.skill-value {
     box-sizing: border-box;
 }
 
-.EON.itemsheet input.attribute-value {
+/* .EON.itemsheet input.attribute-value,
+.EON.rollperson input.attribute-value {
     text-align: left;
     padding: 12px 5px;
     box-sizing: border-box;
-}
+} */
 
 .itemsheet .textbox-headline {
     line-height: 28px;
@@ -608,7 +641,7 @@ input.skill-value {
     display: flex; 
     flex-wrap: wrap;
     flex-direction: column;
-    max-height: 430px;
+    max-height: 300px;
 }
 
 .img-block {
@@ -654,13 +687,16 @@ input.skill-value {
     pointer-events: none;
     font-size: var(--eon-box-headline-size);
     top: 0px;
-    left: 3px;
+    left: 5px;
     transition: all 0.2s ease;
     opacity: 1;
 }
 .floating-label-group .floating-label.skill-label {
     top: -8px;
-    left: 7px;
+    /* left: 7px; */
+}
+.floating-label-group .floating-label.text-label {
+    top: -7px;
 }
 .floating-label-group input:focus ~ .floating-label,
 .floating-label-group input:disabled ~ .floating-label,
@@ -680,11 +716,10 @@ input.skill-value {
 .floating-label-group select {
   padding-left: 7px;
   height: var(--eon-line-height-floattext);
-  padding: 4px 0 0 0;
+  /*  padding: 4px 0 0 0;*/
 }
 .floating-label-group input.skill-label {
     height: var(--eon-line-height-default);
-    padding: 4px 0 0 0;
 }
 
 /* Dialogs */
@@ -751,6 +786,9 @@ input.skill-value {
     .EON.rollperson:not(.minimized),
     .EON.varelse:not(.minimized) {
         min-height: 400px;
+        min-width: 810px;
+        width: 810px;
+        height: 800px;
     }
 
     .EON.itemsheet.vapen:not(.minimized),
@@ -763,6 +801,9 @@ input.skill-value {
     .EON.rollperson:not(.minimized),
     .EON.varelse:not(.minimized) {
         min-height: 400px;
+        min-width: 810px;
+        width: 810px;
+        height: 800px;
     }
 
     .EON.itemsheet.vapen:not(.minimized),
@@ -771,7 +812,7 @@ input.skill-value {
     }
 
     .EON .skill-area {
-        max-height: 500px;
+        /* max-height: 500px; */
     }
 }
 

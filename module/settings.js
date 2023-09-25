@@ -9,6 +9,16 @@ export const systemSettings = function() {
 		type: String,
 	});
 
+    /* patch settings */
+	game.settings.register("eon-rpg", "patch200", {
+		name: "patch200",
+		hint: "patch200",
+		scope: "world",
+		config: false,
+		default: false,
+		type: Boolean,
+	});
+
     // "core" is core settings
 	// ""eon-rpg"" as system setting
 	// "eon" or other then is module settings

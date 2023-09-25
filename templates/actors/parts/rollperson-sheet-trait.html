@@ -1,72 +1,94 @@
-<div class="clear headline">
-    <div class="pullLeft attribute-area">Karaktärsdrag<i class="pullRight fa-solid fa-square-plus green"></i></div>        
+<div class="clear">
+    <div class="pullLeft large-headline">Karaktärsdrag</div> 
+    <div class="pullLeft pointer">
+        <a class="item-create" title="Lägg till karaktärsdrag" data-type="karaktärsdrag">
+            <i class="pullRight fa-solid fa-square-plus green"></i>
+        </a>
+    </div>       
 </div>
 
-<div class="clear">
-    <div class="pullLeft two-column">
+<div class="clear info-box">
+    {{#each actor.system.egenskap.karaktärsdrag as |drag id|}}
+        <div class="pullLeft three-column">
+            <div class="clear">
+                <div class="pullLeft attribute-value" style="margin-left: 18px; width: 175px; margin-bottom: 3px;">
+                    <select id="karaktarsdrag_namn_{{id}}" class="inputdata editable" data-source="karaktarsdrag" data-index="{{id}}" data-name="namn">
+                        {{#select drag.namn}}
+                            <option value="">- Välj -</option>
+                            {{#each ../EON.karaktarsdrag as |karaktarsdrag key|}}
+                                <option value="{{key}}">{{karaktarsdrag.namn}}</option>
+                            {{/each}}
+                        {{/select}}
+                    </select>
+                </div>
+                {{#if (gt id 1)}}
+                    <div class="pullRight pointer red item-delete" data-source="karaktärsdrag" data-index="{{id}}"><i class="icon fa-solid fa-trash-can"></i></div>
+                {{/if}}
+            </div>
 
-        <div class="clear">
-            <div class="pullLeft caption">Primärt</div>
-            <div class="pullLeft attribute-value editable">
-                <select>
-                    <option>- Välj -</option>
-                    {{#each EON.karaktarsdrag as |karaktarsdrag key|}}
-                        <option value="{{key}}">{{karaktarsdrag.namn}}</option>
-                    {{/each}}
-                </select>
-            </div>
-        </div>
-        <div class="clear">
-            <div class="pullLeft">
-                <div class="pullLeft">Nivå 1</div>
-                <div class="resource-box pullLeft" data-value="" data-name="">
-                    <span class="resource-value" data-index="0" data-type="" data-value=""></span>
+            <div class="bio clear">
+                <div class="pullLeft">
+                    <div class="resource-box pullLeft" data-value="{{drag.niva1.vald}}">
+                        <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="niva1.vald" data-value="{{drag.niva1.vald}}"></span>
+                    </div>
+                </div>
+                <div class="pullLeft floating-label-group">
+                    <input class="editable" type="text" data-dtype="String" value="{{drag.niva1.text}}" />
+                    <span class="floating-label text-label">Nivå 1</span>
                 </div>
             </div>
-            <div class="pullLeft"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
-        </div>
-        <div class="clear">
-            <div class="pullLeft">
-                <div class="pullLeft">Nivå 2</div>
-                <div class="resource-box pullLeft" data-value="" data-name="">
-                    <span class="resource-value" data-index="0" data-type="" data-value=""></span>
-                </div>
-            </div>
-            <div class="pullLeft"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
-        </div>
-        <div class="clear">
-            <div class="pullLeft">
-                <div class="pullLeft">Nivå 3</div>
-                <div class="resource-box pullLeft" data-value="" data-name="">
-                    <span class="resource-value" data-index="0" data-type="" data-value=""></span>
-                </div>
-            </div>
-            <div class="pullLeft"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
-        </div>
-        <div class="clear">
-            <div class="pullLeft">
-                <div class="pullLeft">Låst</div>
-                <div class="resource-box pullLeft" data-value="" data-name="">
-                    <span class="resource-value" data-index="0" data-type="" data-value=""></span>
-                </div>
-            </div>
-            <div class="pullLeft">
-                <div class="pullLeft">Svaghet</div>
-                <div class="resource-box pullLeft" data-value="" data-name="">
-                    <span class="resource-value" data-index="0" data-type="" data-value=""></span>
-                </div>
-            </div>
-            <div class="pullLeft">
-                <div class="pullLeft">Tvivel</div>
-                <div class="resource-box pullLeft" data-value="" data-name="">
-                    <span class="resource-value" data-index="0" data-type="" data-value=""></span>
-                </div>
-            </div>
-        </div>
 
-    </div>
+            <div class="bio clear">
+                <div class="pullLeft">
+                    <div class="resource-box pullLeft" data-value="{{drag.niva2.vald}}">
+                        <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="niva2.vald" data-value="{{drag.niva2.vald}}"></span>
+                    </div>
+                </div>
+                <div class="pullLeft floating-label-group">
+                    <input class="editable" type="text" data-dtype="String" value="{{drag.niva2.text}}" />
+                    <span class="floating-label text-label">Nivå 2</span>
+                </div>
+            </div>
+            
+            <div class="bio clear">
+                <div class="pullLeft">
+                    <div class="resource-box pullLeft" data-value="{{drag.niva3.vald}}">
+                        <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="niva3.vald" data-value="{{drag.niva3.vald}}"></span>
+                    </div>
+                </div>
+                <div class="pullLeft floating-label-group">
+                    <input class="editable" type="text" data-dtype="String" value="{{drag.niva3.text}}" />
+                    <span class="floating-label text-label">Nivå 3</span>
+                </div>
+            </div>
 
-    <div class="pullLeft two-column">
+            <div class="bio">
+                <div class="clear">
+                    <div class="pullLeft three-column">                        
+                        <div class="resource-box pullLeft" data-value="{{drag.last}}">
+                            <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="last" data-value="{{drag.last}}"></span>
+                        </div>
+                        <div class="pullLeft">Låst</div>
+                    </div>
+                    <div class="pullLeft three-column">                        
+                        <div class="resource-box pullLeft" data-value="{{drag.svarighet}}">
+                            <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="svarighet" data-value="{{drag.svarighet}}"></span>
+                        </div>
+                        <div class="pullLeft">Svaghet</div>
+                    </div>
+                    <div class="pullLeft three-column">                        
+                        <div class="resource-box pullLeft" data-value="{{drag.tvivel}}">
+                            <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="tvivel" data-value="{{drag.tvivel}}"></span>
+                        </div>
+                        <div class="pullLeft">Tvivel</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    {{/each}}
+
+   <!--  <div class="pullLeft two-column">
 
         <div class="clear">
             <div class="pullLeft caption">Sekundärt</div>
@@ -128,5 +150,5 @@
             </div>
         </div>
 
-    </div>
+    </div> -->
 </div>
