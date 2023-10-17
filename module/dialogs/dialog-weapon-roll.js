@@ -278,10 +278,7 @@ export class DialogWeaponRoll extends FormApplication {
 
         const roll = new DiceRollContainer(this.actor, this.config);
         roll.typeroll = CONFIG.EON.slag.vapen;
-        roll.action = this.object.vapennamn;        
-
-        roll.number = parseInt(this.object.actorAttribut.tvarde);
-        roll.bonus = parseInt(this.object.actorAttribut.bonus);       
+        roll.action = this.object.vapennamn;                       
 
         roll.info = this.object.vapen.system.egenskaper;
 
@@ -297,8 +294,14 @@ export class DialogWeaponRoll extends FormApplication {
             }            
         } */
 
+        roll.number = this.object.totalTarning;
+        roll.bonus = this.object.totalBonus;
+
         if (this.object.isattack)  {
-            roll.action = `Anfaller med ${this.object.vapennamn.toLowerCase()}`;            
+            roll.action = `Anfaller med ${this.object.vapennamn.toLowerCase()}`;   
+            
+            /* roll.number = parseInt(this.object.actorAttribut.tvarde);
+            roll.bonus = parseInt(this.object.actorAttribut.bonus); */
         }
         else if ((this.object.isdamage) && ((this.object.usehugg) || (this.object.usekross) || (this.object.usestick))) {
             let skadetyp = "";
@@ -329,10 +332,7 @@ export class DialogWeaponRoll extends FormApplication {
             ui.notifications.error("Du måste välja sättet du använder ditt vapen för innan du slår med tärningarna.");
             this.object.close = false;
             return;
-        }
-
-        roll.number = this.object.totalTarning;
-        roll.bonus = this.object.totalBonus;
+        }        
 
         if ((this.object.svarighet != "") && (this.object.svarighet != undefined)) {
             roll.svarighet = parseInt(this.object.svarighet);
