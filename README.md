@@ -5,6 +5,6 @@ I would never require it by anyone or even expect someone to do but if you reall
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/johanfk)
 
 # EON 
-Delar av detta matterial är tillhör Helmgast AB som äger copyright och trademark. Allt material används med tillåtelse. 
+Delar av detta material är tillhör Helmgast AB som äger copyright och trademark. Allt material används med tillåtelse. 
 
 Detta material är inte en officiell Eon produkt.
