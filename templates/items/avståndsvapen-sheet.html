@@ -68,7 +68,7 @@
                     </div>
 
                     <div class="number-value-text floating-label-group">
-                        <select class="inputdata" name="system.rackvidd" data-source="weapon-close">
+                        <select name="system.rackvidd">
                             <option value="">- Välj -</option>
                             {{#select item.system.rackvidd}}
                                 {{#each EON.CONFIG.vapenavstand as |vapenavstand key|}}
@@ -80,7 +80,7 @@
                     </div>
 
                     <div class="number-value-text floating-label-group">
-                        <select class="inputdata" name="system.skadetyp" data-source="weapon-close">
+                        <select name="system.skadetyp">
                             <option value="">- Välj -</option>
                             {{#select item.system.skadetyp}}
                                 {{#each EON.CONFIG.vapenskador as |skadetyp key|}}

@@ -456,6 +456,11 @@ export default class EonItemSheet extends ItemSheet {
 		if (source == "weapon-close") {
 			const typ = this.item.system.grupp;
 			const vapenmall = element.value;
+
+			if (vapenmall == this.item._id) {
+				return;
+			}
+
 			const vapen = game.EON.narstridsvapen[typ][vapenmall];
 
 			const itemData = duplicate(this.item);
@@ -480,6 +485,11 @@ export default class EonItemSheet extends ItemSheet {
 		if (source == "weapon-range") {
 			const typ = this.item.system.grupp;
 			const vapenmall = element.value;
+
+			if (vapenmall == this.item._id) {
+				return;
+			}
+
 			const vapen = game.EON.avstandsvapen[typ][vapenmall];
 
 			const itemData = duplicate(this.item);
@@ -504,6 +514,11 @@ export default class EonItemSheet extends ItemSheet {
 		if (source == "shield") {
 			const typ = this.item.system.grupp;
 			const vapenmall = element.value;
+
+			if (vapenmall == this.item._id) {
+				return;
+			}
+
 			const vapen = game.EON.forsvar[typ][vapenmall];
 
 			const itemData = duplicate(this.item);
@@ -542,6 +557,7 @@ export default class EonItemSheet extends ItemSheet {
 
 			if (rustningsmall != "") {
 				const rustning = game.EON.forsvar.rustningsmaterial[rustningsmall];
+
 				hugg = rustning.hugg;
 				kross = rustning.kross;
 				stick = rustning.stick;

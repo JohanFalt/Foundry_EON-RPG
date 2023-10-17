@@ -135,7 +135,7 @@ export class DialogWeaponRoll extends FormApplication {
             this.object.totalTarning = this.object.actorAttribut.tvarde;
             this.object.totalBonus = this.object.actorAttribut.bonus;
 
-            if ((this.object.vapen.type="Avståndsvapen") || (this.object.vapen.type="Sköld")) {
+            if ((this.object.vapen.type == "Avståndsvapen") || (this.object.vapen.type == "Sköld")) {
                 if (this.object.vapen.system.skadetyp == "hugg") {
                     this.object.usehugg = true;
                 }
@@ -152,7 +152,7 @@ export class DialogWeaponRoll extends FormApplication {
             this.object.isdamage = true;
             this.object.isdefense = false; 
             
-            if ((this.object.vapen.type="Avståndsvapen") || (this.object.vapen.type="Sköld")) {
+            if ((this.object.vapen.type == "Avståndsvapen") || (this.object.vapen.type == "Sköld")) {
                 if (this.object.vapen.system.skadetyp == "hugg") {
                     this.object.usehugg = true;
                 }

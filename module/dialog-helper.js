@@ -20,8 +20,6 @@ export default class classDialogHelper {
     }
 
     static async MysteryDialog(event, actor) {
-        event.preventDefault();
-
 		const element = event.currentTarget;
 		const dataset = element.dataset; 
         const item = await actor.getEmbeddedDocument("Item", dataset.itemid);
@@ -44,8 +42,6 @@ export default class classDialogHelper {
     }
 
     static async WeaponDialog(event, actor) {
-        event.preventDefault();
-
 		const element = event.currentTarget;
 		const dataset = element.dataset; 
         const item = await actor.getEmbeddedDocument("Item", dataset.itemid);
