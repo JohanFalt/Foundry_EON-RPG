@@ -65,21 +65,21 @@ export async function CompareVersion(oldVersion, newVersion) {
         const oldfields = oldVersion.split(".");
 
         for (let i = 0; i <= 2; i++) {
-        let varde1 = 0;
-        let varde2 = 0;
-        
-        if (newfields[i] != undefined) {
-            varde1 = newfields[i];
-        }
-        if (oldfields[i] != undefined) {
-            varde2 = oldfields[i];
-        }
-        if (parseInt(varde1) > parseInt(varde2)) {
-            return true;
-        }
-        else if (parseInt(varde1) < parseInt(varde2)) {
-            return false;
-        }
+            let varde1 = 0;
+            let varde2 = 0;
+            
+            if (newfields[i] != undefined) {
+                varde1 = newfields[i];
+            }
+            if (oldfields[i] != undefined) {
+                varde2 = oldfields[i];
+            }
+            if (parseInt(varde1) > parseInt(varde2)) {
+                return true;
+            }
+            else if (parseInt(varde1) < parseInt(varde2)) {
+                return false;
+            }
         }
     }
     catch {
@@ -92,7 +92,7 @@ export async function CompareVersion(oldVersion, newVersion) {
  * Sends version text to chat
  * @param systemVersion The new system version
  */
-export async function DoNotice(systemVersion) {
+export async function DoNotice(systemVersion, installedVersion) {
     if (!game.user.isGM) {
       return;
     }
@@ -117,42 +117,48 @@ export async function DoNotice(systemVersion) {
         <li>Grafik</li>`;
     }    
 
-    partMessage += `
-      <li>[VAPEN] Problem med att vapen bytte från närstridsvapen till avståndsvapen utan anledning. <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/107">#107</a></li>
-      <li>[VAPEN] Vapenskadan räknar inte alltid ihop grundskada och vapenskada. <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/106">#106</a></li>`;
+    if (await CompareVersion(installedVersion, '2.0.3')) {
+        partMessage += `<li>[BAKGRUND] Texten under karaktärsdragen sparas inte. <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/102">#102</a></li>`;
+    }
 
-    let intruduction = `
-      <div class="tray-title-area">Version ${systemVersion} installerat</div>
-      <div class="tray-action-area">
-        Systemet är nu uppdaterat till en ny version. Ny funktion kan läsas nedan.
-        <p>Delar av detta system innehåller material som tillhör <a href="https://helmgast.se/">Helmgast AB</a> som äger copyright och trademark. Allt material används med tillåtelse.</p>
-        Detta system är inte en officiell Eon produkt.
-      </div>`;
+    if (await CompareVersion(installedVersion, '2.0.2')) {
+        partMessage += `
+            <li>[VAPEN] Problem med att vapen bytte från närstridsvapen till avståndsvapen utan anledning. <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/107">#107</a></li>
+            <li>[VAPEN] Vapenskadan räknar inte alltid ihop grundskada och vapenskada. <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/106">#106</a></li>`;
+    }        
+
+    let introduction = `
+        <div class="tray-title-area">Version ${systemVersion} installerat</div>
+        <div class="tray-action-area">
+            Systemet är nu uppdaterat till en ny version. Ny funktion kan läsas nedan.
+            <p>Delar av detta system innehåller material som tillhör <a href="https://helmgast.se/">Helmgast AB</a> som äger copyright och trademark. Allt material används med tillåtelse.</p>
+            Detta system är inte en officiell Eon produkt.
+        </div>`;
 
     let message = `
-      <div class="tray-title-area">Nytt för versionen</div>
-      <div class="tray-action-area">
-        <ul style="margin-top: 0">
-          ${partMessage}
-        </ul>
-      </div>`;
+        <div class="tray-title-area">Nytt för versionen</div>
+        <div class="tray-action-area">
+            <ul style="margin-top: 0">
+            ${partMessage}
+            </ul>
+        </div>`;
 
     let support =  `
-      <div class="tray-title-area">Länkar</div>
-      <div class="tray-action-area">
-        <ul style="margin-top: 0">
-          <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG">Projektets källkod</a></li>
-          <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG/discussions/landing">Diskussion</a></li>
-          <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues">Rapportera önskemål eller fel</a></li>
-          <li><a href="https://raw.githubusercontent.com/JohanFalt/Foundry_EON-RPG/main/LICENSE">Licensierad under MIT Licensen</a></li>
-        </ul>
-      </div>
-      <div class="tray-title-area">Stöd mitt arbete</div>
-      <div class="tray-action-area">
-        <a href="https://ko-fi.com/johanfk"><img src="https://ko-fi.com/img/githubbutton_sm.svg" /></a>
-      </div>`;
+        <div class="tray-title-area">Länkar</div>
+        <div class="tray-action-area">
+            <ul style="margin-top: 0">
+            <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG">Projektets källkod</a></li>
+            <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG/discussions/landing">Diskussion</a></li>
+            <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues">Rapportera önskemål eller fel</a></li>
+            <li><a href="https://raw.githubusercontent.com/JohanFalt/Foundry_EON-RPG/main/LICENSE">Licensierad under MIT Licensen</a></li>
+            </ul>
+        </div>
+        <div class="tray-title-area">Stöd mitt arbete</div>
+        <div class="tray-action-area">
+            <a href="https://ko-fi.com/johanfk"><img src="https://ko-fi.com/img/githubbutton_sm.svg" /></a>
+        </div>`;
 
-    message = intruduction + message + support;
+    message = introduction + message + support;
     
     const enrichedMessage = await TextEditor.enrichHTML(`${message}`, { async: true });
     await ChatMessage.create({

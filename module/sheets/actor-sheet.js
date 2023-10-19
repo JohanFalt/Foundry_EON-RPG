@@ -820,12 +820,32 @@ export default class EonActorSheet extends ActorSheet {
         }
         if (source == "karaktarsdrag") {
             const index = Number(dataset.index);
-            const property = dataset.name;
-            let e = document.getElementById(source + "_" + property + "_" + index);
-            const newvalue = e.value
+            let property = dataset.name;
 
-            actorData.system.egenskap.karaktärsdrag[index][property] = newvalue;
+            if (property.includes(".")) {
+                let properties = property.split(".");
 
+                if (properties.length == 2) {
+                    const value1 = properties[0];
+                    const value2 = properties[1];
+                    property = property.replace(".", "_");
+
+                    let e = document.getElementById(source + "_" + property + "_" + index);
+                    const newvalue = e.value
+
+                    actorData.system.egenskap.karaktärsdrag[index][value1][value2] = newvalue;
+                }
+                else {
+                    return;
+                }                
+            }
+            else {
+                let e = document.getElementById(source + "_" + property + "_" + index);
+                const newvalue = e.value
+    
+                actorData.system.egenskap.karaktärsdrag[index][property] = newvalue;
+            }
+            
             await this.actor.update(actorData);
             this.render();
             return;

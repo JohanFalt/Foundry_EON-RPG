@@ -65,16 +65,16 @@ Hooks.once("setup", function () {
 Hooks.once("ready", async () => {
     // Do anything once the system is ready
 	const installedVersion = game.settings.get("eon-rpg", "systemVersion");
-  const systemVersion = game.data.system.version;
+    const systemVersion = game.data.system.version;
 
-  if (game.user.isGM) {
-      if ((installedVersion !== systemVersion || installedVersion === null)) {
-          if (Migration.CompareVersion(installedVersion, systemVersion)) {        
-              await Migration.DoNotice(systemVersion);
-              game.settings.set("eon-rpg", "systemVersion", systemVersion);
-          }
-      }
-  } 
+    if (game.user.isGM) {
+        if ((installedVersion !== systemVersion || installedVersion === null)) {
+            if (Migration.CompareVersion(installedVersion, systemVersion)) {        
+                await Migration.DoNotice(systemVersion, installedVersion);
+                game.settings.set("eon-rpg", "systemVersion", systemVersion);
+            }
+        }
+    } 
 });
 
 Hooks.on("renderActorSheet", (sheet) => { 
