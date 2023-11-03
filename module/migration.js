@@ -117,6 +117,10 @@ export async function DoNotice(systemVersion, installedVersion) {
         <li>Grafik</li>`;
     }    
 
+    if (await CompareVersion(installedVersion, '2.0.4')) {
+        partMessage += `<li>[GRAFIK] Textboxarnas grafik fortplantades in i hur journaltexter såg ut.`;
+    }
+
     if (await CompareVersion(installedVersion, '2.0.3')) {
         partMessage += `<li>[BAKGRUND] Texten under karaktärsdragen sparas inte. <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/102">#102</a></li>`;
     }
