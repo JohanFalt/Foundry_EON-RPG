@@ -118,6 +118,14 @@ export const updateActor = async function(actor, config) {
             itemData = await CreateHelper.SkapaFardighetItem(grupp, config.fardigheter[grupp][fardighet], fardighet, updateData.system.installningar.version);
             await actor.createEmbeddedDocuments("Item", [itemData]);
 
+            if (actor.system.bakgrund.arketyp != "custom") {
+                updateData.system.bakgrund.arketyp = config.arketyper[actor.system.bakgrund.arketyp].namn;
+            }
+            
+            if (actor.system.bakgrund.miljo != "custom") {
+                updateData.system.bakgrund.miljo = config.miljoer[actor.system.bakgrund.miljo].namn;
+            }
+
             update = true;
         }
 
@@ -131,7 +139,7 @@ export const updateActor = async function(actor, config) {
         }
     } 
     catch (e) {
-        e.message = `Failed migration for Actor ${actor.name}: ${err.message}`;
+        e.message = `Failed migration for Actor ${actor.name}: ${e.message}`;
         console.error(e.message);
     }
 }
