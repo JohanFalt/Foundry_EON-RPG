@@ -1,33 +1,50 @@
-<form class="{{cssClass}}" autocomplete="off">
+<form class="{{cssClass}} {{object.dialogClass}}" autocomplete="off">
 
-    <div class="dialog-section-small clear">
+    {{#if (eq object.typ "bakgrund")}}
 
-        <div class="large-main-headline centerText">{{attribut.namn}}</div>
-        <div class="centerText">
-            Ob{{getDiceValue attribut.grund}}
+        <div class="dialog-section-small clear">
+
+            <div class="floating-label-group">
+                <input id="altvalue" type="text" value="{{object.varde}}" />
+                <span class="floating-label">Namn</span>
+            </div>       
+
+            <div class="information-area">Här anger du det Skräddarsydda namnet och trycker sedan på Spara.</div>
+
         </div>
 
-        <div class="pullRight pointer item-create" title="Lägg till bonus" data-type="bonus"><i class="fa-solid fa-square-plus green"></i></div>       
+    {{else}}
 
-    </div>
+        <div class="dialog-section-small clear">
 
-    <div>        
-
-        {{#each attribut.bonuslista as |bonus key|}}
-            <div class="clear">
-                <div class="pullLeft" style="width: 132px;">&nbsp;</div>
-                <div class="pullLeft">
-                    <div class="floating-label-group">
-                        <input class="inputdata" type="text" value="{{bonus.namn}}" id="object.name_{{key}}" data-key="{{key}}" />
-                        <span class="floating-label">Namn</span>
-                    </div>
-                </div>
-                <div class="pullLeft dice-value tic pointer" data-key="{{key}}">{{getDiceValue bonus}}</div>
-                <div class="pointer red item-delete" title="Ta bort bonus" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
+            <div class="large-main-headline centerText">{{attribut.namn}}</div>
+            <div class="centerText">
+                Ob{{getDiceValue attribut.grund}}
             </div>
-        {{/each}}
 
-    </div>
+            <div class="pullRight pointer item-create" title="Lägg till bonus" data-type="bonus"><i class="fa-solid fa-square-plus green"></i></div>       
+
+        </div>
+
+        <div>        
+
+            {{#each attribut.bonuslista as |bonus key|}}
+                <div class="clear">
+                    <div class="pullLeft" style="width: 132px;">&nbsp;</div>
+                    <div class="pullLeft">
+                        <div class="floating-label-group">
+                            <input class="inputdata" type="text" value="{{bonus.namn}}" id="object.name_{{key}}" data-key="{{key}}" />
+                            <span class="floating-label">Namn</span>
+                        </div>
+                    </div>
+                    <div class="pullLeft dice-value tic pointer" data-key="{{key}}">{{getDiceValue bonus}}</div>
+                    <div class="pointer red item-delete" title="Ta bort bonus" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
+                </div>
+            {{/each}}
+
+        </div>
+
+    {{/if}}
 
     <div>
 

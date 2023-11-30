@@ -1,5 +1,4 @@
 import { DiceRollContainer } from "../dice-helper.js";
-import DiceHelper from "../dice-helper.js";
 import { RollDice } from "../dice-helper.js";
 
 export class AttributeRoll {
@@ -150,15 +149,17 @@ export class DialogAttributeRoll extends FormApplication {
 
         var info = [];
 
+        var grundvarde = "";
+
         if ((this.object.totalTarning != this.object.grundTarning) || (this.object.totalBonus != this.object.grundBonus)) {
             if (this.object.grundBonus == 0) {
-                info.push("Basvärde: Ob " + this.object.grundTarning + "T6");
+                grundvarde = `${this.object.grundTarning}T6`;
             }
             else if (this.object.grundBonus > 0) {
-                info.push("Basvärde: Ob " + this.object.grundTarning + "T6+" + this.object.grundBonus);
+                grundvarde = `${this.object.grundTarning}T6+${this.object.grundBonus}`;
             }
             else {
-                info.push("Basvärde: Ob " + this.object.grundTarning + "T6-" + this.object.grundBonus);
+                grundvarde = `${this.object.grundTarning}T6-${this.object.grundBonus}`;
             }            
         }
 
@@ -173,6 +174,7 @@ export class DialogAttributeRoll extends FormApplication {
         }
 
         roll.info = info;
+        roll.grundvarde = grundvarde;
 
         const result = await RollDice(roll);
         this.close();
@@ -332,15 +334,17 @@ export class DialogSkillRoll extends FormApplication {
             info.push("Expertis");
         }
 
+        var grundvarde = "";
+
         if ((this.object.totalTarning != this.object.grundTarning) || (this.object.totalBonus != this.object.grundBonus)) {
             if (this.object.grundBonus == 0) {
-                info.push("Basvärde: Ob " + this.object.grundTarning + "T6");
+                grundvarde = `${this.object.grundTarning}T6`;
             }
             else if (this.object.grundBonus > 0) {
-                info.push("Basvärde: Ob " + this.object.grundTarning + "T6+" + this.object.grundBonus);
+                grundvarde = `${this.object.grundTarning}T6+${this.object.grundBonus}`;
             }
             else {
-                info.push("Basvärde: Ob " + this.object.grundTarning + "T6-" + this.object.grundBonus);
+                grundvarde = `${this.object.grundTarning}T6-${this.object.grundBonus}`;
             }            
         }
 
@@ -354,7 +358,8 @@ export class DialogSkillRoll extends FormApplication {
             roll.svarighet = parseInt(this.object.svarighet);
         }
 
-        roll.info = info;        
+        roll.info = info;      
+        roll.grundvarde = grundvarde;  
 
         const result = await RollDice(roll);
         this.close();
@@ -394,7 +399,6 @@ export class DialogMysteryRoll extends FormApplication {
         this.config = game.EON.CONFIG;     
         this.EON = game.EON; 
         this.isDialog = true;  
-        //this.options.title = `${actor.name}`;        
         this.options.title = `${actor.name} - ${roll.namn}`;
     }
 
@@ -470,8 +474,6 @@ export class DialogMysteryRoll extends FormApplication {
                 console.log("success: " + result);
             }
         }        
-
-        //roll.typeroll = CONFIG.EON.slag.mysterium;
 
         this.object.close = true;
     }

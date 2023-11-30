@@ -13,15 +13,15 @@
                     {{/if}}	
                 </div>
 
-                <div class="pullLeft" style="min-width: 350px;">
+                <div class="pullLeft" style="min-width: 270px;">
 
-                    <div class="number-value-text floating-label-group">
+                    <div class="item-property-area number-value-text floating-label-group">
                         <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
                         <span class="floating-label">Namn</span>
                     </div>
 
-                    <div class="number-value-text floating-label-group">
-                        <select name="system.grupp">                                
+                    <div class="item-property-area number-value-text floating-label-group">
+                        <select class="text-value" name="system.grupp">                                
                             {{#select item.system.grupp}}
                                 <option value="">- Välj -</option>
                                 {{#each EON.CONFIG.vapengrupper as |vapengrupp key|}}
@@ -34,8 +34,8 @@
                         <span class="floating-label">Färdighet</span>
                     </div>
 
-                    <div class="number-value-text floating-label-group">
-                        <select class="inputdata" name="system.mall" data-source="shield">
+                    <div class="item-property-area number-value-text floating-label-group">
+                        <select class="text-value inputdata" name="system.mall" data-source="shield">
                             <option value="">- Välj -</option>                                       
                             {{#select item.system.mall}}    
                                 <option value="{{item._id}}">- Skräddarsytt -</option> 
@@ -46,51 +46,30 @@
                         </select>
                         <span class="floating-label">Vapenmall</span>
                     </div>     
-<!--                     
-                    <div class="number-value-text floating-label-group">
-                        <input class="attribute-value editable" name="system.langd" type="text" value="{{data.system.langd}}" data-dtype="Number" />
-                        <span class="floating-label">Längd (cm)</span>
-                    </div> -->
 
-                    <div class="number-value-text floating-label-group ">
+                    <div class="item-property-area number-value-text floating-label-group ">
                         <input class="attribute-value editable" name="system.vikt" type="text" value="{{data.system.vikt}}" data-dtype="Number" />
                         <span class="floating-label">Vikt (kg)</span>
                     </div>
 
-                    <div class="number-value-text floating-label-group ">
+                    <div class="item-property-area number-value-text floating-label-group ">
                         <input class="attribute-value editable" name="system.pris" type="text" value="{{data.system.pris}}" data-dtype="Number" />
                         <span class="floating-label">Pris (silver)</span>
                     </div>
 
-                    <div class="number-value-text floating-label-group ">
+                    <div class="item-property-area number-value-text floating-label-group ">
                         <input class="attribute-value editable" name="system.skydd" type="text" value="{{data.system.skydd}}" data-dtype="Number" />
                         <span class="floating-label">Skydd</span>
                     </div>
+                    
+                    <div class="item-property-area" style="display: flex; flex-direction: row;">
 
-                    <div class="clear">
-                        <div class="pullLeft item-headline caption">1H</div>
-                        <div class="pullLeft"><input class="item-active" name="system.enhand.aktiv" type="checkbox" data-property="enhand" {{isChecked data.system.enhand.aktiv}} data-dtype="Boolean" /></div>
-                        <div class="pullLeft dice-value number-value-text tic pointer" data-property="enhand">{{getDiceValue item.system.enhand}}</div>
-                    </div>
+                        <div class="number-value-text floating-label-group ">
+                            <div class="dice-value number-value-text tic pointer" data-property="skada">{{getDiceValue item.system.skada}}</div>
+                            <span class="floating-label">Skada</span>
+                        </div>                        
 
-                    <div class="clear">
-                        <div class="pullLeft item-headline caption">2H</div>
-                        <div class="pullLeft"><input class="item-active" name="system.tvahand.aktiv" type="checkbox" data-property="tvahand" {{isChecked data.system.tvahand.aktiv}} data-dtype="Boolean" /></div>
-                        <div class="pullLeft dice-value number-value-text tic pointer" data-property="tvahand">{{getDiceValue item.system.tvahand}}</div>
-                    </div>
-
-                    <div class="clear">
-                        <div class="pullLeft item-headline">Närstrid</div>
-                        <div class="pullLeft dice-value number-value-text tic pointer" data-property="narstrid">{{getDiceValue item.system.narstrid}}</div>
-                    </div>
-                    <div class="clear">
-                        <div class="pullLeft item-headline">Avstånd</div>
-                        <div class="pullLeft dice-value number-value-text tic pointer" data-property="avstand">{{getDiceValue item.system.avstand}}</div>
-                    </div>                    
-
-                    <div class="clear">
-                        <div class="pullLeft item-headline">Skadetyp</div>
-                        <div class="pullLeft">
+                        <div class="dual-box number-value-text floating-label-group">
                             <select name="system.skadetyp">
                                 <option value="">- Välj -</option>
                                 {{#select item.system.skadetyp}}
@@ -99,18 +78,41 @@
                                     {{/each}}
                                 {{/select}}
                             </select>
+                            <span class="floating-label">Skadetyp</span>
                         </div>
+                    </div>   
+                    
+                    <div class="item-property-area number-value-text floating-label-group ">
+                        <div class="dice-value number-value-text tic pointer" data-property="narstrid">{{getDiceValue item.system.narstrid}}</div>
+                        <span class="floating-label">Närstrid</span>
+                    </div>
+
+                    <div class="item-property-area number-value-text floating-label-group ">
+                        <div class="dice-value number-value-text tic pointer" data-property="avstand">{{getDiceValue item.system.avstand}}</div>
+                        <span class="floating-label">Avstånd</span>
                     </div>
 
                     <div class="clear">
-                        <div class="pullLeft item-headline">Skada</div>
-                        <div class="pullLeft dice-value number-value-text tic pointer" data-property="skada">{{getDiceValue item.system.skada}}</div>
-                    </div>                    
+                        <div class="pullLeft" style="width: 100px;">1H</div>
+                        <div class="pullLeft"><input class="item-active" name="system.enhand.aktiv" type="checkbox" data-property="enhand" {{isChecked data.system.enhand.aktiv}} data-dtype="Boolean" /></div>
+                        <div class="pullLeft dice-value number-value-text tic pointer" data-property="enhand">{{getDiceValue item.system.enhand}}</div>
+                    </div>
+
+                    <div class="clear">
+                        <div class="pullLeft" style="width: 100px;">2H</div>
+                        <div class="pullLeft"><input class="item-active" name="system.tvahand.aktiv" type="checkbox" data-property="tvahand" {{isChecked data.system.tvahand.aktiv}} data-dtype="Boolean" /></div>
+                        <div class="pullLeft dice-value number-value-text tic pointer" data-property="tvahand">{{getDiceValue item.system.tvahand}}</div>
+                    </div>
+                      
                 </div>
 
-                {{#if hasActor}}
-                    <div class="pullRight red item-delete" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
-                {{/if}}
+                <div class="pullLeft" style="flex-grow: 1; text-align: right;">
+                    {{#if hasActor}}
+                        <div class="pointer red item-delete large-icon" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
+                    {{/if}}     
+                    
+                    <div class="information-area top-sidetext">SKÖLD</div>
+                </div>
             </div>
 			
 		</header>

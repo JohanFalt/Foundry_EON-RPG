@@ -5,6 +5,7 @@ eon.ikoner = {
     sprak: "systems/eon-rpg/assets/img/icons/archive-register.svg",
     mysterie: "systems/eon-rpg/assets/img/icons/prayer.svg",
     besvarjelse: "systems/eon-rpg/assets/img/icons/spell-book.svg",
+    faltstorning: "systems/eon-rpg/assets/img/icons/burning-book.svg",
     slag_chock: "systems/eon-rpg/assets/img/icons/knockout.svg",
     slag_dod: "systems/eon-rpg/assets/img/icons/half-dead.svg",
     slag_initiative: "systems/eon-rpg/assets/img/icons/swords-emblem.svg",
@@ -199,6 +200,73 @@ eon.vapengrupper = {
     skold: {
         namn:"Sköld",
         grupp: "forsvar"
+    }
+}
+
+eon.aspekter = { 
+    astrotropi: "Astrotropi",
+    ataxotropi: "Ataxotropi",
+    biotropi: "Biotropi",
+    daimotropi: "Daimotropi",
+    fototropi: "Fototropi",
+    geotropi: "Geotropi",
+    heliotropi: "Heliotropi",
+    hydrotropi: "Hydrotropi",
+    ikonotropi: "Ikonotropi",
+    kosmotropi: "Kosmotropi",
+    kronotropi: "Kronotropi",
+    kryotropi: "Kryotropi",
+    nekrotropi: "Nekrotropi",
+    nomotropi: "Nomotropi",
+    oneirotropi: "Oneirotropi",
+    pneumotropi: "Pneumotropi",
+    psykotropi: "Psykotropi",
+    pyrotropi: "Pyrotropi",
+    selenotropi: "Selenotropi",
+    semotropi: "Semotropi",
+    skototropi: "Skototropi",
+    teotropi: "Teotropi",
+    termotropi: "Termotropi",
+    topotropi: "Topotropi"
+}
+
+eon.magi = {
+    faltstorning : { 
+        flimmer: "Fältflimmer",
+        mattlig: "Måttlig fältstörning",
+        allvarlig: "Allvarlig fältstörning",
+        kritisk: "Kritisk fältstörning"
+    },
+    varaktighet: {
+        1: "Scen",
+        2: "Åtta timmar",
+        3: "Ett dygn",
+        4: "Tre dygn",
+        5: "En vecka",
+        6: "Två veckor",
+        7: "En månad",
+        8: "Två månader",
+        9: "Ett kvartal",
+        10: "Ett halvår",
+        11: "Ett år"
+    },
+    omradesomfang: {
+        1: "Extremt litet",
+        2: "Mycket litet",
+        3: "Litet",
+        4: "Medelstort",
+        5: "Stort",
+        6: "Mycket stort",
+        7: "1 kilometer stort"
+    },
+    rackvidd: {
+        1: "Intill",
+        2: "Kort",
+        3: "Meddlångt",
+        4: "Långt",
+        5: "Mycket långt",
+        6: "500 meter",
+        7: "1 kilometer"
     }
 }
 

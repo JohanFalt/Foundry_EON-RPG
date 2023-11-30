@@ -1,2 +1,120 @@
-<div class="item-box magic-area">
+<div class="clear attribute" style="margin-bottom: 25px;">
+    <div class="pullLeft three-column">
+        <div class="pullLeft headline">Borttoning</div>
+        <div class="pullLeft number-value-text"><input class="attribute-value editable skill-value" type="number" name="system.magi.borttoning" value="{{data.system.magi.borttoning}}" data-dtype="Number" /></div> 
+    </div>    
+</div>
+
+<div class="item-box three-column">
+
+    <div class="skill-headline headline">Mystikfärdigheter</div>
+
+    {{#each (getActorSkillGroup actor.system.listdata.fardigheter "mystik") as |fardighet key|}}
+        <div class="skill clear">
+            <div class="pullLeft" >
+                {{#if fardighet.system.installningar.lattlard}}
+                    <div style="width: 8px;"><i class="fa-solid fa-sort-up green"></i></div>
+                {{/if}}
+                {{#if fardighet.system.installningar.svarlard}}
+                    <div style="width: 8px; line-height: 18px;"><i class="fa-solid fa-sort-down red"></i></div>
+                {{/if}}
+            </div>
+            <div class="vrollable pullLeft caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div> 
+                    
+            <div class="pullLeft dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
+            <div class="pullLeft skill-short">({{getAttributeShortName fardighet.system.attribut}})</div>
+        </div>
+    {{/each}}
+
+</div>
+
+<div class="item-box">
+
+    <div class="clear">
+        <div class="pullLeft large-headline">Formelsamling</div>
+        <div class="pullLeft pointer">
+            <a class="item-create" title="Lägg till besvärjelse" data-type="besvärjelse">
+                <i class="fa-solid fa-square-plus green"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="clear headline" style="line-height: 25px; width:100%;">
+        <div class="pullLeft weapon-icon">&nbsp;</div>
+        <div class="pullLeft" style="width: 175px;">Namn</div>
+        <div class="pullLeft" style="width: 75px;">Aspekt</div>
+        <div class="pullLeft" style="width: 75px;">Svårighet</div>
+        <div class="pullLeft" style="width: 140px;">Omfång</div>
+        <div class="pullLeft" style="width: 140px;">Räckvidd</div>
+        <div class="pullLeft" style="width: 140px;">Varaktighet</div>
+    </div>
+
+    {{#each actor.system.listdata.magi.besvarjelse as |kraft key|}}
+        <div class="clear" style="line-height: 25px; width:100%;">
+            <div class="pointer pullLeft weapon-icon"><a class="item-edit" title="Editera besvärjelse" data-source="besvärjelse" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="pullLeft vrollable" style="width: 175px;" data-source="spell" data-itemid="{{kraft._id}}">{{kraft.name}}</div>
+            <div class="pullLeft" style="width: 75px;">{{getConfigPropertyName kraft.system.aspekt ../EON.CONFIG.aspekter}}</div>
+            <div class="pullLeft" style="width: 75px;">{{kraft.system.svarighet}}</div>
+            <div class="pullLeft" style="width: 140px;">{{shorten (getSpellSetting kraft "omfang") 15}}</div>
+            <div class="pullLeft" style="width: 140px;">{{shorten (getSpellSetting kraft "rackvidd") 15}}</div>
+            <div class="pullLeft" style="width: 140px;">{{shorten (getSpellSetting kraft "varaktighet") 15}}</div>
+        </div>
+    {{/each}}
+ 
+</div>
+
+<div class="item-box">
+
+    <div class="clear">
+        <div class="pullLeft large-headline">Kongelat</div>
+        <div class="pullLeft pointer">
+            <a class="item-create" title="Lägg till kongelat" data-type="kongelat">
+                <i class="fa-solid fa-square-plus green"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="clear headline" style="line-height: 25px; width:100%;">
+        <div class="pullLeft weapon-icon">&nbsp;</div>
+        <div class="pullLeft" style="width: 200px;">Aspekt</div>
+        <div class="pullLeft" style="width: 75px;">Magnitud</div>
+        <div class="pullLeft" style="width: 75px;">Antal</div>
+    </div>
+
+    {{#each actor.system.listdata.magi.kongelat as |kongelat key|}}
+        <div class="clear" style="line-height: 25px; width:100%;">
+            <div class="pointer pullLeft weapon-icon"><a class="item-edit" title="Editera kongelat" data-source="kongelat" data-itemid="{{kongelat._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="pullLeft" style="width: 200px;">{{getConfigPropertyName kongelat.name ../EON.CONFIG.aspekter}}</div>
+            <div class="pullLeft" style="width: 75px;">{{getPropertyLevel kongelat.system.egenskaper "magnitud"}}</div>
+            <div class="pullLeft" style="width: 75px;">{{kongelat.system.antal}} st</div>
+        </div>
+    {{/each}}
+
+</div>
+
+<div class="item-box">
+
+    <div class="clear">
+        <div class="pullLeft large-headline">Fältstörning</div>
+        <div class="pullLeft pointer">
+            <a class="item-create" title="Lägg till fältstörning" data-type="fältstörning">
+                <i class="fa-solid fa-square-plus green"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="clear headline" style="line-height: 25px; width:100%;">
+        <div class="pullLeft weapon-icon">&nbsp;</div>
+        <div class="pullLeft" style="width: 200px;">Aspekt</div>
+        <div class="pullLeft" style="width: 200px;">Nivå</div>
+    </div>
+
+    {{#each actor.system.listdata.magi.faltstorning as |faltstorning key|}}
+        <div class="clear" style="line-height: 25px; width:100%;">
+            <div class="pointer pullLeft weapon-icon"><a class="item-edit" title="Editera fältstörning" data-source="faltstorning" data-itemid="{{faltstorning._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="pullLeft" style="width: 200px;">{{getConfigPropertyName faltstorning.name ../EON.CONFIG.aspekter}}</div>
+            <div class="pullLeft" style="width: 200px;">{{getConfigPropertyName faltstorning.system.niva ../EON.CONFIG.magi.faltstorning}}</div>
+        </div>
+    {{/each}}    
+
 </div>

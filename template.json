@@ -6,6 +6,7 @@
     },
     "Item": {
         "types": [
+            "Folkslag",
             "Färdighet",
             "Språk",
             "Mysterie",
@@ -18,6 +19,7 @@
             "Utrustning",
             "Skada"
         ],
+        "Folkslag": {},
         "Färdighet": {},
         "Språk": {},
         "Mysterie": {},

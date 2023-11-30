@@ -1,4 +1,5 @@
 import CreateHelper from "../create-helper.js";
+import CalculateHelper from "../calculate-helper.js";
 
 export default class EonItemSheet extends ItemSheet {
 	
@@ -26,12 +27,6 @@ export default class EonItemSheet extends ItemSheet {
 	/** @override */
 	get title() {
 		let title = this.item.name;
-		
-		/* if (this.item.system.namn != undefined) {
-			if (this.item.system.namn != "") {
-				title = this.item.system.namn;
-			}
-		} */
 
 		return "Editera " + title.toLowerCase();
 	}
@@ -46,6 +41,18 @@ export default class EonItemSheet extends ItemSheet {
 			itemData.system.installningar.version = version;
 			itemData.system.installningar.skapad = true;
 
+			if (itemData.type == "Folkslag") {
+				if (itemData.name == "") {
+					itemData.name = "Nytt folkslag";
+				}
+
+				for (const grundegenskap in CONFIG.EON.grundegenskaper) {
+					itemData.system.grundegenskaper[grundegenskap].grund.tvarde = 2;
+					itemData.system.grundegenskaper[grundegenskap].grund.bonus = 0;
+					itemData.system.grundegenskaper[grundegenskap].totalt.tvarde = 2;
+					itemData.system.grundegenskaper[grundegenskap].totalt.bonus = 0;
+				}
+			}
 			if (itemData.type == "Färdighet") {
 				if (itemData.name == "") {
 					itemData.name = "Ny färdighet";
@@ -157,11 +164,19 @@ export default class EonItemSheet extends ItemSheet {
 
 		html
             .find('.svarighet')
-            .click(this._setSvarighet.bind(this));	
+            .click(this._setSvarighet.bind(this));
+			
+		html
+            .find('.varaktighet')
+            .click(this._setVaraktighet.bind(this));			
 
 		html
 			.find('.item-property')
 			.click(this._setValue.bind(this));	
+
+		html
+			.find('.item-property')
+			.change(event => this._setValue(event));
 
 		html
             .find('.weapon-property')
@@ -178,7 +193,7 @@ export default class EonItemSheet extends ItemSheet {
 
 		if (type == "moment") {
 			let moment = {
-                fardighet: "Nytt moment",
+                fardighet: "",
 				huvud: false,
 				svarighet: 0,
 				tid: ""
@@ -279,12 +294,28 @@ export default class EonItemSheet extends ItemSheet {
 		const itemData = duplicate(this.item);
 		const property = dataset.property;
 
-		itemData.system[property].bonus += 1;
+		const fields = property.split(".");
+
+		// bonus
+		if (fields.length == 1) {
+			itemData.system[property].bonus += 1;
 	
-		if (itemData.system[property].bonus > 3)  {
-			itemData.system[property].tvarde += 1;
-			itemData.system[property].bonus = 0;
+			if (itemData.system[property].bonus > 3)  {
+				itemData.system[property].tvarde += 1;
+				itemData.system[property].bonus = 0;
+			}
 		}
+		// grundegenskaper
+		else if (fields.length == 3) {
+			itemData.system[fields[0]][fields[1]][fields[2]].bonus += 1;
+	
+			if (itemData.system[fields[0]][fields[1]][fields[2]].bonus > 3)  {
+				itemData.system[fields[0]][fields[1]][fields[2]].tvarde += 1;
+				itemData.system[fields[0]][fields[1]][fields[2]].bonus = 0;
+			}
+
+			itemData.system[fields[0]][fields[1]].totalt = await CalculateHelper.BeraknaTotaltVarde(itemData.system[fields[0]][fields[1]]);
+		}		
 
 		await this.item.update(itemData);
 
@@ -300,16 +331,39 @@ export default class EonItemSheet extends ItemSheet {
 		const itemData = duplicate(this.item);
 		const property = dataset.property;
 
-		itemData.system[property].bonus -= 1;
+		const fields = property.split(".");
 
-		if (itemData.system[property].bonus < -1) {
-			itemData.system[property].tvarde -= 1;
-			itemData.system[property].bonus = 3;
+		// bonus
+		if (fields.length == 1) {
+			itemData.system[property].bonus -= 1;
+
+			if (itemData.system[property].bonus < -1) {
+				itemData.system[property].tvarde -= 1;
+				itemData.system[property].bonus = 3;
+			}
+
+			if (itemData.system[property].tvarde < 0) {
+				itemData.system[property].tvarde = 0;
+				itemData.system[property].bonus = 0;
+			}
 		}
+		// grundegenskaper
+		else if (fields.length == 3) {
+			itemData.system[fields[0]][fields[1]][fields[2]].bonus -= 1;
+	
+			if (itemData.system[fields[0]][fields[1]][fields[2]].bonus < -1) {
+				itemData.system[fields[0]][fields[1]][fields[2]].tvarde -= 1;
+				itemData.system[fields[0]][fields[1]][fields[2]].bonus = 3;
+			}
 
-		if (itemData.system[property].tvarde < 0) {
-			itemData.system[property].tvarde = 0;
-			itemData.system[property].bonus = 0;
+			if (itemData.system[fields[0]][fields[1]][fields[2]].tvarde < 0) {
+				itemData.system[fields[0]][fields[1]][fields[2]].tvarde = 0;
+				itemData.system[fields[0]][fields[1]][fields[2]].bonus = 0;
+			}
+
+			if ((fields[0] == "grundegenskaper") && (fields[2] == "grund")) {
+				itemData.system[fields[0]][fields[1]].totalt = await CalculateHelper.BeraknaTotaltVarde(itemData.system[fields[0]][fields[1]]);
+			}			
 		}
 
 		await this.item.update(itemData);
@@ -328,7 +382,7 @@ export default class EonItemSheet extends ItemSheet {
 		itemData.system.installningar.svarlard = false;
 		itemData.system.installningar.normal = true;
 
-		if ((dataset.value == "S") && (!this.item.system.installningar.svarlard)) {
+		if ((dataset.field == "S") && (!this.item.system.installningar.svarlard)) {
 			itemData.system.installningar.svarlard = true;
 			itemData.system.installningar.normal = false;
 		}
@@ -342,15 +396,72 @@ export default class EonItemSheet extends ItemSheet {
 		this.render();
 	}
 
-	async _setValue(event) {
+	async _setVaraktighet(event) {
 		event.preventDefault();
 
 		const element = event.currentTarget;
 		const dataset = element.dataset;
 		const itemData = duplicate(this.item);
 
+		if (dataset.field == "varaktighet.koncentration") {
+			itemData.system.varaktighet.immanent = false;
+			itemData.system.varaktighet.momentan = false;
+			itemData.system.varaktighet.koncentration = !this.item.system.varaktighet.koncentration;
+		}
+		if (dataset.field == "varaktighet.momentan") {
+			itemData.system.varaktighet.immanent = false;
+			itemData.system.varaktighet.momentan = !this.item.system.varaktighet.momentan;
+			itemData.system.varaktighet.koncentration = false;
+		}
+		if (dataset.field == "varaktighet.immanent") {
+			itemData.system.varaktighet.immanent = !this.item.system.varaktighet.immanent;
+			itemData.system.varaktighet.momentan = false;
+			itemData.system.varaktighet.koncentration = false;
+		}		
+		
+		await this.item.update(itemData);
+
+		this.render();
+	}
+
+	async _setValue(event) {
+		event.preventDefault();
+
+		const element = event.currentTarget;
+		const dataset = element.dataset;
+		const itemData = duplicate(this.item);		
+
 		if (dataset.dtype.toLowerCase() == "boolean") {
-			itemData.system[dataset.field] = !itemData.system[dataset.field];
+			const fields = dataset.field.split(".");
+
+			if (fields.length == 1) {
+				itemData.system[fields[0]] = !itemData.system[fields[0]];
+			}			
+			else if (fields.length == 2) {
+				itemData.system[fields[0]][fields[1]] = !itemData.system[fields[0]][fields[1]];
+			}
+		}
+		else if (dataset.dtype.toLowerCase() == "number") {
+			if (dataset.field == "egenskaper") {
+				const egenskaper = [];
+
+				for (const egenskap of itemData.system.egenskaper) {
+					if (egenskap.namn == dataset.name) {
+						const component = "egenskap_" + dataset.name;
+        				var e = document.getElementById(component);
+						egenskap.varde = parseInt(e.value);
+					}
+
+					egenskaper.push(egenskap);
+				}
+
+				itemData.system.egenskaper = egenskaper;
+			}
+		}
+
+		// om man klickar bort att det är en aspekt så behöver typen rensas.
+		if ((dataset.field == "aspekt") && (!itemData.system[dataset.field])) {
+			itemData.system.id = "";
 		}
 
 		await this.item.update(itemData);
@@ -386,17 +497,7 @@ export default class EonItemSheet extends ItemSheet {
 					newPropery = {
 						namn: this.value,
 						varde: value
-					}
-
-					/* if (Number.isInteger(parseInt(sibling[0].children[0].value))) {
-						
-					}
-					else {
-						newPropery = {
-							namn: this.value,
-							varde: 0
-						}
-					} */				
+					}				
 				}
 				else {
 					newPropery = {
@@ -446,6 +547,7 @@ export default class EonItemSheet extends ItemSheet {
 		this.render();
 	}
 
+	/* when selecting what group an item belongs too */
 	async _onsheetChange(event) {
 		event.preventDefault();
 
@@ -553,7 +655,7 @@ export default class EonItemSheet extends ItemSheet {
 			const kroppsdel = dataset.kroppsdel;
 			const itemData = duplicate(this.item);
 			itemData.system.belastning = 0;
-			itemData.system.tacker = [];
+			itemData.system.tacker = "";
 
 			if (rustningsmall != "") {
 				const rustning = game.EON.forsvar.rustningsmaterial[rustningsmall];
@@ -576,7 +678,12 @@ export default class EonItemSheet extends ItemSheet {
 
 				itemData.system.belastning += del.belastning;
 				if (del.material != "") {
-					itemData.system.tacker.push(del.namn);
+					if (itemData.system.tacker == "") {
+						itemData.system.tacker = del.namn;
+					}
+					else {
+						itemData.system.tacker += ", " + del.namn.toLowerCase();
+					}					
 				}
 			}
 
@@ -618,6 +725,17 @@ export default class EonItemSheet extends ItemSheet {
 
 		if (source == "moment") {
 			await this._setMysterieMoment(event);
+
+			return;
+		}
+
+		if (source == "aspekt") {
+			let value = element.value;
+
+			const itemData = duplicate(this.item);
+			itemData.name = game.EON.CONFIG.aspekter[value];
+			await this.item.update(itemData);
+			this.render();
 
 			return;
 		}

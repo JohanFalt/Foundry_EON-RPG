@@ -15,6 +15,8 @@ export default class EonSkada extends basforemal {
         schema.installningar = new fields.SchemaField({
             ...installningar()
         });
+
+        schema.niva = new fields.StringField({required: true, initial: ""});
         
         return schema;
     }

@@ -10,14 +10,14 @@ export const systemSettings = function() {
 	});
 
     /* patch settings */
-	game.settings.register("eon-rpg", "patch200", {
-		name: "patch200",
-		hint: "patch200",
-		scope: "world",
-		config: false,
-		default: false,
-		type: Boolean,
-	});
+	// game.settings.register("eon-rpg", "patch200", {
+	// 	name: "patch200",
+	// 	hint: "patch200",
+	// 	scope: "world",
+	// 	config: false,
+	// 	default: false,
+	// 	type: Boolean,
+	// });
 
     // "core" is core settings
 	// ""eon-rpg"" as system setting
@@ -40,7 +40,7 @@ export const systemSettings = function() {
 		hint: "Skall systemet använda sig av de regler och tillägg som kom i boken Magi?",
 		scope: "world",
 		config: false,
-		default: false,
+		default: true,
 		type: Boolean
 	});
 
@@ -99,7 +99,7 @@ export class Books extends FormApplication {
         if (hasPermission) {
             for (let s of game.settings.settings.values()) {
                 // // Exclude settings the user cannot change
-                if (s.key == "bookCombat") {
+                if ((s.key == "bookCombat") || (s.key == "bookMagic")) {
                     // Update setting data
                     const setting = duplicate(s);
 

@@ -75,6 +75,11 @@
     width: 700px;
 }
 
+.EON.itemsheet.besvarjelse:not(.minimized) {
+    min-width: 600px;
+    width: 600px;
+}
+
 .EON.general-dialog:not(.minimized) {
     min-width: 500px;
     min-height: 500px;
@@ -316,6 +321,10 @@ span.resource-value,
     line-height: var(--eon-line-height-default);
 }
 
+.EON.itemsheet .dice-value {
+    margin-left: 2px;
+}
+
 .EON .macroBtn {
     height: 45px;
     width: 45px;
@@ -330,7 +339,20 @@ span.resource-value,
     width: 100%;
     padding-top: 2px;
     padding-bottom: 2px;
-  }
+}
+
+.EON.itemsheet .top-sidetext {
+    color: #7e7e7e;
+    font-weight: normal;
+    font-size: 18px;
+    text-transform: capitalize;
+    writing-mode: vertical-rl;
+}
+
+.EON.itemsheet .information-area {
+    padding: 5px;
+    padding-top: 15px;
+}
 
 /* Slå tärning */
 
@@ -512,6 +534,7 @@ span.resource-box-center {
     padding: 12px 5px;
     box-sizing: border-box; 
     width: 50px;
+    height: var(--eon-line-height-default);
 }
 
 .EON.rollperson input.text-value {   
@@ -528,6 +551,26 @@ span.resource-box-center {
     text-align: left;
     padding: 0px 0px;
     box-sizing: border-box; 
+}
+
+.EON.itemsheet select.text-value {   
+    width: 75%;
+    position: relative;
+    left: 2px;
+    padding-left: 0px;
+}
+
+.EON.itemsheet .dual-box {   
+    width: 140px;
+}
+
+.EON.itemsheet .dual-box select.text-value,
+.EON.itemsheet .dual-box input.text-value {   
+    width: 100%;
+}
+
+.EON.itemsheet .dual-box-right {   
+    margin-left: 12px;
 }
 
 .avtrubbning-column {
@@ -583,15 +626,46 @@ input.skill-value {
 
 /* VAPEN */
 
-.weapon-icon {
+.EON .weapon-icon {
     width: 20px;
 }
 
-.active-icon {
+.EON .active-icon {
     width: 30px;
 }
 
 /* ITEMS */
+
+.EON.itemsheet section.item-body {
+    padding-right: 30px;
+}
+
+.EON.itemsheet .item-area {
+    margin-left: 10px;
+    width: calc(95% - 100px);
+}
+
+.EON.itemsheet .item-top {
+    margin-bottom: 15px;
+}
+
+.EON.itemsheet .item-section,
+.EON.general-dialog .item-section {
+    background: #fff;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.EON.itemsheet .large-icon {
+    font-size: 24px;
+    margin-top: 5px;
+    margin-right: 5px;
+}
 
 .EON.itemsheet input.text-value {
     width: 75%;
@@ -606,27 +680,20 @@ input.skill-value {
     box-sizing: border-box;
 } */
 
-.itemsheet .textbox-headline {
+.EON.itemsheet .textbox-headline {
     line-height: 28px;
     height: 30px;
 }
 
-.item-headline {
+.EON.itemsheet .item-headline {
     line-height: 28px;
     width: 150px;
     height: 30px;
 }
 
-.item-property-area {
+.EON.itemsheet .item-property-area {
     height: 28px;
-}
-
-.item-top {
-    margin-bottom: 30px;
-}
-
-.item-bottom {
-    margin-top: 30px;
+    width: 270px;
 }
 
 .tic-container {    
@@ -637,7 +704,7 @@ input.skill-value {
     height: 45px;
 }
 
-.property-area {
+.EON.itemsheet .property-area {
     display: flex; 
     flex-wrap: wrap;
     flex-direction: column;
@@ -646,11 +713,6 @@ input.skill-value {
 
 .img-block {
     width: 100px;
-}
-
-.item-area {
-    margin-left: 10px;
-    width: calc(95% - 100px);
 }
 
 .fardighetsvarde {
@@ -724,30 +786,6 @@ input.skill-value {
 
 /* Dialogs */
 
-.EON.general-dialog button {
-
-}
-
-.EON.general-dialog button.dialog-button {
-
-}
-
-.EON.general-dialog button.dialog-event-button {
-
-}
-
-/* .EON button .eon-roller__flag {
-    font-size: 14px;
-    height: 18px;
-    line-height: 1;
-    align-items: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    border-radius: 4px 4px 0 0;
-    max-height: 18px;
-} */
-
 .EON.general-dialog .window-content {
     font-family: var(--eon-main-font);
     color: var(--eon-sheet-text-color);
@@ -782,6 +820,12 @@ input.skill-value {
     width: 22%;
 }
 
+.EON .improvication-icon {
+    font-size: 16px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
 @media all and (max-height : 1200px) {
     .EON.rollperson:not(.minimized),
     .EON.varelse:not(.minimized) {
@@ -810,10 +854,6 @@ input.skill-value {
     .EON.itemsheet:not(.minimized) {
         min-height: 400px;
     }
-
-    .EON .skill-area {
-        /* max-height: 500px; */
-    }
 }
 
 @media all and (max-width : 1280px) {
@@ -824,6 +864,6 @@ input.skill-value {
 
     .EON.itemsheet.vapen:not(.minimized),
     .EON.itemsheet:not(.minimized) {
-        min-width: 400px;
+        min-width: 500px;
     }
 }

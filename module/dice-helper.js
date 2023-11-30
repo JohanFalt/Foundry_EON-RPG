@@ -151,6 +151,8 @@ export class DiceRollContainer {
         this.config = config;
 		this.actor = actor;  			// rolling actor
         this.info = [];
+        this.description = "";
+        this.grundvarde = "";
 		this.number = 0;
 		this.bonus = 0;
         this.svarighet = 0;
@@ -175,6 +177,7 @@ export async function RollDice(diceRoll) {
     let result = 0;
     let diceResult = [];
     let rollInfo = "";
+    let rollDescription = "";
     let resulttext = "";
 
     // egenskaper
@@ -209,6 +212,10 @@ export async function RollDice(diceRoll) {
 
             rollInfo += egenskap;
         }
+    }
+
+    if ((diceRoll.description != "") && (diceRoll.description != undefined)) {
+        rollDescription = diceRoll.description;
     }
 
     let numDices = number;
@@ -260,8 +267,23 @@ export async function RollDice(diceRoll) {
         text = `Slår ${number}${dicetype}-${sbonus}`;
     }
 
+    if (diceRoll.grundvarde != undefined) {
+        if (diceRoll.grundvarde != "") {
+            text = `${text} (${diceRoll.grundvarde})`;
+        }
+    }    
+
     if ((difficulty > 0) && (result >= difficulty)) {
-        resulttext = "LYCKAT SLAG";
+        let advetanges = Math.floor((result - difficulty) / 5);
+
+        if (advetanges > 0) {
+            resulttext = "LYCKAT SLAG (+" + advetanges + " övertag)";
+        }
+        else {
+            resulttext = "LYCKAT SLAG";
+        }
+
+        
     }
     else if ((difficulty > 0) && (result < difficulty)) {
         resulttext = "MISSLYCKAT SLAG";
@@ -270,6 +292,7 @@ export async function RollDice(diceRoll) {
     const templateData = {
         data: {
             info: rollInfo,
+            description: rollDescription,
             config: diceRoll.config,
             actor: diceRoll.actor,
             dicecolor: color,

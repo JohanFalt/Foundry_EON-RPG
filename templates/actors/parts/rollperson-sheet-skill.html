@@ -28,12 +28,12 @@
                         <a class="item-edit" title="Editera språk" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
                     </div>
                 {{else}}
-                    <div class="pullLeft" >
+                    <div class="pullLeft">
                         {{#if fardighet.system.installningar.lattlard}}
-                            <div style="width: 8px;"><i class="fa-solid fa-sort-up green"></i></div>
+                            <div style="width: 8px;position: relative;top: 1px;"><i class="fa-solid fa-sort-up green"></i></div>
                         {{/if}}
                         {{#if fardighet.system.installningar.svarlard}}
-                            <div style="width: 8px; line-height: 18px;"><i class="fa-solid fa-sort-down red"></i></div>
+                            <div style="width: 8px;position: relative;top: -4px;"><i class="fa-solid fa-sort-down red"></i></div>
                         {{/if}}
                     </div>
                     <div class="vrollable pullLeft caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div> 

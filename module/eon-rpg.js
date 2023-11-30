@@ -18,6 +18,7 @@ Hooks.once("init", async function() {
     CONFIG.Actor.dataModels.Rollperson = models.EonRollperson;
     CONFIG.Actor.dataModels.Varelse = models.EonVarelse;
 
+    CONFIG.Item.dataModels.Folkslag = models.EonFolkslag;
     CONFIG.Item.dataModels.Färdighet = models.EonFardighet;
     CONFIG.Item.dataModels.Språk = models.EonSprak;
     CONFIG.Item.dataModels.Mysterie = models.EonMysterie;
@@ -69,7 +70,8 @@ Hooks.once("ready", async () => {
 
     if (game.user.isGM) {
         if ((installedVersion !== systemVersion || installedVersion === null)) {
-            if (Migration.CompareVersion(installedVersion, systemVersion)) {        
+            if (Migration.CompareVersion(installedVersion, systemVersion)) {     
+                await Migration.patchWorld(systemVersion, installedVersion, game.EON); 
                 await Migration.DoNotice(systemVersion, installedVersion);
                 game.settings.set("eon-rpg", "systemVersion", systemVersion);
             }
@@ -88,6 +90,9 @@ Hooks.on("renderItemSheet", (sheet) => {
             (sheet.object.type.toLowerCase().replace(" ", "") == "sköld")) {
         sheet.element[0].classList.add("vapen");
     }	
+    if (sheet.object.type.toLowerCase().replace(" ", "") == "besvärjelse") {
+        sheet.element[0].classList.add("besvarjelse");
+    }
 });
 
 /* ------------------------------------ */
@@ -98,4 +103,5 @@ Hooks.on("renderFormApplication", (sheet) => {
 
 function clearHTML(sheet) {
 	sheet.element[0].classList.remove("vapen");
+    sheet.element[0].classList.remove("besvarjelse");
 }

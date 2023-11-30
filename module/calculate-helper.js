@@ -2,6 +2,11 @@ import DiceHelper from "./dice-helper.js";
 
 export default class CalculateHelper {
     static async BeraknaTotaltVarde(attribut) {
+        if (attribut == undefined) {
+            console.error("'attribut' empty in BeraknaTotaltVarde");
+            return false;
+        }
+
         let totalTarning = parseInt(attribut.grund.tvarde);
         let totalBonus = parseInt(attribut.grund.bonus);
 
@@ -179,4 +184,11 @@ export default class CalculateHelper {
 
         return grundUtmattning;
     }
+
+    static isNumeric(str) {
+        if (typeof str == "number") return true;
+        if (typeof str != "string") return false;
+        return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+               !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+      }
 }

@@ -8,16 +8,30 @@
                     <img src="{{item.img}}" class="item img-block" />
                 </div>
 
-                <div class="pullLeft" style="min-width: 350px;">
+                <div class="pullLeft" style="min-width: 270px;">
 
-                    <div class="number-value-text floating-label-group">
-                        <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
-                        <span class="floating-label">Namn</span>
-                    </div>
+                    {{#if (eq data.system.typ "kongelat")}}
+                        <div class="item-property-area number-value-text floating-label-group">
+                            <select class="text-value" name="name">                                
+                                {{#select item.name}}
+                                    <option value="Kongelat">- Välj -</option>
+                                    {{#each EON.CONFIG.aspekter as |aspekt key|}}
+                                        <option value="{{key}}">{{aspekt}}</option>
+                                    {{/each}}
+                                {{/select}}
+                            </select>
+                            <span class="floating-label">Aspekt</span>
+                        </div>
+                    {{else}}
+                        <div class="item-property-area number-value-text floating-label-group">
+                            <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
+                            <span class="floating-label">Namn</span>
+                        </div>
+                    {{/if}}
 
-                    {{#if (ne data.system.typ "mynt")}}
-                        <div class="number-value-text floating-label-group">
-                            <select name="system.grupp">                                
+                    {{#if (eq data.system.typ "utrustning")}}
+                        <div class="item-property-area number-value-text floating-label-group">
+                            <select class="text-value" name="system.grupp">                                
                                 {{#select item.system.grupp}}
                                     <option value="">- Välj -</option>
                                     {{#each EON.CONFIG.utrustningsgrupper as |utrustninggrupp key|}}
@@ -28,8 +42,8 @@
                             <span class="floating-label">Grupp</span>
                         </div>
 
-                        <div class="number-value-text floating-label-group">
-                            <select class="inputdata" name="system.mall" data-source="equipment">
+                        <div class="item-property-area number-value-text floating-label-group">
+                            <select class="text-value inputdata" name="system.mall" data-source="equipment">
                                 <option value="">- Välj -</option>                                       
                                 {{#select item.system.mall}}    
                                     <option value="{{item._id}}">- Skräddarsytt -</option> 
@@ -41,17 +55,17 @@
                             <span class="floating-label">Utrustning</span>
                         </div>  
 
-                        <div class="number-value-text floating-label-group ">
+                        <div class="item-property-area number-value-text floating-label-group ">
                             <input class="attribute-value editable" name="system.antal" type="text" value="{{data.system.antal}}" data-dtype="Number" />
                             <span class="floating-label">Antal</span>
                         </div>
 
-                        <div class="number-value-text floating-label-group ">
+                        <div class="item-property-area number-value-text floating-label-group ">
                             <input class="attribute-value editable" name="system.vikt" type="text" value="{{data.system.vikt}}" data-dtype="Number" />
                             <span class="floating-label">Vikt (kg)</span>
                         </div>
 
-                        <div class="number-value-text floating-label-group ">
+                        <div class="item-property-area number-value-text floating-label-group ">
                             <input class="attribute-value editable" name="system.pris" type="text" value="{{data.system.pris}}" data-dtype="Number" />
                             <span class="floating-label">Pris (silver)</span>
                         </div>
@@ -62,27 +76,65 @@
                         </div>
                     {{/if}}
 
+                    {{#if (eq data.system.typ "kongelat")}}                        
+
+                        {{#each data.system.egenskaper as |egenskap key|}}
+                            <div class="item-property-area number-value-text floating-label-group ">
+                                <input class="attribute-value editable item-property" id="egenskap_{{egenskap.namn}}" type="text" value="{{egenskap.varde}}" data-dtype="Number" data-field="egenskaper" data-name="{{egenskap.namn}}" />
+                                <span class="floating-label">{{egenskap.label}}</span>
+                            </div>
+                        {{/each}}
+
+                        <div class="item-property-area number-value-text floating-label-group ">
+                            <input class="attribute-value editable" name="system.antal" type="text" value="{{data.system.antal}}" data-dtype="Number" />
+                            <span class="floating-label">Antal</span>
+                        </div>
+
+                        <div class="item-property-area number-value-text floating-label-group ">
+                            <input class="attribute-value editable" name="system.vikt" type="text" value="{{data.system.vikt}}" data-dtype="Number" />
+                            <span class="floating-label">Vikt (kg)</span>
+                        </div>
+
+                        <div class="item-property-area number-value-text floating-label-group ">
+                            <input class="attribute-value editable" name="system.pris" type="text" value="{{data.system.pris}}" data-dtype="Number" />
+                            <span class="floating-label">Pris (silver)</span>
+                        </div>
+
+                    {{/if}}
+
                     {{#if data.system.installningar.behallare}}
-                        <div class="number-value-text floating-label-group ">
+                        <div class="item-property-area number-value-text floating-label-group ">
                             <input class="attribute-value editable" name="system.volym.antal" type="text" value="{{data.system.volym.antal}}" data-dtype="Number" />
                             <span class="floating-label">Antal</span>
                         </div>
 
-                        <div class="number-value-text floating-label-group ">
+                        <div class="item-property-area number-value-text floating-label-group ">
                             <input class="attribute-value editable" name="system.volym.max" type="text" value="{{data.system.volym.max}}" data-dtype="Number" />
                             <span class="floating-label">Max antal</span>
                         </div>
 
-                        <div class="number-value-text floating-label-group ">
+                        <div class="item-property-area number-value-text floating-label-group ">
                             <input class="attribute-value editable" name="system.volym.enhet" type="text" value="{{data.system.volym.enhet}}" data-dtype="String" />
                             <span class="floating-label">Enhet</span>
                         </div>
                     {{/if}}
                 </div>
 
-                {{#if hasActor}}
-                    <div class="pullRight pointer red item-delete" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
-                {{/if}}
+                <div class="pullLeft" style="flex-grow: 1; text-align: right;">
+                    {{#if hasActor}}
+                        <div class="pointer red item-delete large-icon" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
+                    {{/if}}     
+                    
+                    {{#if (eq data.system.typ "kongelat")}}
+                        <div class="information-area top-sidetext">KONGELAT</div>
+                    {{/if}}
+                    {{#if (eq data.system.typ "mynt")}}
+                        <div class="information-area top-sidetext">MYNT</div>
+                    {{/if}}
+                    {{#if (eq data.system.typ "utrustning")}}
+                        <div class="information-area top-sidetext">UTRUSTNING</div>
+                    {{/if}}
+                </div>
             </div>
 			
 		</header>

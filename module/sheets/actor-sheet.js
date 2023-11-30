@@ -1,4 +1,3 @@
-//import DiceHelper from "./dice-helper.js";
 import DialogHelper from "../dialog-helper.js";
 import CreateHelper from "../create-helper.js";
 import CalculateHelper from "../calculate-helper.js";
@@ -40,6 +39,12 @@ export default class EonActorSheet extends ActorSheet {
 
     /** @override */
     async getData() {
+        /* let bok = "grund";
+        // Lägg till grundrustning på kroppsdelarna
+        if (CONFIG.EON.settings.bookCombat) {
+            bok = "strid";
+        } */
+
         const actorData = duplicate(this.actor);	
         const version = game.data.system.version;	
 
@@ -76,6 +81,10 @@ export default class EonActorSheet extends ActorSheet {
         data.actor.system.listdata.religion = [];
         data.actor.system.listdata.religion.mysterie = [];
         data.actor.system.listdata.religion.avvisning = [];
+        data.actor.system.listdata.magi = [];
+        data.actor.system.listdata.magi.besvarjelse = [];
+        data.actor.system.listdata.magi.kongelat = [];
+        data.actor.system.listdata.magi.faltstorning = [];
         data.actor.system.listdata.utrustning = [];
         data.actor.system.listdata.utrustning.rustning = [];
         data.actor.system.listdata.utrustning.vapen = [];
@@ -87,6 +96,8 @@ export default class EonActorSheet extends ActorSheet {
         data.actor.system.listdata.kroppsdelar = [];
         data.actor.system.listdata.kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, version);
         data.actor.system.listdata.skador = [];
+
+        data.actor.system.altvarde = [];
 
         let totalVikt = 0;
         let totalViktVapen = 0;
@@ -104,6 +115,9 @@ export default class EonActorSheet extends ActorSheet {
             }
             if (item.type == "Avvisning") {
                 data.actor.system.listdata.religion.avvisning.push(item);
+            }
+            if (item.type == "Besvärjelse") {
+                data.actor.system.listdata.magi.besvarjelse.push(item);
             }
             if (item.type == "Närstridsvapen") {    
                 data.actor.system.listdata.utrustning.vapen.narstrid.push(item);
@@ -139,19 +153,29 @@ export default class EonActorSheet extends ActorSheet {
                 if (item.system.typ == "mynt") {
                     data.actor.system.listdata.utrustning.mynt.push(item);
                 }
+                else if (item.system.typ == "kongelat") {
+                    data.actor.system.listdata.magi.kongelat.push(item);
+                }                
                 else {
                     data.actor.system.listdata.utrustning.foremal.push(item);
                 }                
 
                 if (item.system.installningar.buren) {
-                    totalVikt += parseFloat(item.system.vikt);    
-                    totalViktUtrustning += parseFloat(item.system.vikt);              
+                    totalVikt += parseFloat(item.system.vikt) * parseFloat(item.system.antal);    
+                    totalViktUtrustning += parseFloat(item.system.vikt) * parseFloat(item.system.antal);                 
                 }
             }
             if (item.type == "Skada") {    
-                data.actor.system.listdata.skador.push(item);
+                if (item.system.typ == "skada") {
+                    data.actor.system.listdata.skador.push(item);
+                }
+                else if (item.system.typ == "faltstorning") {
+                    data.actor.system.listdata.magi.faltstorning.push(item);
+                }
             }
-            
+            if ((item.type == "Folkslag") && (data.actor.system.bakgrund.folkslag == "custom")) {
+                data.actor.system.altvarde.folkslag = item.name;
+            }            
         }
 
         for (const grupp in CONFIG.EON.fardighetgrupper) {
@@ -163,6 +187,14 @@ export default class EonActorSheet extends ActorSheet {
         data.actor.system.listdata.utrustning.vapen.skold = data.actor.system.listdata.utrustning.vapen.skold.sort((a, b) => a.name.localeCompare(b.name));
         data.actor.system.listdata.utrustning.rustning = data.actor.system.listdata.utrustning.rustning.sort((a, b) => a.name.localeCompare(b.name));
 
+        //for (const del in CONFIG.EON.kroppsdelar[bok]) {
+        for (const del of data.actor.system.listdata.kroppsdelar) {
+            del.stick += data.actor.system.harleddegenskaper.grundrustning; 
+            del.kross += data.actor.system.harleddegenskaper.grundrustning; 
+            del.hugg += data.actor.system.harleddegenskaper.grundrustning; 
+        } 
+
+        // Beräkna utmattning och belastning
         data.actor.system.berakning = [];
         data.actor.system.berakning.utmattning = [];
         data.actor.system.berakning.utmattning.perrunda = this.actor.system.skada.blodning;
@@ -206,8 +238,6 @@ export default class EonActorSheet extends ActorSheet {
 
         return data;
     }
-
-    
 
     /** @override */
     activateListeners(html) {
@@ -266,7 +296,36 @@ export default class EonActorSheet extends ActorSheet {
 			.find(".item-delete")
 			.click(this._onItemDelete.bind(this));
     }
+ 
+    /** @override */
+    /**
+        * Aktiveras om Item släpps på rollformuläret.
+        * @param _event
+        * @param data - det släppta item
+    */
+    async _onDropItem(_event, _data) {
+        if (!this.isEditable || !_data.uuid) {
+            return false;
+        }
 
+        const droppedItem = await Item.implementation.fromDropData(_data);
+
+        if ((droppedItem.type == "Folkslag") && (this.actor.type === "Rollperson")) {
+            await this.LaggtillFolkslag(droppedItem);
+        }
+        else if (droppedItem.type == "Folkslag") {
+            ui.notifications.warn(`Folkslag kan inte läggas till denna typ av Actor '${this.actor.type}'.`);
+            return false;
+        }  
+        
+        super._onDropItem(_event, _data)
+    }
+
+    /**
+        * Om man aktiverat att man skall ticka upp ett klick. Denna beräknar då upp tärningsvärdet med +1 Bonus
+        * och korrigerar detta om Bonus övergår till en ny tärning.
+        * @param _event
+    */
     async _ticValueUp(event) {
 		event.preventDefault();
 
@@ -311,6 +370,11 @@ export default class EonActorSheet extends ActorSheet {
 		this.render();
 	}
 
+    /**
+        * Om man aktiverat att man skall ticka ner ett klick. Denna beräknar då ner tärningsvärdet med -1 Bonus
+        * och korrigerar detta om Bonus övergår till en ny tärning.
+        * @param _event
+    */
 	async _ticValueDown(event) {
 		event.preventDefault();
 
@@ -373,6 +437,54 @@ export default class EonActorSheet extends ActorSheet {
 		this.render();
 	}
 
+    /**
+        * Denna funktion hanterar om man lägger till ett Item (Folkslag) på Actor och uppdaterar Actor enligt detta.
+        * @param droppedItem - Det tillagda Folkslaget
+        * @return Boolean - Om Folkslaget tillagt eller ej
+    */
+    async LaggtillFolkslag(droppedItem) {
+        const performDelete = await new Promise((resolve) => {
+            Dialog.confirm({
+                title: "Varning!",
+                yes: () => resolve(true),
+                no: () => resolve(false),
+                content: "Om du byter folkslag kommer alla ändringar du gjort på dina grundegenskaper att nollställas enligt det nya folkslaget"
+            });
+        });
+
+        if (!performDelete) 
+            return false;
+
+        // we only allow one species and one career, find any other species and remove them.
+        const itemToDelete = this.actor.items.filter((i) => (i.type === droppedItem.type) && (i.id !== droppedItem.id));
+        itemToDelete.forEach((i) => {
+            this.actor.items.get(i.id).delete();
+        });
+
+        const actorData = duplicate(this.actor);
+
+        for (const grundegenskap in CONFIG.EON.grundegenskaper) {
+            actorData.system.grundegenskaper[grundegenskap].grund.tvarde = droppedItem.system.grundegenskaper[grundegenskap].grund.tvarde;
+            actorData.system.grundegenskaper[grundegenskap].grund.bonus = droppedItem.system.grundegenskaper[grundegenskap].grund.bonus;
+            actorData.system.grundegenskaper[grundegenskap].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.grundegenskaper[grundegenskap]);
+        }
+
+        actorData.system.bakgrund.folkslag = "custom";
+
+        await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
+        await this.actor.update(actorData);
+
+        ui.notifications.info(`Folkslag '${droppedItem.name}' tillagt på '${this.actor.name}'.`);
+
+        return true;
+    }
+
+    /**
+        * Aktiveras om man klickat på något för att slå ett tärningsslag. Saknas slaget man skickar in får man ett felmeddelande.
+        * Finns flera olika typer av tärningsslag man kan slå (source):
+        * [attribute], [skill], [mystery], [spell], [weapon], [initiative]
+        * @param event
+    */
     _onRollDialog(event) {		
 		event.preventDefault();
 
@@ -398,6 +510,11 @@ export default class EonActorSheet extends ActorSheet {
 			return;
         }        
 
+        if (dataset.source == "spell") {
+            DialogHelper.SpellDialog(event, this.actor);
+			return;
+        }
+
         if (dataset.source == "weapon") {
             DialogHelper.WeaponDialog(event, this.actor);
 			return;
@@ -409,8 +526,15 @@ export default class EonActorSheet extends ActorSheet {
         }
         
 		ui.notifications.error("Slag saknar funktion");
+
+        return;
 	}
 
+    /**
+        * Körs när något blir skapat. Om typen skaknas visas ett felmeddelande.
+        * @param _event
+        * @return Boolean - om typen skapades eller ej.
+    */
     async _onItemCreate(event) {
 		event.preventDefault();
 
@@ -482,6 +606,21 @@ export default class EonActorSheet extends ActorSheet {
                         version: version
                     },
                     magnitud: 0
+                }
+            };
+        }
+
+        if (type == "besvärjelse") {
+            found = true;
+
+            itemData = {
+                name: "Ny besvärjelse",
+                type: "Besvärjelse",                
+                data: {
+                    installningar: {
+                        skapad: true,
+                        version: version
+                    }
                 }
             };
         }
@@ -600,30 +739,79 @@ export default class EonActorSheet extends ActorSheet {
             };
 		}
 
+        if (type == "kongelat") {
+            found = true;
+
+            let magnitud = {
+                namn: "magnitud",
+                label: "Magnitud",
+                varde: 0
+            }
+
+            const properties = [];
+            properties.push(magnitud);
+
+			itemData = {
+                name: "Kongelat",
+                type: "Utrustning",                
+                data: {
+                    installningar: {
+                        skapad: true,
+                        version: version,
+                        behallare: false
+                    },
+                    typ: "kongelat",
+                    egenskaper: properties
+                }
+            };
+		}        
+
         if (type == "skada") {
             found = true;
 
 			itemData = {
                 name: "Ny skada",
-                type: "Skada",
-                
+                type: "Skada",                
                 data: {
                     installningar: {
                         skapad: true,
                         version: version
-                    }
+                    },
+                    typ: "skada"
+                }
+            };
+		}
+
+        if (type == "fältstörning") {
+            found = true;
+
+			itemData = {
+                name: "Fältstörning",
+                type: "Skada",                
+                data: {
+                    installningar: {
+                        skapad: true,
+                        version: version
+                    },
+                    typ: "faltstorning"
                 }
             };
 		}
 
         if (found) {
             await this.actor.createEmbeddedDocuments("Item", [itemData]);
-            return;
+            return true;
         }
 
         ui.notifications.error("Typen som skall skapas saknar funktion");
+
+        return false;
     }
 
+    /**
+        * Körs när något skall blir editerat och dess Item formulär öppnas.
+        * @param _event
+    */
     async _onItemEdit(event) {
 		var _a;
 
@@ -639,7 +827,7 @@ export default class EonActorSheet extends ActorSheet {
         }
 
         const itemid = dataset.itemid;
-		const item = this.actor.getEmbeddedDocument("Item", itemid);	
+		const item = await this.actor.getEmbeddedDocument("Item", itemid);	
         
         if (dataset.property != undefined) {
             return;
@@ -657,6 +845,10 @@ export default class EonActorSheet extends ActorSheet {
 		}
 	}
 
+    /**
+        * Körs när någon egenskap blir ändrad.
+        * @param _event
+    */
     async _onItemAlter(event) {
 		event.preventDefault();
         event.stopPropagation();
@@ -696,6 +888,10 @@ export default class EonActorSheet extends ActorSheet {
         }
 	}
 
+    /**
+        * Körs när något item blir aktiverat. Används främst när man klickar för ett föremål så det blir aktivt/buret/etc.
+        * @param _event
+    */
     async _onItemActive(event) {		
 		event.preventDefault();
         event.stopPropagation();
@@ -728,6 +924,11 @@ export default class EonActorSheet extends ActorSheet {
 		this.render();
 	}
 
+    /**
+        * Körs när något item blir borttaget
+        * @param _event
+        * @return Boolean - om föremålet togs bort eller ej
+    */
     async _onItemDelete(event) {
 		event.preventDefault();
         event.stopPropagation();
@@ -748,14 +949,20 @@ export default class EonActorSheet extends ActorSheet {
         });
 
         if (!performDelete) {
-            return;
+            return false;
 		}     
 
         const actorData = duplicate(this.actor);
         actorData.system.egenskap[source].splice(index, 1);
         await this.actor.update(actorData);
+
+        return true;
 	}
 
+    /**
+        * Körs när något blir ändrat på rollformuläret som kan få vidare effekt för andra saker. Att man t ex ställer in något på Skräddarsytt.
+        * @param _event
+    */
     async _onsheetChange(event) {
 		event.preventDefault();
 
@@ -767,41 +974,73 @@ export default class EonActorSheet extends ActorSheet {
 
         if (source == "folkslag") {
             var e = document.getElementById("folkslag");
-            let data = game.EON.folkslag[e.value];
 
-            if (data?.namn == undefined) {
+            if (e.value == "custom") {
+                DialogHelper.AttributeEditDialog(this.actor, "bakgrund", source);
+                return;
+            }
+            else {
+                let data = game.EON.folkslag[e.value];
+
+                if ((data == undefined) || (data?.namn == undefined)) {
+                    return;
+                }
+    
+                if (this.actor.system.bakgrund.folkslag != "") {
+                    const performDelete = await new Promise((resolve) => {
+                        Dialog.confirm({
+                            title: "Varning!",
+                            yes: () => resolve(true),
+                            no: () => resolve(false),
+                            content: "Om du byter folkslag kommer alla ändringar du gjort på dina grundegenskaper att nollställas enligt det nya folkslaget"
+                        });
+                    });
+    
+                    if (!performDelete)
+                        return;
+                }
+
+                const itemToDelete = this.actor.items.filter((i) => (i.type === "Folkslag"));
+                itemToDelete.forEach((i) => {
+                    this.actor.items.get(i.id).delete();
+                });
+    
+                for (const egenskap in data.grundegenskaper) {
+                    actorData.system.grundegenskaper[egenskap].grund.tvarde = data.grundegenskaper[egenskap].tvarde;
+                    actorData.system.grundegenskaper[egenskap].grund.bonus = data.grundegenskaper[egenskap].bonus;
+                    actorData.system.grundegenskaper[egenskap].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.grundegenskaper[egenskap]);
+                }
+
+                await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
+
+                actorData.system.strid.lakningstakt = parseInt(data.lakningstakt);
+                actorData.system.bakgrund.folkslag = e.value;            
+
+                await this.actor.update(actorData);
+                this.render();
+                return;
+            }   
+        }		
+        if (source == "miljo") {
+            var e = document.getElementById("miljo");
+
+            if (e.value == "custom") {
+                DialogHelper.AttributeEditDialog(this.actor, "bakgrund", source);
                 return;
             }
 
-            if (this.actor.system.bakgrund.folkslag != "") {
-                const performDelete = await new Promise((resolve) => {
-                    Dialog.confirm({
-                        title: "Varning!",
-                        yes: () => resolve(true),
-                        no: () => resolve(false),
-                        content: "Om du byter folkslag kommer alla ändringar du gjort på dina grundegenskaper att nollställas enligt det nya folkslaget"
-                    });
-                });
-
-                if (!performDelete)
-                    return;
-            }
-
-            for (const egenskap in data.grundegenskaper) {
-                actorData.system.grundegenskaper[egenskap].grund.tvarde = data.grundegenskaper[egenskap].tvarde;
-                actorData.system.grundegenskaper[egenskap].grund.bonus = data.grundegenskaper[egenskap].bonus;
-                actorData.system.grundegenskaper[egenskap].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.grundegenskaper[egenskap]);
-            }
-
-            await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
-
-            actorData.system.strid.lakningstakt = parseInt(data.lakningstakt);
-            actorData.system.bakgrund.folkslag = e.value;            
-
-            await this.actor.update(actorData);
-		    this.render();
             return;
-        }		
+        }
+        if (source == "arketyp") {
+            var e = document.getElementById("arketyp");
+            
+            if (e.value == "custom") {
+                DialogHelper.AttributeEditDialog(this.actor, "bakgrund", source);
+                return;
+            }
+
+            return;
+        }        
         if (source == "valmaende") {
             let ruta = document.getElementById("fokus_varde");
 
@@ -816,7 +1055,9 @@ export default class EonActorSheet extends ActorSheet {
                 await this.actor.update(actorData);
                 this.render();
                 return;                
-            }            
+            }    
+            
+            return;
         }
         if (source == "karaktarsdrag") {
             const index = Number(dataset.index);
@@ -852,6 +1093,10 @@ export default class EonActorSheet extends ActorSheet {
         }
 	}
 
+    /**
+        * Funktion som säkerställer att alla rutor och boxar fylls i mer rätt grafik.
+        * @param _event
+    */
     _setupDotCounters(html) {
 		html.find(".resource-circle").each(function () {
 			const value = Number(this.dataset.value);
@@ -876,6 +1121,10 @@ export default class EonActorSheet extends ActorSheet {
 		});
 	}
 
+    /**
+        * Körs när man klickar i en av cirklarna
+        * @param _event
+    */
     async _clickedCircle(event) {
         event.preventDefault();
 		const element = event.currentTarget;

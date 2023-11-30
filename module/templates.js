@@ -27,7 +27,6 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-health.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-armor.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-equipment.html",
-		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-mystic.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-magic.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-religion.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-setting.html",
@@ -247,18 +246,22 @@ export const RegisterHandlebarsHelpers = function () {
 		let list = "";
 
 		for (const skill of skills) {
+			//list = list + CONFIG.EON.fardigheter.mystik[skill.fardighet];
+			if (game.EON.fardigheter.mystik[skill.fardighet] == undefined) {
+				continue;
+			}
+
 			if (list != "") {
 				list = list + ", ";
 			}
 
-			//list = list + CONFIG.EON.fardigheter.mystik[skill.fardighet];
 			list = list + game.EON.fardigheter.mystik[skill.fardighet].namn;
 
 			if (skill.huvud) {
 				list = list + "*";
 			}
 
-			list = list + " " + skill.svarighet;
+			list = list + " (" + skill.svarighet + ")";
 
 			if (skill.tid != "") {
 				list = list + " " + skill.tid;
@@ -266,6 +269,57 @@ export const RegisterHandlebarsHelpers = function () {
 		}
 
 		return list;
+	});
+
+	Handlebars.registerHelper("getSpellSetting", function(spell, property) {
+		if (property == "omfang") {
+			if (spell.system.omfang.yta == 0) {
+				return `${spell.system.omfang.antal} ${spell.system.omfang.text}`;
+			}
+			else {
+				return CONFIG.EON.magi.omradesomfang[spell.system.omfang.yta];
+			}
+		}
+		if (property == "rackvidd") {
+			if (spell.system.rackvidd.stracka == 0) {
+				return `${spell.system.rackvidd.antal} ${spell.system.rackvidd.text}`;
+			}
+			else {
+				return CONFIG.EON.magi.rackvidd[spell.system.rackvidd.stracka];
+			}
+		}
+		if (property == "varaktighet") {
+			if (spell.system.varaktighet.tid == 0) {
+				if (spell.system.varaktighet.koncentration) {
+					return "Koncentration";
+				}
+				if (spell.system.varaktighet.momentan) {
+					return "Momentan";
+				}
+				if (spell.system.varaktighet.immanent) {
+					return "Immanent";
+				}
+			}
+			else {
+				return CONFIG.EON.magi.varaktighet[spell.system.varaktighet.tid];
+			}
+		}
+	});
+
+	Handlebars.registerHelper("getConfigPropertyName", function(name, config) {
+		if (name == undefined) {
+			return name;
+		}
+
+		if (config == undefined) {
+			return name;
+		}
+
+		if (config[name] == undefined) {
+			return name;
+		}
+
+		return config[name];
 	});
 
 	Handlebars.registerHelper("getActorSar", function(actor, key) {
@@ -475,6 +529,10 @@ export const RegisterHandlebarsHelpers = function () {
 
 		return result;
 	});
+
+	Handlebars.registerHelper("multiplicate", function (number1, number2) {
+		return number1 * number2;
+	});	
 
 	Handlebars.registerHelper("captilizeFirst", function (text) {
 		return text.charAt(0).toUpperCase() + text.slice(1);

@@ -31,6 +31,10 @@ export default class foremal extends basforemal {
 
         schema.egenskaper = new fields.ArrayField(
             new fields.SchemaField({
+                label: new fields.StringField({
+                    initial: '',
+                    nullable: false,
+                }),
                 namn: new fields.StringField({
                     initial: '',
                     nullable: false,
@@ -40,7 +44,7 @@ export default class foremal extends basforemal {
                     nullable: false,
                     required: false,
                     min: 0
-                }),
+                })
             }),
             {
                 initial: [],

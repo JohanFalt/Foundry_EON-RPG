@@ -8,9 +8,15 @@ export class WeaponRoll {
 			"tvarde": 0,
 			"bonus": 0
 		};
+
+        this.grundTarning = 0;
+        this.grundBonus = 0;
+
         this.totalTarning = 0;
         this.totalBonus = 0;
         this.actorAttributNamn = "";
+
+        this.svarighet = "";
 
         this.vapen = item;
         this.vapennamn = item["name"];
@@ -132,8 +138,11 @@ export class DialogWeaponRoll extends FormApplication {
             this.object.isdamage = false;
             this.object.isdefense = false;  
 
-            this.object.totalTarning = this.object.actorAttribut.tvarde;
-            this.object.totalBonus = this.object.actorAttribut.bonus;
+            this.object.grundTarning = this.object.actorAttribut.tvarde;
+            this.object.grundBonus = this.object.actorAttribut.bonus;
+
+            this.object.totalTarning = this.object.grundTarning;
+            this.object.totalBonus = this.object.grundBonus;
 
             if ((this.object.vapen.type == "Avståndsvapen") || (this.object.vapen.type == "Sköld")) {
                 if (this.object.vapen.system.skadetyp == "hugg") {
@@ -151,6 +160,9 @@ export class DialogWeaponRoll extends FormApplication {
             this.object.isattack = false;
             this.object.isdamage = true;
             this.object.isdefense = false; 
+
+            this.object.grundTarning = 0;
+            this.object.grundBonus = 0;
             
             if ((this.object.vapen.type == "Avståndsvapen") || (this.object.vapen.type == "Sköld")) {
                 if (this.object.vapen.system.skadetyp == "hugg") {
@@ -169,8 +181,11 @@ export class DialogWeaponRoll extends FormApplication {
             this.object.isdamage = false;
             this.object.isdefense = true;   
 
-            this.object.totalTarning = this.object.actorAttribut.tvarde;
-            this.object.totalBonus = this.object.actorAttribut.bonus;
+            this.object.grundTarning = this.object.actorAttribut.tvarde;
+            this.object.grundBonus = this.object.actorAttribut.bonus;
+
+            this.object.totalTarning = this.object.grundTarning;
+            this.object.totalBonus = this.object.grundBonus;
         }
         if (type == "hugg") {
             this.object.usehugg = true;
@@ -195,6 +210,9 @@ export class DialogWeaponRoll extends FormApplication {
         if (this.object.isdamage) {
             this.object.vapenskada = DiceHelper.AdderaVarden(this.object.vapen.system[type], this.object.actorGrundskada);
 
+            this.object.grundTarning = this.object.vapenskada.tvarde;
+            this.object.grundBonus = this.object.vapenskada.bonus;
+
             this.object.totalTarning = this.object.vapenskada.tvarde;
             this.object.totalBonus = this.object.vapenskada.bonus;
         }
@@ -206,7 +224,7 @@ export class DialogWeaponRoll extends FormApplication {
 
             this.object.totalTarning = 0;
             this.object.totalBonus = 0;
-        }
+        }        
 
         this.render();
     }
@@ -270,7 +288,7 @@ export class DialogWeaponRoll extends FormApplication {
     }
 
     /* clicked to roll */
-    _generalRoll(event) {
+    async _generalRoll(event) {
         if (this.object.close) {
             this.close();
             return;
@@ -282,26 +300,31 @@ export class DialogWeaponRoll extends FormApplication {
 
         roll.info = this.object.vapen.system.egenskaper;
 
-        /* if ((this.object.totalTarning != this.object.actorAttribut.tvarde) || (this.object.totalBonus != this.object.actorAttribut.bonus)) {
-            if (this.object.actorAttribut.bonus == 0) {
-                info.push("Basvärde: Ob " + this.object.actorAttribut.tvarde + "T6");
+        var grundvarde = "";
+
+        if ((this.object.totalTarning != this.object.grundTarning) || (this.object.totalBonus != this.object.grundBonus)) {
+            if (this.object.grundBonus == 0) {
+                grundvarde = `${this.object.grundTarning}T6`;
             }
-            else if (this.object.actorAttribut.bonus > 0) {
-                info.push("Basvärde: Ob " + this.object.actorAttribut.tvarde + "T6+" + this.object.actorAttribut.bonus);
+            else if (this.object.grundBonus > 0) {
+                grundvarde = `${this.object.grundTarning}T6+${this.object.grundBonus}`;
             }
             else {
-                info.push("Basvärde: Ob " + this.object.actorAttribut.tvarde + "T6-" + this.object.actorAttribut.bonus);
+                grundvarde = `${this.object.grundTarning}T6-${this.object.grundBonus}`;
             }            
-        } */
+        }
+
+        roll.grundvarde = grundvarde;
 
         roll.number = this.object.totalTarning;
         roll.bonus = this.object.totalBonus;
 
+        if (this.object.isdamage) {
+            this.object.svarighet = "";
+        }
+
         if (this.object.isattack)  {
-            roll.action = `Anfaller med ${this.object.vapennamn.toLowerCase()}`;   
-            
-            /* roll.number = parseInt(this.object.actorAttribut.tvarde);
-            roll.bonus = parseInt(this.object.actorAttribut.bonus); */
+            roll.action = `Anfaller med ${this.object.vapennamn.toLowerCase()}`; 
         }
         else if ((this.object.isdamage) && ((this.object.usehugg) || (this.object.usekross) || (this.object.usestick))) {
             let skadetyp = "";
@@ -317,8 +340,8 @@ export class DialogWeaponRoll extends FormApplication {
             }
 
             roll.action = `Skadeslag ${this.object.vapennamn.toLowerCase()} (${skadetyp})`;
-            roll.number = parseInt(this.object.vapenskada.tvarde);
-            roll.bonus = parseInt(this.object.vapenskada.bonus);
+            //roll.number = parseInt(this.object.vapenskada.tvarde);
+            //roll.bonus = parseInt(this.object.vapenskada.bonus);
         }
         else if (this.object.isdamage) {
             ui.notifications.error("Du måste välja vilken skadetype du använder dig av innan du slår med tärningarna.");
@@ -338,7 +361,7 @@ export class DialogWeaponRoll extends FormApplication {
             roll.svarighet = parseInt(this.object.svarighet);
         }
         
-        const result = RollDice(roll);
+        const result = await RollDice(roll);
 
         if (this.object.isattack) {
             this.object.isdamage = true;

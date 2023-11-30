@@ -60,6 +60,7 @@
                 <select class="text-value editable inputdata" id="folkslag" name="system.bakgrund.folkslag" data-source="folkslag" style="width: 300px">                    
                     {{#select data.system.bakgrund.folkslag}}
                         <option value="">- Välj -</option>
+                        {{#if (eq data.system.bakgrund.folkslag "custom")}}<option value="custom">{{actor.system.altvarde.folkslag}}</option>{{/if}}
                         {{#each EON.folkslag as |folkslag key|}}
                             <option value="{{key}}">{{folkslag.namn}}</option>
                         {{/each}}
@@ -92,28 +93,23 @@
 
         <div class="bio clear">
             <div class="number-value-text floating-label-group">
-                <select class="text-value editable" name="system.bakgrund.arketyp" style="width: 300px">
-                    <option>- Välj -</option>
-                    {{#select data.system.bakgrund.arketyp}}
-                        {{#each EON.arketyper as |arketyp key|}}
-                            <option value="{{key}}">{{arketyp.namn}}</option>
-                        {{/each}}
-                    {{/select}}
-                </select>
+                <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.arketyp" value="{{data.system.bakgrund.arketyp}}" />
                 <span class="floating-label skill-label">Arketyp</span>
             </div>
         </div>
 
         <div class="bio clear">
             <div class="number-value-text floating-label-group">
-                <select class="text-value editable" name="system.bakgrund.miljo" style="width: 300px">
-                    <option>- Välj -</option>
+                <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.miljo" value="{{data.system.bakgrund.miljo}}" />
+                <!-- <select class="text-value editable inputdata" id="miljo" name="system.bakgrund.miljo" data-source="miljo" style="width: 300px">
                     {{#select data.system.bakgrund.miljo}}
+                        <option value="">- Välj -</option>
+                        <option value="custom">{{#if (eq data.system.bakgrund.miljo "custom")}}{{data.system.altvarde.miljo}}{{else}}- Skräddarsydd -{{/if}}</option>
                         {{#each EON.miljoer as |miljo key|}}
                             <option value="{{key}}">{{miljo.namn}}</option>
                         {{/each}}
                     {{/select}}
-                </select>
+                </select> -->
                 <span class="floating-label skill-label">Miljö</span>
             </div>
         </div>

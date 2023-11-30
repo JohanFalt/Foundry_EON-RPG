@@ -978,7 +978,7 @@ export const datautrustning = {
                 "installningar": {
                     "behallare": false
                 },
-                "namn": "Björnfäll",
+                "namn": "Vargpäls",
                 "vikt": 2.5,
                 "pris": 10
             }

@@ -1,9 +1,9 @@
 {
   "id": "eon-rpg",
   "title": "Eon IV RPG",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "compatibility": {
-    "minimum": "11",
+    "minimum": "11.315",
     "verified": "11",
     "maximum": "11"
   },
@@ -28,8 +28,8 @@
         "type": "module",
         "manifest": "https://raw.githubusercontent.com/JohanFalt/Foundry_EonDiceRoller/main/module.json",
         "compatibility": {
-          "minimum": "1.6.0",
-          "verified": "1.6.0",
+          "minimum": "1.6.1",
+          "verified": "1.6.1",
           "maximum": "2"
         }
       }
@@ -40,7 +40,7 @@
   "gridUnits": "m",
   "url": "https://github.com/JohanFalt/Foundry_EON-RPG",
   "manifest": "https://raw.githubusercontent.com/JohanFalt/Foundry_EON-RPG/main/system.json",
-  "download": "https://github.com/JohanFalt/Foundry_EON-RPG/archive/refs/tags/2.0.4.zip",
+  "download": "https://github.com/JohanFalt/Foundry_EON-RPG/archive/refs/tags/2.1.0.zip",
   "bugs": "https://github.com/JohanFalt/Foundry_EON-RPG/issues",
   "license": "LICENSE.txt"
 }

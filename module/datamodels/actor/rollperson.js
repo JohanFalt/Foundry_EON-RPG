@@ -59,7 +59,7 @@ export default class EonRollperson extends foundry.abstract.DataModel {
         schema.strid = new fields.SchemaField({
             vapenarm: new fields.StringField({required: true, nullable: false, initial: ""}),
             lakningstakt: new fields.NumberField({...valueInteger})
-        });
+        });        
 
         schema.skada = new fields.SchemaField({
             utmattning: new fields.SchemaField({
@@ -80,6 +80,10 @@ export default class EonRollperson extends foundry.abstract.DataModel {
             infektion: new fields.NumberField({...valueInteger}),
             infektionsvarighet: new fields.NumberField({...valueInteger}),
             inreskada: new fields.NumberField({...valueInteger})
+        });
+
+        schema.magi = new fields.SchemaField({
+            borttoning: new fields.NumberField({...valueInteger})
         });
 
         schema.egenskap = new fields.SchemaField({

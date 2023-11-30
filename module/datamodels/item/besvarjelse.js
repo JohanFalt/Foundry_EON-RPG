@@ -17,21 +17,46 @@ export default class EonBesvarjelse extends basforemal {
         const schema = super.defineSchema();
 
         schema.installningar = new fields.SchemaField({
-            ...installningar()            
+            ...installningar(),
+            aktiv: new fields.BooleanField({initial: false})
         });
 
-        schema.mirakel = new fields.StringField({required: true, initial: ""});
-        schema.cermoni = new fields.HTMLField();
-        schema.moment = new fields.ArrayField(
+        schema.aspekt = new fields.StringField({required: true, initial: ""});
+        schema.svarighet = new fields.NumberField({...valueInteger});
+        schema.forsvar = new fields.StringField({required: true, initial: ""});
+        schema.anfall = new fields.StringField({required: true, initial: ""});
+
+        schema.omfang = new fields.SchemaField({
+            antal: new fields.NumberField({...valueInteger}),
+            yta: new fields.NumberField({required: true, nullable: false, integer: true, initial: 1, min: 0}),
+            text: new fields.StringField({required: true, initial: ""})
+        });
+
+        schema.rackvidd = new fields.SchemaField({
+            stracka: new fields.NumberField({required: true, nullable: false, integer: true, initial: 1, min: 0}),
+            antal: new fields.NumberField({...valueInteger}),
+            text: new fields.StringField({required: true, initial: ""})
+        });
+
+        schema.varaktighet = new fields.SchemaField({
+            tid: new fields.NumberField({required: true, nullable: false, integer: true, initial: 1, min: 0}),
+            text: new fields.StringField({required: true, initial: ""}),
+            koncentration: new fields.BooleanField({initial: false}),
+            momentan: new fields.BooleanField({initial: false}),
+            immanent: new fields.BooleanField({initial: false})
+        });
+
+        schema.ritual = new fields.ArrayField(
             new fields.ObjectField({
                 initial: {},
                 nullable: false,
         }));
 
-        schema.omfang = new fields.StringField({required: true, initial: ""});
-        schema.rackvidd = new fields.StringField({required: true, initial: ""});
-        schema.magnitud = new fields.NumberField({...valueInteger});
-        schema.varaktighet = new fields.StringField({required: true, initial: ""});
+        schema.magnitud = new fields.ArrayField(
+            new fields.ObjectField({
+                initial: {},
+                nullable: false,
+        }));
         
         return schema;
     }

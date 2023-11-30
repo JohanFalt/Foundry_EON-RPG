@@ -3,7 +3,7 @@
   border-radius: 3px;
   color: black;
   min-height: 200px;
-  max-height: 200px;
+  max-height: 210px;
   background-color: var(--eon-back-color-inputs);
 }
 
@@ -21,12 +21,12 @@
 
 .EON .editor .tox-editor-container {
   min-height: 200px;
-  max-height: 200px;
+  max-height: 210px;
 } 
 
 .EON .editor .editor-content {
   min-height: 200px;
-  max-height: 200px;
+  max-height: 210px;
 }
 
 .EON .editor-box,
@@ -36,16 +36,16 @@
 
 .EON .small-editor-box .editor {
   min-height: 150px;
-  max-height: 150px;
+  max-height: 160px;
 }
 
 .EON .small-editor-box .editor .tox-editor-container {
   min-height: 150px;
-  max-height: 150px;
+  max-height: 160px;
 } 
 
 .EON .small-editor-box .editor .editor-content {
   min-height: 150px;
-  max-height: 150px;
+  max-height: 160px;
 }
 

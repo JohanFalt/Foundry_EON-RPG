@@ -1,3 +1,5 @@
+import CreateHelper from "./create-helper.js";
+ 
  /**
  * Compares two version numbers to see if the new one is newer than the old one
  * @param oldVersion   The existing version no: e.g. 1.5.9
@@ -88,6 +90,121 @@ export async function CompareVersion(oldVersion, newVersion) {
     return false
 }
 
+/**
+ * patch an actor to the latest version
+ * @param {Actor} actor   The actor to Update
+ * @param config   game.EON 
+ */
+export const updateActor = async function(actor, config) {
+    try {
+        const updateData = duplicate(actor);
+        let update = false;
+
+        if (updateData.system.installningar.version == "") {
+            updateData.system.installningar.version = "1.0.0";
+        } 
+
+        if (CompareVersion(actor.system.installningar.version, "2.1.0")) {
+            updateData.system.installningar.version = "2.1.0";
+
+            const grupp = "mystik";
+            let fardighet = "harmonisera";
+
+            let itemData = await CreateHelper.SkapaFardighetItem(grupp, config.fardigheter[grupp][fardighet], fardighet, updateData.system.installningar.version);
+            await actor.createEmbeddedDocuments("Item", [itemData]);
+
+            fardighet = "teoretiskmagi";
+
+            itemData = await CreateHelper.SkapaFardighetItem(grupp, config.fardigheter[grupp][fardighet], fardighet, updateData.system.installningar.version);
+            await actor.createEmbeddedDocuments("Item", [itemData]);
+
+            update = true;
+        }
+
+        if (update) {
+            await actor.update(updateData);
+            update = false;
+        }
+
+        for (const item of actor.items) {
+            await updateItem(item, config, actor);
+        }
+    } 
+    catch (e) {
+        e.message = `Failed migration for Actor ${actor.name}: ${err.message}`;
+        console.error(e.message);
+    }
+}
+
+/**
+ * patch an actor to the latest version
+ * @param {Items} item   The item to Update
+ * @param config   game.EON 
+ */
+export const updateItem = async function(item, config, actor) {
+    try {
+        const updateData = duplicate(item);
+        let update = false;
+
+        if (item.system.installningar.version == "") {
+            updateData.system.installningar.version = "1.0.0";
+            update = true;
+        }
+
+        if (CompareVersion(item.system.installningar.version, "2.1.0")) {
+            updateData.system.installningar.version = "2.1.0";
+
+            if (item.type == "Färdighet") {
+                if ((!item.system.installningar.lattlard) && (!item.system.installningar.svarlard)) {
+                    updateData.system.installningar.normal = true;
+                    update = true;
+                }
+            }
+            if ((item.type == "Skada") && (item.system.typ == "")) {
+                updateData.system.typ = "skada";
+                update = true;
+            }
+        }
+
+        if (update) {
+            await item.update(updateData);
+            update = false;
+        }
+    } 
+    catch (e) {
+        if (actor == undefined) {
+            e.message = `Failed migration for Item ${item.name}: ${err.message}`;
+        }
+        else {
+            e.message = `Failed migration for Item ${item.name} on Actor ${actor.name}: ${err.message}`;
+        }
+        
+        console.error(e.message);
+    }
+}
+
+ /**
+ * Sends version text to chat
+ * @param systemVersion The new system version
+ * @param installedVersion The installed system version
+ * @param config   game.EON
+ */
+export async function patchWorld(systemVersion, installedVersion, config) {
+    if (CompareVersion(installedVersion, systemVersion)) {
+        ui.notifications.warn(`Uppdaterar världen från version ${installedVersion} till ${systemVersion} stäng inte världen eller din Foundry. Var god vänta då det kan ta tid...`, {permanent: true});
+
+        for (const actor of game.actors) {
+            await updateActor(actor, config);
+        }
+
+        for (const item of game.items) {
+            await updateItem(item, config, undefined);
+        }
+
+        ui.notifications.info("Klar!", {permanent: false});
+    }
+}
+
  /**
  * Sends version text to chat
  * @param systemVersion The new system version
@@ -97,24 +214,41 @@ export async function DoNotice(systemVersion, installedVersion) {
       return;
     }
 
-    let patch200 = false;
+    //let patch200 = false;
     let partMessage = "";
 
-    try {
+    //try {
       // add the new setting in settings.js
-      patch200 = game.settings.get('eon-rpg', 'patch200');      
-    } 
-    catch (e) {
+      //patch200 = game.settings.get('eon-rpg', 'patch200');      
+    //} 
+    //catch (e) {
+    //}
+
+    // if (!patch200) {
+    //   game.settings.set('eon-rpg', 'patch200', true);
+    // }
+
+    if (await CompareVersion(installedVersion, '2.1.0')) {
+        partMessage += `
+            <li>[INSTÄLLNING] Regelbok - Magi är en inställning som aktiveras automatiskt i din världs inställningar. Detta gör att man kan se magifliken på rollformuläret.</li>  
+            <li>[BAKGRUND] Folkslag kan nu skapas som ett föremål i systemet om man vill ha ett folkslag som inte finns med i grundlistan.</li>
+            <li>[MAGI] Fliken Magi</li>                  
+            <li>[MAGI] Besvärjelser är nu ett nytt föremål i systemet. Man lägger till dem i sin värld eller direkt på rollformuläret.</li>
+            <li>[MAGI] Kongelat är nu ett nytt föremål i systemet. Man lägger till dem i sin värld eller direkt på rollformuläret.</li>
+            <li>[MAGI] Fältstörning är nu ett nytt föremål i systemet. Man lägger till dem i sin värld eller direkt på rollformuläret.</li>            
+            <li>[MAGI] Aspekter är nu en ny typ av färdigheter i systemet. Man skapar aspekten under mystikfärdigheterna och markerar den som en aspektfärdighet. Sedan kopplas denna automatiskt rätt när man använder magi.</li>
+            <li>[MAGI] Använda improviserad magi.</li>
+            <li>[RUSTNING] Grundrustning och rustning räknas ihop.</li>
+            <li>I lite mer detalj: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/2?closed=1">lista</a></li>
+            `; 
     }
 
-    if (!patch200) {
-      game.settings.set('eon-rpg', 'patch200', true);
-
-      partMessage += `
-        <li>Skarp version</li>
-        <li>Fliken Bakgrund</li>
-        <li>Bonus på tärningsslag med vapen</li>
-        <li>Grafik</li>`;
+    /* if (await CompareVersion(installedVersion, '2.0.0')) {
+        partMessage += `
+            <li>Skarp version (v2.0)</li>
+            <li>Fliken Bakgrund</li>
+            <li>Bonus på tärningsslag med vapen</li>
+            <li>Grafik</li>`;
     }    
 
     if (await CompareVersion(installedVersion, '2.0.4')) {
@@ -129,7 +263,7 @@ export async function DoNotice(systemVersion, installedVersion) {
         partMessage += `
             <li>[VAPEN] Problem med att vapen bytte från närstridsvapen till avståndsvapen utan anledning. <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/107">#107</a></li>
             <li>[VAPEN] Vapenskadan räknar inte alltid ihop grundskada och vapenskada. <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/106">#106</a></li>`;
-    }        
+    }    */     
 
     let introduction = `
         <div class="tray-title-area">Version ${systemVersion} installerat</div>

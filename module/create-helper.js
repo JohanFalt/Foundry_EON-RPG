@@ -3,7 +3,7 @@ export default class CreateHelper {
 
         for (const grupp in config.fardighetgrupper) {
             for (const fardighet in game.EON.fardigheter[grupp]) {
-                let itemData = await this._SkapaFardighetItem(grupp, game.EON.fardigheter[grupp][fardighet], fardighet, version);
+                let itemData = await this.SkapaFardighetItem(grupp, game.EON.fardigheter[grupp][fardighet], fardighet, version);
                 await actor.createEmbeddedDocuments("Item", [itemData]);
             }
         }       
@@ -75,7 +75,7 @@ export default class CreateHelper {
         }       
     }
 
-    static async _SkapaFardighetItem(grupp, fardighet, nyckel, worldVersion) {
+    static async SkapaFardighetItem(grupp, fardighet, nyckel, worldVersion) {
         let itemData = {
             name: fardighet.namn,
             type: "Färdighet",

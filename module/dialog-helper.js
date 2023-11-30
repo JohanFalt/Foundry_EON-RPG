@@ -1,5 +1,6 @@
 import { DialogSkillRoll, SkillRoll } from "./dialogs/dialog-skill-roll.js";
 import { DialogMysteryRoll, MysteryRoll } from "./dialogs/dialog-skill-roll.js";
+import { DialogSpellRoll, SpellRoll } from "./dialogs/dialog-magic-roll.js";
 import { DialogAttributeRoll, AttributeRoll } from "./dialogs/dialog-skill-roll.js";
 import { DialogWeaponRoll, WeaponRoll } from "./dialogs/dialog-weapon-roll.js";
 import { CombatRoll, DialogCombat } from "./dialogs/dialog-combat-roll.js";
@@ -29,6 +30,16 @@ export default class classDialogHelper {
 		mysteryRollUse.render(true);
     }
 
+    static async SpellDialog(event, actor) {
+		const element = event.currentTarget;
+		const dataset = element.dataset; 
+        const item = await actor.getEmbeddedDocument("Item", dataset.itemid);
+
+        const roll = new SpellRoll(item, actor);
+		let spellRollUse = new DialogSpellRoll(actor, roll);
+		spellRollUse.render(true);
+    }
+
     static async AttributeDialog(actor, type, key, title) {
         const roll = new AttributeRoll(actor, type, key, title);
 		let attributeRollUse = new DialogAttributeRoll(actor, roll);
@@ -37,8 +48,8 @@ export default class classDialogHelper {
 
     static AttributeEditDialog(actor, type, key) {
         const attribute = new DialogAttribute(type, key);
-		let attributeRollUse = new DialogAttributeEdit(actor, attribute);
-		attributeRollUse.render(true);
+		    let attributeRollUse = new DialogAttributeEdit(actor, attribute);
+		    attributeRollUse.render(true);
     }
 
     static async WeaponDialog(event, actor) {

@@ -37,6 +37,9 @@
         <div class="pullLeft active-icon">&nbsp;</div>
         <div class="pullLeft" style="width: 200px;">Namn</div>
         <div class="pullLeft" style="width: 75px;">Magnitud</div>
+        <div class="pullLeft" style="width: 75px;">Omfång</div>
+        <div class="pullLeft" style="width: 75px;">Räckvidd</div>
+        <div class="pullLeft" style="width: 100px;">Varaktighet</div>
         <div class="pullLeft">Moment</div>
     </div>
 
@@ -44,9 +47,12 @@
         <div class="clear" style="line-height: 25px; width:100%;">
             <div class="pointer pullLeft weapon-icon"><a class="item-edit" title="Editera mysterie" data-source="mysterie" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             <div class="pullLeft active-icon"><input class="pointer item-active" name="kraft.system.installningar.aktiv" type="checkbox" data-itemid="{{kraft._id}}" data-property="aktiv" {{isChecked kraft.system.installningar.aktiv}} /></div>
-            <div class="pullLeft" style="width: 200px;" data-source="mystery" data-itemid="{{kraft._id}}">{{kraft.name}}</div>
+            <div class="pullLeft vrollable" style="width: 200px;" data-source="mystery" data-itemid="{{kraft._id}}">{{kraft.name}}</div>
             <div class="pullLeft" style="width: 75px;">{{kraft.system.magnitud}}</div>
-            <div class="pullLeft">{{getMysterySkills kraft.system.moment}}</div>
+            <div class="pullLeft" style="width: 75px;">{{kraft.system.omfang}}</div>
+            <div class="pullLeft" style="width: 75px;">{{kraft.system.rackvidd}}</div>
+            <div class="pullLeft" style="width: 100px;">{{kraft.system.varaktighet}}</div>
+            <div class="pullLeft" title="{{getMysterySkills kraft.system.moment}}">{{shorten (getMysterySkills kraft.system.moment) 25}}</div>
         </div>
     {{/each}}
 
