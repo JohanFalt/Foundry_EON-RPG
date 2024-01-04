@@ -33,7 +33,10 @@ export class DialogAttributeEdit extends FormApplication {
             
         }
         else {
-            this.options.title = `${actor.name} - ${game.EON.CONFIG[attribute.typ][attribute.nyckel].namn}`;        
+            let headline = game.EON.CONFIG[attribute.typ][attribute.nyckel].namn.toLowerCase();
+
+            //this.options.title = `${actor.name} - ${game.EON.CONFIG[attribute.typ][attribute.nyckel].namn}`;        
+            this.options.title = `Editera ${headline}`;        
         }
         
     }
@@ -124,9 +127,27 @@ export class DialogAttributeEdit extends FormApplication {
 		const element = event.currentTarget;
 		const dataset = element.dataset;
 
-        if (dataset.key != undefined) {
+        const actorData = duplicate(this.actor);
+
+        // om höja attribut på Actor
+        if (dataset.property != undefined) {
+            
+          	
+
+            actorData.system[this.object.typ][this.object.nyckel].grund.bonus += 1;
+
+            if (actorData.system[this.object.typ][this.object.nyckel].grund.bonus > 3)  {
+                actorData.system[this.object.typ][this.object.nyckel].grund.tvarde += 1;
+                actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 0;
+            }
+
+            actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
+            await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
+            await this.actor.update(actorData);           
+        }
+        // bonus på attribut
+        else if (dataset.key != undefined) {
             const key = dataset.key;
-            const actorData = duplicate(this.actor);
 
             let tvarde = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].tvarde;
             let bonus = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].bonus;
@@ -144,10 +165,9 @@ export class DialogAttributeEdit extends FormApplication {
             await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
 
             await this.actor.update(actorData);
-            this.render();
-
-            return;
         }
+
+        this.render();
 	}
 
     async _ticValueDown(event) {
@@ -156,9 +176,35 @@ export class DialogAttributeEdit extends FormApplication {
 		const element = event.currentTarget;
 		const dataset = element.dataset;
 
-        if (dataset.key != undefined) {
+        const actorData = duplicate(this.actor);	
+
+        // om sänka attribut på Actor
+        if (dataset.property != undefined) {
+            // om egenskap på Actor
+
+            if ((actorData.system[this.object.typ][this.object.nyckel].tvarde == 0) && (actorData.system[this.object.typ][this.object.nyckel].bonus == 0)) {
+                return;
+            }
+
+            actorData.system[this.object.typ][this.object.nyckel].grund.bonus -= 1;        
+
+            if (actorData.system[this.object.typ][this.object.nyckel].grund.bonus < -1) {
+                actorData.system[this.object.typ][this.object.nyckel].grund.tvarde -= 1;
+                actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 3;
+            }
+
+            if (actorData.system[this.object.typ][this.object.nyckel].grund.tvarde < 0) {
+                actorData.system[this.object.typ][this.object.nyckel].grund.tvarde = 0;
+                actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 0;
+            }
+
+            actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
+            await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
+            await this.actor.update(actorData);
+        }
+        // bonus på attribut
+        else if (dataset.key != undefined) {
             const key = dataset.key;
-            const actorData = duplicate(this.actor);
 
             let tvarde = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].tvarde;
             let bonus = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].bonus;
@@ -176,10 +222,9 @@ export class DialogAttributeEdit extends FormApplication {
             await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
 
             await this.actor.update(actorData);
-            this.render();
-
-            return;
         }
+
+        this.render();
 	}
 
     async _addBonus(event) {
@@ -220,7 +265,6 @@ export class DialogAttributeEdit extends FormApplication {
 
         if (this.object.typ == "bakgrund") {
             const actorData = duplicate(this.actor);
-            //var e = document.getElementById(this.object.nyckel);
             var alt = document.getElementById("altvalue");
 
             var newvalue = alt.value;

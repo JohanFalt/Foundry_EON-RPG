@@ -1,61 +1,78 @@
 <form class="{{cssClass}}" autocomplete="off">
 
-    <div class="dialog-section-small">
+    <div class="item-top">
+        <div class="item-section">
+            <div class="dialog-section-small">
 
-        <div class="large-main-headline centerText">{{object.namn}}</div>
-        <div class="centerText">
-            Ob{{getDiceValue object.tarningar}}
-        </div>
-
-    </div>
-
-    <div class="dialog-section">
-
-        <div>
-            <div class="clear centerText">
-                <div class="pullLeft two-column headline">Bonus</div>
-                <div class="pullLeft two-column headline">Avdrag</div>
-            </div>            
-            <div class="dice-row">
-                <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1T6">+ ob1T6</button>
-                <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1">+1</button>
-                <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1T6">- ob1T6</button>
-                <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1">-1</button>
-            </div>
-        </div>
-        <div class="centerText">
-            {{#if (lt object.grundBonus 0)}}
-                Ob<input class="attribute-value skill-label" type="text" value="{{object.totalTarning}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.totalBonus}}" disabled readonly />
-            {{else}}
-                Ob<input class="attribute-value skill-label" type="text" value="{{object.totalTarning}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.totalBonus}}" disabled readonly />
-            {{/if}}
-            
-        </div>
-        
-    </div>
-
-    <div class="clear dialog-section-small">
-
-        <div class="clear">
-            <div class="pullLeft" style="width: 170px;">&nbsp;</div>
-            <div class="pullLeft">
-                <div class="floating-label-group">
-                    <input id="difficulty" class="attribute-value skill-label" type="text" value="{{object.svarighet}}" disabled readonly />
-                    <span class="floating-label">Svårdighet</span>
+                <div class="large-main-headline centerText">{{object.namn}}</div>
+                <div class="centerText">
+                    Ob{{getDiceValue object.tarningar}}
                 </div>
+
+                {{#if object.harBelastning}}
+                    <div class="centerText">Belastning (-{{getDiceValue object.actor.system.berakning.belastning.totaltavdrag}})</div>
+                {{/if}}
+                {{#if object.harSmarta}}
+                    <div class="centerText">Smärta (-{{object.actor.system.berakning.svarighet.smarta}}T6)</div>
+                {{/if}}
+                {{#if object.harSar}}
+                    <div class="centerText">Sår (-{{object.hamtaAntalSar}}T6)</div>
+                {{/if}}
+
             </div>
         </div>
-        <div>
-            <div class="dice-row">
-                {{#numFromLoop 1 9}}
-                    <button class="dialog-event-button eventbutton" title="{{this}}"  style="width: 7%;" data-source="difficulty" data-value="{{this}}"><span>{{this}}</span></button>
-                {{/numFromLoop}}
-                <button class="dialog-event-button eventbutton" title="0"  style="width: 7%;" data-source="difficulty" data-value="0"><span>0</span></button>
-                <button class="dialog-event-button eventbutton" title="Rensa" style="width: 7%;" data-source="difficulty" data-value="clear"><span>...</span></button>
-            </div>
-        </div>  
 
-    </div>
+        <div class="item-section">
+            <div class="dialog-section">
+
+                <div>
+                    <div class="clear centerText">
+                        <div class="pullLeft two-column headline">Bonus</div>
+                        <div class="pullLeft two-column headline">Avdrag</div>
+                    </div>            
+                    <div class="dice-row">
+                        <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1T6">+ ob1T6</button>
+                        <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1">+1</button>
+                        <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1T6">- ob1T6</button>
+                        <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1">-1</button>
+                    </div>
+                </div>
+                <div class="centerText">
+                    {{#if (lt object.grundBonus 0)}}
+                        Ob<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.tvarde}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.bonus}}" disabled readonly />
+                    {{else}}
+                        Ob<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.tvarde}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.bonus}}" disabled readonly />
+                    {{/if}}
+                    
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="item-section">
+
+            <div class="item-column dialog-section-small">
+
+                <div>
+                    <div style="margin-left: 205px;">
+                        <div class="floating-label-group">
+                            <input id="difficulty" class="attribute-value skill-label" type="text" value="{{object.svarighet}}" disabled readonly />
+                            <span class="floating-label">Svårdighet</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="dice-row">
+                        {{#numFromLoop 1 9}}
+                            <button class="dialog-event-button eventbutton" title="{{this}}"  style="width: 7%;" data-source="difficulty" data-value="{{this}}"><span>{{this}}</span></button>
+                        {{/numFromLoop}}
+                        <button class="dialog-event-button eventbutton" title="0"  style="width: 7%;" data-source="difficulty" data-value="0"><span>0</span></button>
+                        <button class="dialog-event-button eventbutton" title="Rensa" style="width: 7%;" data-source="difficulty" data-value="clear"><span>...</span></button>
+                    </div>
+                </div>  
+
+            </div>
+        </div>
 
     <div>
 

@@ -1,109 +1,125 @@
-<div class="item-box">
+<div class="large-headline">Skador</div>
 
-    <div class="large-headline">Skador</div>
-
-    <div class="pullLeft two-third-column">
-        <div class="clear">
-            <div class="pullLeft two-column">
+<div class="item-box item-row">
+    <div class="two-third-column item-row">
+        <div class="item-row one-column">
+            <div class="two-column">
                 <div class="headline">Smärta</div>
-                <div class="clear">
-                    <div class="pullLeft resource-box" title="Smärtnivå" data-value="{{data.system.skada.smarta}}" data-name="skada">
-                        {{#numFromLoop 1 6}}
-                            <span class="resource-box resource-box-center resource-value" data-index="{{this}}" data-value="smarta"></span>
-                        {{/numFromLoop}}
+                <div class="three-quarter-column">
+                    <div class="item-row">
+                        <div class="resource-box" title="Smärtnivå" data-value="{{data.system.skada.smarta}}" data-name="skada">
+                            {{#numFromLoop 1 6}}
+                                <span class="resource-box resource-box-center resource-value" data-index="{{this}}" data-value="smarta"></span>
+                            {{/numFromLoop}}
+                        </div>
+                        <div class="number-value-text floating-label-group">
+                            <input class="attribute-value editable" type="text" value="{{#if (gt actor.system.berakning.svarighet.smarta 0)}}-{{actor.system.berakning.svarighet.smarta}}T6{{else}}Inga{{/if}}" disabled readonly />
+                            <span class="floating-label">Avdrag</span>
+                        </div>
                     </div>
-                    <div class="pullLeft number-value-text floating-label-group">
-                        <input class="attribute-value editable" type="text" value="{{#if (gt actor.system.berakning.svarighet.smarta 0)}}-{{actor.system.berakning.svarighet.smarta}}T6{{else}}Inga{{/if}}" disabled readonly />
-                        <span class="floating-label">Avdrag</span>
-                    </div>
+                    <div class="information-area information-box">−1T6 per kryss för fysiska handlingar.</div>
                 </div>
-                <div class="information-area">−1T6 per kryss för fysiska handlingar.</div>
             </div>
 
-            <div class="pullLeft two-column">
-                <div class="headline">Blödning</div>         
-                <div class="clear">
-                    <div class="pullLeft resource-box" data-value="{{data.system.skada.blodning}}" data-name="skada" title="Blödningstakt">
-                        {{#numFromLoop 1 3}}
-                            <span class="resource-box resource-box-center resource-value" data-index="{{this}}" data-value="blodning"></span>
-                        {{/numFromLoop}}
-                    </div>
-                    <div class="pullLeft number-value-text floating-label-group">
-                        <input class="attribute-value editable" name="system.skada.blodningsvarighet" type="text" value="{{data.system.skada.blodningsvarighet}}" data-value="{{data.system.skada.blodningsvarighet}}" data-dtype="Number" autocomplete="off" autofocus required />
-                        <span class="floating-label">Svårighet</span>
-                    </div>
-                </div>  
-                <div class="information-area">Varje runda: Utmattningen ökar med Blödningstakten.</div>  
+            <div class="two-column">
+                <div class="headline">Blödning</div>   
+                <div class="three-quarter-column">
+                    <div class="item-row">
+                        <div class="resource-box" data-value="{{data.system.skada.blodning}}" data-name="skada" title="Blödningstakt">
+                            {{#numFromLoop 1 3}}
+                                <span class="resource-box resource-box-center resource-value" data-index="{{this}}" data-value="blodning"></span>
+                            {{/numFromLoop}}
+                        </div>
+                        <div class="number-value-text floating-label-group">
+                            <input class="attribute-value editable skill-label skill-value" name="system.skada.blodningsvarighet" type="text" value="{{data.system.skada.blodningsvarighet}}" data-value="{{data.system.skada.blodningsvarighet}}" data-dtype="Number" autocomplete="off" autofocus required />
+                            <span class="floating-label">Svårighet</span>
+                        </div>
+                    </div>  
+                    <div class="information-area information-box">Varje runda: Utmattningen ökar med Blödningstakten.</div>  
+                </div>      
             </div>
         </div>
-        <div class="clear">
-            <div class="pullLeft two-column">
-                <div class="headline">Infektion</div>        
-                <div class="clear">
-                    <div class="pullLeft resource-box number-value-text floating-label-group">
-                        <input name="system.skada.infektion" class="attribute-value editable" type="text" value="{{data.system.skada.infektion}}" data-dtype="Number" autocomplete="off" autofocus required />
-                        <span class="floating-label">Nivå</span>
+        <div class="item-row one-column">
+            <div class="two-column">
+                <div class="headline">Infektion</div>   
+                <div class="three-quarter-column">
+                    <div class="item-row">
+                        <div class="resource-box number-value-text floating-label-group">
+                            <input name="system.skada.infektion" class="attribute-value editable skill-label skill-value" type="text" value="{{data.system.skada.infektion}}" data-dtype="Number" autocomplete="off" autofocus required />
+                            <span class="floating-label">Nivå</span>
+                        </div>
+                        <div class="resource-box number-value-text floating-label-group">
+                            <input name="system.skada.infektionsvarighet" class="attribute-value editable skill-label skill-value" type="text" value="{{data.system.skada.infektionsvarighet}}" data-dtype="Number" autocomplete="off" autofocus required />
+                            <span class="floating-label">Svårighet</span>
+                        </div>
                     </div>
-                    <div class="pullLeft resource-box number-value-text floating-label-group">
-                        <input name="system.skada.infektionsvarighet" class="attribute-value editable" type="text" value="{{data.system.skada.infektionsvarighet}}" data-dtype="Number" autocomplete="off" autofocus required />
-                        <span class="floating-label">Svårighet</span>
-                    </div>
-                </div>
-                <div class="information-area">Varje dygn: Dödsslag mot svårigheten. Nivån medför Grundutmattning.</div>
+                    <div class="information-area information-box">Varje dygn: Dödsslag mot svårigheten. Nivån medför Grundutmattning.</div>
+                </div>     
             </div>
 
-            <div class="pullLeft two-column">
-                <div class="headline">Inre skada</div>        
-                <div class="resource-box" data-value="{{data.system.skada.inreskada}}" data-name="skada">
-                    {{#numFromLoop 1 3}}
-                        <span class="resource-box resource-box-center resource-value" data-index="{{this}}" data-value="inreskada"></span>
-                    {{/numFromLoop}}
-                </div>
-                <div class="information-area">Varje dygn och Inre skada: Slå 1T10 på tabellen för Inre skador.</div>
+            <div class="two-column">
+                <div class="headline">Inre skada</div> 
+                <div class="three-quarter-column">
+                    <div class="resource-box" data-value="{{data.system.skada.inreskada}}" data-name="skada">
+                        {{#numFromLoop 1 3}}
+                            <span class="resource-box resource-box-center resource-value" data-index="{{this}}" data-value="inreskada"></span>
+                        {{/numFromLoop}}
+                    </div>
+                    <div class="information-area information-box">Varje dygn och Inre skada: Slå 1T10 på tabellen för Inre skador.</div>
+                </div>       
             </div>
         </div>
     </div>
-    <div class="pullRight">
+    <div>
         <div class="headline">Sår</div>
         {{#each EON.CONFIG.kroppsdelar.grund as |kroppsdel key|}}
-            <div class="clear">
-                <div class="pullLeft" style="width: 75px;">{{kroppsdel}}</div>
-                <div class="pullLeft resource-box" data-value="{{getActorSar ../data key}}" data-name="skada">
+            <div class="item-row">
+                <div style="width: 75px;">{{kroppsdel}}</div>
+                <div class="resource-box" data-value="{{getActorSar ../data key}}" data-name="skada">
                     {{#numFromLoop 1 3}}
                         <span class="resource-box resource-value" data-index="{{this}}" data-type="sar" data-value="{{key}}"></span>
                     {{/numFromLoop}}
                 </div>
             </div>
         {{/each}}
-        <div class="information-area">-1T6 per kryss för påverkade slag</div>
+        <div class="information-area information-box">-1T6 per kryss för påverkade slag</div>
     </div>
 </div>
 
 <div class="item-box">
     <div>
-        <div class="clear">
+        <!-- <div class="clear">
             <div class="pullLeft large-headline">Allvarliga skador</div>
             <div class="pullLeft pointer">
                 <a class="item-create" title="Lägg till allvarlig skada" data-type="skada">
                     <i class="fa-solid fa-square-plus green"></i>
                 </a>
             </div>
-        </div>
-        <div class="clear headline" style="line-height: 25px; width:100%;">
-            <div class="pullLeft weapon-icon">&nbsp;</div>
-            <div class="pullLeft" style="width: 125px;">Namn</div>
+        </div> -->
+        <div class="item-row headline" style="line-height: 25px; width:100%; border-bottom-style: solid; border-bottom-width: 1px; border-top-style: solid; border-top-width: 1px;">
+            <div class="weapon-icon">
+                <a class="item-create" title="Lägg till allvarlig skada" data-type="skada">
+                    <i class="fa-solid fa-square-plus green"></i>
+                </a>
+            </div>
+            <div>Allvarliga skador</div>
         </div>
     </div>
     <div>
         {{#if (eq actor.system.listdata.skador.length 0)}}
-        <div class="clear" style="line-height: 25px; width:100%;">
+        <div class="item-row" style="line-height: 25px; width:100%;">
             Inga allvarliga skador
         </div>
         {{/if}}
         {{#each actor.system.listdata.skador as |skada key|}}
-            <div class="clear" style="line-height: 25px; width:100%;">
-                <div class="pointer pullLeft weapon-icon"><a class="item-edit" title="Editera skada" data-source="wound" data-itemid="{{skada._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
-                <div class="pullLeft" style="width: 125px;" data-source="wound" data-itemid="{{skada._id}}">{{skada.name}}</div>
+            <div class="item-row" style="line-height: 25px; width:100%;">
+                <div class="weapon-icon"><a class="item-edit" title="Editera skada" data-source="wound" data-itemid="{{skada._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+                {{#if (eq skada.system.beskrivning "")}}
+                    <div class="weapon-icon"><i class="icon fa-regular fa-share"></i></div>
+                {{else}}
+                    <div class="weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{skada._id}}"><i class="icon fa-solid fa-share"></i></a></div>
+                {{/if}}
+                <div style="width: 125px;" data-source="wound" data-itemid="{{skada._id}}">{{skada.name}}</div>
             </div>
         {{/each}}
     </div>

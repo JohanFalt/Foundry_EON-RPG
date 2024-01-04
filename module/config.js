@@ -98,12 +98,12 @@ eon.harleddegenskaper = {
 
 eon.fardighetgrupper = {
     strid: "Stridsfärdigheter",
-    rorelse: "Rörelsefärdigheter",
-    mystik: "Mystikfärdigheter",
+    rorelse: "Rörelsefärdigheter",    
     social: "Sociala färdigheter",
-    kunskap: "Kunskapsfärdigheter",
-    sprak: "Språkfärdigheter",
+    kunskap: "Kunskapsfärdigheter",    
     vildmark: "Vildmarksfärdigheter",
+    mystik: "Mystikfärdigheter",
+    sprak: "Språkfärdigheter",
     ovriga: "Övriga färdigheter"
 }
 

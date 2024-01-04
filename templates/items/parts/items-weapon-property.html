@@ -1,0 +1,26 @@
+<div class="item-headline large-headline">Egenskaper</div>
+<div class="item-section">
+    <div class="property-area">                
+        {{#each EON.egenskaper as |egenhet key|}}                        
+            <div class="item-row">
+                <div class="item-headline">{{egenhet.namn}}</div>
+                <div class="number-value-text item-row">
+                    <div>
+                        <input class="weapon-property" type="checkbox" {{#if (checkProperty ../item.system.egenskaper key)}} checked {{/if}} value="{{key}}" />
+                    </div>
+                    <div style="width: 25px;">
+                        {{#if (checkProperty ../item.system.egenskaper key)}}
+                            {{#if egenhet.harniva}}
+                                <input class="inputdata" style="width: 25px;" type="text" value="{{getPropertyLevel ../item.system.egenskaper key}}" data-source="weapon-property" data-dtype="Number" />
+                            {{else}}
+                                &nbsp;
+                            {{/if}}
+                        {{else}}
+                            &nbsp;
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>

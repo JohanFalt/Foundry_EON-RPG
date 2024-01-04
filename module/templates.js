@@ -15,7 +15,7 @@ export const PreloadHandlebarsTemplates = async function () {
     const templatePaths = [
         // Actor Sheet Partials
 		"systems/eon-rpg/templates/actors/parts/navigation.html",
-		"systems/eon-rpg/templates/actors/parts/navigation-mystic.html",
+
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-top.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-bio.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-trait.html",
@@ -31,7 +31,25 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-religion.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-setting.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-skill.html",
+
 		"systems/eon-rpg/templates/actors/parts/varelse-sheet-top.html",
+
+		"systems/eon-rpg/templates/items/parts/navigation-weapon.html",
+		"systems/eon-rpg/templates/items/parts/navigation-faith.html",
+		"systems/eon-rpg/templates/items/parts/navigation-spell.html",
+
+		"systems/eon-rpg/templates/items/parts/items-melee-weapon-data.html",
+		"systems/eon-rpg/templates/items/parts/items-missile-weapon-data.html",
+		"systems/eon-rpg/templates/items/parts/items-defence-weapon-data.html",
+		"systems/eon-rpg/templates/items/parts/items-weapon-property.html",
+
+		"systems/eon-rpg/templates/items/parts/items-faith-data.html",
+		"systems/eon-rpg/templates/items/parts/items-faith-skills.html",
+
+		"systems/eon-rpg/templates/items/parts/items-spell-data.html",
+		"systems/eon-rpg/templates/items/parts/items-spell-ritual.html",		
+
+		"systems/eon-rpg/templates/items/parts/items-description.html"
     ];
 
     /* Load the template parts
@@ -118,18 +136,55 @@ export const RegisterHandlebarsHelpers = function () {
 			dice = "0";
 		}
 
-		//return "Ob" + dice;
 		return dice;
 	});
 
-	// hämtar en särskild räckvidd
+	// hämtar en särskild färdighets namn
 	Handlebars.registerHelper("getSkillname", function(grupp, skill) {
 		return game.EON.fardigheter[grupp][skill].namn;
+	});
+
+	// hämtar en särskild färdighets namn
+	Handlebars.registerHelper("getSkillnameRitualList", function(list) {
+		let oversatt = "";
+
+		try {
+			for (const moment of list) {
+				if (oversatt != "") {
+					oversatt += ", ";
+				}
+	
+				oversatt += game.EON.fardigheter[moment.grupp][moment.fardighet].namn;
+			}
+		}
+		catch {
+			ui.notifications.warn("Fel visa ritual - momentfärdigheter", {permanent: false});
+		}		
+
+		return oversatt;
 	});
 
 	// hämtar en särskild grupp av färdigheterna
 	Handlebars.registerHelper("getActorSkillGroup", function(fardighetgrupp, grupp) {
 		return fardighetgrupp[grupp];
+	});
+
+	Handlebars.registerHelper("getActorSkillList", function(fardighetlista, grupper) {
+		let lista = [];
+
+		for (const grupp in grupper) {
+			if ((grupp =="mystik") || (grupp == "sprak") || (grupp == "ovriga")) {
+				continue;
+			}
+
+			for (const fardighet of fardighetlista[grupp]) {
+				lista.push(fardighet);
+			}			
+		}
+
+		lista.sort((a, b) => a.name.localeCompare(b.name));
+
+		return lista;
 	});
 
 	// hämtar en särskild grupp av vapnen
@@ -142,9 +197,6 @@ export const RegisterHandlebarsHelpers = function () {
 		if (isEmpty(skada)) {
 			return "&nbsp;";
 		}
-		/* if ((skada == "") || (skada == undefined)) {
-			return "&nbsp;";
-		} */
 
 		return vapenskador[skada];
 	});
@@ -154,9 +206,6 @@ export const RegisterHandlebarsHelpers = function () {
 		if (isEmpty(rackvidd)) {
 			return "&nbsp;";
 		}
-		/* if ((rackvidd == "") || (rackvidd == undefined)) {
-			return "&nbsp;";
-		} */
 
 		return rackviddlista[rackvidd].namn;
 	});
@@ -186,6 +235,15 @@ export const RegisterHandlebarsHelpers = function () {
 	// hämtar en särskild grupp av utrustning
 	Handlebars.registerHelper("getEquipmentGroup", function(utrustningsgrupp, grupp) {
 		return utrustningsgrupp[grupp];
+	});
+
+	// hämtar en särskild egenskap i en särskild lista
+	Handlebars.registerHelper("getListProperty", function(lista, nr, property) {
+		if (nr == -1) {
+			return "";
+		}
+
+		return lista[nr][property];
 	});
 
 	// lägger ihop två tärningspooler till en.
@@ -221,6 +279,24 @@ export const RegisterHandlebarsHelpers = function () {
 			"bonus": 0
 		}
 	});	
+
+	Handlebars.registerHelper("getSkillAreaHeight", function(fardigheter) {
+		let style = "";
+		let numGroup = 0;
+		let numSkill = 0;
+
+		for (const grupp in game.EON.CONFIG.fardighetgrupper) {
+			numGroup += 1;
+			numSkill = numSkill + fardigheter[grupp].length;
+		}
+
+		let height = parseInt(numSkill + numGroup) * 27 / 3;
+		height = Math.ceil(height);
+
+		style = `max-height: ${height}px`;
+
+		return style;
+	});
 
 	// hämtar erfarenhetspoängen på en särskild färdighet.
 	Handlebars.registerHelper("getActorSkillGroupExp", function(fardighetgrupp, grupp) {
@@ -455,6 +531,16 @@ export const RegisterHandlebarsHelpers = function () {
 		return game.EON.forsvar.rustningsmaterial[armor].namn;
 	});
 
+	Handlebars.registerHelper("propertyTrueInList", function(list, property) {
+		for(const item of list) {
+			if (item[property]) {
+				return true;
+			}
+		}
+
+		return false;
+	});
+
 	Handlebars.registerHelper("isChecked", function(value) {
 		if (value) {
 			return "checked";
@@ -462,9 +548,13 @@ export const RegisterHandlebarsHelpers = function () {
 
 		return "";
 	});
-	
+
 	Handlebars.registerHelper("setVariable", function(varName, varValue, options) {
 		options.data.root[varName] = varValue;
+	});
+	
+	Handlebars.registerHelper("enrichText", function(text) {
+		return TextEditor.enrichHTML(text, {async: false});
 	});
 		
 	Handlebars.registerHelper("numLoop", function (num, options) {
@@ -518,12 +608,19 @@ export const RegisterHandlebarsHelpers = function () {
 		return !found;
 	});
 
-	Handlebars.registerHelper("shorten", function (text, i) {
+	Handlebars.registerHelper("shorten", function (text, i, exact) {
 		let result = text;
 
 		if (text.length > i) {
-			if (text.length > i + 3) {
-				result = text.substring(0, i) + "...";
+			if (exact) {
+				if (text.length > i) {
+					result = text.substring(0, i);
+				}
+			}
+			else {
+				if (text.length > i + 3) {
+					result = text.substring(0, i) + "...";
+				}
 			}
 		}
 

@@ -1,17 +1,14 @@
 <form class="{{cssClass}}" autocomplete="off">
 
 	<div class="sheet-item">
-		<header class="sheet-header">			
-			
-		</header>
-		
-		<section class="item-body item-top">
-			<div style="display: flex;">
+		<header class="sheet-header item-top">			
+
+			<div class="item-row">
                 <div style="min-width: 110px;">
 					<img src="{{EON.CONFIG.ikoner.sprak}}" class="item img-block" />
 				</div>
 
-				<div class="pullLeft" style="min-width: 270px;">
+				<div class="item-column" style="min-width: 270px;">
 					<div class="item-property-area number-value-text floating-label-group">
 						<input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
 						<span class="floating-label">Namn</span>
@@ -22,17 +19,17 @@
 						<span class="floating-label">Referens</span>
 					</div>
 
-					<div class="clear item-property-area">
-						<div class="pullLeft" style="width: 100px;">Talar med brytning</div>
-						<div class="pullLeft"><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="talabrytning" {{isChecked data.system.talabrytning}} data-dtype="Boolean" /></div>
+					<div class="item-row">
+						<div class="headline-checkbox">Talar med brytning</div>
+						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="talabrytning" {{isChecked data.system.talabrytning}} data-dtype="Boolean" /></div>
 					</div>
-					<div class="clear item-property-area">
-						<div class="pullLeft" style="width: 100px;">Talar flytande</div>
-						<div class="pullLeft"><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="talaflytande" {{isChecked data.system.talaflytande}} data-dtype="Boolean" /></div>
+					<div class="item-row">
+						<div class="headline-checkbox">Talar flytande</div>
+						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="talaflytande" {{isChecked data.system.talaflytande}} data-dtype="Boolean" /></div>
 					</div>   
-					<div class="clear item-property-area">
-						<div class="pullLeft" style="width: 100px;">Kan läsa och skriva</div>
-						<div class="pullLeft"><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="lasaskriva" {{isChecked data.system.lasaskriva}} data-dtype="Boolean" /></div>
+					<div class="item-row">
+						<div class="headline-checkbox">Kan läsa och skriva</div>
+						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="lasaskriva" {{isChecked data.system.lasaskriva}} data-dtype="Boolean" /></div>
 					</div>
      
 				</div>
@@ -46,7 +43,9 @@
 					<div class="information-area top-sidetext">SPRÅK</div>
 				</div>
 			</div>
-			
+		</header>
+		
+		<section class="item-body">
 		</section>
 
 	</div>

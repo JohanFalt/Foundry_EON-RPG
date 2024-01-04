@@ -1,101 +1,118 @@
 <form class="{{cssClass}}" autocomplete="off">
 
-    <div class="item-section">
+    <div class="item-top">
+        <div class="item-section">
 
-        <div class="dialog-section-small">
+            <div class="dialog-section-small">
 
-            {{#if (eq object.typ "skill")}}       
-                <div class="large-main-headline centerText">{{object.namn}}</div>
+                {{#if (eq object.typ "skill")}}       
+                    <div class="large-main-headline centerText">{{object.namn}}</div>
+                
+                    <div class="centerText">
+                        {{#if (eq object.grundBonus 0)}}
+                            Ob{{object.grundTarning}}T6
+                        {{/if}}
+                        {{#if (lt object.grundBonus 0)}}
+                            Ob{{object.grundTarning}}T6-{{object.grundBonus}}
+                        {{/if}}
+                        {{#if (gt object.grundBonus 0)}}
+                            Ob{{object.grundTarning}}T6+{{object.grundBonus}}                    
+                        {{/if}}
+                    </div>
+                {{/if}}
+
+                {{#if (eq object.typ "mystery")}}
+                    <div class="large-main-headline centerText">{{object.namn}}</div>
+                {{/if}}
+
+                {{#if object.harBelastning}}
+                    <div class="centerText">Belastning (-{{getDiceValue object.actor.system.berakning.belastning.totaltavdrag}})</div>
+                {{/if}}
+                {{#if object.harSmarta}}
+                    <div class="centerText">Smärta (-{{object.actor.system.berakning.svarighet.smarta}}T6)</div>
+                {{/if}}
+                {{#if object.visaSar}}
+                    <div class="centerText" style="line-height: 26px; height: 26px; display: flex; margin-left: 185px;">
+                        Sår (-{{object.hamtaAntalSar}}T6)
+                        <input class="item-property pointer eventbutton" {{isChecked object.harSar}} type="checkbox" data-dtype="Boolean" data-source="set" data-value="harSar" />
+                    </div>
+                {{/if}}
+
+            </div>           
+        </div>
             
-                <div class="centerText">
-                    {{#if (eq object.grundBonus 0)}}
-                        Ob{{object.grundTarning}}T6
-                    {{/if}}
-                    {{#if (lt object.grundBonus 0)}}
-                        Ob{{object.grundTarning}}T6-{{object.grundBonus}}
-                    {{/if}}
-                    {{#if (gt object.grundBonus 0)}}
-                        Ob{{object.grundTarning}}T6+{{object.grundBonus}}                    
-                    {{/if}}
-                </div>
-            {{/if}}
+        <div class="item-section">
+            <div class="dialog-section">
 
-            {{#if (eq object.typ "mystery")}}
-                <div class="large-main-headline centerText">{{object.namn}}</div>
-            {{/if}}
+                {{#if (eq object.typ "skill")}}            
+                    <div>
+                        <div class="item-row centerText">
+                            <div class="two-column headline">Bonus</div>
+                            <div class="two-column headline">Avdrag</div>
+                        </div>            
+                        <div class="dice-row">
+                            <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1T6">+ ob1T6</button>
+                            <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1">+1</button>
+                            <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1T6">- ob1T6</button>
+                            <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1">-1</button>
+                        </div>
+                    </div>
+                    <div class="centerText">
+                        {{#if (lt object.grundBonus 0)}}
+                            Ob<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.tvarde}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.bonus}}" disabled readonly />
+                        {{else}}
+                            Ob<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.tvarde}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.bonus}}" disabled readonly />
+                        {{/if}}
+                        
+                    </div>
+                {{/if}}
+                
+                {{#if (eq object.typ "mystery")}}
+                    <div class="headline">Moment:</div>
+                    {{#each object.moment as |item key|}}                
+                        <div class="item-row">
+                            <div style="width: 200px;">{{getSkillname "mystik" item.fardighet}} {{#if item.huvud}}*{{/if}}</div>
+                            <div style="width: 50px;">{{item.svarighet}}</div>
+                            <div>{{item.tid}}</div>
+                        </div>
+                    {{/each}}
+                    <div class="information-area">Ovan färdigheter kommer slås med tillsatt svårighet.</div>
+                {{/if}}
 
-        </div>           
+            </div>   
+        </div> 
     </div>
-        
-    <div class="item-section">
-        <div class="dialog-section">
-
-            {{#if (eq object.typ "skill")}}            
-                <div>
-                    <div class="clear centerText">
-                        <div class="pullLeft two-column headline">Bonus</div>
-                        <div class="pullLeft two-column headline">Avdrag</div>
-                    </div>            
-                    <div class="dice-row">
-                        <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1T6">+ ob1T6</button>
-                        <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1">+1</button>
-                        <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1T6">- ob1T6</button>
-                        <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1">-1</button>
-                    </div>
-                </div>
-                <div class="centerText">
-                    {{#if (lt object.grundBonus 0)}}
-                        Ob<input class="attribute-value skill-label" type="text" value="{{object.totalTarning}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.totalBonus}}" disabled readonly />
-                    {{else}}
-                        Ob<input class="attribute-value skill-label" type="text" value="{{object.totalTarning}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.totalBonus}}" disabled readonly />
-                    {{/if}}
-                    
-                </div>
-            {{/if}}
-            
-            {{#if (eq object.typ "mystery")}}
-                <div>Moment:</div>
-                {{#each object.moment as |item key|}}                
-                    <div class="clear">
-                        <div class="pullLeft" style="width: 200px;">{{getSkillname "mystik" item.fardighet}} {{#if item.huvud}}*{{/if}}</div>
-                        <div class="pullLeft" style="width: 50px;">{{item.svarighet}}</div>
-                        <div class="pullLeft">{{item.tid}}</div>
-                    </div>
-                {{/each}}
-            {{/if}}
-
-        </div>   
-    </div> 
 
     {{#if (eq object.typ "skill")}}
 
-        <div class="item-section">
+        <div class="item-body">
+            <div class="item-section">
 
-            <div class="clear dialog-section-small">        
-                    
-                <div class="clear">
-                    <div class="pullLeft" style="width: 170px;">&nbsp;</div>
-                    <div class="pullLeft">
-                        <div class="floating-label-group">
-                            {{#if (eq object.svarighet "")}}
-                                <input id="difficulty" class="attribute-value skill-label" type="text" value="" disabled readonly />
-                            {{else}}
-                                <input id="difficulty" class="attribute-value skill-label" type="text" value="{{object.svarighet}}" disabled readonly />
-                            {{/if}}
-                            <span class="floating-label">Svårighet</span>
+                <div class="item-column dialog-section-small">        
+                        
+                    <div class="item-row">
+                        <div style="margin-left: 205px;">
+                            <div class="floating-label-group">
+                                {{#if (eq object.svarighet "")}}
+                                    <input id="difficulty" class="attribute-value skill-label" type="text" value="" disabled readonly />
+                                {{else}}
+                                    <input id="difficulty" class="attribute-value skill-label" type="text" value="{{object.svarighet}}" disabled readonly />
+                                {{/if}}
+                                <span class="floating-label">Svårighet</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <div class="dice-row">
-                        {{#numFromLoop 1 9}}
-                            <button class="dialog-event-button eventbutton" title="{{this}}"  style="width: 7%;" data-source="difficulty" data-value="{{this}}"><span>{{this}}</span></button>
-                        {{/numFromLoop}}
-                        <button class="dialog-event-button eventbutton" title="0" style="width: 7%;" data-source="difficulty" data-value="0"><span>0</span></button>
-                        <button class="dialog-event-button eventbutton" title="Rensa" style="width: 7%;" data-source="difficulty" data-value="clear"><span>...</span></button>
-                    </div>
-                </div>  
+                    <div>
+                        <div class="dice-row">
+                            {{#numFromLoop 1 9}}
+                                <button class="dialog-event-button eventbutton" title="{{this}}"  style="width: 7%;" data-source="difficulty" data-value="{{this}}"><span>{{this}}</span></button>
+                            {{/numFromLoop}}
+                            <button class="dialog-event-button eventbutton" title="0" style="width: 7%;" data-source="difficulty" data-value="0"><span>0</span></button>
+                            <button class="dialog-event-button eventbutton" title="Rensa" style="width: 7%;" data-source="difficulty" data-value="clear"><span>...</span></button>
+                        </div>
+                    </div>  
 
+                </div>
             </div>
         </div>
 

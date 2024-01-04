@@ -9,6 +9,33 @@ export const systemSettings = function() {
 		type: String,
 	});
 
+    game.settings.register("eon-rpg", "textfont", {
+		name: "Textfont",
+		hint: "Valda fonten till text (kräver omstart av Foundry)",
+		scope: "world",
+		config: true,
+		default: "eon1",
+		type: String,
+        choices: {
+			"eon1": "Eon font 1",
+            "normal": "Normal font"
+		}
+	});
+
+    game.settings.register("eon-rpg", "headlinefont", {
+		name: "Rubrikfont",
+		hint: "Valda fonten till rubriker (kräver omstart av Foundry)",
+		scope: "world",
+		config: true,
+		default: "eon1",
+		type: String,
+        choices: {
+			"eon1": "Eon rubrik-fonttyp 1",
+            "eon2": "Eon rubrik-fonttyp 2",
+            "normal": "Normal font"
+		}
+	});
+
     /* patch settings */
 	// game.settings.register("eon-rpg", "patch200", {
 	// 	name: "patch200",
@@ -52,6 +79,24 @@ export const systemSettings = function() {
 		default: true,
 		type: Boolean
 	});    
+
+    game.settings.register("eon-rpg", "hinderenceSkillGroupMovement", {
+		name: "Belastningsavdrag Rörelsefärdigheter",
+		hint: "Skall färdighetsgruppen Rörelsefärdigheter få avdrag för belastning automatiskt?",
+		scope: "world",
+		config: false,
+		default: true,
+		type: Boolean
+	});
+
+    game.settings.register("eon-rpg", "hinderenceAttributeMovement", {
+		name: "Belastningsavdrag Rörlighet",
+		hint: "Skall färdigheter med attributet Rörlighet få avdrag för belastning automatiskt?",
+		scope: "world",
+		config: false,
+		default: false,
+		type: Boolean
+	});
 
     /* Groups of settings */
     game.settings.registerMenu("eon-rpg", "bookSettings", {
@@ -199,7 +244,7 @@ export class Rules extends FormApplication {
         if (hasPermission) {
             for (let s of game.settings.settings.values()) {
                 // // Exclude settings the user cannot change
-                if (s.key == "weightRules") {
+                if ((s.key == "weightRules") || (s.key == "hinderenceSkillGroupMovement") || (s.key == "hinderenceAttributeMovement")) {
                     // Update setting data
                     const setting = duplicate(s);
 

@@ -141,11 +141,8 @@
 		
 		<section class="item-body">    
             
-            <div>
-                <div class="large-headline">Beskrivning</div>
-                <div class="editor-box">
-                    {{editor data.system.beskrivning target="system.beskrivning" button=true owner=owner editable=true}}
-                </div>
+            <div style="width: 450px;">
+                {{> "systems/eon-rpg/templates/items/parts/items-description.html"}}
             </div>
             
 		</section>

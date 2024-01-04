@@ -1,39 +1,38 @@
-<div class="clear">
-    <div class="large-headline">Allmänt</div>
+<div>
 
-    <div class="pullLeft info-box" style="display: flex; flex-flow: column; flex-wrap: wrap; max-height: 160px; width: 100%;">
+    <div class="item-column info-box" style="max-height: 160px; width: 100%;">
 
-        <div class="bio clear">
+        <div class="bio">
             <div class="number-value-text floating-label-group">
                 <input class="text-value editable skill-label" type="text" name="name" value="{{actor.name}}" data-dtype="String" style="width: 300px" />
                 <span class="floating-label skill-label">Namn</span>
             </div>
         </div>        
 
-        <div class="bio clear">
+        <div class="bio item-row">
 
-            <div class="pullLeft">
+            <div>
                 <div class="number-value-text floating-label-group">
                     <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 138px" name="system.bakgrund.kon" value="{{data.system.bakgrund.kon}}" />
                     <span class="floating-label skill-label">Kön</span>
                 </div>
             </div>
 
-            <div class="pullLeft">
+            <div>
                 <div class="number-value-text floating-label-group">
                     <input class="attribute-value editable skill-label" type="text" data-dtype="String" style="width: 50px" name="system.bakgrund.alder" value="{{data.system.bakgrund.alder}}" />
                     <span class="floating-label skill-label">Ålder</span>
                 </div>
             </div>
 
-            <div class="pullLeft">
+            <div>
                 <div class="number-value-text floating-label-group">
                     <input class="attribute-value editable skill-label" type="text" data-dtype="Strinh" style="width: 50px" name="system.bakgrund.langd" value="{{data.system.bakgrund.langd}}" />
                     <span class="floating-label skill-label">Längd</span>
                 </div>
             </div>
 
-            <div class="pullLeft">
+            <div>
                 <div class="number-value-text floating-label-group">
                     <input class="attribute-value editable skill-label" type="text" data-dtype="String" style="width: 50px" name="system.bakgrund.vikt" value="{{data.system.bakgrund.vikt}}" />
                     <span class="floating-label skill-label">Vikt</span>
@@ -41,7 +40,7 @@
             </div>
         </div>
 
-        <div class="bio clear">
+        <div class="bio">
             <div class="floating-label-group">
                 <select class="text-value editable" name="system.strid.vapenarm" id="system.strid.vapenarm" style="width: 300px">
                     {{#select data.system.strid.vapenarm}}                                        
@@ -55,7 +54,7 @@
             </div>
         </div>
 
-        <div class="bio clear">
+        <div class="bio">
             <div class="number-value-text floating-label-group">
                 <select class="text-value editable inputdata" id="folkslag" name="system.bakgrund.folkslag" data-source="folkslag" style="width: 300px">                    
                     {{#select data.system.bakgrund.folkslag}}
@@ -70,35 +69,35 @@
             </div>
         </div>
 
-        <div class="bio clear">
+        <div class="bio">
             <div class="number-value-text floating-label-group">
                 <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.religion" value="{{data.system.bakgrund.religion}}" />
                 <span class="floating-label skill-label">Religion</span>
             </div>
         </div>
 
-        <div class="bio clear">
+        <div class="bio">
             <div class="number-value-text floating-label-group">
                 <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.varv" value="{{data.system.bakgrund.varv}}" />
                 <span class="floating-label skill-label">Värv</span>
             </div>
         </div>
 
-        <div class="bio clear">
+        <div class="bio">
             <div class="number-value-text floating-label-group">
                 <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.hemort" value="{{data.system.bakgrund.hemort}}" />
                 <span class="floating-label skill-label">Hemort</span>
             </div>
         </div>        
 
-        <div class="bio clear">
+        <div class="bio">
             <div class="number-value-text floating-label-group">
                 <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.arketyp" value="{{data.system.bakgrund.arketyp}}" />
                 <span class="floating-label skill-label">Arketyp</span>
             </div>
         </div>
 
-        <div class="bio clear">
+        <div class="bio">
             <div class="number-value-text floating-label-group">
                 <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.miljo" value="{{data.system.bakgrund.miljo}}" />
                 <!-- <select class="text-value editable inputdata" id="miljo" name="system.bakgrund.miljo" data-source="miljo" style="width: 300px">
@@ -114,7 +113,7 @@
             </div>
         </div>
 
-        <div class="bio clear">
+        <div class="bio">
             <div class="number-value-text floating-label-group">
                 <input class="text-value editable skill-label" type="text" name="system.bakgrund.sysselsattning" value="{{data.system.bakgrund.sysselsattning}}" data-dtype="String" style="width: 300px" />
                 <span class="floating-label skill-label">Sysselsättning</span>
@@ -129,7 +128,7 @@
 
 <div class="large-headline">Anteckningar</div>
 <div class="editor-box">
-    {{editor data.system.bakgrund.beskrivning target="system.bakgrund.beskrivning" button=true owner=owner editable=true}}
+    {{editor (enrichText actor.system.bakgrund.beskrivning) target="system.bakgrund.beskrivning" button=true owner=owner editable=true}}
 </div>
 
 <!--<div class="clear">

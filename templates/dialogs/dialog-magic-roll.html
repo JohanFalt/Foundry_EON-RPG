@@ -1,150 +1,159 @@
 <form class="{{cssClass}}" autocomplete="off">
 
-    <div class="item-section">
+    <div class="item-top">
+        <div class="item-section">
 
-        <div class="dialog-section-small">
+            <div class="dialog-section-small">
 
-            <div class="large-main-headline centerText">{{captilize (getConfigPropertyName object.aspekt ../EON.CONFIG.aspekter)}}</div>
+                <div class="large-main-headline centerText">{{captilize (getConfigPropertyName object.aspekt ../EON.CONFIG.aspekter)}}</div>
 
-            <div class="centerText">
-                {{#if (eq object.grundBonus 0)}}
-                    Ob{{object.grundTarning}}T6
-                {{/if}}
-                {{#if (lt object.grundBonus 0)}}
-                    Ob{{object.grundTarning}}T6-{{object.grundBonus}}
-                {{/if}}
-                {{#if (gt object.grundBonus 0)}}
-                    Ob{{object.grundTarning}}T6+{{object.grundBonus}}                    
-                {{/if}}
-            </div>
-
-            {{#if (ne object.forsvar "")}}
-                <div class="centerText">{{{object.forsvar}}} mot {{object.anfall}}</div>
-            {{/if}}
-
-        </div>           
-    </div>
-        
-    <div class="item-section">
-        <div class="dialog-section">
-
-            <div>
-                <div class="clear centerText">
-                    <div class="pullLeft two-column headline">Bonus</div>
-                    <div class="pullLeft two-column headline">Avdrag</div>
-                </div>            
-                <div class="dice-row">
-                    <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1T6">+ ob1T6</button>
-                    <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1">+1</button>
-                    <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1T6">- ob1T6</button>
-                    <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1">-1</button>
+                <div class="centerText">
+                    {{#if (eq object.grundBonus 0)}}
+                        Ob{{object.grundTarning}}T6
+                    {{/if}}
+                    {{#if (lt object.grundBonus 0)}}
+                        Ob{{object.grundTarning}}T6-{{object.grundBonus}}
+                    {{/if}}
+                    {{#if (gt object.grundBonus 0)}}
+                        Ob{{object.grundTarning}}T6+{{object.grundBonus}}                    
+                    {{/if}}
                 </div>
-            </div>
-            <div class="centerText">
-                {{#if (lt object.grundBonus 0)}}
-                    Ob<input class="attribute-value skill-label" type="text" value="{{object.totalTarning}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.totalBonus}}" disabled readonly />
-                {{else}}
-                    Ob<input class="attribute-value skill-label" type="text" value="{{object.totalTarning}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.totalBonus}}" disabled readonly />
+
+                {{#if (ne object.forsvar "")}}
+                    <div class="centerText">{{{object.forsvar}}} mot {{object.anfall}}</div>
                 {{/if}}
-                
-            </div>
 
-        </div>   
-    </div> 
+                {{#if object.harSmarta}}
+                    <div class="centerText">Smärta (-{{object.actor.system.berakning.svarighet.smarta}}T6)</div>
+                {{/if}}
 
-    <div class="item-section">
-        <div class="dialog-section-small">
-            <div class="item-property-area" style="display: flex; flex-direction: row;">
-                <div style="width: 175px;">Anfall</div>
-                <div style="width: 125px;">{{object.anfall}}</div>
-                <div><i class="pointer fa-solid fa-square-plus improvication-icon" data-source="anfall"></i><i class="pointer fa-solid fa-minus-square improvication-icon" aria-hidden="true" data-source="anfall"></i></div>
-            </div>
+            </div>           
+        </div>
+            
+        <div class="item-section">
+            <div class="dialog-section">
 
-            {{#if object.varaktighet}}
-                <div class="item-property-area" style="display: flex; flex-direction: row;">
-                    <div style="width: 175px;">Varaktighet</div>
-                    <div style="width: 125px;">{{object.varaktighettyptext}}</div>
-                    <div><i class="pointer fa-solid fa-square-plus improvication-icon" data-source="varaktighet"></i><i class="pointer fa-solid fa-minus-square improvication-icon" aria-hidden="true" data-source="varaktighet"></i></div>
+                <div>
+                    <div class="clear centerText">
+                        <div class="pullLeft two-column headline">Bonus</div>
+                        <div class="pullLeft two-column headline">Avdrag</div>
+                    </div>            
+                    <div class="dice-row">
+                        <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1T6">+ ob1T6</button>
+                        <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1">+1</button>
+                        <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1T6">- ob1T6</button>
+                        <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1">-1</button>
+                    </div>
                 </div>
-            {{else}}
-                <div class="item-property-area" style="display: flex; flex-direction: row;">
-                    <div style="width: 175px;">Varaktighet</div>
-                    <div style="width: 125px;">
-                        {{#if object.koncentration}}
-                            Koncentration
-                        {{else if object.momentan}}
-                            Momentan
-                        {{else if object.immanent}}
-                            Immanent
-                        {{/if}}
-                    </div>                        
+                <div class="centerText">
+                    {{#if (lt object.grundBonus 0)}}
+                        Ob<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.tvarde}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.bonus}}" disabled readonly />
+                    {{else}}
+                        Ob<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.tvarde}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.bonus}}" disabled readonly />
+                    {{/if}}
+                    
                 </div>
-            {{/if}}
 
-            <div class="item-property-area" style="display: flex; flex-direction: row;">
-                {{#if object.omfang}}
-                    <div style="width: 175px;">Omfång</div>
-                    <div style="width: 125px;">{{object.omfangtyptext}}</div>
-                {{else}}
-                    <div style="width: 175px;">Antal mål</div>
-                    <div style="width: 125px;">{{object.omfangantal}} {{object.omfangtext}}</div>
-                {{/if}}
-                <div><i class="pointer fa-solid fa-square-plus improvication-icon" data-source="omfang"></i><i class="pointer fa-solid fa-minus-square improvication-icon" aria-hidden="true" data-source="omfang"></i></div>
-            </div>
+            </div>   
+        </div> 
 
-            <div class="item-property-area" style="display: flex; flex-direction: row;">
-                <div style="width: 175px;">Räckvidd</div>
-                {{#if object.rackvidd}}               
-                    <div style="width: 125px;">{{object.rackviddtyptext}}</div>
-                {{else}}
-                    <div style="width: 125px;">{{object.rackviddlangd}} {{object.rackviddenhet}}</div>
-                {{/if}}
-                <div><i class="pointer fa-solid fa-square-plus improvication-icon" data-source="rackvidd"></i><i class="pointer fa-solid fa-minus-square improvication-icon" aria-hidden="true" data-source="rackvidd"></i></div>
-            </div>
+        <div class="item-section">
+            <div class="centerText headline">Improviserad magi</div>
+            <div class="dialog-section-small">
+                <div class="item-property-area item-row">
+                    <div style="width: 175px;">Anfall</div>
+                    <div style="width: 125px;">{{object.anfall}}</div>
+                    <div><i class="pointer fa-solid fa-square-plus improvication-icon" data-source="anfall"></i><i class="pointer fa-solid fa-minus-square improvication-icon" aria-hidden="true" data-source="anfall"></i></div>
+                </div>
 
-            <div class="item-property-area" style="display: flex; flex-direction: row;">
-                <div style="width: 175px;">Överflöd</div>
-                {{#if (eq object.overflod 0)}}
-                    <div style="width: 125px;">&nbsp;</div>
+                {{#if object.varaktighet}}
+                    <div class="item-property-area item-row">
+                        <div style="width: 175px;">Varaktighet</div>
+                        <div style="width: 125px;">{{object.varaktighettyptext}}</div>
+                        <div><i class="pointer fa-solid fa-square-plus improvication-icon" data-source="varaktighet"></i><i class="pointer fa-solid fa-minus-square improvication-icon" aria-hidden="true" data-source="varaktighet"></i></div>
+                    </div>
                 {{else}}
-                    <div style="width: 125px;">{{object.overflod}}</div>
+                    <div class="item-property-area item-row">
+                        <div style="width: 175px;">Varaktighet</div>
+                        <div style="width: 125px;">
+                            {{#if object.koncentration}}
+                                Koncentration
+                            {{else if object.momentan}}
+                                Momentan
+                            {{else if object.immanent}}
+                                Immanent
+                            {{/if}}
+                        </div>                        
+                    </div>
                 {{/if}}
-                <div><i class="pointer fa-solid fa-square-plus improvication-icon" data-source="overflod"></i><i class="pointer fa-solid fa-minus-square improvication-icon" aria-hidden="true" data-source="overflod"></i></div>
+
+                <div class="item-property-area item-row">
+                    {{#if object.omfang}}
+                        <div style="width: 175px;">Omfång</div>
+                        <div style="width: 125px;">{{object.omfangtyptext}}</div>
+                    {{else}}
+                        <div style="width: 175px;">Antal mål</div>
+                        <div style="width: 125px;">{{object.omfangantal}} {{object.omfangtext}}</div>
+                    {{/if}}
+                    <div><i class="pointer fa-solid fa-square-plus improvication-icon" data-source="omfang"></i><i class="pointer fa-solid fa-minus-square improvication-icon" aria-hidden="true" data-source="omfang"></i></div>
+                </div>
+
+                <div class="item-property-area item-row">
+                    <div style="width: 175px;">Räckvidd</div>
+                    {{#if object.rackvidd}}               
+                        <div style="width: 125px;">{{object.rackviddtyptext}}</div>
+                    {{else}}
+                        <div style="width: 125px;">{{object.rackviddlangd}} {{object.rackviddenhet}}</div>
+                    {{/if}}
+                    <div><i class="pointer fa-solid fa-square-plus improvication-icon" data-source="rackvidd"></i><i class="pointer fa-solid fa-minus-square improvication-icon" aria-hidden="true" data-source="rackvidd"></i></div>
+                </div>
+
+                <div class="item-property-area item-row">
+                    <div style="width: 175px;">Överflöd</div>
+                    {{#if (eq object.overflod 0)}}
+                        <div style="width: 125px;">&nbsp;</div>
+                    {{else}}
+                        <div style="width: 125px;">{{object.overflod}}</div>
+                    {{/if}}
+                    <div><i class="pointer fa-solid fa-square-plus improvication-icon" data-source="overflod"></i><i class="pointer fa-solid fa-minus-square improvication-icon" aria-hidden="true" data-source="overflod"></i></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="item-section">
+    <div class="item-body">
 
-        <div class="clear dialog-section-small">        
-                
-            <div class="clear">
-                <div class="pullLeft" style="width: 170px;">&nbsp;</div>
-                <div class="pullLeft">
-                    <div class="floating-label-group">
-                        {{#if (eq object.svarighet "")}}
-                            <input id="difficulty" class="attribute-value skill-label" type="text" value="" disabled readonly />
-                        {{else if (eq object.improvisation 0)}}
-                            <input id="difficulty" class="attribute-value skill-label" type="text" value="{{object.svarighet}}" disabled readonly />
-                        {{else if (lt object.improvisation 0)}}
-                            <input id="difficulty" class="attribute-value skill-label" type="text" value="{{object.svarighet}} ({{object.improvisation}})" style="width: 75px;" disabled readonly />
-                        {{else if (gt object.improvisation 0)}}    
-                            <input id="difficulty" class="attribute-value skill-label" type="text" value="{{object.svarighet}} (+{{object.improvisation}})" style="width: 75px;" disabled readonly />
-                        {{/if}}
-                        <span class="floating-label">Svårdighet</span>
+        <div class="item-section">
+
+            <div class="item-column dialog-section-small">        
+                    
+                <div>
+                    <div style="margin-left: 205px;">
+                        <div class="floating-label-group">
+                            {{#if (eq object.svarighet "")}}
+                                <input id="difficulty" class="attribute-value skill-label" type="text" value="" disabled readonly />
+                            {{else if (eq object.improvisation 0)}}
+                                <input id="difficulty" class="attribute-value skill-label" type="text" value="{{object.svarighet}}" disabled readonly />
+                            {{else if (lt object.improvisation 0)}}
+                                <input id="difficulty" class="attribute-value skill-label" type="text" value="{{object.svarighet}} ({{object.improvisation}})" style="width: 75px;" disabled readonly />
+                            {{else if (gt object.improvisation 0)}}    
+                                <input id="difficulty" class="attribute-value skill-label" type="text" value="{{object.svarighet}} (+{{object.improvisation}})" style="width: 75px;" disabled readonly />
+                            {{/if}}
+                            <span class="floating-label">Svårdighet</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div>
-                <div class="dice-row">
-                    {{#numFromLoop 1 9}}
-                        <button class="dialog-event-button eventbutton" title="{{this}}"  style="width: 7%;" data-source="difficulty" data-value="{{this}}"><span>{{this}}</span></button>
-                    {{/numFromLoop}}
-                    <button class="dialog-event-button eventbutton" title="0"  style="width: 7%;" data-source="difficulty" data-value="0"><span>0</span></button>
-                    <button class="dialog-event-button eventbutton" title="Rensa" style="width: 7%;" data-source="difficulty" data-value="clear"><span>...</span></button>
-                </div>
-            </div>  
+                <div>
+                    <div class="dice-row">
+                        {{#numFromLoop 1 9}}
+                            <button class="dialog-event-button eventbutton" title="{{this}}"  style="width: 7%;" data-source="difficulty" data-value="{{this}}"><span>{{this}}</span></button>
+                        {{/numFromLoop}}
+                        <button class="dialog-event-button eventbutton" title="0"  style="width: 7%;" data-source="difficulty" data-value="0"><span>0</span></button>
+                        <button class="dialog-event-button eventbutton" title="Rensa" style="width: 7%;" data-source="difficulty" data-value="clear"><span>...</span></button>
+                    </div>
+                </div>  
 
+            </div>
         </div>
     </div>
 

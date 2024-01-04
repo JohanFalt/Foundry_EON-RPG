@@ -11,12 +11,19 @@
     src: url('../assets/fonts/vinque rg.otf') format("opentype");
 }
 
+@font-face {
+    font-family: "normal-text";
+    src: url('../assets/fonts/Sukhumala Regular.otf') format("opentype");
+}
+
 /* ROOT and variables */
 :root {
    
-    --eon-main-font: Verdana, Helvetica, sans-serif;    
-    --eon-main-headline: "rubrik", Helvetica, sans-serif;
-    --eon-main-large-headline: "stor-rubrik", Helvetica, sans-serif;
+    --eon-main-font: "normal-text", Helvetica, sans-serif;
+    --eon-main-font-norm: Verdana, Helvetica, sans-serif;
+    --eon-main-headline-norm: Verdana, Helvetica, sans-serif;
+    --eon-main-headline1: "rubrik", Helvetica, sans-serif;
+    --eon-main-headline2: "stor-rubrik", Helvetica, sans-serif;
 
     --eon-image-width: 105px;
 
@@ -24,6 +31,8 @@
     --eon-font-xsmall: 8px;
     --eon-font-small: 12px;
     --eon-font-large: 16px;
+    --eon-font-large18: 18px;
+    --eon-font-large20: 20px;
     --eon-font-x-large: 24px;
     --eon-font-tabsize: 14px;
 
@@ -49,11 +58,15 @@
 
 /* Sheet */
 
+.EON:not(.general-dialog) .window-content {
+    padding: 0px;
+}
+
 .EON.rollperson:not(.minimized) {
-    min-width: 800px;
-    width: 800px;
-    min-height: 1200px;
-    height: 1200px;
+    min-width: 850px;
+    width: 850px;
+    min-height: 1100px;
+    height: 1100px;
 }
 
 .EON.varelse:not(.minimized) {
@@ -72,7 +85,17 @@
 
 .EON.itemsheet.vapen:not(.minimized) {
     min-width: 700px;
+    max-width: 700px;
     width: 700px;
+    min-height: 500px;
+    height: 500px;
+}
+
+.EON.itemsheet.rustning:not(.minimized) {
+    min-height: 700px;
+    height: 700px;
+    min-width: 550px;
+    width: 550px;
 }
 
 .EON.itemsheet.besvarjelse:not(.minimized) {
@@ -86,8 +109,19 @@
     height: 600px;
 }
 
+.EON.general-dialog.besvarjelse:not(.minimized) {
+    min-height: 775px;
+    height: 775px;
+}
+
+.EON.general-dialog.vapen:not(.minimized) {
+    min-height: 700px;
+    height: 700px;
+}
+
 .EON.rollperson .window-content,
-.EON.varelse .window-content {
+.EON.varelse .window-content,
+.EON.general-dialog .window-content {
     background: var(--eon-sheet-background-color) no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -103,13 +137,35 @@
     background-size: cover;
 }
 
+.EON.itemsheet .item-body,
+.EON.general-dialog .item-body {
+    width: 100%;
+    padding-left: 8px;
+    padding-bottom: 8px;
+    padding-right: 8px;
+}
+
+.EON.itemsheet.vapen .item-body,
+.EON.itemsheet.besvarjelse .item-body,
+.EON.itemsheet.vapen .item-body {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
 .EON .sheet-item,
-.EON .sheet-character {
-    font-family: var(--eon-main-font);
+.EON .sheet-character {    
     color: var(--eon-sheet-text-color);
 }
 
-span.resource-value,
+.EON.normal-text {
+    font-family: var(--eon-main-font-norm);
+}
+
+.EON.eon-text {
+    font-family: var(--eon-main-font);
+}
+
+.EON span.resource-value,
 .EON input[type="text"],
 .EON input[type="number"],
 .EON select {
@@ -152,8 +208,12 @@ span.resource-value,
     font-weight: normal;
 }
 
-:EON .sheet-top {
+.EON .sheet-top,
+.EON .item-top {
     width: 100%;
+    padding-top: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 .EON .sheet-character,
@@ -167,6 +227,9 @@ span.resource-value,
 
 .EON .sheet-body {
     width: 100%;
+    padding-bottom: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 .EON .sheet-box {
@@ -176,8 +239,16 @@ span.resource-value,
 /* General */
 
 .EON .item-box {
-    min-height: 100px; 
+    min-height: 75px; 
     margin-bottom: 25px;
+}
+
+.EON .item-row {
+    display: flex; flex-wrap: wrap; flex-direction: row;
+}
+
+.EON .item-column {
+    display: flex; flex-wrap: wrap; flex-direction: column;
 }
 
 .EON .info-box {
@@ -201,24 +272,69 @@ span.resource-value,
     width:50%;
 }
 
-.EON .headline {
-    font-family: var(--eon-main-headline);
-    font-size: var(--eon-font-large);    
+.EON .headline {        
     font-weight: normal;
     margin-bottom: 5px;    
-    border-bottom: 1px solid var(--eon-border-color);
+    /* border-bottom: 1px solid var(--eon-border-color); */
+}
+
+.EON.normal-headline .headline {
+    font-family: var(--eon-main-headline-norm);
+    font-size: var(--eon-font-large);    
+}
+
+.EON.eon1-headline .headline {
+    font-family: var(--eon-main-headline1);
+    font-size: var(--eon-font-large18);
+}
+
+.EON.eon2-headline .headline {
+    font-family: var(--eon-main-headline2);
+    font-size: var(--eon-font-large20);
+}
+
+.EON .headline-background {
+    line-height: 25px; 
+    width:100%; 
+    border-bottom-style: solid; 
+    border-bottom-width: 1px; 
+    border-top-style: solid; 
+    border-top-width: 1px; 
+    /* background: rgba(156, 132, 109, 1); */
 }
 
 .EON .large-headline {
-    font-family: var(--eon-main-headline);
     font-size: var(--eon-font-x-large);   
     font-weight: normal;
 }
 
+.EON.normal-headline .large-headline {
+    font-family: var(--eon-main-headline-norm);
+}
+
+.EON.eon1-headline .large-headline {
+    font-family: var(--eon-main-headline1);
+}
+
+.EON.eon2-headline .large-headline {
+    font-family: var(--eon-main-headline2);
+}
+
 .EON .large-main-headline {
-    font-family: var(--eon-main-large-headline); 
-    font-size: var(--eon-font-x-large);   
+    font-size: var(--eon-font-x-large);
     font-weight: normal;
+}
+
+.EON.normal-headline .large-main-headline {
+    font-family: var(--eon-main-headline-norm);
+}
+
+.EON.eon1-headline .large-main-headline {
+    font-family: var(--eon-main-headline1);
+}
+
+.EON.eon2-headline .large-main-headline {
+    font-family: var(--eon-main-headline2);
 }
 
 .EON .tab .large-headline {
@@ -226,7 +342,11 @@ span.resource-value,
 }
 
 .EON .number-value-text {
-    font-family: var(--eon-main-font);
+}
+
+.EON .highlighted {
+    font-style: italic;
+    font-weight: bold;
 }
 
 .EON .pullLeft {
@@ -252,6 +372,14 @@ span.resource-value,
 .EON .clear {
     clear: both !important;
     overflow: hidden !important;
+}
+
+.EON .one-column {
+    width: 100%;
+}
+
+.EON .three-quarter-column {
+    width: 75%;
 }
 
 .EON .two-third-column {
@@ -296,7 +424,8 @@ span.resource-value,
 .EON .vrollable:focus {
     background: url('../assets/img/icons/perspective-dice-six-faces-six.svg');
     background-repeat: no-repeat;
-    background-size: contain;
+    /* background-size: contain; */
+    background-size: 23px;
     background-position: right;
 }
 
@@ -310,7 +439,7 @@ span.resource-value,
 
 .EON .dice-value {
     background-color: var(--eon-back-color-inputs);
-    font-family: var(--eon-main-font);
+    /* font-family: var(--eon-main-font); */
     width: 50px;
     text-align: center;
     margin-left: 5px;
@@ -319,10 +448,6 @@ span.resource-value,
     border: 1px solid var(--eon-border-color);
     height: var(--eon-line-height-default);
     line-height: var(--eon-line-height-default);
-}
-
-.EON.itemsheet .dice-value {
-    margin-left: 2px;
 }
 
 .EON .macroBtn {
@@ -338,10 +463,22 @@ span.resource-value,
     color: #7e7e7e;
     width: 100%;
     padding-top: 2px;
-    padding-bottom: 2px;
+    padding-bottom: 2px;    
 }
 
-.EON.itemsheet .top-sidetext {
+.EON .information-box {
+    background: #f3f3f3;
+    border: black;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 3px;
+    margin-top: 5px;
+    max-width: 200px;
+}
+
+.EON.itemsheet .top-sidetext,
+.EON.general-dialog .top-sidetext {
     color: #7e7e7e;
     font-weight: normal;
     font-size: 18px;
@@ -349,9 +486,14 @@ span.resource-value,
     writing-mode: vertical-rl;
 }
 
-.EON.itemsheet .information-area {
+.EON.itemsheet .information-area.top-sidetext,
+.EON.general-dialog .information-area.top-sidetext {
     padding: 5px;
     padding-top: 15px;
+}
+
+.EON .headline-background i {
+    font-size: 16px;
 }
 
 /* Slå tärning */
@@ -398,6 +540,10 @@ span.resource-value,
     line-height: var(--eon-line-height-floattext);
 }
 
+.EON.itemsheet .tabButton {
+    width: 33%;
+}
+
 .EON .tabIcon {
     width: 25px;
     min-width: 25px;
@@ -409,8 +555,6 @@ span.resource-value,
 }
 
 .EON .headlineTabs {
-    font-family: var(--eon-main-headline);
-    font-size: var(--eon-font-tabsize);    
     border-bottom-style: solid;
     border-bottom-width: 1px;
     border-top-style: solid;
@@ -418,21 +562,36 @@ span.resource-value,
     height: 30px;
 }
 
+.EON.normal-headline .headlineTabs {
+    font-family: var(--eon-main-headline-norm);
+    font-size: var(--eon-font-tabsize);
+}
+
+.EON.eon1-headline .headlineTabs {
+    font-family: var(--eon-main-headline1);
+    font-size: var(--eon-font-large);
+}
+
+.EON.eon2-headline .headlineTabs {
+    font-family: var(--eon-main-headline2);
+    font-size: var(--eon-font-large18);
+}
+
 /* Rutor / cirklar */
 
-.locked .resource-circle {
+.EON .locked .resource-circle {
     cursor: default;
 }
 
-.locked .resource-value {
+.EON .locked .resource-value {
     cursor: default;
 }
 
-.resource-circle {
+.EON .resource-circle {
     line-height: var(--eon-line-height-floattext);
 }
 
-.resource-circle .resource-value {
+.EON .resource-circle .resource-value {
   height: 14px;
   width: 14px;
   border: 1px solid var(--eon-border-color);
@@ -441,7 +600,7 @@ span.resource-value,
   cursor: pointer;
 }
 
-.resource-box .resource-value {
+.EON .resource-box .resource-value {
     height: 16px;
     width: 16px;
     border: 1px solid var(--eon-border-color);
@@ -449,11 +608,11 @@ span.resource-value,
     cursor: pointer;
 }
 
-span.resource-box-center {
+.EON span.resource-box-center {
     margin-top: calc(var(--eon-line-height-floattext) / 7);
 }
 
-.resource-value.active {
+.EON .resource-value.active {
     background:
       linear-gradient(
         45deg,
@@ -477,9 +636,9 @@ span.resource-box-center {
 
 /* TOPP */
 
-.attribute {
-    height: 25px;
-    line-height: 25px;
+.EON .attribute {
+    height: 26px;
+    line-height: 26px;
 }
 
 .resource-box-text {
@@ -503,9 +662,13 @@ span.resource-box-center {
 }
 
 .EON .navigation {
+    
+}
+
+.EON .sheet-character .navigation {
+    width: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
-    width: 100%;
 }
 
 .EON .sheet-character .profile-img {
@@ -534,6 +697,13 @@ span.resource-box-center {
     padding: 12px 5px;
     box-sizing: border-box; 
     width: 50px;
+    height: var(--eon-line-height-default);
+}
+
+.EON input.exp-value {
+    text-align: left;
+    padding: 12px 5px;
+    box-sizing: border-box; 
     height: var(--eon-line-height-default);
 }
 
@@ -592,8 +762,13 @@ input.skill-value {
     display: flex; 
     flex-wrap: wrap;
     flex-direction: column;
-    max-height: 700px;
 } 
+
+.EON .skill-row {
+    display: flex; 
+    flex-wrap: wrap;
+    flex-direction: row;    
+}
 
 .EON .skill,
 .EON .bio {
@@ -606,25 +781,37 @@ input.skill-value {
     margin-bottom: 3px;
 }
 
-.skill-headline.headline {
+.EON .skill-headline.headline {
     width: 71%;
 }
 
-.skill-short {
+.EON .skill-short {
     margin-left: 5px;
     line-height: 25px;
     width: 30px;
 }
 
-.skill-icon {
+.EON .skill-icon {
     margin-left: 15px;
 }
 
-.normalskill {
+.EON .language-icon {
+    margin-left: 55px;
+}
+
+.EON .normalskill {
     margin-left: 8px;
 }
 
 /* VAPEN */
+
+.EON.itemsheet.vapen .navigation {
+    display: none;
+}
+
+.EON.itemsheet.vapen .item-fullarea {
+    display: block;
+}
 
 .EON .weapon-icon {
     width: 20px;
@@ -634,11 +821,13 @@ input.skill-value {
     width: 30px;
 }
 
-/* ITEMS */
+/* RUSTNINGAR */
 
-.EON.itemsheet section.item-body {
-    padding-right: 30px;
+.EON .armor-area {
+    height: 200px;
 }
+
+/* ITEMS */
 
 .EON.itemsheet .item-area {
     margin-left: 10px;
@@ -647,6 +836,13 @@ input.skill-value {
 
 .EON.itemsheet .item-top {
     margin-bottom: 15px;
+}
+
+.EON.itemsheet .item-bottom {
+    width: 100%;
+    padding-bottom: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 .EON.itemsheet .item-section,
@@ -661,10 +857,19 @@ input.skill-value {
     border-radius: 5px;
 }
 
+.EON.itemsheet.vapen .item-section {
+    width: 650px;
+}
+
 .EON.itemsheet .large-icon {
     font-size: 24px;
     margin-top: 5px;
     margin-right: 5px;
+}
+
+.EON.itemsheet .headline-checkbox {
+    width: 125px;
+    line-height: 26px;
 }
 
 .EON.itemsheet input.text-value {
@@ -672,13 +877,6 @@ input.skill-value {
     padding: 12px 5px;
     box-sizing: border-box;
 }
-
-/* .EON.itemsheet input.attribute-value,
-.EON.rollperson input.attribute-value {
-    text-align: left;
-    padding: 12px 5px;
-    box-sizing: border-box;
-} */
 
 .EON.itemsheet .textbox-headline {
     line-height: 28px;
@@ -692,8 +890,8 @@ input.skill-value {
 }
 
 .EON.itemsheet .item-property-area {
-    height: 28px;
-    width: 270px;
+    height: 32px;
+    width: 280px;
 }
 
 .tic-container {    
@@ -708,7 +906,7 @@ input.skill-value {
     display: flex; 
     flex-wrap: wrap;
     flex-direction: column;
-    max-height: 300px;
+    max-height: 300px
 }
 
 .img-block {
@@ -747,18 +945,21 @@ input.skill-value {
 .floating-label-group .floating-label {
     position: absolute;
     pointer-events: none;
+    font-family: var(--eon-main-headline-norm);
     font-size: var(--eon-box-headline-size);
-    top: 0px;
+    top: -1px;
     left: 5px;
     transition: all 0.2s ease;
     opacity: 1;
 }
 .floating-label-group .floating-label.skill-label {
-    top: -8px;
-    /* left: 7px; */
+    top: -9px;
 }
 .floating-label-group .floating-label.text-label {
     top: -7px;
+}
+.floating-label-group .floating-label.ritual-label {
+    top: 0px;
 }
 .floating-label-group input:focus ~ .floating-label,
 .floating-label-group input:disabled ~ .floating-label,
@@ -787,7 +988,6 @@ input.skill-value {
 /* Dialogs */
 
 .EON.general-dialog .window-content {
-    font-family: var(--eon-main-font);
     color: var(--eon-sheet-text-color);
     font-size: var(--eon-font-small);
     font-weight: normal;
@@ -796,6 +996,14 @@ input.skill-value {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+}
+
+.EON.general-dialog .window-content {
+    font-family: var(--eon-main-font-norm);
+}
+
+.EON.general-dialog .window-content {
+    font-family: var(--eon-main-font);
 }
 
 .EON.general-dialog .dialog-section-small {
@@ -835,9 +1043,13 @@ input.skill-value {
         height: 800px;
     }
 
-    .EON.itemsheet.vapen:not(.minimized),
     .EON.itemsheet:not(.minimized) {
         min-height: 400px;
+    }
+
+    .EON.itemsheet.vapen:not(.minimized) {
+        min-height: 500px;
+        height: 500px;
     }
 }
 
@@ -850,10 +1062,14 @@ input.skill-value {
         height: 800px;
     }
 
-    .EON.itemsheet.vapen:not(.minimized),
     .EON.itemsheet:not(.minimized) {
         min-height: 400px;
     }
+
+    .EON.itemsheet.vapen:not(.minimized) {
+        min-height: 500px;
+        height: 500px;
+    }    
 }
 
 @media all and (max-width : 1280px) {
@@ -862,8 +1078,11 @@ input.skill-value {
         min-width: 400px;
     }
 
-    .EON.itemsheet.vapen:not(.minimized),
     .EON.itemsheet:not(.minimized) {
         min-width: 500px;
+    }
+
+    .EON.itemsheet.vapen:not(.minimized) {
+        min-width: 700px;
     }
 }

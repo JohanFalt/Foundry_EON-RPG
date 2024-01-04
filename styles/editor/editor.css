@@ -15,10 +15,6 @@
   flex: 1; /* NEW, */
 }
 
-/* .editor-box .editor {
-  min-height: 200px;
-} */
-
 .EON .editor .tox-editor-container {
   min-height: 200px;
   max-height: 210px;
@@ -30,7 +26,8 @@
 }
 
 .EON .editor-box,
-.EON .small-editor-box {
+.EON .small-editor-box,
+.EON .tall-editor-box {
   padding: 5px;
 }
 
@@ -47,5 +44,20 @@
 .EON .small-editor-box .editor .editor-content {
   min-height: 150px;
   max-height: 160px;
+}
+
+.EON .tall-editor-box .editor {
+  min-height: 220px;
+  max-height: 230px;
+}
+
+.EON .tall-editor-box .editor .tox-editor-container {
+  min-height: 220px;
+  max-height: 230px;
+} 
+
+.EON .tall-editor-box .editor .editor-content {
+  min-height: 220px;
+  max-height: 230px;
 }
 

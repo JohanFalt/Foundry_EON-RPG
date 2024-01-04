@@ -1,0 +1,145 @@
+<div style="min-width: 110px;">
+    <img src="{{EON.CONFIG.ikoner.besvarjelse}}" class="item img-block" />
+</div>
+
+<div class="item-area pullLeft">
+    <div class="item-top">
+        <div>
+            <div class="item-property-area number-value-text floating-label-group">
+                <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
+                <span class="floating-label">Namn</span>
+            </div>		
+
+            <div class="item-property-area" style="display: flex; flex-direction: row;">
+
+                <div class="dual-box number-value-text floating-label-group">
+                    <select class="text-value" name="system.aspekt">
+                        <option value="">- Välj -</option>
+                        {{#select item.system.aspekt}}										
+                            {{#each EON.CONFIG.aspekter as |aspekt key|}}
+                                <option value="{{key}}">{{aspekt}}</option>
+                            {{/each}}
+                        {{/select}}
+                    </select>
+                    <span class="floating-label">Aspekt</span>
+                </div>	
+
+                <div class="dual-box-right number-value-text floating-label-group">
+                    <input class="attribute-value editable" type="text" name="system.svarighet" value="{{item.system.svarighet}}" data-dtype="Number" autocomplete="off" autofocus required />
+                    <span class="floating-label">Svårighet</span>
+                </div>
+
+            </div>
+
+            <div class="item-property-area number-value-text floating-label-group">
+                <input class="text-value editable" type="text" name="system.forsvar" value="{{item.system.forsvar}}" data-dtype="String" autocomplete="off" autofocus required />
+                <span class="floating-label">Försvar</span>
+            </div>
+        
+            <div class="item-property-area number-value-text floating-label-group">
+                <input class="text-value editable" type="text" name="system.anfall" value="{{item.system.anfall}}" data-dtype="String" autocomplete="off" autofocus required />
+                <span class="floating-label">Anfall</span>
+            </div>
+
+            <div class="item-property-area number-value-text floating-label-group">
+                <input class="text-value editable" type="text" name="system.referens" value="{{item.system.referens}}" data-dtype="String" autocomplete="off" autofocus required />
+                <span class="floating-label">Referens</span>
+            </div>	
+        </div>	
+    </div>	
+    <div class="item-top">
+
+        <div class="item-column">
+            <div class="item-property-area number-value-text floating-label-group">
+                <select class="text-value" name="system.omfang.yta">
+                    {{#select item.system.omfang.yta}}	
+                        <option value="0">- Skräddarsydd -</option>									
+                        {{#each EON.CONFIG.magi.omradesomfang as |yta key|}}
+                            <option value="{{key}}">{{yta}}</option>
+                        {{/each}}
+                    {{/select}}
+                </select>
+                <span class="floating-label">Omfång</span>
+            </div>
+
+            <div class="item-property-area item-row">
+
+                <div class="number-value-text floating-label-group">
+                    <input class="attribute-value editable" type="text" name="system.omfang.antal" value="{{item.system.omfang.antal}}" data-dtype="Number" {{#if (eq item.system.omfang.yta 0)}}autocomplete="off" autofocus required{{else}}disabled readonly{{/if}} />
+                    <span class="floating-label">Antal mål</span>
+                </div>
+
+                <div class="dual-box-right number-value-text floating-label-group">
+                    <input class="text-value editable" type="text" name="system.omfang.text" value="{{item.system.omfang.text}}" data-dtype="String" {{#if (eq item.system.omfang.yta 0)}}autocomplete="off" autofocus required{{else}}disabled readonly{{/if}} />
+                    <span class="floating-label">Typ av mål</span>
+                </div>		
+                
+            </div>
+        </div>    
+    
+    </div>		
+    <div class="item-top">
+
+        <div class="item-column">
+            <div class="item-property-area number-value-text floating-label-group">
+                <select class="text-value" name="system.rackvidd.stracka">
+                    {{#select item.system.rackvidd.stracka}}										
+                        <option value="0">- Skräddarsydd -</option>	
+                        {{#each EON.CONFIG.magi.rackvidd as |rackvidd key|}}
+                            <option value="{{key}}">{{rackvidd}}</option>
+                        {{/each}}
+                    {{/select}}
+                </select>
+                <span class="floating-label">Räckvidd</span>
+            </div>
+
+            <div class="item-property-area item-row">
+
+                <div class="number-value-text floating-label-group">
+                    <input class="attribute-value editable" type="text" name="system.rackvidd.antal" value="{{item.system.rackvidd.antal}}" data-dtype="Number" {{#if (eq item.system.rackvidd.stracka 0)}}autocomplete="off" autofocus required{{else}}disabled readonly{{/if}} />
+                    <span class="floating-label">Sträcka</span>
+                </div>
+
+                <div class="dual-box-right number-value-text floating-label-group">
+                    <input class="text-value editable" type="text" name="system.rackvidd.text" value="{{item.system.rackvidd.text}}" data-dtype="String" {{#if (eq item.system.rackvidd.stracka 0)}}autocomplete="off" autofocus required{{else}}disabled readonly{{/if}} />
+                    <span class="floating-label">Sträcktyp</span>
+                </div>
+
+            </div>
+        </div>
+
+    </div>		
+    <div class="item-top">
+
+        <div class="item-column">
+            <div class="item-property-area number-value-text floating-label-group">
+                <select class="text-value" name="system.varaktighet.tid">
+                    {{#select item.system.varaktighet.tid}}										
+                        <option value="0">- Tillfällig -</option>	
+                        {{#each EON.CONFIG.magi.varaktighet as |varaktighet key|}}
+                            <option value="{{key}}">{{varaktighet}}</option>
+                        {{/each}}
+                    {{/select}}
+                </select>
+                <span class="floating-label">Varaktighet</span>
+            </div>
+    
+            <div class="item-row">
+                <div style="width: 100px;">Koncentration</div>
+                <div><input class="varaktighet pointer" type="checkbox" {{isChecked data.system.varaktighet.koncentration}} data-dtype="Boolean" data-field="varaktighet.koncentration" {{#if (gt item.system.varaktighet.tid 0)}}disabled readonly{{/if}} />
+                </div>
+            </div>
+        
+            <div class="item-row">
+                <div style="width: 100px;">Momentan</div>
+                <div><input class="varaktighet pointer" type="checkbox" {{isChecked data.system.varaktighet.momentan}} data-dtype="Boolean" data-field="varaktighet.momentan" {{#if (gt item.system.varaktighet.tid 0)}}disabled readonly{{/if}} /></div>
+            </div>
+        
+            <div class="item-row">
+                <div style="width: 100px;">Immanent</div>
+                <div><input class="varaktighet pointer" type="checkbox" {{isChecked data.system.varaktighet.immanent}} data-dtype="Boolean" data-field="varaktighet.immanent" {{#if (gt item.system.varaktighet.tid 0)}}disabled readonly{{/if}} /></div>
+            </div>
+        </div>
+    </div>         
+    
+</div>

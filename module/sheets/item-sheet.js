@@ -2,18 +2,25 @@ import CreateHelper from "../create-helper.js";
 import CalculateHelper from "../calculate-helper.js";
 
 export default class EonItemSheet extends ItemSheet {
-	
+
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
-			classes: ["EON itemsheet"]
+			classes: ["EON itemsheet"],
+			tabs: [{
+                navSelector: ".item-tabs",
+                contentSelector: ".sheet-header",
+                initial: "values",
+            }]
 		});
 	}
 
+	/** @override */
 	constructor(item, options) {
 		super(item, options);
 
 		this.isCharacter = false;	
-		this.isGM = game.user.isGM;			
+		this.isGM = game.user.isGM;		
+		this.selectedRitual = -1;
 	}
 
 	/** @override */
@@ -118,11 +125,18 @@ export default class EonItemSheet extends ItemSheet {
 		const data = await super.getData();
 
 		data.isCharacter = this.isCharacter;
+		data.isGM = this.isGM;
+		data.selectedRitual = parseInt(this.selectedRitual);
+
 		data.EON = game.EON;
 		data.EON.CONFIG = CONFIG.EON;
 
 		if (this.item.actor != null) {
 			data.hasActor = true;
+
+			if ((this.item.type == "Färdighet") && (this.item.system.grupp == "mystik") && (this.item.system.id == "teoretiskmagi")) {
+				data.item.system.installningar.kantabort = true;
+			}
 		}
 		else {
 			data.hasActor = false;
@@ -153,6 +167,14 @@ export default class EonItemSheet extends ItemSheet {
 		html
 			.find(".item-create")
 			.click(this._onItemCreate.bind(this));
+
+		html
+			.find(".item-edit")
+			.click(this._onItemEdit.bind(this));
+
+		html
+			.find(".item-save")
+			.click(this._onItemSave.bind(this));
 		
 		html
 			.find(".item-active")
@@ -183,14 +205,43 @@ export default class EonItemSheet extends ItemSheet {
             .click(this._setVapenEgenhet.bind(this));
 	}
 
+	/** @override */
+	async close(...args) {
+		await super.close(...args);
+
+		if (this.item.type == "Besvärjelse") {
+			const itemData = duplicate(this.item);	
+
+			for(const ritual of itemData.system.ritual) {
+				ritual.editera = false;
+			}
+
+			this.item.update(itemData);
+			this.selectedRitual = -1;
+		}
+	}
+
 	async _onItemCreate(event) {
 		event.preventDefault();
 
 		const header = event.currentTarget;
 		const type = header.dataset.type;
+		const source = header.dataset.source;
         const version = game.data.system.version;
-		let itemData;
+		const itemData = duplicate(this.item);
 
+		if ((type == "moment") && (source == "ritual")) {
+			if (this.selectedRitual == -1) {
+				return;
+			}
+
+			const itemData = duplicate(this.item);
+			itemData.system.ritual[this.selectedRitual].moment.push({grupp: "mystik", fardighet: "cermoni"});			
+			await this.item.update(itemData);
+
+			this.render();
+			return;
+		}
 		if (type == "moment") {
 			let moment = {
                 fardighet: "",
@@ -199,7 +250,6 @@ export default class EonItemSheet extends ItemSheet {
 				tid: ""
             };
 
-			const itemData = duplicate(this.item);
         	itemData.system.moment.push(moment);
         	await this.item.update(itemData);
 
@@ -207,7 +257,71 @@ export default class EonItemSheet extends ItemSheet {
 
 			return;
 		}
+		if (type == "ritual") {
+			let ritual = {
+				namn: "Ny ritual",
+				typ: "",
+				tid: "",
+				moment: [{grupp: "mystik", fardighet: "cermoni"}],
+				overtag: 0,
+				kostnad: 0,
+				bonus: 0,
+				editera: false,
+				beskrivning: ""
+			};
+
+        	itemData.system.ritual.push(ritual);
+        	await this.item.update(itemData);
+
+        	this.render();
+			return;
+		}
 	}
+
+	async _onItemEdit(event) {
+		event.preventDefault();
+        event.stopPropagation();
+
+        const element = event.currentTarget;
+		const dataset = element.dataset;
+
+        if (dataset.source == "ritual") {
+			const key = parseInt(dataset.itemid);
+			const itemData = duplicate(this.item);
+
+			for(const ritual of itemData.system.ritual) {
+				ritual.editera = false;
+			}
+
+			itemData.system.ritual[key].editera = !itemData.system.ritual[key].editera;
+			await this.item.update(itemData);
+
+			this.selectedRitual = key;
+        	this.render();
+            return;
+        }
+	}
+
+	async _onItemSave(event) {
+		event.preventDefault();
+        event.stopPropagation();
+
+        const element = event.currentTarget;
+		const dataset = element.dataset;
+
+        if (dataset.source == "ritual") {
+			const itemData = duplicate(this.item);
+
+			for(const ritual of itemData.system.ritual) {
+				ritual.editera = false;
+			}
+
+			await this.item.update(itemData);
+			this.selectedRitual = -1;
+			this.render();
+			return;
+        }
+	}	
 
 	async _onItemActive(event) {		
 		event.preventDefault();
@@ -247,10 +361,43 @@ export default class EonItemSheet extends ItemSheet {
 		if (dataset.type != undefined) {
 			const type = dataset.type;
 			const key = parseInt(dataset.key);
+			let source = undefined;
 
+			if (dataset.source != undefined) {
+				source = dataset.source;
+			}
+
+			if ((type == "moment") && (source == "ritual")) {
+				if (this.selectedRitual == -1) {
+					return;
+				}
+
+				const itemData = duplicate(this.item);
+
+				if (itemData.system.ritual[this.selectedRitual].moment.length > 1) {
+					itemData.system.ritual[this.selectedRitual].moment.splice(key, 1);
+				}
+				else {
+					itemData.system.ritual[this.selectedRitual].moment = [{grupp: "mystik", fardighet: "cermoni"}];
+				}
+				
+				await this.item.update(itemData);
+	
+				this.render();
+				return;
+			}
 			if (type == "moment") {
 				const itemData = duplicate(this.item);
 				itemData.system[type].splice(key, 1);
+				await this.item.update(itemData);
+	
+				this.render();
+				return;
+			}
+			if (type == "ritual") {
+				const itemData = duplicate(this.item);
+				itemData.system[type].splice(key, 1);
+
 				await this.item.update(itemData);
 	
 				this.render();
@@ -382,7 +529,7 @@ export default class EonItemSheet extends ItemSheet {
 		itemData.system.installningar.svarlard = false;
 		itemData.system.installningar.normal = true;
 
-		if ((dataset.field == "S") && (!this.item.system.installningar.svarlard)) {
+		if ((dataset.value == "S") && (!this.item.system.installningar.svarlard)) {
 			itemData.system.installningar.svarlard = true;
 			itemData.system.installningar.normal = false;
 		}
@@ -528,7 +675,7 @@ export default class EonItemSheet extends ItemSheet {
 		const component = "object." + property + "_" + key;
         var e = document.getElementById(component);
 
-        var newvalue 
+        var newvalue = "";
 		
 		if (property == "svarighet") {
 			newvalue = parseInt(e.value);
@@ -545,6 +692,68 @@ export default class EonItemSheet extends ItemSheet {
 		await this.item.update(itemData);
 
 		this.render();
+	}
+
+	async _setRitualData(event, key) {
+		const itemData = duplicate(this.item);
+
+		// for(const ritual of itemData.system.ritual) {
+		// 	ritual.editera = false;
+		// }
+
+		itemData.system.ritual[key].namn = document.getElementById("ritual.namn").value;
+
+		try {
+			itemData.system.ritual[key].bonus = parseInt(document.getElementById("ritual.bonus").value);
+		}
+		catch{
+			itemData.system.ritual[key].bonus = 0;
+			ui.notifications.warn("Fel läsa av ritual - bonus", {permanent: false});
+		}
+
+		try {
+			itemData.system.ritual[key].overtag = parseInt(document.getElementById("ritual.overtag").value);
+		}
+		catch{
+			itemData.system.ritual[key].overtag = 0;
+			ui.notifications.warn("Fel läsa av ritual - övertag", {permanent: false});
+		}
+
+		try {
+			itemData.system.ritual[key].kostnad = parseInt(document.getElementById("ritual.kostnad").value);
+		}
+		catch{
+			itemData.system.ritual[key].kostnad = 0;
+			ui.notifications.warn("Fel läsa av ritual - kostnad", {permanent: false});
+		}
+
+		try {
+			itemData.system.ritual[key].tid = document.getElementById("ritual.tid").value;
+		}
+		catch{
+			itemData.system.ritual[key].tid = "";
+			ui.notifications.warn("Fel läsa av ritual - tidsåtgång", {permanent: false});
+		}
+
+		try {
+			for (let value = 0; value < itemData.system.ritual[key].moment.length; value++) {
+				let grupp = document.getElementById("ritual.momentgrupp_" + value).value;
+
+				if (grupp == itemData.system.ritual[key].moment[value].grupp) {
+					itemData.system.ritual[key].moment[value].fardighet = document.getElementById("ritual.moment_" + value).value;
+				}
+				else {
+					itemData.system.ritual[key].moment[value].grupp = grupp;
+					itemData.system.ritual[key].moment[value].fardighet = "";
+				}			
+			}
+		}
+		catch {
+			itemData.system.ritual[key].moment = [{grupp: "mystik", fardighet: "cermoni"}];
+			ui.notifications.warn("Fel läsa av ritual - moment", {permanent: false});
+		}
+
+		await this.item.update(itemData);
 	}
 
 	/* when selecting what group an item belongs too */
@@ -736,6 +945,14 @@ export default class EonItemSheet extends ItemSheet {
 			itemData.name = game.EON.CONFIG.aspekter[value];
 			await this.item.update(itemData);
 			this.render();
+
+			return;
+		}
+
+		if (source == "ritual") {
+			const key = parseInt(this.selectedRitual);
+
+			await this._setRitualData(event, key);
 
 			return;
 		}

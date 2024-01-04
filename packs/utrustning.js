@@ -1102,7 +1102,7 @@ export const datautrustning = {
                 "installningar": {
                     "behallare": false
                 },
-                "namn": "Byxor, pälsalmhatt",
+                "namn": "Byxor, päls",
                 "vikt": 2.3,
                 "pris": 25
             },

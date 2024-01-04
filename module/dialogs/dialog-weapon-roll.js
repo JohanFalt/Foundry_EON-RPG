@@ -3,42 +3,62 @@ import DiceHelper from "../dice-helper.js";
 import { RollDice } from "../dice-helper.js";
 
 export class WeaponRoll {
+
+    #_totalTarning = 0;
+    #_totalBonus = 0;
+    #_grundTarning = 0;
+    #_grundBonus = 0;
+
+    #_isattack = true;
+    #_isdamage = false;
+    #_isdefence = false;
+
+    #_usehugg = false;
+    #_usekross = false;
+    #_usestick = false;
+
+    #_vapenskada = {
+        "tvarde": 0,
+        "bonus": 0
+    };
+
+    #_actorGrundskada = {
+        "tvarde": 0,
+        "bonus": 0
+    };
+
+    #_harSmarta = false;
+    #_harSar = false;
+    #_visaSar = false;
+
     constructor(actor, item) {
+        if (actor.system.berakning.svarighet.smarta > 0) {
+            this.#_harSmarta = true;
+        }
+
+        if ((actor.system.skada.sar.hogerarm > 0) || (actor.system.skada.sar.vansterarm > 0)) {
+            this.#_harSar = false;
+            this.#_visaSar = true;
+        }
+
         this.actorAttribut = {
 			"tvarde": 0,
 			"bonus": 0
 		};
 
-        this.grundTarning = 0;
-        this.grundBonus = 0;
-
-        this.totalTarning = 0;
-        this.totalBonus = 0;
+        this.actor = actor;
         this.actorAttributNamn = "";
-
         this.svarighet = "";
+        this.typ = "vapen";        
+        this.canroll = false;   
+        this.close = false;
 
         this.vapen = item;
         this.vapennamn = item["name"];
-        this.vapenskada = {
-			"tvarde": 0,
-			"bonus": 0
-		};
 
-        this.actorGrundskada = {
-			"tvarde": 0,
-			"bonus": 0
-		};
-
-        if (item.type == "Avståndsvapen") {
-            this.vapenskada = this.vapen.system.skada;
-        }
-        else if (item.type == "Sköld") {            
-            this.actorGrundskada = actor.system.harleddegenskaper.grundskada.totalt;
-            this.vapenskada = DiceHelper.AdderaVarden(this.vapen.system.skada, this.actorGrundskada);
-        }
-        else {
-            this.actorGrundskada = actor.system.harleddegenskaper.grundskada.totalt;
+        if (item.type == "Sköld") {            
+            this.#_isattack = false;
+            this.#_isdefence = true;             
         }
 
         // läs in värdena för vapenfärdigheten
@@ -48,18 +68,315 @@ export class WeaponRoll {
                 this.actorAttributNamn = fardighet.name;
                 break;
 			}
-		}
+		}     
 
-        this.isattack = false;
-        this.isdefense = false;   
-        this.isdamage = false;
+        this.setDamageType();
+
+        if (item.type == "Sköld") {
+            this.setCombatmode("defence");
+        }
+        else {
+            this.setCombatmode("attack");
+        }
         
-        this.usehugg = false;
-        this.usekross = false;
-        this.usestick = false;
+    }
+
+    get visaTarning() {
+        let tarning = {
+            tvarde: this.#_totalTarning,
+            bonus: this.#_totalBonus
+        };
+
+        if (!this.#_isdamage) {
+            if (this.#_harSmarta) {
+                tarning.tvarde = tarning.tvarde - this.actor.system.berakning.svarighet.smarta;
+    
+                if (tarning.tvarde < 0) {
+                    tarning.tvarde = 0;
+                    tarning.bonus = 0;
+                }       
+            }
+    
+            if (this.#_harSar) {
+                tarning.tvarde = tarning.tvarde - this.actor.system.skada.sar.hogerarm;
+                tarning.tvarde = tarning.tvarde - this.actor.system.skada.sar.vansterarm;
+    
+                if (tarning.tvarde < 0) {
+                    tarning.tvarde = 0;
+                    tarning.bonus = 0;
+                }   
+            }
+        }        
+
+        return tarning;
+    }
+
+    get visaGrundtarning() {
+        return {
+            tvarde: this.grundTarning,
+            bonus: this.grundBonus
+        };
+    }
+
+    get grundTarning() {
+        if (this.#_isattack) {
+            return this.actorAttribut.tvarde;
+        }
+        if (this.#_isdamage) {
+            return this.#_vapenskada.tvarde;
+        }
+        if (this.#_isdefence) {
+            return this.actorAttribut.tvarde;
+        }
+
+        return 0;
+    }
+
+    set grundTarning(value) {
+        this.#_grundTarning = value;
+    }
+
+    get grundBonus() {
+        if (this.#_isattack) {
+            return this.actorAttribut.bonus;
+        }
+        if (this.#_isdamage) {
+            return this.#_vapenskada.bonus;
+        }
+        if (this.#_isdefence) {
+            return this.actorAttribut.bonus;
+        }
+
+        return 0;
+    }
+
+    set grundBonus(value) {
+        this.#_grundBonus = value;
+    }
+
+    get totalTarning() {
+        return this.#_totalTarning;
+    }
+
+    get totalBonus() {
+        return this.#_totalBonus;
+    }
+
+    get harSmarta() {
+        return this.#_harSmarta;
+    }
+
+    get harSar() {
+        return this.#_harSar;
+    }
+
+    set harSar(aktiv) {
+        this.#_harSar = aktiv;
+    }
+
+    get visaSar() {
+        return this.#_visaSar;
+    }
+
+    get usehugg() {
+        return this.#_usehugg;
+    }
+
+    get usekross() {
+        return this.#_usekross;
+    }
+
+    get usestick() {
+        return this.#_usestick;
+    }
+
+    set usehugg(value) {
+        this.#_usehugg = value;
+    }
+
+    set usekross(value) {
+        this.#_usekross = value;
+    }
+
+    set usestick(value) {
+        this.#_usestick = value;
+    }
+
+    get isattack() {
+        return this.#_isattack;
+    }
+
+    get isdamage() {
+        return this.#_isdamage;
+    }
+
+    get isdefence() {
+        return this.#_isdefence;
+    }
+
+    get hamtaAntalSar() {
+        return this.actor.system.skada.sar.hogerarm + this.actor.system.skada.sar.vansterarm;
+    }
+
+    get harSar() {
+        return this.#_harSar;
+    }
+
+    set harSar(aktiv) {
+        this.#_harSar = aktiv;
+    }
+
+    addTicToTarning() {
+        if (this.#_totalBonus == 3) {
+            this.#_totalTarning += 1;
+            this.#_totalBonus = 0;
+        }
+        else {
+            this.#_totalBonus += 1;
+        }
+    }
+
+    addDiceToTarning() {
+        this.#_totalTarning += 1;
+    }
+
+    removeTicToTarning() {
+        if ((this.#_totalBonus == -1) && (this.#_totalTarning > 0)) {
+            this.#_totalTarning -= 1;
+            this.#_totalBonus = 3;
+        }
+        else if ((this.#_totalTarning == 0) && (this.#_totalBonus == 0)) {
+            // gör inget alls
+        }
+        else {
+            this.#_totalBonus -= 1;
+        }
+    }
+
+    removeDiceToTarning() {
+        if (this.#_totalTarning > 0) {
+            this.#_totalTarning -= 1;
+        }
+    }
+
+    setCombatmode(type = "") {
+        this.#_isattack = false;
+        this.#_isdamage = false;
+        this.#_isdefence = false;
+
+        if (type == "attack") {
+            this.#_isattack = true;
+            this.#_visaSar = true;
+            this.#_harSar = false;
+        }
+        else if (type == "damage") {
+            this.#_isdamage = true;   
+            this.#_visaSar = false;
+            this.#_harSar = false;         
+        }
+        else if (type == "defence") {
+            this.#_usehugg = false;
+            this.#_usekross = false;
+            this.#_usestick = false;
+
+            this.#_visaSar = true;
+            this.#_harSar = false;
+
+            this.#_isdefence = true;
+        }
+
+        this.setWeaponDamage();
+
+        this.#_totalTarning = this.grundTarning;
+        this.#_totalBonus = this.grundBonus;
+    }
+
+    setDamageType(type = "") {
+        this.#_usehugg = false;
+        this.#_usekross = false;
+        this.#_usestick = false;
+
+        if ((this.vapen.type == "Avståndsvapen") || (this.vapen.type == "Sköld")) {
+            if (this.vapen.system.skadetyp == "hugg") {
+                this.#_usehugg = true;
+            }
+            if (this.vapen.system.skadetyp == "kross") {
+                this.#_usekross = true;
+            }
+            if (this.vapen.system.skadetyp == "stick") {
+                this.#_usestick = true;
+            }
+        }
+        if (this.vapen.type == "Närstridsvapen") {
+            let antal = 0;
+
+            if (this.vapen.system.hugg.aktiv) {
+                antal += 1;
+                this.#_usehugg = true;
+            }
+            if (this.vapen.system.kross.aktiv) {
+                antal += 1;
+                this.#_usekross = true;
+            }
+            if (this.vapen.system.stick.aktiv) {
+                antal += 1;
+                this.#_usestick = true;
+            }
+
+            if (antal != 1) {
+                this.#_usehugg = false;
+                this.#_usekross = false;
+                this.#_usestick = false;
+            }
+        }
+        if (type == "hugg") {
+            this.#_usehugg = true;
+        }
+        if (type == "kross") {
+            this.#_usekross = true;
+        }
+        if (type == "stick") {
+            this.#_usestick = true;
+        }
+    }
+
+    setWeaponDamage(type = "") {
+        this.#_actorGrundskada = this.actor.system.harleddegenskaper.grundskada.totalt;
+
+        if (!this.#_isdamage) {
+            this.#_vapenskada = {
+                "tvarde": 0,
+                "bonus": 0
+            };
+        }
+        else if (this.vapen.type == "Avståndsvapen") {
+            this.#_vapenskada = this.vapen.system.skada;
+        }
+        else if (this.vapen.type == "Sköld") {            
+            this.#_vapenskada = DiceHelper.AdderaVarden(this.vapen.system.skada, this.#_actorGrundskada);
+        }
+        else if ((this.vapen.type == "Närstridsvapen") && (type != "")) {
+            this.#_vapenskada = this.#_actorGrundskada;
+
+            this.#_vapenskada = DiceHelper.AdderaVarden(this.vapen.system[type], this.#_actorGrundskada);            
+        }
+        else if (this.vapen.type == "Närstridsvapen") {
+            if (this.#_usehugg) {
+                this.#_vapenskada = DiceHelper.AdderaVarden(this.vapen.system.hugg, this.#_actorGrundskada);
+            }
+            if (this.#_usekross) {
+                this.#_vapenskada = DiceHelper.AdderaVarden(this.vapen.system.kross, this.#_actorGrundskada);
+            }
+            if (this.#_usestick) {
+                this.#_vapenskada = DiceHelper.AdderaVarden(this.vapen.system.stick, this.#_actorGrundskada);
+            } 
+        }   
         
-        this.canroll = false;   
-        this.close = false;
+        this.#_grundTarning = this.#_vapenskada.tvarde;
+        this.#_grundBonus = this.#_vapenskada.bonus;
+
+        this.#_totalTarning = this.#_grundTarning;
+        this.#_totalBonus = this.#_grundBonus;
     }
 }
 
@@ -109,9 +426,7 @@ export class DialogWeaponRoll extends FormApplication {
         html
             .find('.closebutton')
             .click(this._closeForm.bind(this));
-    }
-
-    
+    }    
 
     async _updateObject(event, formData) {
         if (this.object.close) {
@@ -127,75 +442,10 @@ export class DialogWeaponRoll extends FormApplication {
 
 		const element = event.currentTarget;
 		const dataset = element.dataset;
-        const type = dataset.type;
+        const type = dataset.type;   
 
-        this.object.usehugg = false;
-        this.object.usekross = false;
-        this.object.usestick = false;
-
-        if (type == "attack") {
-            this.object.isattack = true;
-            this.object.isdamage = false;
-            this.object.isdefense = false;  
-
-            this.object.grundTarning = this.object.actorAttribut.tvarde;
-            this.object.grundBonus = this.object.actorAttribut.bonus;
-
-            this.object.totalTarning = this.object.grundTarning;
-            this.object.totalBonus = this.object.grundBonus;
-
-            if ((this.object.vapen.type == "Avståndsvapen") || (this.object.vapen.type == "Sköld")) {
-                if (this.object.vapen.system.skadetyp == "hugg") {
-                    this.object.usehugg = true;
-                }
-                if (this.object.vapen.system.skadetyp == "kross") {
-                    this.object.usekross = true;
-                }
-                if (this.object.vapen.system.skadetyp == "stick") {
-                    this.object.usestick = true;
-                }
-            }
-        }
-        if (type == "damage") {
-            this.object.isattack = false;
-            this.object.isdamage = true;
-            this.object.isdefense = false; 
-
-            this.object.grundTarning = 0;
-            this.object.grundBonus = 0;
-            
-            if ((this.object.vapen.type == "Avståndsvapen") || (this.object.vapen.type == "Sköld")) {
-                if (this.object.vapen.system.skadetyp == "hugg") {
-                    this.object.usehugg = true;
-                }
-                if (this.object.vapen.system.skadetyp == "kross") {
-                    this.object.usekross = true;
-                }
-                if (this.object.vapen.system.skadetyp == "stick") {
-                    this.object.usestick = true;
-                }
-            }
-        }
-        if (type == "defense") {
-            this.object.isattack = false;
-            this.object.isdamage = false;
-            this.object.isdefense = true;   
-
-            this.object.grundTarning = this.object.actorAttribut.tvarde;
-            this.object.grundBonus = this.object.actorAttribut.bonus;
-
-            this.object.totalTarning = this.object.grundTarning;
-            this.object.totalBonus = this.object.grundBonus;
-        }
-        if (type == "hugg") {
-            this.object.usehugg = true;
-        }
-        if (type == "kross") {
-            this.object.usekross = true;
-        }
-        if (type == "stick") {
-            this.object.usestick = true;
-        }
+        this.object.setCombatmode(type);
+        this.object.setDamageType();
 
         this.render();
     }
@@ -207,24 +457,10 @@ export class DialogWeaponRoll extends FormApplication {
 		const dataset = element.dataset;
         const type = dataset.type;
 
-        if (this.object.isdamage) {
-            this.object.vapenskada = DiceHelper.AdderaVarden(this.object.vapen.system[type], this.object.actorGrundskada);
-
-            this.object.grundTarning = this.object.vapenskada.tvarde;
-            this.object.grundBonus = this.object.vapenskada.bonus;
-
-            this.object.totalTarning = this.object.vapenskada.tvarde;
-            this.object.totalBonus = this.object.vapenskada.bonus;
+        if (this.object.isdamage) {     
+            this.object.setDamageType(type);
+            this.object.setWeaponDamage(type); 
         }
-        else {
-            this.object.vapenskada = {
-                "tvarde": 0,
-                "bonus": 0
-            };
-
-            this.object.totalTarning = 0;
-            this.object.totalBonus = 0;
-        }        
 
         this.render();
     }
@@ -236,40 +472,26 @@ export class DialogWeaponRoll extends FormApplication {
         const element = event.currentTarget;
 		const dataset = element.dataset;
 
+        if (dataset?.source == "set") {
+            this.object[dataset.value] = !this.object[dataset.value];
+        }
         if (dataset?.source == "bonus") {
             let value = dataset.value;
 
             if (dataset?.action == "add") {
                 if (value == "1T6") {
-                    this.object.totalTarning += 1;
+                    this.object.addDiceToTarning();
                 }
                 else {
-                    if (this.object.totalBonus == 3) {
-                        this.object.totalTarning += 1;
-                        this.object.totalBonus = 0;
-                    }
-                    else {
-                        this.object.totalBonus += 1;
-                    }                    
+                    this.object.addTicToTarning();
                 }
             }
             if (dataset?.action == "remove") {
                 if (value == "1T6") {
-                    if (this.object.totalTarning > 0) {
-                        this.object.totalTarning -= 1;
-                    }
+                    this.object.removeDiceToTarning();
                 }
                 else {
-                    if ((this.object.totalBonus == -1) && (this.object.totalTarning > 0)) {
-                        this.object.totalTarning -= 1;
-                        this.object.totalBonus = 3;
-                    }
-                    else if ((this.object.totalTarning == 0) && (this.object.totalBonus == 0)) {
-                        // gör inget alls
-                    }
-                    else {
-                        this.object.totalBonus -= 1;
-                    }                   
+                    this.object.removeTicToTarning();
                 }
             }
         }
@@ -294,6 +516,29 @@ export class DialogWeaponRoll extends FormApplication {
             return;
         }
 
+        let description = "";
+
+        if ((this.object.harSmarta) && (!this.object.isdamage)) {
+            description += `${this.actor.system.berakning.svarighet.smarta}T6 smärta</br >`;
+        }
+
+        if (this.object.harSar) {
+            if (this.actor.system.skada.sar.hogerarm > 0) {
+                description += `Har ${this.actor.system.skada.sar.hogerarm} sår i höger arm (${this.actor.system.skada.sar.hogerarm}T6)<br />`;
+            }
+            if (this.actor.system.skada.sar.vansterarm > 0) {
+                description += `Har ${this.actor.system.skada.sar.vansterarm} sår i vänster arm (${this.actor.system.skada.sar.vansterarm}T6)<br />`;
+            }
+        }
+        if ((this.object.visaSar) && (!this.object.harSar)) {
+            if (this.actor.system.skada.sar.hogerarm > 0) {
+                description += `Ignorerar ${this.actor.system.skada.sar.hogerarm} sår i höger arm<br />`;
+            }
+            if (this.actor.system.skada.sar.vansterarm > 0) {
+                description += `Ignorerar ${this.actor.system.skada.sar.vansterarm} sår i vänster arm<br />`;
+            }
+        }
+
         const roll = new DiceRollContainer(this.actor, this.config);
         roll.typeroll = CONFIG.EON.slag.vapen;
         roll.action = this.object.vapennamn;                       
@@ -302,7 +547,7 @@ export class DialogWeaponRoll extends FormApplication {
 
         var grundvarde = "";
 
-        if ((this.object.totalTarning != this.object.grundTarning) || (this.object.totalBonus != this.object.grundBonus)) {
+        if ((this.object.visaTarning.tvarde != this.object.grundTarning) || (this.object.visaTarning.bonus != this.object.grundBonus)) {
             if (this.object.grundBonus == 0) {
                 grundvarde = `${this.object.grundTarning}T6`;
             }
@@ -314,10 +559,11 @@ export class DialogWeaponRoll extends FormApplication {
             }            
         }
 
+        roll.description = description;
         roll.grundvarde = grundvarde;
 
-        roll.number = this.object.totalTarning;
-        roll.bonus = this.object.totalBonus;
+        roll.number = this.object.visaTarning.tvarde;
+        roll.bonus = this.object.visaTarning.bonus;
 
         if (this.object.isdamage) {
             this.object.svarighet = "";
@@ -340,15 +586,13 @@ export class DialogWeaponRoll extends FormApplication {
             }
 
             roll.action = `Skadeslag ${this.object.vapennamn.toLowerCase()} (${skadetyp})`;
-            //roll.number = parseInt(this.object.vapenskada.tvarde);
-            //roll.bonus = parseInt(this.object.vapenskada.bonus);
         }
         else if (this.object.isdamage) {
             ui.notifications.error("Du måste välja vilken skadetype du använder dig av innan du slår med tärningarna.");
             this.object.close = false;
             return;
         }
-        else if (this.object.isdefense) {
+        else if (this.object.isdefence) {
             roll.action = `Försvarar med ${this.object.vapennamn.toLowerCase()}`;            
         }
         else {
@@ -364,19 +608,16 @@ export class DialogWeaponRoll extends FormApplication {
         const result = await RollDice(roll);
 
         if (this.object.isattack) {
-            this.object.isdamage = true;
-            this.object.isattack = false;
+            this.object.setCombatmode("damage");
             this.object.close = false;
-
-            this.object.totalTarning = 0;
-            this.object.totalBonus = 0;
-
-            this.render();
-            return;
         }
         else {
-            this.object.close = true;
-        }        
+            this.close();
+            return;      
+        }   
+
+        this.render();
+        return;
     }
 
     /* clicked to close form */

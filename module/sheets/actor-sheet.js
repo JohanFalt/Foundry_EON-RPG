@@ -1,6 +1,7 @@
 import DialogHelper from "../dialog-helper.js";
 import CreateHelper from "../create-helper.js";
 import CalculateHelper from "../calculate-helper.js";
+import { SendMessage } from "../dice-helper.js";
 
 export default class EonActorSheet extends ActorSheet {
 
@@ -200,6 +201,12 @@ export default class EonActorSheet extends ActorSheet {
         data.actor.system.berakning.utmattning.perrunda = this.actor.system.skada.blodning;
         data.actor.system.berakning.svarighet = [];
         data.actor.system.berakning.svarighet.smarta = this.actor.system.skada.smarta;   
+        data.actor.system.berakning.svarighet.antalsar = 0; 
+        
+        for (const kroppsdel in this.actor.system.skada.sar) {
+            data.actor.system.berakning.svarighet.antalsar += this.actor.system.skada.sar[kroppsdel];
+        }
+        
         data.actor.system.berakning.belastning = [];
 
         data.actor.system.berakning.belastning.vapen = 0;            
@@ -233,6 +240,7 @@ export default class EonActorSheet extends ActorSheet {
             data.actor.system.berakning.belastning.totaltavdrag = CalculateHelper.BeraknaBelastningAvdrag(data.actor.system.berakning.belastning.rustning);
         }
 
+        console.log(data.actor.name);
         console.log(data.actor);
         console.log(data.EON);
 
@@ -248,14 +256,6 @@ export default class EonActorSheet extends ActorSheet {
         html
 			.find('.inputdata')
 			.change(event => this._onsheetChange(event));
-
-        html
-            .find('.tic')
-			.click(this._ticValueUp.bind(this));
-
-		html
-			.find('.tic')
-			.on('contextmenu', this._ticValueDown.bind(this));
 
         html
             .find('.macroBtn')
@@ -295,6 +295,10 @@ export default class EonActorSheet extends ActorSheet {
         html
 			.find(".item-delete")
 			.click(this._onItemDelete.bind(this));
+
+        html
+            .find(".item-send")
+            .click(this._onItemSend.bind(this));
     }
  
     /** @override */
@@ -320,122 +324,6 @@ export default class EonActorSheet extends ActorSheet {
         
         super._onDropItem(_event, _data)
     }
-
-    /**
-        * Om man aktiverat att man skall ticka upp ett klick. Denna beräknar då upp tärningsvärdet med +1 Bonus
-        * och korrigerar detta om Bonus övergår till en ny tärning.
-        * @param _event
-    */
-    async _ticValueUp(event) {
-		event.preventDefault();
-
-		const element = event.currentTarget;
-		const dataset = element.dataset;
-
-        // om Item
-        if (dataset.itemid != undefined) {
-            const itemid = dataset.itemid;
-		    const item = this.actor.getEmbeddedDocument("Item", itemid);
-
-            const itemData = duplicate(item);
-
-            itemData.system.varde.bonus += 1;
-
-            if (itemData.system.varde.bonus > 3)  {
-                itemData.system.varde.tvarde += 1;
-                itemData.system.varde.bonus = 0;
-            }
-    
-            await item.update(itemData);
-            this.render();
-
-			return;
-        }
-
-        // om egenskap på Actor
-        const property = dataset.property;
-        const type = dataset.type;		
-
-		const actorData = duplicate(this.actor);	
-
-		actorData.system[property][type].grund.bonus += 1;
-	
-        if (actorData.system[property][type].grund.bonus > 3)  {
-			actorData.system[property][type].grund.tvarde += 1;
-			actorData.system[property][type].grund.bonus = 0;
-		}
-
-        await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
-		await this.actor.update(actorData);
-		this.render();
-	}
-
-    /**
-        * Om man aktiverat att man skall ticka ner ett klick. Denna beräknar då ner tärningsvärdet med -1 Bonus
-        * och korrigerar detta om Bonus övergår till en ny tärning.
-        * @param _event
-    */
-	async _ticValueDown(event) {
-		event.preventDefault();
-
-		const element = event.currentTarget;
-		const dataset = element.dataset;
-
-        // om Item
-        if (dataset.itemid != undefined) {
-            const itemid = dataset.itemid;
-		    const item = this.actor.getEmbeddedDocument("Item", itemid);
-
-            const itemData = duplicate(item);
-
-            if ((itemData.system.varde.tvarde == 0) && (itemData.system.varde.bonus == 0)) {
-                return;
-            }
-    
-            itemData.system.varde.bonus -= 1;        
-    
-            if (itemData.system.varde.bonus < -1) {
-                itemData.system.varde.tvarde -= 1;
-                itemData.system.varde.bonus = 3;
-            }
-    
-            if (itemData.system.varde.tvarde < 0) {
-                itemData.system.varde.tvarde = 0;
-                itemData.system.varde.bonus = 0;
-            }
-
-            await item.update(itemData);
-            this.render();
-
-			return;
-        }
-
-        // om egenskap på Actor
-        const property = dataset.property;
-        const type = dataset.type;
-
-		const actorData = duplicate(this.actor);		
-
-        if ((actorData.system[property][type].tvarde == 0) && (actorData.system[property][type].bonus == 0)) {
-            return;
-        }
-
-		actorData.system[property][type].bonus -= 1;        
-
-		if (actorData.system[property][type].bonus < -1) {
-			actorData.system[property][type].tvarde -= 1;
-			actorData.system[property][type].bonus = 3;
-		}
-
-		if (actorData.system[property][type].tvarde < 0) {
-			actorData.system[property][type].tvarde = 0;
-			actorData.system[property][type].bonus = 0;
-		}
-
-        await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
-		await this.actor.update(actorData);
-		this.render();
-	}
 
     /**
         * Denna funktion hanterar om man lägger till ett Item (Folkslag) på Actor och uppdaterar Actor enligt detta.
@@ -958,6 +846,23 @@ export default class EonActorSheet extends ActorSheet {
 
         return true;
 	}
+
+    _onItemSend(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const element = event.currentTarget;
+		const dataset = element.dataset;
+        const itemid = dataset.itemid;
+		const item = this.actor.getEmbeddedDocument("Item", itemid);
+
+        const headline = `${item.name} (${item.type.toLowerCase()})`;
+        const message = item.system.beskrivning;
+        
+        const enrichedMessage = TextEditor.enrichHTML(`${message}`, { async: false });
+
+        SendMessage(this.actor, CONFIG.EON, headline, enrichedMessage);        
+    }
 
     /**
         * Körs när något blir ändrat på rollformuläret som kan få vidare effekt för andra saker. Att man t ex ställer in något på Skräddarsytt.

@@ -3,26 +3,43 @@ import { RollDice } from "../dice-helper.js";
 import CalculateHelper from "../calculate-helper.js";
 
 export class SpellRoll {
+
+    #_totalTarning = 0;
+    #_totalBonus = 0;
+    #_grundTarning = 0;
+    #_grundBonus = 0;
+    #_tarningar;
+
+    #_harSmarta = false;
+
     constructor(item, actor) {
+        this.actor = actor;
         this.typ = "spell";
         this.namn = item.name;
         this.svarighet = item.system.svarighet;
         this.improvisation = 0;
         this.aspekt = item.system.aspekt;
 
-        this.grundTarning = 0;
-        this.grundBonus = 0;
+        // this.grundTarning = 0;
+        // this.grundBonus = 0;
+
+        if (actor.system.berakning.svarighet.smarta > 0) {
+            this.#_harSmarta = true;
+        }
 
         for (const fardighet of actor.system.listdata.fardigheter.mystik) {
             if (fardighet.system.id == item.system.aspekt) {
-                this.grundTarning = fardighet.system.varde.tvarde;
-                this.grundBonus = fardighet.system.varde.bonus;
+                this.#_tarningar = fardighet.system.varde
+                this.#_grundTarning = this.#_tarningar.tvarde;
+                this.#_grundBonus = this.tarningar.bonus;
+                this.#_totalTarning = this.#_tarningar.tvarde;
+                this.#_totalBonus = this.#_tarningar.bonus;  
                 break;
             }
         }
 
-        this.totalTarning = this.grundTarning;
-        this.totalBonus = this.grundBonus;
+        // this.totalTarning = this.grundTarning;
+        // this.totalBonus = this.grundBonus;
 
         if (item.system.forsvar != "") {
             this.forsvar = item.system.forsvar;
@@ -39,6 +56,17 @@ export class SpellRoll {
         if (this.varaktighet) {
             this.varaktighettyptext = CONFIG.EON.magi.varaktighet[item.system.varaktighet.tid];
         }
+        else {
+            if (item.system.varaktighet.koncentration) {
+                this.varaktighettyptext = "Koncentration";
+            }
+            if (item.system.varaktighet.momentan) {
+                this.varaktighettyptext = "Momentan";
+            }
+            if (item.system.varaktighet.immanent) {
+                this.varaktighettyptext = "Immanent";
+            }            
+        }
 
         this.varaktighettyp = item.system.varaktighet.tid;
         this.koncentration = item.system.varaktighet.koncentration;
@@ -52,6 +80,9 @@ export class SpellRoll {
         if (this.omfang) {
             this.omfangtyptext = CONFIG.EON.magi.omradesomfang[item.system.omfang.yta];
         }
+        else {
+            this.omfangtyptext = `${item.system.omfang.antal} ${item.system.omfang.text}`;
+        }
 
         this.omfangtyp = item.system.omfang.yta;
         this.omfangantal = item.system.omfang.antal;
@@ -63,6 +94,9 @@ export class SpellRoll {
         if (this.rackvidd) {
             this.rackviddtyptext = CONFIG.EON.magi.rackvidd[item.system.rackvidd.stracka];
         }
+        else {
+            this.rackviddtyptext = `${item.system.rackvidd.antal} ${item.system.rackvidd.text}`;
+        }
 
         this.rackviddtyp = item.system.rackvidd.stracka;
         this.rackviddlangd = item.system.rackvidd.antal;
@@ -73,6 +107,81 @@ export class SpellRoll {
         this.beskrivning = item.system.beskrivning;
 
         this.close = false;
+    }
+
+    get visaTarning() {
+        let tarning = {
+            tvarde: this.#_totalTarning,
+            bonus: this.#_totalBonus
+        };
+
+        if (this.#_harSmarta) {
+            tarning.tvarde = tarning.tvarde - this.actor.system.berakning.svarighet.smarta;
+
+            if (tarning.tvarde < 0) {
+                tarning.tvarde = 0;
+                tarning.bonus = 0;
+            }  
+        }
+
+        return tarning;
+    }
+
+    get grundTarning() {
+        return this.#_grundTarning;
+    }
+
+    get grundBonus() {
+        return this.#_grundBonus;
+    }
+
+    get tarningar() {
+        return this.#_tarningar;
+    }
+
+    get totalTarning() {
+        return this.#_totalTarning;
+    }
+
+    get totalBonus() {
+        return this.#_totalBonus;
+    }
+
+    get harSmarta() {
+        return this.#_harSmarta;
+    }
+
+    addTicToTarning() {
+        if (this.#_totalBonus == 3) {
+            this.#_totalTarning += 1;
+            this.#_totalBonus = 0;
+        }
+        else {
+            this.#_totalBonus += 1;
+        }
+    }
+
+    addDiceToTarning() {
+        this.#_totalTarning += 1;
+    }
+
+    removeTicToTarning() {
+        if ((this.#_totalBonus == -1) && (this.#_totalTarning > 0)) {
+            this.#_totalTarning -= 1;
+            this.#_totalBonus = 3;
+        }
+        else if ((this.#_totalTarning == 0) && (this.#_totalBonus == 0)) {
+            // gör inget alls
+        }
+        else {
+            this.#_totalBonus -= 1;
+        }
+    }
+
+    removeDiceToTarning() {
+        if (this.#_totalTarning > 0) {
+            this.#_totalTarning -= 1;
+        }
     }
 }
 
@@ -147,7 +256,6 @@ export class DialogSpellRoll extends FormApplication {
 
         this._setImprovisation(dataset, "down");
     }
-
 
     _setImprovisation(dataset, direction) {
 
@@ -321,37 +429,54 @@ export class DialogSpellRoll extends FormApplication {
         if (dataset?.source == "bonus") {
             let value = dataset.value;
  
+            // if (dataset?.action == "add") {
+            //     if (value == "1T6") {
+            //         this.object.totalTarning += 1;
+            //     }
+            //     else {
+            //         if (this.object.totalBonus == 3) {
+            //             this.object.totalTarning += 1;
+            //             this.object.totalBonus = 0;
+            //         }
+            //         else {
+            //             this.object.totalBonus += 1;
+            //         }                    
+            //     }
+            // }
+            // if (dataset?.action == "remove") {
+            //     if (value == "1T6") {
+            //         if (this.object.totalTarning > 0) {
+            //             this.object.totalTarning -= 1;
+            //         }
+            //     }
+            //     else {
+            //         if ((this.object.totalBonus == -1) && (this.object.totalTarning > 0)) {
+            //             this.object.totalTarning -= 1;
+            //             this.object.totalBonus = 3;
+            //         }
+            //         else if ((this.object.totalTarning == 0) && (this.object.totalBonus == 0)) {
+            //             // gör inget alls
+            //         }
+            //         else {
+            //             this.object.totalBonus -= 1;
+            //         }                   
+            //     }
+            // }
+
             if (dataset?.action == "add") {
                 if (value == "1T6") {
-                    this.object.totalTarning += 1;
+                    this.object.addDiceToTarning();
                 }
                 else {
-                    if (this.object.totalBonus == 3) {
-                        this.object.totalTarning += 1;
-                        this.object.totalBonus = 0;
-                    }
-                    else {
-                        this.object.totalBonus += 1;
-                    }                    
+                    this.object.addTicToTarning();  
                 }
             }
             if (dataset?.action == "remove") {
                 if (value == "1T6") {
-                    if (this.object.totalTarning > 0) {
-                        this.object.totalTarning -= 1;
-                    }
+                    this.object.removeDiceToTarning();
                 }
                 else {
-                    if ((this.object.totalBonus == -1) && (this.object.totalTarning > 0)) {
-                        this.object.totalTarning -= 1;
-                        this.object.totalBonus = 3;
-                    }
-                    else if ((this.object.totalTarning == 0) && (this.object.totalBonus == 0)) {
-                        // gör inget alls
-                    }
-                    else {
-                        this.object.totalBonus -= 1;
-                    }                   
+                    this.object.removeTicToTarning();      
                 }
             }
         }
@@ -386,8 +511,26 @@ export class DialogSpellRoll extends FormApplication {
 
         var info = [];
         var grundvarde = "";
+        var visadeTarningar = this.object.visaTarning;
+        var description = "";
 
-        if ((this.object.totalTarning != this.object.grundTarning) || (this.object.totalBonus != this.object.grundBonus)) {
+        if (this.object.harSmarta) {
+            description += `${this.actor.system.berakning.svarighet.smarta}T6 smärta<br />`;
+        }
+
+        // if ((this.object.totalTarning != this.object.grundTarning) || (this.object.totalBonus != this.object.grundBonus)) {
+        //     if (this.object.grundBonus == 0) {
+        //         grundvarde = `${this.object.grundTarning}T6`;
+        //     }
+        //     else if (this.object.grundBonus > 0) {
+        //         grundvarde = `${this.object.grundTarning}T6+${this.object.grundBonus}`;
+        //     }
+        //     else {
+        //         grundvarde = `${this.object.grundTarning}T6-${this.object.grundBonus}`;
+        //     }            
+        // }
+
+        if ((visadeTarningar.tvarde != this.object.grundTarning) || (visadeTarningar.bonus != this.object.grundBonus)) {
             if (this.object.grundBonus == 0) {
                 grundvarde = `${this.object.grundTarning}T6`;
             }
@@ -395,15 +538,17 @@ export class DialogSpellRoll extends FormApplication {
                 grundvarde = `${this.object.grundTarning}T6+${this.object.grundBonus}`;
             }
             else {
-                grundvarde = `${this.object.grundTarning}T6-${this.object.grundBonus}`;
+                grundvarde = `${this.object.grundTarning}T6${this.object.grundBonus}`;
             }            
         }
 
         const roll = new DiceRollContainer(this.actor, this.config);
         roll.typeroll = CONFIG.EON.slag.fardighet;
         roll.action = this.object.namn;
-        roll.number = parseInt(this.object.totalTarning);
-        roll.bonus = parseInt(this.object.totalBonus);
+        // roll.number = parseInt(this.object.totalTarning);
+        // roll.bonus = parseInt(this.object.totalBonus);
+        roll.number = this.object.visaTarning.tvarde;
+        roll.bonus = this.object.visaTarning.bonus;
 
         if ((this.object.svarighet != "") && (this.object.svarighet != undefined)) {
             roll.svarighet = parseInt(this.object.svarighet) + parseInt(this.object.improvisation);
@@ -413,6 +558,7 @@ export class DialogSpellRoll extends FormApplication {
         }
 
         roll.info = info; 
+        roll.description = description;
         roll.grundvarde = grundvarde;
 
         // Omfång

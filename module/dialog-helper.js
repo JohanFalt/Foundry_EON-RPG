@@ -15,9 +15,9 @@ export default class classDialogHelper {
 		const dataset = element.dataset; 
         const item = await actor.getEmbeddedDocument("Item", dataset.itemid);
 
-        const roll = new SkillRoll(item);
-		let skillRollUse = new DialogSkillRoll(actor, roll);
-		skillRollUse.render(true);
+        const roll = new SkillRoll(item, actor);
+        let skillRollUse = new DialogSkillRoll(actor, roll);
+        skillRollUse.render(true);
     }
 
     static async MysteryDialog(event, actor) {
@@ -25,9 +25,9 @@ export default class classDialogHelper {
 		const dataset = element.dataset; 
         const item = await actor.getEmbeddedDocument("Item", dataset.itemid);
 
-        const roll = new MysteryRoll(item);
-		let mysteryRollUse = new DialogMysteryRoll(actor, roll);
-		mysteryRollUse.render(true);
+        const roll = new MysteryRoll(item, actor);
+        let mysteryRollUse = new DialogMysteryRoll(actor, roll);
+        mysteryRollUse.render(true);
     }
 
     static async SpellDialog(event, actor) {
@@ -36,14 +36,14 @@ export default class classDialogHelper {
         const item = await actor.getEmbeddedDocument("Item", dataset.itemid);
 
         const roll = new SpellRoll(item, actor);
-		let spellRollUse = new DialogSpellRoll(actor, roll);
-		spellRollUse.render(true);
+		    let spellRollUse = new DialogSpellRoll(actor, roll);
+		    spellRollUse.render(true);
     }
 
     static async AttributeDialog(actor, type, key, title) {
         const roll = new AttributeRoll(actor, type, key, title);
-		let attributeRollUse = new DialogAttributeRoll(actor, roll);
-		attributeRollUse.render(true);
+		    let attributeRollUse = new DialogAttributeRoll(actor, roll);
+		    attributeRollUse.render(true);
     }
 
     static AttributeEditDialog(actor, type, key) {
@@ -53,19 +53,19 @@ export default class classDialogHelper {
     }
 
     static async WeaponDialog(event, actor) {
-		const element = event.currentTarget;
-		const dataset = element.dataset; 
+		    const element = event.currentTarget;
+		    const dataset = element.dataset; 
         const item = await actor.getEmbeddedDocument("Item", dataset.itemid);
 
         const roll = new WeaponRoll(actor, item);
-		let weaponRollUse = new DialogWeaponRoll(actor, roll);
-		weaponRollUse.render(true);
+		    let weaponRollUse = new DialogWeaponRoll(actor, roll);
+		    weaponRollUse.render(true);
     }
 
     static async CombatDialog(actor) {
         const roll = new CombatRoll(actor);
         let combatRollUse = new DialogCombat(actor, roll);
-		combatRollUse.render(true);
+		    combatRollUse.render(true);
     }
 
 }

@@ -1,6 +1,6 @@
 <div class="clear attribute" style="margin-bottom: 25px;">
     <div class="pullLeft three-column">
-        <div class="pullLeft headline">Borttoning</div>
+        <div class="pullLeft headline" style="margin-right: 45px;">Borttoning</div>
         <div class="pullLeft number-value-text"><input class="attribute-value editable skill-value" type="number" name="system.magi.borttoning" value="{{data.system.magi.borttoning}}" data-dtype="Number" /></div> 
     </div>    
 </div>
@@ -30,34 +30,36 @@
 
 <div class="item-box">
 
-    <div class="clear">
-        <div class="pullLeft large-headline">Formelsamling</div>
-        <div class="pullLeft pointer">
+    <div class="large-headline">Formelsamling</div>
+
+    <div class="headline headline-background item-row" style="line-height: 25px; width:100%;">
+        <div class="weapon-icon">
             <a class="item-create" title="Lägg till besvärjelse" data-type="besvärjelse">
                 <i class="fa-solid fa-square-plus green"></i>
             </a>
         </div>
-    </div>
-
-    <div class="clear headline" style="line-height: 25px; width:100%;">
-        <div class="pullLeft weapon-icon">&nbsp;</div>
-        <div class="pullLeft" style="width: 175px;">Namn</div>
-        <div class="pullLeft" style="width: 75px;">Aspekt</div>
-        <div class="pullLeft" style="width: 75px;">Svårighet</div>
-        <div class="pullLeft" style="width: 140px;">Omfång</div>
-        <div class="pullLeft" style="width: 140px;">Räckvidd</div>
-        <div class="pullLeft" style="width: 140px;">Varaktighet</div>
+        <div style="width: 195px;">Namn</div>
+        <div style="width: 75px;">Aspekt</div>
+        <div class="centerText" style="width: 80px;">Svårighet</div>
+        <div style="width: 140px;">Omfång</div>
+        <div style="width: 140px;">Räckvidd</div>
+        <div style="width: 140px;">Varaktighet</div>
     </div>
 
     {{#each actor.system.listdata.magi.besvarjelse as |kraft key|}}
-        <div class="clear" style="line-height: 25px; width:100%;">
-            <div class="pointer pullLeft weapon-icon"><a class="item-edit" title="Editera besvärjelse" data-source="besvärjelse" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
-            <div class="pullLeft vrollable" style="width: 175px;" data-source="spell" data-itemid="{{kraft._id}}">{{kraft.name}}</div>
-            <div class="pullLeft" style="width: 75px;">{{getConfigPropertyName kraft.system.aspekt ../EON.CONFIG.aspekter}}</div>
-            <div class="pullLeft" style="width: 75px;">{{kraft.system.svarighet}}</div>
-            <div class="pullLeft" style="width: 140px;">{{shorten (getSpellSetting kraft "omfang") 15}}</div>
-            <div class="pullLeft" style="width: 140px;">{{shorten (getSpellSetting kraft "rackvidd") 15}}</div>
-            <div class="pullLeft" style="width: 140px;">{{shorten (getSpellSetting kraft "varaktighet") 15}}</div>
+        <div class="item-row" style="line-height: 25px; width:100%;">
+            <div class="weapon-icon"><a class="item-edit" title="Editera besvärjelse" data-source="besvärjelse" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            {{#if (eq kraft.system.beskrivning "")}}
+                <div class="weapon-icon"><i class="icon fa-regular fa-share"></i></div>
+            {{else}}
+                <div class="weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-share"></i></a></div>
+            {{/if}}
+            <div class="vrollable" style="width: 175px;" data-source="spell" data-itemid="{{kraft._id}}">{{kraft.name}}</div>
+            <div style="width: 75px;">{{getConfigPropertyName kraft.system.aspekt ../EON.CONFIG.aspekter}}</div>
+            <div class="centerText" style="width: 80px;">{{kraft.system.svarighet}}</div>
+            <div style="width: 140px;">{{shorten (getSpellSetting kraft "omfang") 15 false}}</div>
+            <div style="width: 140px;">{{shorten (getSpellSetting kraft "rackvidd") 15 false}}</div>
+            <div style="width: 140px;">{{shorten (getSpellSetting kraft "varaktighet") 15 false}}</div>
         </div>
     {{/each}}
  
@@ -65,28 +67,30 @@
 
 <div class="item-box">
 
-    <div class="clear">
-        <div class="pullLeft large-headline">Kongelat</div>
-        <div class="pullLeft pointer">
+    <div class="large-headline">Kongelat</div>
+
+    <div class="headline headline-background item-row" style="line-height: 25px; width:100%;">
+        <div class="weapon-icon">
             <a class="item-create" title="Lägg till kongelat" data-type="kongelat">
                 <i class="fa-solid fa-square-plus green"></i>
             </a>
         </div>
-    </div>
-
-    <div class="clear headline" style="line-height: 25px; width:100%;">
-        <div class="pullLeft weapon-icon">&nbsp;</div>
-        <div class="pullLeft" style="width: 200px;">Aspekt</div>
-        <div class="pullLeft" style="width: 75px;">Magnitud</div>
-        <div class="pullLeft" style="width: 75px;">Antal</div>
+        <div style="width: 195px;">Aspekt</div>
+        <div class="centerText" style="width: 100px;">Magnitud</div>
+        <div class="centerText" style="width: 75px;">Antal</div>
     </div>
 
     {{#each actor.system.listdata.magi.kongelat as |kongelat key|}}
-        <div class="clear" style="line-height: 25px; width:100%;">
-            <div class="pointer pullLeft weapon-icon"><a class="item-edit" title="Editera kongelat" data-source="kongelat" data-itemid="{{kongelat._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
-            <div class="pullLeft" style="width: 200px;">{{getConfigPropertyName kongelat.name ../EON.CONFIG.aspekter}}</div>
-            <div class="pullLeft" style="width: 75px;">{{getPropertyLevel kongelat.system.egenskaper "magnitud"}}</div>
-            <div class="pullLeft" style="width: 75px;">{{kongelat.system.antal}} st</div>
+        <div class="item-row" style="line-height: 25px; width:100%;">
+            <div class="weapon-icon"><a class="item-edit" title="Editera kongelat" data-source="kongelat" data-itemid="{{kongelat._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            {{#if (eq kongelat.system.beskrivning "")}}
+                <div class="weapon-icon"><i class="icon fa-regular fa-share"></i></div>
+            {{else}}
+                <div class="weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{kongelat._id}}"><i class="icon fa-solid fa-share"></i></a></div>
+            {{/if}}
+            <div style="width: 175px;">{{getConfigPropertyName kongelat.name ../EON.CONFIG.aspekter}}</div>
+            <div class="centerText" style="width: 100px;">{{getPropertyLevel kongelat.system.egenskaper "magnitud"}}</div>
+            <div class="centerText" style="width: 75px;">{{kongelat.system.antal}} st</div>
         </div>
     {{/each}}
 
@@ -94,26 +98,28 @@
 
 <div class="item-box">
 
-    <div class="clear">
-        <div class="pullLeft large-headline">Fältstörning</div>
-        <div class="pullLeft pointer">
+    <div class="large-headline">Fältstörning</div>
+
+    <div class="headline headline-background item-row" style="line-height: 25px; width:100%;">
+        <div class="weapon-icon">
             <a class="item-create" title="Lägg till fältstörning" data-type="fältstörning">
                 <i class="fa-solid fa-square-plus green"></i>
             </a>
         </div>
-    </div>
-
-    <div class="clear headline" style="line-height: 25px; width:100%;">
-        <div class="pullLeft weapon-icon">&nbsp;</div>
-        <div class="pullLeft" style="width: 200px;">Aspekt</div>
-        <div class="pullLeft" style="width: 200px;">Nivå</div>
+        <div style="width: 195px;">Aspekt</div>
+        <div>Nivå</div>
     </div>
 
     {{#each actor.system.listdata.magi.faltstorning as |faltstorning key|}}
-        <div class="clear" style="line-height: 25px; width:100%;">
-            <div class="pointer pullLeft weapon-icon"><a class="item-edit" title="Editera fältstörning" data-source="faltstorning" data-itemid="{{faltstorning._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
-            <div class="pullLeft" style="width: 200px;">{{getConfigPropertyName faltstorning.name ../EON.CONFIG.aspekter}}</div>
-            <div class="pullLeft" style="width: 200px;">{{getConfigPropertyName faltstorning.system.niva ../EON.CONFIG.magi.faltstorning}}</div>
+        <div class="item-row" style="line-height: 25px; width:100%;">
+            <div class="weapon-icon"><a class="item-edit" title="Editera fältstörning" data-source="faltstorning" data-itemid="{{faltstorning._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            {{#if (eq faltstorning.system.beskrivning "")}}
+                <div class="weapon-icon"><i class="icon fa-regular fa-share"></i></div>
+            {{else}}
+                <div class="weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{faltstorning._id}}"><i class="icon fa-solid fa-share"></i></a></div>
+            {{/if}}
+            <div style="width: 175px;">{{getConfigPropertyName faltstorning.name ../EON.CONFIG.aspekter}}</div>
+            <div>{{getConfigPropertyName faltstorning.system.niva ../EON.CONFIG.magi.faltstorning}}</div>
         </div>
     {{/each}}    
 

@@ -1,0 +1,42 @@
+<div class="large-headline">Moment</div>    
+
+<div class="headline item-row" style="line-height: 25px; width:100%;">
+    <div class="pointer item-create weapon-icon" title="Lägg till moment" data-type="moment" style="margin-left: 5px; margin-right: 5px;"><i class="fa-solid fa-square-plus green"></i></div>
+    <div style="width: 150px;">Färdighet</div>
+    <div style="width: 100px;">Svårighet</div>
+    <div style="width: 100px;">Tid</div>
+</div>
+
+{{#each data.system.moment as |item key|}}
+    <div class="item-row" style="line-height: 25px; width:100%;">
+        <div><input class="weapon-icon pointer item-active" type="checkbox" id="object.huvud_{{key}}" title="Huvudmomentet" value="{{item.huvud}}" data-source="moment" data-key="{{key}}" data-egenskap="huvud" {{isChecked item.huvud}} /></div>
+        <div style="width: 150px;">
+            <select class="inputdata" id="object.fardighet_{{key}}" data-source="moment" data-key="{{key}}" data-egenskap="fardighet" style="width: 140px;">
+                <option>- Välj -</option>
+                {{#select item.fardighet}}
+                    {{#each ../EON.fardigheter.mystik as |fardighet key|}}
+                        <option value="{{key}}">{{fardighet.namn}}</option>
+                    {{/each}}
+                {{/select}}
+            </select>
+        </div>        
+        <div style="width: 100px;"><input class="inputdata" type="text" value="{{item.svarighet}}" id="object.svarighet_{{key}}" data-source="moment"  data-key="{{key}}" data-egenskap="svarighet" style="width: 90px;" /></div>
+        <div style="width: 100px;"><input class="inputdata" type="text" value="{{item.tid}}" id="object.tid_{{key}}" data-source="moment"  data-key="{{key}}" data-egenskap="tid" style="width: 90px;" /></div>
+        <div class="pointer red item-delete" title="Ta bort moment" data-type="moment" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
+    </div>
+{{/each}}
+
+<div class="clear">
+    <div class="pullLeft two-column">
+        <div class="large-headline textbox-headline">Mirakel</div>
+        <div class="tall-editor-box">
+            {{editor (enrichText item.system.mirakel) target="system.mirakel" button=true owner=owner editable=true}}
+        </div>
+    </div> 
+    <div class="pullLeft two-column">
+        <div class="large-headline textbox-headline">Cermoni</div>
+        <div class="tall-editor-box">
+            {{editor (enrichText item.system.cermoni) target="system.cermoni" button=true owner=owner editable=true}}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,108 @@
+<div style="min-width: 110px;">
+    {{#if (eq item.system.grupp "")}}
+        <img src="{{item.img}}" class="item img-block" />
+    {{/if}}
+    {{#if (eq item.system.grupp "armborst")}}
+        <img src="{{EON.CONFIG.ikoner.foremal_armborst}}" class="item img-block" />
+    {{/if}}
+    {{#if (eq item.system.grupp "bage")}}
+        <img src="{{EON.CONFIG.ikoner.foremal_bage}}" class="item img-block" />
+    {{/if}}
+    {{#if (eq item.system.grupp "kastvapen")}}
+        <img src="{{EON.CONFIG.ikoner.foremal_kastvapen}}" class="item img-block" />
+    {{/if}}
+</div>
+
+<div class="pullLeft" style="min-width: 270px;">
+    <div class="item-property-area number-value-text floating-label-group">
+        <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
+        <span class="floating-label">Namn</span>
+    </div>
+
+    <div class="item-property-area number-value-text floating-label-group">
+        <select class="text-value" name="system.grupp">
+            <option value="">- Välj -</option>
+            {{#select item.system.grupp}}
+                {{#each EON.CONFIG.vapengrupper as |vapengrupp key|}}
+                    {{#if (eq vapengrupp.grupp "avstandsvapen")}}
+                        <option value="{{key}}">{{vapengrupp.namn}}</option>
+                    {{/if}}
+                {{/each}}
+            {{/select}}
+        </select>
+        <span class="floating-label">Färdighet</span>
+    </div>
+
+    <div class="item-property-area number-value-text floating-label-group">
+        <select class="text-value inputdata" name="system.mall" data-source="weapon-range">
+            <option value="">- Välj -</option>                                       
+            {{#select item.system.mall}}    
+                <option value="{{item._id}}">- Skräddarsytt -</option> 
+                {{#each (getWeaponGroup EON.avstandsvapen item.system.grupp) as |vapen key|}}     
+                    <option value="{{key}}">{{vapen.namn}}</option>               
+                {{/each}}
+            {{/select}}
+        </select>
+        <span class="floating-label">Vapenmall</span>
+    </div>    
+    
+    <div class="item-property-area number-value-text floating-label-group">
+        <input class="attribute-value editable" name="system.langd" type="text" value="{{data.system.langd}}" data-dtype="Number" />
+        <span class="floating-label">Längd (cm)</span>
+    </div>
+
+    <div class="item-property-area number-value-text floating-label-group">
+        <input class="attribute-value editable" name="system.vikt" type="text" value="{{data.system.vikt}}" data-dtype="Number" />
+        <span class="floating-label">Vikt (kg)</span>
+    </div>
+
+    <div class="item-property-area number-value-text floating-label-group ">
+        <input class="attribute-value editable" name="system.pris" type="text" value="{{data.system.pris}}" data-dtype="Number" />
+        <span class="floating-label">Pris (silver)</span>
+    </div>
+
+    <div class="item-property-area number-value-text floating-label-group">
+        <select class="text-value" name="system.rackvidd">
+            <option value="">- Välj -</option>
+            {{#select item.system.rackvidd}}
+                {{#each EON.CONFIG.vapenavstand as |vapenavstand key|}}
+                    <option value="{{key}}">{{vapenavstand.namn}}</option>
+                {{/each}}
+            {{/select}}
+        </select>
+        <span class="floating-label">Räckvidd</span>
+    </div>
+
+    <div class="item-property-area" style="display: flex; flex-direction: row;">
+
+        <div class="number-value-text floating-label-group ">
+            <div class="dice-value number-value-text tic pointer" data-property="skada" style="margin-left: 2px;">{{getDiceValue item.system.skada}}</div>
+            <span class="floating-label">Skada</span>
+        </div>
+
+        <div class="dual-box number-value-text floating-label-group">
+            <select class="text-value" name="system.skadetyp">
+                <option value="">- Välj -</option>
+                {{#select item.system.skadetyp}}
+                    {{#each EON.CONFIG.vapenskador as |skadetyp key|}}
+                        <option value="{{key}}">{{skadetyp}}</option>
+                    {{/each}}
+                {{/select}}
+            </select>
+            <span class="floating-label">Skadetyp</span>
+        </div>
+    </div>                    
+
+    <div class="item-property-area clear">
+        <div class="pullLeft" style="width: 100px;">1H</div>
+        <div class="pullLeft"><input class="item-active" name="system.enhand.aktiv" type="checkbox" data-property="enhand" {{isChecked data.system.enhand.aktiv}} data-dtype="String" /></div>
+        <div class="pullLeft dice-value number-value-text tic pointer" data-property="enhand">{{getDiceValue item.system.enhand}}</div>
+    </div>
+
+    <div class="item-property-area clear">
+        <div class="pullLeft" style="width: 100px;">2H</div>
+        <div class="pullLeft"><input class="item-active" name="system.tvahand.aktiv" type="checkbox" data-property="tvahand" {{isChecked data.system.tvahand.aktiv}} data-dtype="String" /></div>
+        <div class="pullLeft dice-value number-value-text tic pointer" data-property="tvahand">{{getDiceValue item.system.tvahand}}</div>
+    </div>  
+                                         
+</div>   

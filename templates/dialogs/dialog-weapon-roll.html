@@ -1,83 +1,100 @@
 <form class="{{cssClass}}" autocomplete="off">
 
-    <div class="dialog-section-small">
-        <div class="large-main-headline centerText">{{object.vapennamn}}</div>
-        <div class="centerText">
-            Ob{{getDiceValue object.actorAttribut}}
-        </div>
-    </div>
+    <div class="item-top">
+        <div class="item-section">
+            <div class="dialog-section-small">
+                <div class="large-main-headline centerText">{{object.vapennamn}}</div>
+                <div class="centerText">
+                    Ob{{getDiceValue object.visaGrundtarning}}                    
+                </div>
 
-    <div class="dialog-area centerText">
-        <div class="clear">
-            <button class="three-button pullLeft mode {{#if object.isattack}}active{{/if}}" data-type="attack">Anfall</button>
-            <button class="three-button pullLeft mode {{#if object.isdamage}}active{{/if}}" data-type="damage">Skada</button>
-            <button class="three-button pullLeft mode {{#if object.isdefense}}active{{/if}}" data-type="defense">Försvar</button>
-        </div>
-
-        <div id="attack_area" class="clear" style="height: 40px;">
-            {{#if object.isdamage}}
-                {{#if object.vapen.system.hugg.aktiv}}
-                    <button class="attacktype three-button pullLeft mode {{#if object.usehugg}}active{{/if}}" data-type="hugg">Hugg</button>
+                {{#if (eq object.isdamage false)}}
+                    {{#if object.harSmarta}}
+                        <div class="centerText">Smärta (-{{object.actor.system.berakning.svarighet.smarta}}T6)</div>
+                    {{/if}}
+                    {{#if object.visaSar}}
+                        <div class="centerText" style="line-height: 26px; height: 26px; display: flex; margin-left: 185px;">Sår (-{{object.hamtaAntalSar}}T6) <input class="item-property pointer eventbutton" {{isChecked object.harSar}} type="checkbox" data-dtype="Boolean" data-source="set" data-value="harSar" /></div>
+                    {{/if}}
                 {{/if}}
-                {{#if object.vapen.system.kross.aktiv}}
-                    <button class="attacktype three-button pullLeft mode {{#if object.usekross}}active{{/if}}" data-type="kross">Kross</button>
-                {{/if}}
-                {{#if object.vapen.system.stick.aktiv}}
-                    <button class="attacktype three-button pullLeft mode {{#if object.usestick}}active{{/if}}" data-type="stick">Stick</button>
-                {{/if}}
-            {{else}}  
-                <div>&nbsp;</div>
-            {{/if}}
-            
-        </div>
-    </div>
+            </div>
 
-    <div class="dialog-section">
+            <div class="dialog-area centerText">
+                <div class="clear">
+                    <button class="three-button pullLeft mode {{#if object.isattack}}active{{/if}}" data-type="attack">Anfall</button>
+                    <button class="three-button pullLeft mode {{#if object.isdamage}}active{{/if}}" data-type="damage">Skada</button>
+                    <button class="three-button pullLeft mode {{#if object.isdefence}}active{{/if}}" data-type="defence">Försvar</button>
+                </div>
 
-        <div>
-            <div class="clear centerText">
-                <div class="pullLeft two-column headline">Bonus</div>
-                <div class="pullLeft two-column headline">Avdrag</div>
-            </div>            
-            <div class="dice-row">
-                <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1T6">+ ob1T6</button>
-                <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1">+1</button>
-                <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1T6">- ob1T6</button>
-                <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1">-1</button>
+                <div id="attack_area" class="clear" style="height: 40px;">
+                    {{#if object.isdamage}}
+                        {{#if object.vapen.system.hugg.aktiv}}
+                            <button class="attacktype three-button pullLeft {{#if object.usehugg}}active{{/if}}" data-type="hugg">Hugg</button>
+                        {{/if}}
+                        {{#if object.vapen.system.kross.aktiv}}
+                            <button class="attacktype three-button pullLeft {{#if object.usekross}}active{{/if}}" data-type="kross">Kross</button>
+                        {{/if}}
+                        {{#if object.vapen.system.stick.aktiv}}
+                            <button class="attacktype three-button pullLeft {{#if object.usestick}}active{{/if}}" data-type="stick">Stick</button>
+                        {{/if}}
+                    {{else}}  
+                        <div>&nbsp;</div>
+                    {{/if}}
+                    
+                </div>
             </div>
         </div>
-        <div class="centerText">
-            {{#if (lt object.grundBonus 0)}}
-                Ob<input class="attribute-value skill-label" type="text" value="{{object.totalTarning}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.totalBonus}}" disabled readonly />
-            {{else}}
-                Ob<input class="attribute-value skill-label" type="text" value="{{object.totalTarning}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.totalBonus}}" disabled readonly />
-            {{/if}}        
-        </div>
 
+        <div class="item-section">
+            <div class="dialog-section">
+
+                <div>
+                    <div class="clear centerText">
+                        <div class="pullLeft two-column headline">Bonus</div>
+                        <div class="pullLeft two-column headline">Avdrag</div>
+                    </div>            
+                    <div class="dice-row">
+                        <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1T6">+ ob1T6</button>
+                        <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1">+1</button>
+                        <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1T6">- ob1T6</button>
+                        <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1">-1</button>
+                    </div>
+                </div>
+                <div class="centerText">
+                    {{#if (lt object.grundBonus 0)}}
+                        Ob<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.tvarde}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.bonus}}" disabled readonly />
+                    {{else}}
+                        Ob<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.tvarde}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.bonus}}" disabled readonly />
+                    {{/if}}        
+                </div>
+
+            </div>
+        </div>
     </div>
 
     {{#if (eq object.isdamage false)}}
-        <div class="clear dialog-section-small">
 
-            <div class="clear">
-                <div class="pullLeft" style="width: 170px;">&nbsp;</div>
-                <div class="pullLeft">
-                    <div class="floating-label-group">
-                        <input id="difficulty" class="attribute-value skill-label" type="text" value="{{object.svarighet}}" disabled readonly />
-                        <span class="floating-label">Svårdighet</span>
+        <div class="item-body">
+
+            <div class="item-section">            
+                <div class="item-column dialog-section-small">
+
+                    <div style="margin-left: 205px;">
+                        <div class="floating-label-group">
+                            <input id="difficulty" class="attribute-value skill-label" type="text" value="{{object.svarighet}}" disabled readonly />
+                            <span class="floating-label">Svårdighet</span>
+                        </div>
                     </div>
+
+                    <div class="dice-row">
+                        {{#numFromLoop 1 9}}
+                            <button class="dialog-event-button eventbutton" title="{{this}}"  style="width: 7%;" data-source="difficulty" data-value="{{this}}"><span>{{this}}</span></button>
+                        {{/numFromLoop}}
+                        <button class="dialog-event-button eventbutton" title="0"  style="width: 7%;" data-source="difficulty" data-value="0"><span>0</span></button>
+                        <button class="dialog-event-button eventbutton" title="Rensa" style="width: 7%;" data-source="difficulty" data-value="clear"><span>...</span></button>
+                    </div>
+
                 </div>
             </div>
-            <div>
-                <div class="dice-row">
-                    {{#numFromLoop 1 9}}
-                        <button class="dialog-event-button eventbutton" title="{{this}}"  style="width: 7%;" data-source="difficulty" data-value="{{this}}"><span>{{this}}</span></button>
-                    {{/numFromLoop}}
-                    <button class="dialog-event-button eventbutton" title="0"  style="width: 7%;" data-source="difficulty" data-value="0"><span>0</span></button>
-                    <button class="dialog-event-button eventbutton" title="Rensa" style="width: 7%;" data-source="difficulty" data-value="clear"><span>...</span></button>
-                </div>
-            </div>  
-
         </div>
     {{/if}}
 

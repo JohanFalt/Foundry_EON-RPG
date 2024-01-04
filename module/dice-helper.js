@@ -324,3 +324,35 @@ export async function RollDice(diceRoll) {
 
     return result;
 }
+
+export async function SendMessage(actor, config, headline, message) {
+
+    const templateData = {
+        data: {
+            description: message,
+            config: config,
+            actor: actor,
+            type: "message",
+            title: headline,
+        }
+    };
+
+    // Render the chat card template
+    const template = `modules/eon-dice-roller/templates/roll-template.html`;
+    const html = await renderTemplate(template, templateData);
+
+    const chatData = {
+        type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+        content: html,
+        speaker: ChatMessage.getSpeaker(),
+        rollMode: game.settings.get("core", "rollMode")        
+    };
+    ChatMessage.applyRollMode(chatData, "roll");
+    ChatMessage.create(chatData);
+
+    // ChatMessage.create({
+    //     user: game.user.id,
+    //     content: message,
+    //     type: CONST.CHAT_MESSAGE_TYPES.OTHER
+    // });
+}

@@ -240,15 +240,6 @@ export const datafardigheter = {
                     "bonus": 0
                 }
             },
-            "teoretiskmagi": {
-                "namn": "Teoretisk magi",
-                "referens": "Magi s91",
-                "attribut": "visdom",
-                "grund": {
-                    "tvarde": 0,
-                    "bonus": 0
-                }
-            },
         },
         "social": {
             "argumentera": {

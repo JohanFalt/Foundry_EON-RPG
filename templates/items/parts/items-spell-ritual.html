@@ -1,0 +1,104 @@
+<div class="item-box" style="width: 530px;">
+
+    <div class="large-headline">Ritualer</div>    
+
+    <div class="headline headline-background item-row" style="line-height: 25px; width:100%;">
+        <div class="weapon-icon">
+            <a class="item-create" title="Lägg till ritual" data-type="ritual">
+                <i class="fa-solid fa-square-plus green"></i>
+            </a>
+        </div>
+        <div style="width: 120px;">Namn</div>
+        <div class="centerText" style="width: 75px;">Bonus</div>
+        <div class="centerText" style="width: 75px;">Övertag</div>
+        <div class="centerText" style="width: 50px;">Kost.</div>        
+        <div class="centerText" style="width: 50px;">Tid</div>
+        <div>Moment</div>
+    </div>
+
+    {{#each data.system.ritual as |item key|}}
+        <div class="item-row {{#if item.editera}}highlighted{{/if}}" style="line-height: 25px; width:100%;">
+            {{#if item.editera}}
+                <div class="weapon-icon"><a class="item-save" title="Spara ritual" data-source="ritual" data-itemid="{{key}}"><i class="icon fa-solid fa-sd-card"></i></a></div>
+            {{else}}
+                <div class="weapon-icon"><a class="item-edit" title="Editera ritual" data-source="ritual" data-itemid="{{key}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            {{/if}}
+            <div style="width: 120px;" title="{{item.namn}}">{{shorten item.namn 20 false}}</div>
+            <div class="centerText" style="width: 75px;">{{item.bonus}}</div>
+            <div class="centerText" style="width: 75px;">{{item.overtag}}</div>
+            <div class="centerText" style="width: 50px;">{{item.kostnad}} s</div>
+            <div class="centerText" style="width: 50px;">{{item.tid}}</div>
+            <div title="{{getSkillnameRitualList item.moment}}">{{shorten (getSkillnameRitualList item.moment) 10 false}}</div>
+            <div class="pointer red item-delete" title="Ta bort ritual" data-type="ritual" data-key="{{key}}" style="flex-grow: 1; text-align: right;"><i class="icon fa-solid fa-trash-can"></i></div>
+        </div>
+    {{/each}}
+
+</div>
+
+{{#if (propertyTrueInList data.system.ritual "editera")}}
+    <div class="item-box" style="width: 400px;">
+        <div class="floating-label-group">
+            <input class="text-value editable skill-label inputdata" type="text" id="ritual.namn" value="{{getListProperty item.system.ritual this.selectedRitual 'namn'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
+            <span class="floating-label">Namn</span>
+        </div>
+
+        <div class="item-row" style="padding-top: 5px;">
+            <div class="floating-label-group" style="width: 75px;">
+                <input class="skill-label editable inputdata" style="height: 26px;line-height: 26px;" type="text" id="ritual.bonus" value="{{getListProperty item.system.ritual this.selectedRitual 'bonus'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
+                <span class="floating-label ritual-label">Bonus</span>
+            </div>
+
+            <div class="floating-label-group" style="width: 75px;margin-left: 3px;">
+                <input class="skill-label editable inputdata" style="height: 26px;line-height: 26px;" type="text" id="ritual.overtag" value="{{getListProperty item.system.ritual this.selectedRitual 'overtag'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
+                <span class="floating-label ritual-label">Övertag</span>
+            </div>
+
+            <div class="floating-label-group" style="width: 75px;margin-left: 3px;">
+                <input class="skill-label editable inputdata" style="height: 26px;line-height: 26px;" type="text" id="ritual.kostnad" value="{{getListProperty item.system.ritual this.selectedRitual 'kostnad'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
+                <span class="floating-label ritual-label">Kostnad (silver)</span>
+            </div>
+
+            <div class="floating-label-group" style="width: 75px;margin-left: 3px;">
+                <input class="skill-label editable inputdata" style="height: 26px;line-height: 26px;" type="text" id="ritual.tid" value="{{getListProperty item.system.ritual this.selectedRitual 'tid'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
+                <span class="floating-label ritual-label">Tidsåtgång</span>
+            </div>
+        </div>        
+    </div>
+
+    <div class="item-box" style="width: 400px;">
+        <div class="headline item-row" style="line-height: 25px; width:100%;">
+            <div class="weapon-icon">
+                <a class="item-create" title="Lägg till moment" data-source="ritual" data-type="moment">
+                    <i class="fa-solid fa-square-plus green"></i>
+                </a>
+            </div>
+            <div>Moment</div>
+        </div>
+
+        {{#each (getListProperty item.system.ritual this.selectedRitual "moment") as |item key|}}
+            <div class="item-row" style="line-height: 25px; width:100%;padding-top: 5px;">
+                <div style="width: 150px;">
+                    <select class="inputdata" id="ritual.momentgrupp_{{key}}" data-source="ritual" data-key="{{key}}" style="width: 140px;">
+                        <option>- Välj -</option>
+                        {{#select item.grupp}}
+                            {{#each ../EON.CONFIG.fardighetgrupper as |grupp key|}}
+                                <option value="{{key}}">{{grupp}}</option>
+                            {{/each}}
+                        {{/select}}
+                    </select>
+                </div>
+                <div style="width: 150px;">
+                    <select class="inputdata" id="ritual.moment_{{key}}" data-source="ritual" data-key="{{key}}" style="width: 140px;">
+                        <option>- Välj -</option>
+                        {{#select item.fardighet}}
+                            {{#each (getActorSkillGroup ../EON.fardigheter item.grupp) as |fardighet key|}}
+                                <option value="{{key}}">{{fardighet.namn}}</option>
+                            {{/each}}
+                        {{/select}}
+                    </select>
+                </div> 
+                <div class="pointer red item-delete" title="Ta bort moment" data-source="ritual" data-type="moment" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
+            </div>
+        {{/each}}
+    </div>
+{{/if}}

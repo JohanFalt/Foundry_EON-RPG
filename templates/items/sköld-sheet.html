@@ -1,109 +1,22 @@
 <form class="{{cssClass}}" autocomplete="off">
 
 	<div class="sheet-item">
+
 		<header class="sheet-header item-top">
 
-            <div class="clear" style="display: flex;">
-                <div style="min-width: 110px;">
-                    {{#if (eq item.system.grupp "")}}
-                        <img src="{{item.img}}" class="item img-block" />
-                    {{/if}}
-                    {{#if (eq item.system.grupp "skold")}}
-                        <img src="{{EON.CONFIG.ikoner.foremal_skold}}" class="item img-block" />
-                    {{/if}}	
-                </div>
-
-                <div class="pullLeft" style="min-width: 270px;">
-
-                    <div class="item-property-area number-value-text floating-label-group">
-                        <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
-                        <span class="floating-label">Namn</span>
-                    </div>
-
-                    <div class="item-property-area number-value-text floating-label-group">
-                        <select class="text-value" name="system.grupp">                                
-                            {{#select item.system.grupp}}
-                                <option value="">- Välj -</option>
-                                {{#each EON.CONFIG.vapengrupper as |vapengrupp key|}}
-                                    {{#if (eq vapengrupp.grupp "forsvar")}}
-                                        <option value="{{key}}">{{vapengrupp.namn}}</option>
-                                    {{/if}}
-                                {{/each}}
-                            {{/select}}
-                        </select>
-                        <span class="floating-label">Färdighet</span>
-                    </div>
-
-                    <div class="item-property-area number-value-text floating-label-group">
-                        <select class="text-value inputdata" name="system.mall" data-source="shield">
-                            <option value="">- Välj -</option>                                       
-                            {{#select item.system.mall}}    
-                                <option value="{{item._id}}">- Skräddarsytt -</option> 
-                                {{#each (getWeaponGroup EON.forsvar item.system.grupp) as |vapen key|}}     
-                                    <option value="{{key}}">{{vapen.namn}}</option>               
-                                {{/each}}
-                            {{/select}}
-                        </select>
-                        <span class="floating-label">Vapenmall</span>
-                    </div>     
-
-                    <div class="item-property-area number-value-text floating-label-group ">
-                        <input class="attribute-value editable" name="system.vikt" type="text" value="{{data.system.vikt}}" data-dtype="Number" />
-                        <span class="floating-label">Vikt (kg)</span>
-                    </div>
-
-                    <div class="item-property-area number-value-text floating-label-group ">
-                        <input class="attribute-value editable" name="system.pris" type="text" value="{{data.system.pris}}" data-dtype="Number" />
-                        <span class="floating-label">Pris (silver)</span>
-                    </div>
-
-                    <div class="item-property-area number-value-text floating-label-group ">
-                        <input class="attribute-value editable" name="system.skydd" type="text" value="{{data.system.skydd}}" data-dtype="Number" />
-                        <span class="floating-label">Skydd</span>
-                    </div>
-                    
-                    <div class="item-property-area" style="display: flex; flex-direction: row;">
-
-                        <div class="number-value-text floating-label-group ">
-                            <div class="dice-value number-value-text tic pointer" data-property="skada">{{getDiceValue item.system.skada}}</div>
-                            <span class="floating-label">Skada</span>
-                        </div>                        
-
-                        <div class="dual-box number-value-text floating-label-group">
-                            <select name="system.skadetyp">
-                                <option value="">- Välj -</option>
-                                {{#select item.system.skadetyp}}
-                                    {{#each EON.CONFIG.vapenskador as |skadetyp key|}}
-                                        <option value="{{key}}">{{skadetyp}}</option>
-                                    {{/each}}
-                                {{/select}}
-                            </select>
-                            <span class="floating-label">Skadetyp</span>
+            <div class="item-row">
+                <div class="item-column" style="width: 650px;">
+                    <div class="tab" data-group="primary" data-tab="values">
+                        <div class="item-row">
+                            {{> "systems/eon-rpg/templates/items/parts/items-defence-weapon-data.html"}}
                         </div>
-                    </div>   
-                    
-                    <div class="item-property-area number-value-text floating-label-group ">
-                        <div class="dice-value number-value-text tic pointer" data-property="narstrid">{{getDiceValue item.system.narstrid}}</div>
-                        <span class="floating-label">Närstrid</span>
                     </div>
-
-                    <div class="item-property-area number-value-text floating-label-group ">
-                        <div class="dice-value number-value-text tic pointer" data-property="avstand">{{getDiceValue item.system.avstand}}</div>
-                        <span class="floating-label">Avstånd</span>
+                    <div class="tab" data-group="primary" data-tab="property">
+                        {{> "systems/eon-rpg/templates/items/parts/items-weapon-property.html"}}
                     </div>
-
-                    <div class="clear">
-                        <div class="pullLeft" style="width: 100px;">1H</div>
-                        <div class="pullLeft"><input class="item-active" name="system.enhand.aktiv" type="checkbox" data-property="enhand" {{isChecked data.system.enhand.aktiv}} data-dtype="Boolean" /></div>
-                        <div class="pullLeft dice-value number-value-text tic pointer" data-property="enhand">{{getDiceValue item.system.enhand}}</div>
+                    <div class="tab" data-group="primary" data-tab="description">
+                        {{> "systems/eon-rpg/templates/items/parts/items-description.html"}}
                     </div>
-
-                    <div class="clear">
-                        <div class="pullLeft" style="width: 100px;">2H</div>
-                        <div class="pullLeft"><input class="item-active" name="system.tvahand.aktiv" type="checkbox" data-property="tvahand" {{isChecked data.system.tvahand.aktiv}} data-dtype="Boolean" /></div>
-                        <div class="pullLeft dice-value number-value-text tic pointer" data-property="tvahand">{{getDiceValue item.system.tvahand}}</div>
-                    </div>
-                      
                 </div>
 
                 <div class="pullLeft" style="flex-grow: 1; text-align: right;">
@@ -114,42 +27,15 @@
                     <div class="information-area top-sidetext">SKÖLD</div>
                 </div>
             </div>
-			
+
 		</header>
 		
-		<section class="item-body">   
+		<section class="item-body" style="position: absolute; bottom: 0; width: 100%; margin-bottom: 5px;">  
             
-            <div class="item-headline large-headline">Egenskaper</div>
-            <div class="property-area">                
-                {{#each EON.egenskaper as |egenhet key|}}                        
-                    <div class="clear">
-                        <div class="pullLeft item-headline">{{egenhet.namn}}</div>
-                        <div class="pullLeft number-value-text">
-                            <div class="pullLeft">
-                                <input class="weapon-property" type="checkbox" {{#if (checkProperty ../item.system.egenskaper key)}} checked {{/if}} value="{{key}}" />
-                            </div>
-                            <div class="pullLeft" style="width: 50px;">
-                                {{#if (checkProperty ../item.system.egenskaper key)}}
-                                    {{#if egenhet.harniva}}
-                                        <input class="inputdata" style="width: 50px;" type="text" value="{{getPropertyLevel ../item.system.egenskaper key}}" data-source="weapon-property" data-dtype="Number" />
-                                    {{else}}
-                                        &nbsp;
-                                    {{/if}}
-                                {{else}}
-                                    &nbsp;
-                                {{/if}}
-                            </div>                            
-                        </div>
-                    </div>
-                {{/each}}
+            <div>
+                {{> "systems/eon-rpg/templates/items/parts/navigation-weapon.html"}}
             </div>
 
-            <div>
-                <div class="large-headline">Beskrivning</div>
-                <div class="editor-box">
-                    {{editor data.system.beskrivning target="system.beskrivning" button=true owner=owner editable=true}}
-                </div>
-            </div>            
 		</section>
 
 	</div>

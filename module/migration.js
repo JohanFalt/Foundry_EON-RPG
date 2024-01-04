@@ -95,7 +95,7 @@ export async function CompareVersion(oldVersion, newVersion) {
  * @param {Actor} actor   The actor to Update
  * @param config   game.EON 
  */
-export const updateActor = async function(actor, config) {
+export const updateActor = async function(actor, config, systemVersion) {
     try {
         const updateData = duplicate(actor);
         let update = false;
@@ -107,22 +107,28 @@ export const updateActor = async function(actor, config) {
         if (CompareVersion(actor.system.installningar.version, "2.1.0")) {
             updateData.system.installningar.version = "2.1.0";
 
-            const grupp = "mystik";
-            let fardighet = "harmonisera";
+            let addSkill = true;
 
-            let itemData = await CreateHelper.SkapaFardighetItem(grupp, config.fardigheter[grupp][fardighet], fardighet, updateData.system.installningar.version);
-            await actor.createEmbeddedDocuments("Item", [itemData]);
+            for (const item of actor.items) {
+                if ((item.type == "Färdighet") && (item.system.grupp == "mystik") && (item.system.id == "harmonisera")) {
+                    addSkill = false;
+                    break;
+                }
+            }
 
-            fardighet = "teoretiskmagi";
+            if (addSkill) {
+				const grupp = "mystik";
+                let fardighet = "harmonisera";
 
-            itemData = await CreateHelper.SkapaFardighetItem(grupp, config.fardigheter[grupp][fardighet], fardighet, updateData.system.installningar.version);
-            await actor.createEmbeddedDocuments("Item", [itemData]);
+                let itemData = await CreateHelper.SkapaFardighetItem(grupp, config.fardigheter[grupp][fardighet], fardighet, updateData.system.installningar.version);
+                await actor.createEmbeddedDocuments("Item", [itemData]);
+			}            
 
-            if (actor.system.bakgrund.arketyp != "custom") {
+            if ((actor.system.bakgrund.arketyp != "custom") && (config.arketyper[actor.system.bakgrund.arketyp] != undefined)) {
                 updateData.system.bakgrund.arketyp = config.arketyper[actor.system.bakgrund.arketyp].namn;
             }
             
-            if (actor.system.bakgrund.miljo != "custom") {
+            if ((actor.system.bakgrund.miljo != "custom") && (config.miljoer[actor.system.bakgrund.miljo] != undefined)) {
                 updateData.system.bakgrund.miljo = config.miljoer[actor.system.bakgrund.miljo].namn;
             }
 
@@ -202,14 +208,14 @@ export async function patchWorld(systemVersion, installedVersion, config) {
         ui.notifications.warn(`Uppdaterar världen från version ${installedVersion} till ${systemVersion} stäng inte världen eller din Foundry. Var god vänta då det kan ta tid...`, {permanent: true});
 
         for (const actor of game.actors) {
-            await updateActor(actor, config);
+            await updateActor(actor, config, systemVersion);
         }
 
         for (const item of game.items) {
             await updateItem(item, config, undefined);
         }
 
-        ui.notifications.info("Klar!", {permanent: false});
+        ui.notifications.info("Klar!", {permanent: true});
     }
 }
 
@@ -222,21 +228,31 @@ export async function DoNotice(systemVersion, installedVersion) {
       return;
     }
 
-    //let patch200 = false;
     let partMessage = "";
+    let futureMessage = "";
 
-    //try {
-      // add the new setting in settings.js
-      //patch200 = game.settings.get('eon-rpg', 'patch200');      
-    //} 
-    //catch (e) {
-    //}
+    if (await CompareVersion(installedVersion, '2.2.0')) {
+        partMessage += `
+            <li>[INSTÄLLNING] Vilka fonter man vill använda till brödtext och rubriker.</li>
+            <li>[DESIGN] Fixat och trixat i designen av alla formulärer i systemet.</li>            
+            <li>[SYSTEM] Lagt till automatisk beräkning för avdrag på färdighetsslag enligt grundboken när det gäller sår, smärta och belastning.</li>
+            <li>[SYSTEM] Man kan nu skicka beskrivningar till chatten.</li>
+            <li>[SYSTEM] Flyttat att höja/sänka grundegenskaperna/färdigheterna inne i EDITERA.</li>
+            <li>[SYSTEM] Alla beskrivningsrutor stödjer nu Foundrys inre länkning samt HTML.</li>
+            <li>[MAGI] Lagt till så man kan registrera ritualversioner till besvärjelser.</li>
+            <li>I lite mer detalj: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/1?closed=1">v2.2</a></li>
+        `;
 
-    // if (!patch200) {
-    //   game.settings.set('eon-rpg', 'patch200', true);
-    // }
+        futureMessage += `
+            <li>Boken Strid</li>
+            <li>Varelser</li>            
+            <li>Utrustningslistan</li>
+            <li>Folkslag</li>
+            <li>Vad som ligger planerat: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/5">v2.3</a></li>
+        `;
+    }
 
-    if (await CompareVersion(installedVersion, '2.1.0')) {
+    /* if (await CompareVersion(installedVersion, '2.1.0')) {
         partMessage += `
             <li>[INSTÄLLNING] Regelbok - Magi är en inställning som aktiveras automatiskt i din världs inställningar. Detta gör att man kan se magifliken på rollformuläret.</li>  
             <li>[BAKGRUND] Folkslag kan nu skapas som ett föremål i systemet om man vill ha ett folkslag som inte finns med i grundlistan.</li>
@@ -247,9 +263,9 @@ export async function DoNotice(systemVersion, installedVersion) {
             <li>[MAGI] Aspekter är nu en ny typ av färdigheter i systemet. Man skapar aspekten under mystikfärdigheterna och markerar den som en aspektfärdighet. Sedan kopplas denna automatiskt rätt när man använder magi.</li>
             <li>[MAGI] Använda improviserad magi.</li>
             <li>[RUSTNING] Grundrustning och rustning räknas ihop.</li>
-            <li>I lite mer detalj: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/2?closed=1">lista</a></li>
+            <li>I lite mer detalj: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/2?closed=1">v2.1</a></li>
             `; 
-    }
+    } */
 
     /* if (await CompareVersion(installedVersion, '2.0.0')) {
         partMessage += `
@@ -289,14 +305,23 @@ export async function DoNotice(systemVersion, installedVersion) {
             </ul>
         </div>`;
 
+    message += `
+        <div class="tray-title-area">Planerat för framtiden</div>
+        <div class="tray-action-area">
+            För nästa version är det lite svårare att egentligen säga vad som kommer. Jag har vissa punkter som behöver göras och kommer koncentrera på dessa men om alla verkligen görs till nästa version eller om vissa flyttas fram får vi se.
+        </div>
+        <div class="tray-action-area">
+            <ul style="margin-top: 0">
+            ${futureMessage}
+            </ul>
+        </div>`;
+
     let support =  `
         <div class="tray-title-area">Länkar</div>
         <div class="tray-action-area">
             <ul style="margin-top: 0">
-            <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG">Projektets källkod</a></li>
-            <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG/discussions/landing">Diskussion</a></li>
-            <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues">Rapportera önskemål eller fel</a></li>
-            <li><a href="https://raw.githubusercontent.com/JohanFalt/Foundry_EON-RPG/main/LICENSE">Licensierad under MIT Licensen</a></li>
+                <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG">Projektets källkod</a></li>
+                <li><a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues">Rapportera önskemål eller fel</a></li>
             </ul>
         </div>
         <div class="tray-title-area">Stöd mitt arbete</div>

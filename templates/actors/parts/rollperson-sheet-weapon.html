@@ -1,19 +1,22 @@
 <div class="weapon-area">
 
-    <div class="clear attribute" style="margin-bottom: 25px;">
-        <div class="pullLeft three-column">
-            <div class="pullLeft headline">Grundskada</div>
-            <div class="pullLeft dice-value disabled">{{getDiceValue data.system.harleddegenskaper.grundskada.totalt}}</div>
+    <div class="clear attribute item-row" style="margin-bottom: 25px;">
+        <div class="three-column item-row">
+            <div class="headline">Grundskada</div>
+            <div class="dice-value">{{getDiceValue data.system.harleddegenskaper.grundskada.totalt}}</div>
         </div>   
-        <div class="pullLeft three-column">
-            <div class="pullLeft headline">Grundrustning</div>
-            <div class="pullLeft number-value-text"><input class="attribute-value editable" type="text" value="{{data.system.harleddegenskaper.grundrustning}}" disabled readonly /></div>
+        <div class="three-column item-row">
+            <div class="headline">Grundrustning</div>
+            <!-- <div class="number-value-text"><input class="attribute-value editable" type="text" value="{{data.system.harleddegenskaper.grundrustning}}" disabled readonly /></div> -->
+            <div class="dice-value">{{getDiceValue data.system.harleddegenskaper.grundrustning}}</div>
         </div>     
-        <div class="pullLeft three-column">
-            <div class="pullLeft headline">Läkningstakt</div>
-            <div class="pullLeft number-value-text"><input class="attribute-value editable skill-value" type="number" name="system.strid.lakningstakt" value="{{data.system.strid.lakningstakt}}" data-dtype="Number" /></div>
+        <div class="three-column item-row">
+            <div class="headline">Läkningstakt</div>
+            <div class="number-value-text"><input class="attribute-value editable skill-label skill-value" type="number" name="system.strid.lakningstakt" value="{{data.system.strid.lakningstakt}}" data-dtype="Number" /></div>
         </div>
     </div>
+
+    <div class="large-headline">Vapen</div>
     
     {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-close.html"}}
 

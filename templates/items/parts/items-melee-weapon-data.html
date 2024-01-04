@@ -1,0 +1,105 @@
+<div style="min-width: 110px;">
+    {{#if (eq item.system.grupp "")}}
+        <img src="{{item.img}}" class="item img-block" />
+    {{/if}}
+    {{#if (eq item.system.grupp "slagsmal")}}
+        <img src="{{EON.CONFIG.ikoner.foremal_hand}}" class="item img-block" />
+    {{/if}}
+    {{#if (eq item.system.grupp "dolk")}}
+        <img src="{{EON.CONFIG.ikoner.foremal_dolk}}" class="item img-block" />
+    {{/if}}
+    {{#if (eq item.system.grupp "kedjevapen")}}
+        <img src="{{EON.CONFIG.ikoner.foremal_kedjevapen}}" class="item img-block" />
+    {{/if}}
+    {{#if (eq item.system.grupp "klubba")}}
+        <img src="{{EON.CONFIG.ikoner.foremal_klubba}}" class="item img-block" />
+    {{/if}}
+    {{#if (eq item.system.grupp "spjut")}}
+        <img src="{{EON.CONFIG.ikoner.foremal_spjut}}" class="item img-block" />
+    {{/if}}
+    {{#if (eq item.system.grupp "stav")}}
+        <img src="{{EON.CONFIG.ikoner.foremal_stav}}" class="item img-block" />
+    {{/if}}
+    {{#if (eq item.system.grupp "svard")}}
+        <img src="{{EON.CONFIG.ikoner.foremal_svard}}" class="item img-block" />
+    {{/if}}				
+    {{#if (eq item.system.grupp "yxa")}}
+        <img src="{{EON.CONFIG.ikoner.foremal_yxa}}" class="item img-block" />
+    {{/if}}	
+</div>
+
+<div class="item-column" style="min-width: 270px;">
+    <div class="item-property-area number-value-text floating-label-group">
+        <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
+        <span class="floating-label">Namn</span>
+    </div>       
+    
+    <div class="item-property-area number-value-text floating-label-group">
+        <select class="text-value" name="system.grupp">                                
+            {{#select item.system.grupp}}
+                <option value="">- Välj -</option>
+                {{#each EON.CONFIG.vapengrupper as |vapengrupp key|}}
+                    {{#if (eq vapengrupp.grupp "narstridsvapen")}}
+                        <option value="{{key}}">{{vapengrupp.namn}}</option>
+                    {{/if}}
+                {{/each}}
+            {{/select}}
+        </select>
+        <span class="floating-label">Färdighet</span>
+    </div>
+
+    <div class="item-property-area number-value-text floating-label-group">
+        <select class="text-value inputdata" name="system.mall" data-source="weapon-close">
+            <option value="">- Välj -</option>                                       
+            {{#select item.system.mall}}    
+                <option value="{{item._id}}">- Skräddarsytt -</option> 
+                {{#each (getWeaponGroup EON.narstridsvapen item.system.grupp) as |vapen key|}}     
+                    <option value="{{key}}">{{vapen.namn}}</option>               
+                {{/each}}
+            {{/select}}
+        </select>
+        <span class="floating-label">Vapenmall</span>
+    </div>
+
+    <div class="item-property-area number-value-text floating-label-group">
+        <input class="attribute-value editable" name="system.langd" type="text" value="{{data.system.langd}}" data-dtype="Number" />
+        <span class="floating-label">Längd (cm)</span>
+    </div>
+
+    <div class="item-property-area number-value-text floating-label-group ">
+        <input class="attribute-value editable" name="system.vikt" type="text" value="{{data.system.vikt}}" data-dtype="Number" />
+        <span class="floating-label">Vikt (kg)</span>
+    </div>
+
+    <div class="item-property-area number-value-text floating-label-group ">
+        <input class="attribute-value editable" name="system.pris" type="text" value="{{data.system.pris}}" data-dtype="Number" />
+        <span class="floating-label">Pris (silver)</span>
+    </div>
+
+    <div class="item-row">
+        <div class="headline-checkbox">1H</div>
+        <div><input class="item-active" name="system.enhand.aktiv" type="checkbox" data-property="enhand" {{isChecked data.system.enhand.aktiv}} data-dtype="Boolean" /></div>
+        <div class="dice-value number-value-text tic pointer" data-property="enhand">{{getDiceValue item.system.enhand}}</div>
+    </div>
+    <div class="item-row">
+        <div class="headline-checkbox">2H</div>
+        <div><input class="item-active" name="system.tvahand.aktiv" type="checkbox" data-property="tvahand" {{isChecked data.system.tvahand.aktiv}} data-dtype="Boolean" /></div>
+        <div class="dice-value number-value-text tic pointer" data-property="tvahand">{{getDiceValue item.system.tvahand}}</div>
+    </div>
+
+    <div class="item-row">
+        <div class="headline-checkbox">Hugg</div>
+        <div><input class="item-active" name="system.hugg.aktiv" type="checkbox" data-property="hugg" {{isChecked data.system.hugg.aktiv}} data-dtype="Boolean" /></div>
+        <div class="dice-value number-value-text tic pointer" data-property="hugg">{{getDiceValue item.system.hugg}}</div>
+    </div>
+    <div class="item-row">
+        <div class="headline-checkbox">Kross</div>
+        <div><input class="item-active" name="system.kross.aktiv" type="checkbox" data-property="kross" {{isChecked data.system.kross.aktiv}} data-dtype="Boolean" /></div>
+        <div class="dice-value number-value-text tic pointer" data-property="kross">{{getDiceValue item.system.kross}}</div>
+    </div>
+    <div class="item-row">
+        <div class="headline-checkbox">Stick</div>
+        <div><input class="item-active" name="system.stick.aktiv" type="checkbox" data-property="stick" {{isChecked data.system.stick.aktiv}} data-dtype="Boolean" /></div>
+        <div class="dice-value number-value-text tic pointer" data-property="stick">{{getDiceValue item.system.stick}}</div>
+    </div>
+</div>
