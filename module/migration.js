@@ -289,6 +289,10 @@ export async function DoNotice(systemVersion, installedVersion) {
             <li>[VAPEN] Vapenskadan räknar inte alltid ihop grundskada och vapenskada. <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/106">#106</a></li>`;
     }    */     
 
+    if (message == "") {
+        return;
+    }
+
     let introduction = `
         <div class="tray-title-area">Version ${systemVersion} installerat</div>
         <div class="tray-action-area">

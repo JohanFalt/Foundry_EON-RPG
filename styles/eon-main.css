@@ -27,7 +27,7 @@
 
     --eon-image-width: 105px;
 
-    --eon-box-headline-size: 6px;
+    --eon-box-headline-size: 8px;
     --eon-font-xsmall: 8px;
     --eon-font-small: 12px;
     --eon-font-large: 16px;
@@ -696,7 +696,7 @@
     text-align: left;
     padding: 12px 5px;
     box-sizing: border-box; 
-    width: 50px;
+    width: 60px;
     height: var(--eon-line-height-default);
 }
 
@@ -719,15 +719,15 @@
 
 .EON.rollperson select.text-value {   
     text-align: left;
-    padding: 0px 0px;
+    padding-left: 5px;
     box-sizing: border-box; 
 }
 
 .EON.itemsheet select.text-value {   
     width: 75%;
-    position: relative;
+    position-left: relative;
     left: 2px;
-    padding-left: 0px;
+    padding: 5px;
 }
 
 .EON.itemsheet .dual-box {   
@@ -953,7 +953,7 @@ input.skill-value {
     opacity: 1;
 }
 .floating-label-group .floating-label.skill-label {
-    top: -9px;
+    top: -8px;
 }
 .floating-label-group .floating-label.text-label {
     top: -7px;
