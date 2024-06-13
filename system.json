@@ -39,8 +39,8 @@
   "gridDistance": 2,
   "gridUnits": "m",
   "url": "https://github.com/JohanFalt/Foundry_EON-RPG",
-  "manifest": "https://raw.githubusercontent.com/JohanFalt/Foundry_EON-RPG/main/system.json",
-  "download": "https://github.com/JohanFalt/Foundry_EON-RPG/archive/refs/tags/2.2.1.zip",
+  "manifest": "https://raw.githubusercontent.com/JohanFalt/Foundry_EON-RPG/Foundry-11/system.json",
+  "download": "https://github.com/JohanFalt/Foundry_EON-RPG/archive/refs/tags/Final-2.2.zip",
   "bugs": "https://github.com/JohanFalt/Foundry_EON-RPG/issues",
   "license": "LICENSE.txt"
 }
