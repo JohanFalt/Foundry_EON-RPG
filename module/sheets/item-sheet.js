@@ -4,7 +4,7 @@ import CalculateHelper from "../calculate-helper.js";
 export default class EonItemSheet extends ItemSheet {
 
 	static get defaultOptions() {
-		return mergeObject(super.defaultOptions, {
+		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ["EON itemsheet"],
 			tabs: [{
                 navSelector: ".item-tabs",
@@ -40,7 +40,7 @@ export default class EonItemSheet extends ItemSheet {
 
 	/** @override */
 	async getData() {
-		const itemData = duplicate(this.item);		
+		const itemData = foundry.utils.duplicate(this.item);		
 
 		if (!itemData.system.installningar.skapad) {
 			const version = game.data.system.version;
@@ -210,7 +210,7 @@ export default class EonItemSheet extends ItemSheet {
 		await super.close(...args);
 
 		if (this.item.type == "Besvärjelse") {
-			const itemData = duplicate(this.item);	
+			const itemData = foundry.utils.duplicate(this.item);	
 
 			for(const ritual of itemData.system.ritual) {
 				ritual.editera = false;
@@ -228,14 +228,14 @@ export default class EonItemSheet extends ItemSheet {
 		const type = header.dataset.type;
 		const source = header.dataset.source;
         const version = game.data.system.version;
-		const itemData = duplicate(this.item);
+		const itemData = foundry.utils.duplicate(this.item);
 
 		if ((type == "moment") && (source == "ritual")) {
 			if (this.selectedRitual == -1) {
 				return;
 			}
 
-			const itemData = duplicate(this.item);
+			const itemData = foundry.utils.duplicate(this.item);
 			itemData.system.ritual[this.selectedRitual].moment.push({grupp: "mystik", fardighet: "cermoni"});			
 			await this.item.update(itemData);
 
@@ -287,7 +287,7 @@ export default class EonItemSheet extends ItemSheet {
 
         if (dataset.source == "ritual") {
 			const key = parseInt(dataset.itemid);
-			const itemData = duplicate(this.item);
+			const itemData = foundry.utils.duplicate(this.item);
 
 			for(const ritual of itemData.system.ritual) {
 				ritual.editera = false;
@@ -310,7 +310,7 @@ export default class EonItemSheet extends ItemSheet {
 		const dataset = element.dataset;
 
         if (dataset.source == "ritual") {
-			const itemData = duplicate(this.item);
+			const itemData = foundry.utils.duplicate(this.item);
 
 			for(const ritual of itemData.system.ritual) {
 				ritual.editera = false;
@@ -335,7 +335,7 @@ export default class EonItemSheet extends ItemSheet {
 			return;
 		}
 
-		const itemData = duplicate(this.item);
+		const itemData = foundry.utils.duplicate(this.item);
 
 		if (this.item.system.installningar[dataset.property] != undefined) {
 			let active = this.item.system.installningar[dataset.property];
@@ -372,7 +372,7 @@ export default class EonItemSheet extends ItemSheet {
 					return;
 				}
 
-				const itemData = duplicate(this.item);
+				const itemData = foundry.utils.duplicate(this.item);
 
 				if (itemData.system.ritual[this.selectedRitual].moment.length > 1) {
 					itemData.system.ritual[this.selectedRitual].moment.splice(key, 1);
@@ -387,7 +387,7 @@ export default class EonItemSheet extends ItemSheet {
 				return;
 			}
 			if (type == "moment") {
-				const itemData = duplicate(this.item);
+				const itemData = foundry.utils.duplicate(this.item);
 				itemData.system[type].splice(key, 1);
 				await this.item.update(itemData);
 	
@@ -395,7 +395,7 @@ export default class EonItemSheet extends ItemSheet {
 				return;
 			}
 			if (type == "ritual") {
-				const itemData = duplicate(this.item);
+				const itemData = foundry.utils.duplicate(this.item);
 				itemData.system[type].splice(key, 1);
 
 				await this.item.update(itemData);
@@ -438,7 +438,7 @@ export default class EonItemSheet extends ItemSheet {
 		const element = event.currentTarget;
 		const dataset = element.dataset;
 
-		const itemData = duplicate(this.item);
+		const itemData = foundry.utils.duplicate(this.item);
 		const property = dataset.property;
 
 		const fields = property.split(".");
@@ -475,7 +475,7 @@ export default class EonItemSheet extends ItemSheet {
 		const element = event.currentTarget;
 		const dataset = element.dataset;
 
-		const itemData = duplicate(this.item);
+		const itemData = foundry.utils.duplicate(this.item);
 		const property = dataset.property;
 
 		const fields = property.split(".");
@@ -523,7 +523,7 @@ export default class EonItemSheet extends ItemSheet {
 
 		const element = event.currentTarget;
 		const dataset = element.dataset;
-		const itemData = duplicate(this.item);
+		const itemData = foundry.utils.duplicate(this.item);
 
 		itemData.system.installningar.lattlard = false;
 		itemData.system.installningar.svarlard = false;
@@ -548,7 +548,7 @@ export default class EonItemSheet extends ItemSheet {
 
 		const element = event.currentTarget;
 		const dataset = element.dataset;
-		const itemData = duplicate(this.item);
+		const itemData = foundry.utils.duplicate(this.item);
 
 		if (dataset.field == "varaktighet.koncentration") {
 			itemData.system.varaktighet.immanent = false;
@@ -576,7 +576,7 @@ export default class EonItemSheet extends ItemSheet {
 
 		const element = event.currentTarget;
 		const dataset = element.dataset;
-		const itemData = duplicate(this.item);		
+		const itemData = foundry.utils.duplicate(this.item);		
 
 		if (dataset.dtype.toLowerCase() == "boolean") {
 			const fields = dataset.field.split(".");
@@ -657,7 +657,7 @@ export default class EonItemSheet extends ItemSheet {
 			}
 		});
 
-		const itemData = duplicate(this.item);
+		const itemData = foundry.utils.duplicate(this.item);
 		itemData.system.egenskaper = properties;
 		await this.item.update(itemData);
 
@@ -687,7 +687,7 @@ export default class EonItemSheet extends ItemSheet {
 			newvalue = e.value;
 		}
 
-		const itemData = duplicate(this.item);
+		const itemData = foundry.utils.duplicate(this.item);
 		itemData.system.moment[key][property] = newvalue;
 		await this.item.update(itemData);
 
@@ -695,7 +695,7 @@ export default class EonItemSheet extends ItemSheet {
 	}
 
 	async _setRitualData(event, key) {
-		const itemData = duplicate(this.item);
+		const itemData = foundry.utils.duplicate(this.item);
 
 		// for(const ritual of itemData.system.ritual) {
 		// 	ritual.editera = false;
@@ -774,7 +774,7 @@ export default class EonItemSheet extends ItemSheet {
 
 			const vapen = game.EON.narstridsvapen[typ][vapenmall];
 
-			const itemData = duplicate(this.item);
+			const itemData = foundry.utils.duplicate(this.item);
 			itemData.name = vapen.namn;
 			itemData.system.mall = vapenmall;
 			itemData.system.grupp = vapen.grupp;
@@ -803,7 +803,7 @@ export default class EonItemSheet extends ItemSheet {
 
 			const vapen = game.EON.avstandsvapen[typ][vapenmall];
 
-			const itemData = duplicate(this.item);
+			const itemData = foundry.utils.duplicate(this.item);
 			itemData.name = vapen.namn;
 			itemData.system.mall = vapenmall;
 			itemData.system.grupp = vapen.grupp;
@@ -832,7 +832,7 @@ export default class EonItemSheet extends ItemSheet {
 
 			const vapen = game.EON.forsvar[typ][vapenmall];
 
-			const itemData = duplicate(this.item);
+			const itemData = foundry.utils.duplicate(this.item);
 			itemData.name = vapen.namn;
 			itemData.system.mall = vapenmall;
 			itemData.system.grupp = vapen.grupp;
@@ -862,7 +862,7 @@ export default class EonItemSheet extends ItemSheet {
 			let namn = "";
 
 			const kroppsdel = dataset.kroppsdel;
-			const itemData = duplicate(this.item);
+			const itemData = foundry.utils.duplicate(this.item);
 			itemData.system.belastning = 0;
 			itemData.system.tacker = "";
 
@@ -907,7 +907,7 @@ export default class EonItemSheet extends ItemSheet {
 			const utrustningmall = element.value;
 			const utrustning = game.EON.utrustning[typ][utrustningmall];
 
-			const itemData = duplicate(this.item);
+			const itemData = foundry.utils.duplicate(this.item);
 			itemData.name = utrustning.namn;			
 			itemData.system.mall = utrustningmall;
 			itemData.system.grupp = typ;
@@ -941,7 +941,7 @@ export default class EonItemSheet extends ItemSheet {
 		if (source == "aspekt") {
 			let value = element.value;
 
-			const itemData = duplicate(this.item);
+			const itemData = foundry.utils.duplicate(this.item);
 			itemData.name = game.EON.CONFIG.aspekter[value];
 			await this.item.update(itemData);
 			this.render();

@@ -122,7 +122,7 @@ export const systemSettings = function() {
 export class Books extends FormApplication {
     /** @override */
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: "books",
             classes: ["EON setting-dialog"],
             title: "Bokinställningar",
@@ -146,7 +146,7 @@ export class Books extends FormApplication {
                 // // Exclude settings the user cannot change
                 if ((s.key == "bookCombat") || (s.key == "bookMagic")) {
                     // Update setting data
-                    const setting = duplicate(s);
+                    const setting = foundry.utils.duplicate(s);
 
                     setting.value = game.settings.get("eon-rpg", setting.key);
                     setting.type = s.type instanceof Function ? s.type.name : "String";
@@ -222,7 +222,7 @@ export class Books extends FormApplication {
 export class Rules extends FormApplication {
     /** @override */
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: "rules",
             classes: ["EON setting-dialog"],
             title: "Regelinställningar",
@@ -246,7 +246,7 @@ export class Rules extends FormApplication {
                 // // Exclude settings the user cannot change
                 if ((s.key == "weightRules") || (s.key == "hinderenceSkillGroupMovement") || (s.key == "hinderenceAttributeMovement")) {
                     // Update setting data
-                    const setting = duplicate(s);
+                    const setting = foundry.utils.duplicate(s);
 
                     setting.value = game.settings.get("eon-rpg", setting.key);
                     setting.type = s.type instanceof Function ? s.type.name : "String";

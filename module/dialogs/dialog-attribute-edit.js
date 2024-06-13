@@ -13,7 +13,7 @@ export class DialogAttribute {
 export class DialogAttributeEdit extends FormApplication {
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["EON general-dialog"],
             closeOnSubmit: false,
             submitOnChange: true,
@@ -107,7 +107,7 @@ export class DialogAttributeEdit extends FormApplication {
 
         if (dataset.key != undefined) {
             const key = dataset.key;
-            const actorData = duplicate(this.actor);
+            const actorData = foundry.utils.duplicate(this.actor);
             const component = "object.name_" + key;
 
             var e = document.getElementById(component);
@@ -127,7 +127,7 @@ export class DialogAttributeEdit extends FormApplication {
 		const element = event.currentTarget;
 		const dataset = element.dataset;
 
-        const actorData = duplicate(this.actor);
+        const actorData = foundry.utils.duplicate(this.actor);
 
         // om höja attribut på Actor
         if (dataset.property != undefined) {
@@ -176,7 +176,7 @@ export class DialogAttributeEdit extends FormApplication {
 		const element = event.currentTarget;
 		const dataset = element.dataset;
 
-        const actorData = duplicate(this.actor);	
+        const actorData = foundry.utils.duplicate(this.actor);	
 
         // om sänka attribut på Actor
         if (dataset.property != undefined) {
@@ -234,7 +234,7 @@ export class DialogAttributeEdit extends FormApplication {
             bonus: 0
         }
 
-        const actorData = duplicate(this.actor);
+        const actorData = foundry.utils.duplicate(this.actor);
         actorData.system[this.object.typ][this.object.nyckel].bonuslista.push(bonus);
 
         await this.actor.update(actorData);
@@ -250,7 +250,7 @@ export class DialogAttributeEdit extends FormApplication {
 
         const key = parseInt(dataset.key);
 
-        const actorData = duplicate(this.actor);
+        const actorData = foundry.utils.duplicate(this.actor);
         actorData.system[this.object.typ][this.object.nyckel].bonuslista.splice(key, 1);
         actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
         await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
@@ -264,7 +264,7 @@ export class DialogAttributeEdit extends FormApplication {
         event.preventDefault();
 
         if (this.object.typ == "bakgrund") {
-            const actorData = duplicate(this.actor);
+            const actorData = foundry.utils.duplicate(this.actor);
             var alt = document.getElementById("altvalue");
 
             var newvalue = alt.value;

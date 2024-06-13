@@ -7,7 +7,7 @@ export default class EonActorSheet extends ActorSheet {
 
     /** @override */
     static get defaultOptions() {
-		return mergeObject(super.defaultOptions, {
+		return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["EON rollperson"],
             tabs: [{
                 navSelector: ".sheet-tabs",
@@ -46,7 +46,7 @@ export default class EonActorSheet extends ActorSheet {
             bok = "strid";
         } */
 
-        const actorData = duplicate(this.actor);	
+        const actorData = foundry.utils.duplicate(this.actor);	
         const version = game.data.system.version;	
 
 		if (!actorData.system.installningar.skapad) {
@@ -349,7 +349,7 @@ export default class EonActorSheet extends ActorSheet {
             this.actor.items.get(i.id).delete();
         });
 
-        const actorData = duplicate(this.actor);
+        const actorData = foundry.utils.duplicate(this.actor);
 
         for (const grundegenskap in CONFIG.EON.grundegenskaper) {
             actorData.system.grundegenskaper[grundegenskap].grund.tvarde = droppedItem.system.grundegenskaper[grundegenskap].grund.tvarde;
@@ -441,7 +441,7 @@ export default class EonActorSheet extends ActorSheet {
                 itemData = {
                     name: "Nytt språk",
                     type: "Språk",                
-                    data: {
+                    system: {
                         installningar: {
                             skapad: true,
                             version: version,
@@ -454,7 +454,7 @@ export default class EonActorSheet extends ActorSheet {
                 itemData = {
                     name: "Ny färdighet",
                     type: "Färdighet",                
-                    data: {
+                    system: {
                         installningar: {
                             skapad: true,
                             version: version,
@@ -472,7 +472,7 @@ export default class EonActorSheet extends ActorSheet {
             itemData = {
                 name: "Nytt mysterie",
                 type: "Mysterie",                
-                data: {
+                system: {
                     installningar: {
                         skapad: true,
                         version: version
@@ -488,7 +488,7 @@ export default class EonActorSheet extends ActorSheet {
             itemData = {
                 name: "Ny avvisning",
                 type: "Avvisning",                
-                data: {
+                system: {
                     installningar: {
                         skapad: true,
                         version: version
@@ -504,7 +504,7 @@ export default class EonActorSheet extends ActorSheet {
             itemData = {
                 name: "Ny besvärjelse",
                 type: "Besvärjelse",                
-                data: {
+                system: {
                     installningar: {
                         skapad: true,
                         version: version
@@ -514,7 +514,7 @@ export default class EonActorSheet extends ActorSheet {
         }
 
         if (type == "karaktärsdrag") {
-            const actorData = duplicate(this.actor);
+            const actorData = foundry.utils.duplicate(this.actor);
             await CreateHelper.SkapaKaraktarsdrag(actorData);
             await this.actor.update(actorData);
             return;
@@ -526,7 +526,7 @@ export default class EonActorSheet extends ActorSheet {
 			itemData = {
                 name: "Nytt närstridsvapen",
                 type: "Närstridsvapen",                
-                data: {
+                system: {
                     installningar: {
                         skapad: true,
                         version: version
@@ -541,9 +541,8 @@ export default class EonActorSheet extends ActorSheet {
 
 			itemData = {
                 name: "Nytt avståndsvapen",
-                type: "Avståndsvapen",
-                
-                data: {
+                type: "Avståndsvapen",                
+                system: {
                     installningar: {
                         skapad: true,
                         version: version
@@ -558,9 +557,8 @@ export default class EonActorSheet extends ActorSheet {
 
 			itemData = {
                 name: "Ny sköld",
-                type: "Sköld",
-                
-                data: {
+                type: "Sköld",                
+                system: {
                     installningar: {
                         skapad: true,
                         version: version
@@ -578,7 +576,7 @@ export default class EonActorSheet extends ActorSheet {
 			itemData = {
                 name: "Ny rustning",
                 type: "Rustning",                
-                data: {
+                system: {
                     installningar: {
                         skapad: true,
                         version: version
@@ -595,7 +593,7 @@ export default class EonActorSheet extends ActorSheet {
 			itemData = {
                 name: "Nytt föremål",
                 type: "Utrustning",                
-                data: {
+                system: {
                     installningar: {
                         skapad: true,
                         version: version
@@ -611,7 +609,7 @@ export default class EonActorSheet extends ActorSheet {
 			itemData = {
                 name: "Silvermynt",
                 type: "Utrustning",                
-                data: {
+                system: {
                     installningar: {
                         skapad: true,
                         version: version,
@@ -642,7 +640,7 @@ export default class EonActorSheet extends ActorSheet {
 			itemData = {
                 name: "Kongelat",
                 type: "Utrustning",                
-                data: {
+                system: {
                     installningar: {
                         skapad: true,
                         version: version,
@@ -660,7 +658,7 @@ export default class EonActorSheet extends ActorSheet {
 			itemData = {
                 name: "Ny skada",
                 type: "Skada",                
-                data: {
+                system: {
                     installningar: {
                         skapad: true,
                         version: version
@@ -676,7 +674,7 @@ export default class EonActorSheet extends ActorSheet {
 			itemData = {
                 name: "Fältstörning",
                 type: "Skada",                
-                data: {
+                system: {
                     installningar: {
                         skapad: true,
                         version: version
@@ -759,7 +757,7 @@ export default class EonActorSheet extends ActorSheet {
             }
 
             const item = this.actor.getEmbeddedDocument("Item", itemid);
-            const itemData = duplicate(item);
+            const itemData = foundry.utils.duplicate(item);
 
             if (fields.length == 1) {
                 itemData.system[fields[0]] = value;
@@ -791,7 +789,7 @@ export default class EonActorSheet extends ActorSheet {
         const property = dataset.property;
 
 		const item = this.actor.getEmbeddedDocument("Item", itemid);
-        const itemData = duplicate(item);        
+        const itemData = foundry.utils.duplicate(item);        
 		
 		let active = itemData.system.installningar[property];
 		itemData.system.installningar[property] = !active;
@@ -803,7 +801,7 @@ export default class EonActorSheet extends ActorSheet {
 
             for (const armor of activeArmor) {
                 const otherItem = await this.actor.getEmbeddedDocument("Item", armor._id);
-                const otheritemData = duplicate(otherItem);
+                const otheritemData = foundry.utils.duplicate(otherItem);
                 otheritemData.system.installningar.buren = false;
                 await otherItem.update(otheritemData);
             }
@@ -840,7 +838,7 @@ export default class EonActorSheet extends ActorSheet {
             return false;
 		}     
 
-        const actorData = duplicate(this.actor);
+        const actorData = foundry.utils.duplicate(this.actor);
         actorData.system.egenskap[source].splice(index, 1);
         await this.actor.update(actorData);
 
@@ -875,7 +873,7 @@ export default class EonActorSheet extends ActorSheet {
 		const dataset = element.dataset;
 
 		const source = dataset.source;
-		const actorData = duplicate(this.actor);
+		const actorData = foundry.utils.duplicate(this.actor);
 
         if (source == "folkslag") {
             var e = document.getElementById("folkslag");
@@ -1039,7 +1037,7 @@ export default class EonActorSheet extends ActorSheet {
         if (dataset.itemid != undefined) {
             const itemid = dataset.itemid;
             const item = this.actor.getEmbeddedDocument("Item", itemid);
-            const itemData = duplicate(item);
+            const itemData = foundry.utils.duplicate(item);
             let found = false;
 
             if (dataset.type == "boolean") {
@@ -1071,7 +1069,7 @@ export default class EonActorSheet extends ActorSheet {
             return;
         }
 
-        const actorData = duplicate(this.actor);
+        const actorData = foundry.utils.duplicate(this.actor);
         steps.removeClass("active");
 
         if (type != undefined) {

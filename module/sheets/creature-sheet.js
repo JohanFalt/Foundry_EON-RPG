@@ -1,7 +1,7 @@
 export default class EonCreatureSheet extends ActorSheet {
     /** @override */
     static get defaultOptions() {
-		return mergeObject(super.defaultOptions, {
+		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ["EON varelse"]
 		});
 	}
@@ -29,7 +29,7 @@ export default class EonCreatureSheet extends ActorSheet {
 
     /** @override */
     async getData() {
-        const actorData = duplicate(this.actor);	
+        const actorData = foundry.utils.duplicate(this.actor);	
         const version = game.data.system.version;	
 
 		if (!actorData.system.installningar.skapad) {

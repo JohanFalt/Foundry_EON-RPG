@@ -178,7 +178,7 @@ export class AttributeRoll {
 export class DialogAttributeRoll extends FormApplication {
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["EON general-dialog"],
             closeOnSubmit: false,
             submitOnChange: true,
@@ -553,7 +553,7 @@ export class SkillRoll {
 export class DialogSkillRoll extends FormApplication {
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["EON general-dialog"],
             closeOnSubmit: false,
             submitOnChange: true,
@@ -777,7 +777,7 @@ export class MysteryRoll {
 export class DialogMysteryRoll extends FormApplication {
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["EON general-dialog"],
             closeOnSubmit: false,
             submitOnChange: true,

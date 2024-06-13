@@ -80,7 +80,7 @@ export default class CreateHelper {
             name: fardighet.namn,
             type: "Färdighet",
             
-            data: {
+            system: {
                 installningar: {
                     skapad: true,
                     version: worldVersion
@@ -105,7 +105,7 @@ export default class CreateHelper {
             name: vapen.namn,
             type: "Närstridsvapen",
             
-            data: {
+            system: {
                 installningar: {
                     skapad: true,
                     version: version,
@@ -136,7 +136,7 @@ export default class CreateHelper {
             name: kroppsdel,
             type: "Rustning",
             
-            data: {
+            system: {
                 installningar: {
                     skapad: true,
                     version: version

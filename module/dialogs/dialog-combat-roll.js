@@ -26,7 +26,7 @@ export class DialogCombat extends FormApplication {
     }
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["EON general-dialog"],
             template: "systems/eon-rpg/templates/dialogs/dialog-combat-roll.html",
             closeOnSubmit: false,
@@ -195,7 +195,7 @@ export class DialogCombat extends FormApplication {
 
 		if ((foundToken) && (foundEncounter)) {
 			if (!this._inTurn(token)) {
-				await token.toggleCombat();
+				await token.document.toggleCombatant();
             }
 
             await token.combatant.update({initiative: result});

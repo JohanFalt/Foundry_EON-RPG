@@ -97,7 +97,7 @@ export async function CompareVersion(oldVersion, newVersion) {
  */
 export const updateActor = async function(actor, config, systemVersion) {
     try {
-        const updateData = duplicate(actor);
+        const updateData = foundry.utils.duplicate(actor);
         let update = false;
 
         if (updateData.system.installningar.version == "") {
@@ -157,7 +157,7 @@ export const updateActor = async function(actor, config, systemVersion) {
  */
 export const updateItem = async function(item, config, actor) {
     try {
-        const updateData = duplicate(item);
+        const updateData = foundry.utils.duplicate(item);
         let update = false;
 
         if (item.system.installningar.version == "") {

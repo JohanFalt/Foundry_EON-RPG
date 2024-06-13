@@ -188,7 +188,7 @@ export class SpellRoll {
 export class DialogSpellRoll extends FormApplication {
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["EON general-dialog"],
             closeOnSubmit: false,
             submitOnChange: true,

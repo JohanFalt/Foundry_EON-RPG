@@ -390,7 +390,7 @@ export class DialogWeaponRoll extends FormApplication {
     }
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["EON general-dialog"],
             template: "systems/eon-rpg/templates/dialogs/dialog-weapon-roll.html",
             closeOnSubmit: false,
