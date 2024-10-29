@@ -1,0 +1,292 @@
+{
+	"id": "rt_hugg_armben",
+	"version": "1.0.0",
+	"mapp": "Skadetabell",
+	"tabell": {
+	  "name": "Hugg mot arm/ben",
+	  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg",
+	  "description": "",
+	  "results": [
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			1,
+			1
+		  ],
+		  "drawn": false,
+		  "_id": "AkLwRgat8VI9qtH3",
+		  "text": "Rustning eller klädesplagg slits upp. [Rustningsskada.]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			2,
+			2
+		  ],
+		  "drawn": false,
+		  "_id": "lUnJRjewWcIaBEcm",
+		  "text": "Ytligt köttsår. [1 Smärta.]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			3,
+			3
+		  ],
+		  "drawn": false,
+		  "_id": "uYMPwd7owyxFuUvA",
+		  "text": "Träff över leden. [Tappar eller Faller.]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			4,
+			4
+		  ],
+		  "drawn": false,
+		  "_id": "dHkV8r4zBdWuA8Oc",
+		  "text": "Huden slits loss från köttet. [1 Smärta.]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			5,
+			5
+		  ],
+		  "drawn": false,
+		  "_id": "fBpm05xg6C7WjnoO",
+		  "text": "Träff i benpipa. [Tappar eller Faller.]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			6,
+			6
+		  ],
+		  "drawn": false,
+		  "_id": "Z0vl2qvdbfZOQfTA",
+		  "text": "Vapnet fastnar, orsakar stark smärta då det slits loss. [1 Smärta.]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			7,
+			7
+		  ],
+		  "drawn": false,
+		  "_id": "WSeMFq599n7xcAsT",
+		  "text": "Djupt hugg i benpipa. [Tappar eller Faller, Brytrisk 10 (arm/ben).]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			8,
+			8
+		  ],
+		  "drawn": false,
+		  "_id": "g9063pFQyOIHh3PV",
+		  "text": "Djupt sår slits upp efter hela armen eller benet. [Sår.]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			9,
+			9
+		  ],
+		  "drawn": false,
+		  "_id": "AwTrEOcaAArXJhja",
+		  "text": "Djupt hugg sliter upp pulsåder. [Blödning 1/6.]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			10,
+			10
+		  ],
+		  "drawn": false,
+		  "_id": "M3zQmOx6gWS0C6Wb",
+		  "text": "Senor och muskler avslitna. [Tappar eller Faller, Sår.]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			11,
+			11
+		  ],
+		  "drawn": false,
+		  "_id": "tMmQfKvbzMQiV0qr",
+		  "text": "Träff över handleden eller fotleden. [Amputationsrisk 12 (hand/fot).]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			12,
+			12
+		  ],
+		  "drawn": false,
+		  "_id": "MUzeDDQyBR2tttuI",
+		  "text": "Huden slits loss från köttet i en lång remsa som blottar muskler och senor. [Tappar eller Faller, Infektion 2/4.]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			13,
+			13
+		  ],
+		  "drawn": false,
+		  "_id": "TsCTjUWAVnYOR5or",
+		  "text": "Kraftig blödning. [Blödning 1/10.]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			14,
+			14
+		  ],
+		  "drawn": false,
+		  "_id": "2c8soLkNpGiNRrv3",
+		  "text": "Underarmen eller vaden upphuggen. [Amputationsrisk 12 (underarm/vad).]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			15,
+			15
+		  ],
+		  "drawn": false,
+		  "_id": "3ussEjj3Y11wK8Ta",
+		  "text": "Senor sönderslitna och köttet uppsprättat. [Tappar eller Faller, Sår.]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			16,
+			16
+		  ],
+		  "drawn": false,
+		  "_id": "CmGwdTgJoq2fBMJG",
+		  "text": "Armbågen eller knät sönderslitet. [Amputationsrisk 12 (armbåge/knä), 1 Smärta.]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			17,
+			17
+		  ],
+		  "drawn": false,
+		  "_id": "GRxi4zms4Paqyb1h",
+		  "text": "Uppfläkt sår som blottar skelettet. [Amputationsrisk 12 (överarm/lår), Infektion 2/10.]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			18,
+			18
+		  ],
+		  "drawn": false,
+		  "_id": "tUgSKCbsLiOmUwbJ",
+		  "text": "[Död 8] Axeln eller höften söndertrasad. [1 Smärta, Tappar eller Faller, Amputationsrisk 12 (axel/höft).]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			19,
+			19
+		  ],
+		  "drawn": false,
+		  "_id": "R0RTV0vaaVlGYjVl",
+		  "text": "[Död 10] Ett långt sår slits upp i köttet som löper efter pulsådern och orsakar en kraftig artärblödning. [Sår, Blödning 1/20.]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		},
+		{
+		  "type": 0,
+		  "weight": 1,
+		  "range": [
+			20,
+			20
+		  ],
+		  "drawn": false,
+		  "_id": "iQDrXL1xwu6F9q1a",
+		  "text": "[Död 12] Armen eller benet förstört på något groteskt sätt. Genomborrat, stympat, krossat. [Tappar eller Faller, Sår, Amputationsrisk 14 (armbåge/ knä).]",
+		  "documentId": null,
+		  "flags": {},
+		  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+		}
+	  ]
+	}
+}

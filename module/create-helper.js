@@ -1,12 +1,45 @@
 export default class CreateHelper {
     static async SkapaFardigheter(actor, config, version) {
 
-        for (const grupp in config.fardighetgrupper) {
-            for (const fardighet in game.EON.fardigheter[grupp]) {
-                let itemData = await this.SkapaFardighetItem(grupp, game.EON.fardigheter[grupp][fardighet], fardighet, version);
-                await actor.createEmbeddedDocuments("Item", [itemData]);
-            }
-        }       
+        if (actor.system.installningar.varelsegrupp == undefined) {
+            for (const grupp in config.fardighetgrupper) {
+                for (const fardighet in game.EON.fardigheter[grupp]) {
+                    let itemData = await this.SkapaFardighetItem(grupp, game.EON.fardigheter[grupp][fardighet], fardighet, version);
+                    await actor.createEmbeddedDocuments("Item", [itemData]);
+                }
+            }       
+        }   
+        else {
+            let itemData = await this.SkapaFardighetItem('allman', game.EON.fardigheter['vildmark']['genomsoka'], 'genomsoka', version, false);
+            await actor.createEmbeddedDocuments("Item", [itemData]);
+
+            itemData = await this.SkapaFardighetItem('allman', game.EON.fardigheter['vildmark']['jakt'], 'jakt', version, false);
+            await actor.createEmbeddedDocuments("Item", [itemData]);
+
+            itemData = await this.SkapaFardighetItem('allman', game.EON.fardigheter['vildmark']['orientering'], 'orientering', version, false);
+            await actor.createEmbeddedDocuments("Item", [itemData]);
+
+            itemData = await this.SkapaFardighetItem('allman', game.EON.fardigheter['rorelse']['gomma'], 'gomma', version, false);
+            await actor.createEmbeddedDocuments("Item", [itemData]);
+
+            itemData = await this.SkapaFardighetItem('allman', game.EON.fardigheter['rorelse']['hoppa'], 'hoppa', version, false);
+            await actor.createEmbeddedDocuments("Item", [itemData]);
+
+            itemData = await this.SkapaFardighetItem('allman', game.EON.fardigheter['rorelse']['klattra'], 'klattra', version, false);
+            await actor.createEmbeddedDocuments("Item", [itemData]);
+
+            itemData = await this.SkapaFardighetItem('allman', game.EON.fardigheter['rorelse']['simma'], 'simma', version, false);
+            await actor.createEmbeddedDocuments("Item", [itemData]);
+
+            itemData = await this.SkapaFardighetItem('allman', game.EON.fardigheter['rorelse']['smyga'], 'smyga', version, false);
+            await actor.createEmbeddedDocuments("Item", [itemData]);
+
+            itemData = await this.SkapaFardighetItem('allman', game.EON.fardigheter['vildmark']['spara'], 'spara', version, false);
+            await actor.createEmbeddedDocuments("Item", [itemData]);
+
+            itemData = await this.SkapaFardighetItem('allman', game.EON.fardigheter['vildmark']['speja'], 'speja', version, false);
+            await actor.createEmbeddedDocuments("Item", [itemData]);
+        }     
     }
 
     static async SkapaKaraktarsdrag(actorData) {
@@ -75,7 +108,16 @@ export default class CreateHelper {
         }       
     }
 
-    static async SkapaFardighetItem(grupp, fardighet, nyckel, worldVersion) {
+    static async SkapaFardighetItem(grupp, fardighet, nyckel, worldVersion, baschans = true) {
+        let tvgrund = 0;
+        let bonusgrund = 0;
+
+        if (baschans)
+        {
+            tvgrund = parseInt(fardighet.grund.tvarde);
+            bonusgrund = fardighet.grund.bonus;
+        }
+
         let itemData = {
             name: fardighet.namn,
             type: "Färdighet",
@@ -90,8 +132,8 @@ export default class CreateHelper {
                 id: nyckel,
                 grupp: grupp,
                 varde: {
-                    tvarde: parseInt(fardighet.grund.tvarde),
-                    bonus: parseInt(fardighet.grund.bonus)
+                    tvarde: tvgrund,
+                    bonus: bonusgrund
                 }
             }
         };

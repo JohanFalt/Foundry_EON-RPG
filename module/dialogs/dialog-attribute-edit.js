@@ -35,7 +35,6 @@ export class DialogAttributeEdit extends FormApplication {
         else {
             let headline = game.EON.CONFIG[attribute.typ][attribute.nyckel].namn.toLowerCase();
 
-            //this.options.title = `${actor.name} - ${game.EON.CONFIG[attribute.typ][attribute.nyckel].namn}`;        
             this.options.title = `Editera ${headline}`;        
         }
         

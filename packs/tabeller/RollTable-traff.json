@@ -1,0 +1,96 @@
+{
+	"id": "rt_traff",
+	"version": "1.0.0",
+	"mapp": "Strid",
+	"tabell": {
+	  "name": "Träfftabell",
+	  "img": "systems/eon-rpg/assets/img/icons/on-sight.svg",
+	  "description": "",
+	  "results": [
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            1,
+            1
+          ],
+          "drawn": false,
+          "_id": "A5kzPhI3xmwkpBAd",
+          "text": "Huvud",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/on-sight.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            2,
+            4
+          ],
+          "drawn": false,
+          "_id": "8KtsAZgSl7t1W5w6",
+          "text": "Torso",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/on-sight.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            5,
+            6
+          ],
+          "drawn": false,
+          "_id": "ikToZHRmfTXBvC9I",
+          "text": "Vänster arm",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/on-sight.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            7,
+            8
+          ],
+          "drawn": false,
+          "_id": "fF8zWntXxUaczz2M",
+          "text": "Höger arm",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/on-sight.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            9,
+            9
+          ],
+          "drawn": false,
+          "_id": "g4wVH9r9nDzFdGSu",
+          "text": "Vänster ben",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/on-sight.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            10,
+            10
+          ],
+          "drawn": false,
+          "_id": "ZmDWkGL3p1PphMLU",
+          "text": "Höger ben",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/on-sight.svg"
+        }
+      ]
+	}
+}

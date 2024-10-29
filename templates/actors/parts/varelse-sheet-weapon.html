@@ -1,0 +1,22 @@
+<div class="item-box">
+    <div class="headline headline-background item-row">
+        <div class="weapon-icon pointer">
+            <a class="item-create" title="Lägg till vapen" data-type="närstridsvapen">
+                <i class="fa-solid fa-square-plus green"></i>
+            </a>
+        </div>
+        <div style="width: 175px;">Vapen</div>
+        <div class="centerText" style="width: 75px;">Färdighet</div>
+        <div class="centerText" style="width: 45px;">1H</div>
+        <div class="centerText" style="width: 45px;">2H</div>
+        <div class="centerText" style="width: 50px;">Hugg</div>
+        <div class="centerText" style="width: 50px;">Kross</div>
+        <div class="centerText" style="width: 50px;">Stick</div>
+        <div class="centerText" style="width: 60px;">Längd</div>
+        <div class="centerText" style="width: 50px;">Vikt</div>
+        <div>Egenskaper</div>
+    </div>   
+
+    {{#each actor.system.listdata.vapen as | vapen key|}}
+    {{/each}}
+</div>

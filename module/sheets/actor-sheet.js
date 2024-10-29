@@ -1,6 +1,7 @@
 import DialogHelper from "../dialog-helper.js";
 import CreateHelper from "../create-helper.js";
 import CalculateHelper from "../calculate-helper.js";
+import SelectHelper from "../select-helpers.js"
 import { SendMessage } from "../dice-helper.js";
 
 export default class EonActorSheet extends ActorSheet {
@@ -23,6 +24,7 @@ export default class EonActorSheet extends ActorSheet {
 
         this.locked = false;
 		this.isCharacter = true;	
+        this.isPC = true;
 		this.isGM = game.user.isGM;	
     }
 
@@ -68,6 +70,8 @@ export default class EonActorSheet extends ActorSheet {
 
         data.EON = game.EON;
         data.EON.CONFIG = CONFIG.EON;
+
+        data.enrichedBeskrivning = await TextEditor.enrichHTML(this.actor.system.bakgrund.beskrivning);        
 
         data.actor.system.listdata = [];
         data.actor.system.listdata.fardigheter = [];
@@ -239,6 +243,8 @@ export default class EonActorSheet extends ActorSheet {
         else {
             data.actor.system.berakning.belastning.totaltavdrag = CalculateHelper.BeraknaBelastningAvdrag(data.actor.system.berakning.belastning.rustning);
         }
+
+        data.listData = SelectHelper.SetupActor(data.actor);
 
         console.log(data.actor.name);
         console.log(data.actor);
@@ -541,7 +547,8 @@ export default class EonActorSheet extends ActorSheet {
 
 			itemData = {
                 name: "Nytt avståndsvapen",
-                type: "Avståndsvapen",                
+                type: "Avståndsvapen",
+                
                 system: {
                     installningar: {
                         skapad: true,
@@ -557,7 +564,8 @@ export default class EonActorSheet extends ActorSheet {
 
 			itemData = {
                 name: "Ny sköld",
-                type: "Sköld",                
+                type: "Sköld",
+                
                 system: {
                     installningar: {
                         skapad: true,

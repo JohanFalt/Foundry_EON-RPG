@@ -10,6 +10,8 @@ eon.ikoner = {
     slag_dod: "systems/eon-rpg/assets/img/icons/half-dead.svg",
     slag_initiative: "systems/eon-rpg/assets/img/icons/swords-emblem.svg",
     skada: "systems/eon-rpg/assets/img/icons/arrowed.svg",
+    skadetabell: "systems/eon-rpg/assets/img/icons/internal-injury.svg",
+    trafftabell: "systems/eon-rpg/assets/img/icons/on-sight.svg",
     initiative_distance: "systems/eon-rpg/assets/img/icons/bowman.svg",
     initiative_close: "systems/eon-rpg/assets/img/icons/swordman.svg",
     initiative_mystic: "systems/eon-rpg/assets/img/icons/magic-swirl.svg",

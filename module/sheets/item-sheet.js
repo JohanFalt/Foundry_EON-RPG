@@ -1,5 +1,8 @@
 import CreateHelper from "../create-helper.js";
 import CalculateHelper from "../calculate-helper.js";
+import SelectHelper from "../select-helpers.js"
+import { DiceRollContainer } from "../dice-helper.js";
+import { RollDice } from "../dice-helper.js";
 
 export default class EonItemSheet extends ItemSheet {
 
@@ -19,6 +22,13 @@ export default class EonItemSheet extends ItemSheet {
 		super(item, options);
 
 		this.isCharacter = false;	
+		this.isPC = false;
+
+		if (this.actor != undefined)
+		{
+			this.isPC = this.actor.type.toLowerCase().replace(" ", "") == "rollperson";
+		}
+		
 		this.isGM = game.user.isGM;		
 		this.selectedRitual = -1;
 	}
@@ -125,8 +135,20 @@ export default class EonItemSheet extends ItemSheet {
 		const data = await super.getData();
 
 		data.isCharacter = this.isCharacter;
+		data.isPC = this.isPC;
 		data.isGM = this.isGM;
+		data.hasExperience = false;
 		data.selectedRitual = parseInt(this.selectedRitual);
+
+		data.listData = SelectHelper.SetupItem(this.item);
+
+		data.enrichedBeskrivning = await TextEditor.enrichHTML(this.item.system.beskrivning);
+
+		if (this.item.type == 'Mysterie')
+		{
+			data.enrichedMirakel = await TextEditor.enrichHTML(this.item.system.mirakel);
+			data.enrichedCermoni = await TextEditor.enrichHTML(this.item.system.cermoni);
+		}
 
 		data.EON = game.EON;
 		data.EON.CONFIG = CONFIG.EON;
@@ -134,9 +156,13 @@ export default class EonItemSheet extends ItemSheet {
 		if (this.item.actor != null) {
 			data.hasActor = true;
 
-			if ((this.item.type == "Färdighet") && (this.item.system.grupp == "mystik") && (this.item.system.id == "teoretiskmagi")) {
-				data.item.system.installningar.kantabort = true;
-			}
+			if (this.item.type == "Färdighet") {
+				data.hasExperience = this.item.actor.system.fardigheter[this.item.system.grupp].erf > 0;
+
+				if ((this.item.system.grupp == "mystik") && (this.item.system.id == "teoretiskmagi")) {
+					data.item.system.installningar.kantabort = true;
+				}
+			}			
 		}
 		else {
 			data.hasActor = false;
@@ -183,6 +209,10 @@ export default class EonItemSheet extends ItemSheet {
 		html
 			.find(".item-delete")
 			.click(this._onItemDelete.bind(this));
+
+		html
+			.find(".skill-improve")
+			.click(this._onSkillImprove.bind(this));
 
 		html
             .find('.svarighet')
@@ -959,4 +989,138 @@ export default class EonItemSheet extends ItemSheet {
 
 		ui.notifications.error("Saknar _onsheetChange source typ");
 	}
+
+	async _onSkillImprove(event) {
+		event.preventDefault();
+
+		const itemData = foundry.utils.duplicate(this.item);
+		const roll = new DiceRollContainer(this.actor, game.EON.CONFIG);
+		const improveThreshold = CalculateHelper.CalculateImproveDifficulty(this.actor, itemData);
+
+		roll.typeroll = CONFIG.EON.slag.fardighet;
+		roll.action = `Förbättringsslag ${itemData.name}`;
+		roll.number = itemData.system.varde.tvarde;
+		roll.bonus = itemData.system.varde.bonus;
+		roll.svarighet = parseInt(improveThreshold);
+
+		// Perform the roll and get the total result
+		const total = await RollDice(roll);
+
+		// Skill improvement logic
+		let improvementMessage = "";
+		if (this.actor.system.fardigheter[itemData.system.grupp].erf > 0) {
+			const tvarde = itemData.system.varde.tvarde;
+			const bonus = itemData.system.varde.bonus;
+			const gruppKey = itemData.system.grupp;
+			const currentErf = this.actor.system.fardigheter[gruppKey].erf;
+
+			if (tvarde === 0 && bonus === 0) {
+				// Special case for skills with value 0
+				if (currentErf >= 4) {
+					// Decrease erfarenhet by 4
+					await this.actor.update({
+						[`system.fardigheter.${gruppKey}.erf`]: Math.max(currentErf - 4, 0)
+					});
+
+					// Improve skill to rank 2 with 0 bonus
+					const improvementResult = await this._improveSkillToRankTwo();
+
+					if (improvementResult) {
+						improvementMessage = `Färdigheten <b>${this.item.name}</b> har förbättrats från 0 till 2T6!<br>
+											Fyra erfarenhetspoäng har förbrukats.`;
+					} else {
+						improvementMessage = `Kunde inte hitta färdigheten <b>${this.item.name}</b> för att förbättra.`;
+					}
+				} else {
+					improvementMessage = `För att förbättra färdigheten <b>${this.item.name}</b> från 0 till 2T6 krävs 4 erfarenhetspoäng.`;
+				}
+			} else {
+				// Decrease erfarenhet by 1
+				await this.actor.update({
+					[`system.fardigheter.${gruppKey}.erf`]: Math.max(currentErf - 1, 0)
+				});
+
+				if (total >= improveThreshold) {
+					const improvementResult = await this._improveSkill(itemData);
+
+					if (improvementResult) {
+						const { oldTvarde, oldBonus, newTvarde, newBonus } = improvementResult;
+						const oldValueStr = formatSkillValue(oldTvarde, oldBonus);
+						const newValueStr = formatSkillValue(newTvarde, newBonus);
+
+						improvementMessage = `Tärningsslaget (${total}) är <b>högre</b> än svårighetsgraden (${improveThreshold}).<br>
+											Färdigheten <b>${this.item.name}</b> ökade från ${oldValueStr} till ${newValueStr}.`;
+					} else {
+						improvementMessage = `Kunde inte hitta färdigheten <b>${this.item.name}</b> för att förbättra.`;
+					}
+				} else {
+					improvementMessage = `Tärningsslaget (${total}) är <b>lägre</b> än svårighetsgraden (${improveThreshold}).<br>
+										Färdigheten <b>${this.item.name}</b> förbättrades inte.`;
+				}
+				improvementMessage += `<br>En erfarenhetspoäng har förbrukats.`;
+			}
+
+			const chatContent = `${roll.description}${improvementMessage}`;
+
+			// Send a single chat message with both roll result and improvement information
+			await ChatMessage.create({
+				content: chatContent,
+					speaker: ChatMessage.getSpeaker({ actor: this.actor })
+			});
+		}		
+
+		this.render();
+	}
+
+	async _improveSkill(item) {
+        // Find the skill item in the actor's items
+        //const skillItem = this.actor.items.find(item => item.name === this.item.nam && item.type === "Färdighet");
+
+		// Get the current skill value before improvement
+		let oldTvarde = item.system.varde.tvarde;
+		let oldBonus = item.system.varde.bonus;
+
+		// Copy the values for calculation
+		let tvarde = oldTvarde;
+		let bonus = oldBonus;
+
+		// Increase the skill value by +1 (adjusting bonus and tvarde accordingly)
+		bonus += 1;
+		if (bonus > 3) {
+			tvarde += 1;
+			bonus = bonus - 4; // Reset bonus and increase dice
+		}
+
+		// Update the skill item
+		await this.item.update({
+			"system.varde.tvarde": tvarde,
+			"system.varde.bonus": bonus
+		});
+
+		// Return old and new values
+		return {
+			oldTvarde,
+			oldBonus,
+			newTvarde: tvarde,
+			newBonus: bonus
+		};
+    }
+
+    async _improveSkillToRankTwo() {
+		await this.item.update({
+			"system.varde.tvarde": 2,
+			"system.varde.bonus": 0
+		});
+    }
+}
+
+// Helper function to format skill values
+function formatSkillValue(tvarde, bonus) {
+    if (bonus === 0) {
+        return `${tvarde}T6`;
+    } else if (bonus > 0) {
+        return `${tvarde}T6+${bonus}`;
+    } else {
+        return `${tvarde}T6${bonus}`;
+    }
 }

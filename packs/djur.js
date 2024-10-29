@@ -309,7 +309,7 @@ export const datadjur = {
                 "referens": "s278",
                 "strid": {
                     "narstrid": {
-                        "egenskaper": ["Bettet från giftormen fungerar som ett Nervgift (se sida 257) – förutsatt att bettet går igenom huden."]
+                        "egenskaper": ["Bettet från giftormen fungerar som ett Nervgift (se sida 257) - förutsatt att bettet går igenom huden."]
                     }                    
                 }
             },

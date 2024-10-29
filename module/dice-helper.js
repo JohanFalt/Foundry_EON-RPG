@@ -225,7 +225,7 @@ export async function RollDice(diceRoll) {
 
     while (numDices > rolledDices) {
         let roll = await new Roll("1" + dicetype);
-        await roll.evaluate();	
+        await roll.evaluate();
         allDices.push(roll);
         
         roll.terms[0].results.forEach((dice) => {
@@ -313,6 +313,7 @@ export async function RollDice(diceRoll) {
     const html = await renderTemplate(template, templateData);
 
     const chatData = {
+        //type: CONST.CHAT_MESSAGE_TYPES.ROLL,
         rolls: allDices,
         content: html,
         speaker: ChatMessage.getSpeaker(),
@@ -341,6 +342,7 @@ export async function SendMessage(actor, config, headline, message) {
     const html = await renderTemplate(template, templateData);
 
     const chatData = {
+        //type: CONST.CHAT_MESSAGE_TYPES.ROLL,
         content: html,
         speaker: ChatMessage.getSpeaker(),
         rollMode: game.settings.get("core", "rollMode")        

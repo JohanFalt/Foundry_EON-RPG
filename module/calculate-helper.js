@@ -163,6 +163,36 @@ export default class CalculateHelper {
         return avdrag;
     }
 
+    // Beräkna svårigheten att höja färdighet
+    static CalculateImproveDifficulty(actor, item) {
+        const tvarde = item.system.varde.tvarde;
+        const bonus = item.system.varde.bonus;
+        const isLattlard = item.system.installningar.lattlard;
+        const isSvarlard = item.system.installningar.svarlard;
+        const attributeValue = actor.system.grundegenskaper[item.system.attribut]?.totalt.tvarde * 4 + actor.system.grundegenskaper[item.system.attribut]?.totalt.bonus;       
+    
+        if (tvarde === 0 && bonus === 0) {
+            return Infinity; // This ensures that a roll can never succeed for a 0-value skill
+        }
+        const rank = ((tvarde - 2) * 4) + bonus;
+        let difficulty = 4 + (rank * 2);
+    
+        // Check if skill is less than the attribute it's based on
+        const skillValue = tvarde * 4 + bonus;
+        if (skillValue < attributeValue) {
+            difficulty -= 2;
+        }
+    
+        if (isLattlard) {
+            difficulty -= 2;
+        } else if (isSvarlard) {
+            difficulty += 4;
+        }
+    
+        // For lättlärd skills, we allow the difficulty to be less than 4
+        return isLattlard ? difficulty : Math.max(difficulty, 4);
+    }
+
     static _beraknaRustningBelastning(rustning) {
         let grundUtmattning = 0;
 
@@ -183,12 +213,14 @@ export default class CalculateHelper {
         }
 
         return grundUtmattning;
-    }
+    }    
 
     static isNumeric(str) {
         if (typeof str == "number") return true;
         if (typeof str != "string") return false;
         return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
                !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
-      }
+    }
+
+    
 }

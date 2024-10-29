@@ -289,7 +289,7 @@ export async function DoNotice(systemVersion, installedVersion) {
             <li>[VAPEN] Vapenskadan räknar inte alltid ihop grundskada och vapenskada. <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/106">#106</a></li>`;
     }    */     
 
-    if (message == "") {
+    if (partMessage == "") {
         return;
     }
 
@@ -339,6 +339,6 @@ export async function DoNotice(systemVersion, installedVersion) {
     await ChatMessage.create({
       user: game.user.id,
       content: enrichedMessage,
-      type: CONST.CHAT_MESSAGE_TYPES.OTHER
+      //type: CONST.CHAT_MESSAGE_TYPES.OTHER
     });
 }

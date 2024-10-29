@@ -16,4 +16,6 @@ export {default as EonRustning} from "./item/rustning.js";
 
 export {default as EonUtrustning} from "./item/utrustning.js";
 
+export {default as EonEgenskap} from "./item/egenskap.js";
+
 export {default as EonSkada} from "./item/skada.js";

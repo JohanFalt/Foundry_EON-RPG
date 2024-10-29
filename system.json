@@ -1,7 +1,7 @@
 {
   "id": "eon-rpg",
   "title": "Eon IV RPG",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "compatibility": {
     "minimum": "12",
     "verified": "12",
@@ -37,12 +37,12 @@
   },
   "initiative": "@harleddegenskaper.initiativ.tarning + @harleddegenskaper.initiativ.bonus",
   "grid": {
-    "distance": 2,
-    "units": "m"
-  },
+    "gridDistance": 2,
+    "gridUnits": "m"
+  },  
   "url": "https://github.com/JohanFalt/Foundry_EON-RPG",
   "manifest": "https://raw.githubusercontent.com/JohanFalt/Foundry_EON-RPG/main/system.json",
-  "download": "https://github.com/JohanFalt/Foundry_EON-RPG/archive/refs/tags/3.0.0.zip",
+  "download": "https://github.com/JohanFalt/Foundry_EON-RPG/archive/refs/tags/3.1.0.zip",
   "bugs": "https://github.com/JohanFalt/Foundry_EON-RPG/issues",
   "license": "LICENSE.txt"
 }

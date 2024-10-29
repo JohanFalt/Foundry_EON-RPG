@@ -25,18 +25,22 @@
 						<span class="floating-label">Namn</span>
 					</div>	
 
-					<div class="item-property-area number-value-text floating-label-group">
-						<select class="text-value" name="system.attribut">
-							<option value="">- Välj -</option>
-							{{#select item.system.attribut}}										
-								<option value="">- Inget attribut -</option>
-								{{#each EON.CONFIG.grundegenskaper as |grundegenskap key|}}
-									<option value="{{key}}">{{grundegenskap.namn}}</option>
-								{{/each}}
-							{{/select}}
-						</select>
-						<span class="floating-label">Attribut</span>
-					</div>	
+					{{#if this.isPC}}
+
+						<div class="item-property-area number-value-text floating-label-group">
+							<select class="text-value" name="system.attribut">
+								<option value="">- Välj -</option>
+								{{#select item.system.attribut}}										
+									<option value="">- Inget attribut -</option>
+									{{#each EON.CONFIG.grundegenskaper as |grundegenskap key|}}
+										<option value="{{key}}">{{grundegenskap.namn}}</option>
+									{{/each}}
+								{{/select}}
+							</select>
+							<span class="floating-label">Attribut</span>
+						</div>	
+
+					{{/if}}
 					
 					<div class="item-property-area number-value-text floating-label-group">
 						<input class="text-value editable" name="system.referens" type="text" value="{{data.system.referens}}" data-dtype="String" />
@@ -50,15 +54,17 @@
 
 					<div class="information-area information-box">För att höja/sänka sitt färdighetsvärde höger-eller vänsterklickar på rutan.</div>
 
-					<div class="item-row">
-						<div class="headline-checkbox">Lättlärd</div>
-						<div><input class="svarighet pointer" type="checkbox" data-value="L" {{isChecked data.system.installningar.lattlard}} data-dtype="String" /></div>
-					</div>
+					{{#if this.isPC}}
+						<div class="item-row">
+							<div class="headline-checkbox">Lättlärd</div>
+							<div><input class="svarighet pointer" type="checkbox" data-value="L" {{isChecked data.system.installningar.lattlard}} data-dtype="String" /></div>
+						</div>
 
-					<div class="item-row">
-						<div class="headline-checkbox">Svårlärd</div>
-						<div><input class="svarighet pointer" type="checkbox" data-value="S" {{isChecked data.system.installningar.svarlard}} data-dtype="String" /></div>
-					</div> 
+						<div class="item-row">
+							<div class="headline-checkbox">Svårlärd</div>
+							<div><input class="svarighet pointer" type="checkbox" data-value="S" {{isChecked data.system.installningar.svarlard}} data-dtype="String" /></div>
+						</div> 
+					{{/if}}
 
 					{{#if (eq item.system.grupp "mystik")}}
 						<div class="item-row">
@@ -80,9 +86,7 @@
 							<div class="headline-checkbox">Kännetecken</div>
 							<div><input class="item-property pointer" type="checkbox" {{isChecked data.system.kannetecken}} data-dtype="Boolean" data-field="kannetecken" /></div>
 						</div>
-					{{/if}}
-
-					
+					{{/if}}					
 
 				</div>
 
@@ -98,7 +102,14 @@
 			</div>		
 		</header>
 		
-		<section class="item-body">				
+		<section class="item-body">		
+			
+			{{#if hasExperience}}
+				<div class="form-group">
+
+					<button class="dialog-button four-column skill-improve">Förbättra färdighet</button>
+				</div>
+			{{/if}}
 					
 		</section>
 

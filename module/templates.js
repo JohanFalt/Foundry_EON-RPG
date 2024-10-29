@@ -33,6 +33,10 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-skill.html",
 
 		"systems/eon-rpg/templates/actors/parts/varelse-sheet-top.html",
+		"systems/eon-rpg/templates/actors/parts/varelse-sheet-skill.html",
+		"systems/eon-rpg/templates/actors/parts/varelse-sheet-property.html",		
+		"systems/eon-rpg/templates/actors/parts/varelse-sheet-weapon.html",
+		"systems/eon-rpg/templates/actors/parts/varelse-sheet-health.html",
 
 		"systems/eon-rpg/templates/items/parts/navigation-weapon.html",
 		"systems/eon-rpg/templates/items/parts/navigation-faith.html",
@@ -59,14 +63,7 @@ export const PreloadHandlebarsTemplates = async function () {
 };
 
 export async function Setup() {
-    try {        
-        /* const {files} = await FilePicker.browse("data", 'systems/eon-rpg/packs');
-        let data = await FilePicker.browse("data", "systems/eon-rpg/packs", { bucket: null, extensions: [".json", ".JSON"], wildcard: false }); 
-		if (data.files.includes("systems/eon-rpg/packs/karaktarsdrag.json")) {
-			const fileData = await fetch(`systems/eon-rpg/packs/karaktarsdrag.json`).then((response) => response.json());
-			Object.assign(importData, fileData);
-        }*/
-
+    try {      
 		const harStrid = false;
 
 		let importData = {};
@@ -97,6 +94,127 @@ export async function Setup() {
     }
 }
 
+export async function RegisterRollableTables() {
+	let stridfolderData = false;
+	let skadefolderData = false;
+
+	// skapa mapp-strukturen först
+	for (const folder of game.folders) {
+		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Strid")) {
+			stridfolderData = folder;
+			break;
+		}
+	}
+
+	if (!stridfolderData) {
+		// Create a new Folder
+		stridfolderData = await Folder.create({
+			name: "[EON] Strid",
+			type: "RollTable",
+			parent: null,
+			sorting: 'm',
+			"flags.eon.folderId": "Strid"
+		});
+	}
+
+	for (const folder of game.folders) {
+		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Skadetabell")) {
+			skadefolderData = folder;
+			break;
+		}
+	}
+
+	if (!skadefolderData) {
+		// Create a new Folder
+		skadefolderData = await Folder.create({
+			name: "[EON] Skadetabell",
+			type: "RollTable",
+			parent: stridfolderData._id,
+			sorting: 'm',
+			"flags.eon.folderId": "Skadetabell"
+		});
+	}
+
+	// läs in alla tabellerna
+	let data = await FilePicker.browse("data", "systems/eon-rpg/packs/tabeller", { bucket: null, extensions: [".json", ".JSON"], wildcard: false }); 
+
+	for (const file of data.files) {
+		const fileData = await fetch(`${file}`).then((response) => response.json());
+
+		let id = "";
+
+		try {
+			id = game.settings.get('eon-rpg', fileData.id);
+		}
+		catch(err) {
+			// om tabellen inte har en inställning hoppa över denna
+			console.error(`Ingen inställning för ${fileData.id}`);
+			continue;
+		}
+
+		let folderData = false;
+
+		// kontrollera om mappen redan finns
+		if (fileData.mapp != "") {
+			if (fileData.mapp == "Skadetabell") {
+				folderData = skadefolderData;
+			}
+			if (fileData.mapp == "Strid") {
+				folderData = stridfolderData;
+			}
+		}	
+
+		let range = 1;
+
+		try {
+			range = parseInt(fileData.tabell.results[fileData.tabell.results.length-1].range[1]);
+		}
+		catch(err) {
+			console.error(`Kunde inte läsa in antalet sidor tabellen ${fileData.id} skulle ha`);
+			continue;
+		}		
+
+		if (id == "") {
+			let tabell = await RollTable.implementation.create({
+				name: fileData.tabell.name,
+				results: fileData.tabell.results,
+				img: fileData.tabell.img,
+				description: fileData.tabell.description,
+				folder: folderData._id,
+				replacement: true,
+				displayRoll: true,
+				formula: `1d${range}`
+			});
+
+			console.log(`Tabell ${fileData.id} skapad ${tabell._id}`);
+			await game.settings.set('eon-rpg', fileData.id, tabell._id);
+		}
+		// kontrollera version på tabellen
+		// om tabellen är borttagen OM borttagen skall den läggas till igen?
+		else {
+			const table = game.tables.find(i => i._id === id);
+
+			if ((!table) || (table == undefined)) {
+				let tabell = await RollTable.implementation.create({
+					name: fileData.tabell.name,
+					results: fileData.tabell.results,
+					img: fileData.tabell.img,
+					description: fileData.tabell.description,
+					folder: folderData._id,
+					replacement: true,
+					displayRoll: true,
+					formula: `1d${range}`
+				});
+
+				console.log(`Tabell ${fileData.id} skapad ${tabell._id}`);		
+				await game.settings.set('eon-rpg', fileData.id, tabell._id);
+			}			
+		}		
+	}
+
+	//await Macro.implementation.create({});
+}
+
 export const RegisterHandlebarsHelpers = function () {
 
 	function isEmpty(value) {
@@ -113,8 +231,13 @@ export const RegisterHandlebarsHelpers = function () {
 	Handlebars.registerHelper("getDiceValue", function(value) {
 		let dice = "0";
 
+		// rollperson
 		if (value?.tvarde != undefined) {
 			dice = value?.tvarde;
+		}
+		// varelse
+		else if (value?.grund != undefined) {
+			dice = value?.grund.tvarde;
 		}
 
 		dice = dice + "T6";
@@ -129,6 +252,18 @@ export const RegisterHandlebarsHelpers = function () {
 			}
 			if (value?.bonus < 0) {
 				return dice + value?.bonus;
+			}			
+		}
+		else if ((value?.grund?.bonus != undefined) && (value?.grund?.bonus != 0)) {
+			if (dice == "0T6") {
+				dice = "";
+			}
+
+			if (value?.bonus > 0) {
+				return dice + "+" + value?.grund.bonus;
+			}
+			if (value?.bonus < 0) {
+				return dice + value?.grund?.bonus;
 			}			
 		}
 
@@ -551,10 +686,6 @@ export const RegisterHandlebarsHelpers = function () {
 
 	Handlebars.registerHelper("setVariable", function(varName, varValue, options) {
 		options.data.root[varName] = varValue;
-	});
-	
-	Handlebars.registerHelper("enrichText", function(text) {
-		return TextEditor.enrichHTML(text, {async: false});
 	});
 		
 	Handlebars.registerHelper("numLoop", function (num, options) {

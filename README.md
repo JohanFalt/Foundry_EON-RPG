@@ -1,4 +1,4 @@
-![](https://img.shields.io/badge/Foundry-v11-informational)
+![](https://img.shields.io/badge/Foundry-v11-informational) ![]https://img.shields.io/badge/Foundry-v12-informational
 
 I would never require it by anyone or even expect someone to do but if you really want to feel free to [buy me a coffee](https://ko-fi.com/johanfk) 
 

@@ -10,8 +10,19 @@
             
         </header>
 
-        <section class="sheet-body">            
+        <section class="sheet-body">         
+            <div class="clear">
+                <div class="two-column pullLeft">
+                    {{> "systems/eon-rpg/templates/actors/parts/varelse-sheet-skill.html"}}
+                </div>
+                <div class="two-column pullLeft">
+                    {{> "systems/eon-rpg/templates/actors/parts/varelse-sheet-property.html"}}
+                </div>
+            </div>   
 
+            {{> "systems/eon-rpg/templates/actors/parts/varelse-sheet-weapon.html"}}
+
+            {{> "systems/eon-rpg/templates/actors/parts/varelse-sheet-health.html"}}
         </section>
 
     </div>
