@@ -5,6 +5,7 @@ import { datavapen } from "../packs/vapen.js";
 import { datastrid } from "../packs/strid.js";
 import { datautrustning } from "../packs/utrustning.js";
 import { datadjur } from "../packs/djur.js";
+import { datavaluta } from "../packs/valuta.js";
 
 /**
  * Define a set of template paths to pre-load
@@ -53,7 +54,8 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/items/parts/items-spell-data.html",
 		"systems/eon-rpg/templates/items/parts/items-spell-ritual.html",		
 
-		"systems/eon-rpg/templates/items/parts/items-description.html"
+		"systems/eon-rpg/templates/items/parts/items-description.html",
+		"systems/eon-rpg/templates/items/valuta-sheet.html",
     ];
 
     /* Load the template parts
@@ -86,6 +88,9 @@ export async function Setup() {
 		Object.assign(importData, fileData);
 
 		fileData = datadjur;
+		Object.assign(importData, fileData);
+
+		fileData = datavaluta;
 		Object.assign(importData, fileData);
 
 		return importData;		
@@ -785,5 +790,44 @@ export const RegisterHandlebarsHelpers = function () {
 		else {
 			return;
 		}
+	});
+
+	Handlebars.registerHelper("getCurrencyData", function(valuta, property) {
+		if (!valuta || !property) {
+			return "";
+		}
+
+		if (CONFIG.EON.datavaluta?.valuta?.[valuta]?.[property] !== undefined) {
+			return CONFIG.EON.datavaluta.valuta[valuta][property];
+		}
+
+		return "";
+	});
+
+	Handlebars.registerHelper("getCurrencyList", function() {
+		if (!CONFIG.EON.datavaluta?.valuta) {
+			console.log("No currency data found");
+			return [];
+		}
+		
+		const currencyList = Object.entries(CONFIG.EON.datavaluta.valuta).map(([key, currency]) => {
+			const item = {
+				key: key,
+				namn: currency.namn,
+				ursprung: currency.ursprung,
+				displayNamn: `${currency.namn} (${currency.ursprung})`
+			};
+			return item;
+		});
+		
+		console.log("Currency list:", currencyList);
+		return currencyList;
+	});
+
+	Handlebars.registerHelper("formatDecimal", function(number) {
+		if (typeof number !== 'number') {
+			number = Number(number);
+		}
+		return number.toFixed(2);
 	});
 }

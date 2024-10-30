@@ -18,7 +18,8 @@
             "Sköld",
             "Rustning",
             "Utrustning",
-            "Skada"
+            "Skada",
+            "Valuta"
         ],
         "Egenskap": {},
         "Folkslag": {},
@@ -32,6 +33,7 @@
         "Sköld": {},
         "Rustning": {},
         "Utrustning": {},
-        "Skada": {}
+        "Skada": {},
+        "Valuta": {}
     }
 }
