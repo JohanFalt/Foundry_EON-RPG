@@ -296,6 +296,10 @@ eon.utrustningsgrupper = {
     proviant: "Proviant"
 }
 
+eon.valuta = {
+    "valuta": "Valuta"
+}
+
 eon.djurgrupper = {
     litenvarelse: "Liten varelse",
     meddelstorvarelse: "Medelstor varelse",

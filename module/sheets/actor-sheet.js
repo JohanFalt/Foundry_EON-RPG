@@ -3,6 +3,7 @@ import CreateHelper from "../create-helper.js";
 import CalculateHelper from "../calculate-helper.js";
 import SelectHelper from "../select-helpers.js"
 import { SendMessage } from "../dice-helper.js";
+import { datavaluta } from '../../packs/valuta.js';
 
 export default class EonActorSheet extends ActorSheet {
 
@@ -26,6 +27,7 @@ export default class EonActorSheet extends ActorSheet {
 		this.isCharacter = true;	
         this.isPC = true;
 		this.isGM = game.user.isGM;	
+        this.datavaluta = datavaluta;	
     }
 
     /** @override */
@@ -96,12 +98,13 @@ export default class EonActorSheet extends ActorSheet {
         data.actor.system.listdata.utrustning.vapen.narstrid = [];
         data.actor.system.listdata.utrustning.vapen.avstand = [];
         data.actor.system.listdata.utrustning.vapen.skold = [];
-        data.actor.system.listdata.utrustning.mynt = [];
         data.actor.system.listdata.utrustning.foremal = [];
         data.actor.system.listdata.kroppsdelar = [];
         data.actor.system.listdata.kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, version);
         data.actor.system.listdata.skador = [];
+        data.actor.system.listdata.datavaluta = this.datavaluta;
 
+        data.actor.system.listdata.valuta = [];
         data.actor.system.altvarde = [];
 
         let totalVikt = 0;
@@ -155,16 +158,20 @@ export default class EonActorSheet extends ActorSheet {
                 }
             }
             if (item.type == "Utrustning") {
-                if (item.system.typ == "mynt") {
-                    data.actor.system.listdata.utrustning.mynt.push(item);
-                }
-                else if (item.system.typ == "kongelat") {
+                if (item.system.typ == "kongelat") {
                     data.actor.system.listdata.magi.kongelat.push(item);
                 }                
                 else {
                     data.actor.system.listdata.utrustning.foremal.push(item);
                 }                
 
+                if (item.system.installningar.buren) {
+                    totalVikt += parseFloat(item.system.vikt) * parseFloat(item.system.antal);    
+                    totalViktUtrustning += parseFloat(item.system.vikt) * parseFloat(item.system.antal);                 
+                }
+            }
+            if (item.type == "Valuta") {
+                data.actor.system.listdata.valuta.push(item);
                 if (item.system.installningar.buren) {
                     totalVikt += parseFloat(item.system.vikt) * parseFloat(item.system.antal);    
                     totalViktUtrustning += parseFloat(item.system.vikt) * parseFloat(item.system.antal);                 
@@ -249,6 +256,10 @@ export default class EonActorSheet extends ActorSheet {
         console.log(data.actor.name);
         console.log(data.actor);
         console.log(data.EON);
+
+        data.actor.system.listdata.valuta = data.actor.items
+            .filter(item => item.type === "Valuta")
+            .sort((a, b) => a.name.localeCompare(b.name));
 
         return data;
     }
@@ -611,24 +622,37 @@ export default class EonActorSheet extends ActorSheet {
             };
 		}
 
-        if (type == "mynt") {
+        if (type == "valuta") {
             found = true;
 
-			itemData = {
-                name: "Silvermynt",
-                type: "Utrustning",                
+            const getCurrencyData = (currencyName) => {
+                if (currencyName) {
+                    const currency = Object.values(this.datavaluta.valuta)
+                        .find(currency => currency.namn === currencyName);
+                    if (currency) return currency;
+                }
+            
+                const firstCurrency = Object.values(this.datavaluta.valuta)[0];
+                return firstCurrency;
+            };
+
+            const currencyData = getCurrencyData('Denar');
+
+            itemData = {
+                name: currencyData.namn,
+                type: "Valuta",                
                 system: {
                     installningar: {
                         skapad: true,
                         version: version,
-                        behallare: true
+                        buren: false
                     },
-                    typ: "mynt",
-                    volym: {
-                        enhet: "st",
-                        antal: 0,
-                        max: 50
-                    }
+
+                    ursprung: currencyData.ursprung,
+                    metall: currencyData.metall,
+                    silver_varde: currencyData.silver_varde,
+                    vikt: currencyData.vikt,
+                    antal: 0
                 }
             };
 		}

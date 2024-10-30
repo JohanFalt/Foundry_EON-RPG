@@ -233,6 +233,10 @@ export default class EonItemSheet extends ItemSheet {
 		html
             .find('.weapon-property')
             .click(this._setVapenEgenhet.bind(this));
+
+		html
+			.find('.currency-select')
+			.change(event => this._setCurrency(event));
 	}
 
 	/** @override */
@@ -794,6 +798,29 @@ export default class EonItemSheet extends ItemSheet {
 		const dataset = element.dataset;
 		const source = dataset.source;
 
+		if (source == "valuta") {
+			const selectedCurrencyName = element.value;
+			const currencyData = CONFIG.EON.datavaluta.valuta[selectedCurrencyName.toLowerCase()];
+			
+			if (!currencyData) {
+				ui.notifications.error("Valutan hittades inte");
+				return;
+			}
+			
+			const itemData = foundry.utils.duplicate(this.item);
+			itemData.name = currencyData.namn;
+			itemData.system.metall = currencyData.metall;
+			itemData.system.silver_varde = currencyData.silver_varde;
+			itemData.system.vikt = currencyData.vikt;
+			itemData.system.ursprung = currencyData.ursprung;
+			itemData.system.antal = this.item.system.antal || 0;
+			
+			await this.item.update(itemData);
+			this.render();
+			
+			return;
+		}
+
 		if (source == "weapon-close") {
 			const typ = this.item.system.grupp;
 			const vapenmall = element.value;
@@ -1112,6 +1139,28 @@ export default class EonItemSheet extends ItemSheet {
 			"system.varde.bonus": 0
 		});
     }
+
+	async _setCurrency(event) {
+		event.preventDefault();
+		const currencyKey = event.currentTarget.value.toLowerCase();
+		const currencyData = CONFIG.EON.datavaluta.valuta[currencyKey];
+		
+		if (currencyData) {
+			const itemData = {
+				name: currencyData.namn,
+				system: {
+					ursprung: currencyData.ursprung,
+					metall: currencyData.metall,
+					silver_varde: currencyData.silver_varde,
+					vikt: currencyData.vikt,
+					antal: this.item.system.antal || 0
+				}
+			};
+			
+			await this.item.update(itemData);
+			this.render();
+		}
+	}
 }
 
 // Helper function to format skill values
