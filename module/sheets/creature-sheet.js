@@ -58,6 +58,7 @@ export default class EonCreatureSheet extends ActorSheet {
 
         data.actor.system.listdata = [];
         data.actor.system.listdata.fardigheter = [];
+        data.actor.system.listdata.vapen = [];
         data.actor.system.listdata.egenskaper = [];
 
         for (const item of this.actor.items) {
@@ -70,9 +71,13 @@ export default class EonCreatureSheet extends ActorSheet {
             if (item.type == "Egenskap") {
                 data.actor.system.listdata.egenskaper.push(item);
             }
+            if ((item.type == "Närstridsvapen") || (item.type == "Avståndsvapen")) {    
+                data.actor.system.listdata.vapen.push(item);
+            }
         }
 
         data.actor.system.listdata.fardigheter = data.actor.system.listdata.fardigheter.sort((a, b) => a.name.localeCompare(b.name));
+        data.actor.system.listdata.vapen = data.actor.system.listdata.vapen.sort((a, b) => a.name.localeCompare(b.name));
 
         console.log(data.actor.name);
         console.log(data.actor);

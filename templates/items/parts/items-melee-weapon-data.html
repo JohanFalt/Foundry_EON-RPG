@@ -76,6 +76,7 @@
         <span class="floating-label">Pris (silver)</span>
     </div>
 
+    <div class="headline">Fattning</div>
     <div class="item-row">
         <div class="headline-checkbox">1H</div>
         <div><input class="item-active" name="system.enhand.aktiv" type="checkbox" data-property="enhand" {{isChecked data.system.enhand.aktiv}} data-dtype="Boolean" /></div>
@@ -86,7 +87,9 @@
         <div><input class="item-active" name="system.tvahand.aktiv" type="checkbox" data-property="tvahand" {{isChecked data.system.tvahand.aktiv}} data-dtype="Boolean" /></div>
         <div class="dice-value number-value-text tic pointer" data-property="tvahand">{{getDiceValue item.system.tvahand}}</div>
     </div>
+    <div class="information-area information-box">Kryssa i den handtyp vapnet kan användas i.</div>
 
+    <div class="headline">Skada</div>
     <div class="item-row">
         <div class="headline-checkbox">Hugg</div>
         <div><input class="item-active" name="system.hugg.aktiv" type="checkbox" data-property="hugg" {{isChecked data.system.hugg.aktiv}} data-dtype="Boolean" /></div>
@@ -102,4 +105,5 @@
         <div><input class="item-active" name="system.stick.aktiv" type="checkbox" data-property="stick" {{isChecked data.system.stick.aktiv}} data-dtype="Boolean" /></div>
         <div class="dice-value number-value-text tic pointer" data-property="stick">{{getDiceValue item.system.stick}}</div>
     </div>
+    <div class="information-area information-box">Kryssa i de skadetyper som kan användas av vapnet.</div>
 </div>

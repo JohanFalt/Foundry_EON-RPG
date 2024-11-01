@@ -106,6 +106,25 @@ export default class DiceHelper {
     }
 
     static AdderaVarden(tarning1, tarning2) {
+        if ((tarning1 == undefined) && (tarning2 == undefined)) {
+            return {
+                tvarde: 0,
+                bonus: 0
+            };
+        }
+        else if (tarning1 == undefined) {
+            return {
+                tvarde: parseInt(tarning2.tvarde),
+                bonus: parseInt(tarning2.bonus)
+            };
+        }
+        else if (tarning2 == undefined) {
+            return {
+                tvarde: parseInt(tarning1.tvarde),
+                bonus: parseInt(tarning1.bonus)
+            };
+        }
+
         let totalTarning = parseInt(tarning1.tvarde) + parseInt(tarning2.tvarde);
         let totalBonus = parseInt(tarning1.bonus) + parseInt(tarning2.bonus);
 

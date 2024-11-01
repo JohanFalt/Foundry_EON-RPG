@@ -393,11 +393,13 @@ export const RegisterHandlebarsHelpers = function () {
 
 	// hämtar värdet på en särskild färdighet som RP har.
 	Handlebars.registerHelper("getActorSkillGroupValue", function(actor, fardighet, grupp) {
-		for (const item of actor.system.listdata.fardigheter[grupp]) {
-			if (item.system.id == fardighet) {
-				return item.system.varde;
+		if (actor.system.listdata.fardigheter[grupp] != undefined) {
+			for (const item of actor.system.listdata.fardigheter[grupp]) {
+				if (item.system.id == fardighet) {
+					return item.system.varde;
+				}
 			}
-		}
+		}		
 
 		return {
 			"tvarde": 0,
@@ -406,13 +408,15 @@ export const RegisterHandlebarsHelpers = function () {
 	});
 
 	Handlebars.registerHelper("getActorSkillValue", function(actor, fardighet, config) {
-		for (const grupp in config.fardighetgrupper) {
-			for (const item of actor.system.listdata.fardigheter[grupp]) {
-				if (item.system.id == fardighet) {
-					return item.system.varde;
+		if (actor.system.listdata.fardigheter[grupp] != undefined) {
+			for (const grupp in config.fardighetgrupper) {
+				for (const item of actor.system.listdata.fardigheter[grupp]) {
+					if (item.system.id == fardighet) {
+						return item.system.varde;
+					}
 				}
 			}
-		}
+		}		
 
 		return {
 			"tvarde": 0,
