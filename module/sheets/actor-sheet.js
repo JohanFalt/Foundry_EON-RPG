@@ -739,7 +739,11 @@ export default class EonActorSheet extends ActorSheet {
         const element = event.currentTarget;
 		const dataset = element.dataset;
 
-        if (dataset.type == "attribute") {
+        if (dataset.type === "strid") {
+            DialogHelper.AttributeEditDialog(this.actor, dataset.type, dataset.attribute);
+            return;
+        }
+        else if (dataset.type == "attribute") {
             DialogHelper.AttributeEditDialog(this.actor, dataset.source, dataset.attribute);
             return;
         }
@@ -917,6 +921,14 @@ export default class EonActorSheet extends ActorSheet {
             else {
                 let data = game.EON.folkslag[e.value];
 
+                if (data?.lakningstakt) {
+                    actorData.system.strid.lakningstakt = {
+                        varde: data.lakningstakt,
+                        totalt: data.lakningstakt,
+                        bonuslista: []
+                    };
+                }
+
                 if ((data == undefined) || (data?.namn == undefined)) {
                     return;
                 }
@@ -948,7 +960,7 @@ export default class EonActorSheet extends ActorSheet {
 
                 await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
 
-                actorData.system.strid.lakningstakt = parseInt(data.lakningstakt);
+                actorData.system.strid.lakningstakt.varde = data.lakningstakt;
                 actorData.system.bakgrund.folkslag = e.value;            
 
                 await this.actor.update(actorData);
@@ -1024,6 +1036,12 @@ export default class EonActorSheet extends ActorSheet {
             
             await this.actor.update(actorData);
             this.render();
+            return;
+        }
+        if (source == "lakningstakt") {
+            let value = parseInt(element.value);
+            actorData.system.strid.lakningstakt = value;
+            await this.actor.update(actorData);
             return;
         }
 	}

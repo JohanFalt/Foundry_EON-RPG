@@ -46,7 +46,9 @@
                         <div class="headline">Bonus</div>
                     </div>
 
-                    {{#each attribut.bonuslista as |bonus key|}}
+                    {{#if attribut.bonuslista}}
+                    <div class="bonus-list">
+                        {{#each attribut.bonuslista as |bonus key|}}
                         <div class="item-row">
                             <div>
                                 <div class="floating-label-group">
@@ -54,10 +56,20 @@
                                     <span class="floating-label">Namn</span>
                                 </div>
                             </div>
-                            <div class="dice-value tic pointer" data-key="{{key}}">{{getDiceValue bonus}}</div>
-                            <div class="pointer red item-delete" title="Ta bort bonus" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
+                            {{#if (or (eq ../object.typ "strid") (and (eq ../object.typ "harleddegenskaper") (eq ../object.nyckel "grundrustning")))}}
+                                <div class="floating-label-group tic pointer" data-key="{{key}}">
+                                    <input class="attribute-value editable" type="text" value="{{bonus.tvarde}}" />
+                                </div>
+                            {{else}}
+                                <div class="dice-value tic pointer" data-key="{{key}}">{{getDiceValue bonus}}</div>
+                            {{/if}}
+                            <div class="pointer red item-delete" title="Ta bort bonus" data-key="{{key}}">
+                                <i class="icon fa-solid fa-trash-can"></i>
+                            </div>
                         </div>
-                    {{/each}}                    
+                        {{/each}}
+                    </div>
+                    {{/if}}
 
                 </div>
 

@@ -94,7 +94,14 @@ eon.harleddegenskaper = {
     },
     livskraft: {
         namn: "Livskraft"
-
+    },
+    grundskada: {
+        namn: "Grundskada",
+        rollable: false
+    },
+    grundrustning: {
+        namn: "Grundrustning",
+        rollable: false
     }
 }
 
@@ -305,4 +312,11 @@ eon.djurgrupper = {
     meddelstorvarelse: "Medelstor varelse",
     storvarelse: "Stor varelse",
     mycketstorvarelse: "Mycket stor varelse"
+}
+
+eon.strid = {
+    lakningstakt: {
+        namn: "Läkningstakt",
+        rollable: false
+    }
 }

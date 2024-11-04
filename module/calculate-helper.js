@@ -7,13 +7,36 @@ export default class CalculateHelper {
             return false;
         }
 
-        let totalTarning = parseInt(attribut.grund.tvarde);
-        let totalBonus = parseInt(attribut.grund.bonus);
+        // Special handling för läkningstakt och grundrustning
+        if (attribut.varde !== undefined) {
+            let total = parseInt(attribut.varde) || 0;
+            if (attribut.bonuslista?.length > 0) {
+                attribut.bonuslista.forEach(bonus => {
+                    total += parseInt(bonus.tvarde) || 0;
+                });
+            }
+            attribut.totalt = total;
+            return total;
+        }
+
+        if (!attribut.grund) {
+            let totalValue = parseInt(attribut.varde) || 0;
+            if (attribut.bonuslista) {
+                for (const bonus of attribut.bonuslista) {
+                    totalValue += parseInt(bonus.tvarde) || 0;
+                }
+            }
+            attribut.totalt = totalValue;
+            return totalValue;
+        }
+
+        let totalTarning = Math.floor(parseInt(attribut.grund.tvarde));
+        let totalBonus = Math.floor(parseInt(attribut.grund.bonus));
 
         if(attribut.bonuslista.length > 0) {
 			for (const bonus of attribut.bonuslista) {
-				totalTarning += bonus.tvarde;
-				totalBonus += bonus.bonus;
+				totalTarning += Math.floor(parseInt(bonus.tvarde || 0));
+				totalBonus += Math.floor(parseInt(bonus.bonus || 0));
 			}
 
 			if (totalBonus > 3) {
@@ -39,8 +62,8 @@ export default class CalculateHelper {
 		}
 
         return {
-            tvarde: totalTarning,
-            bonus: totalBonus
+            tvarde: Math.floor(totalTarning),
+            bonus: Math.floor(totalBonus)
         }
     }
 
@@ -106,6 +129,37 @@ export default class CalculateHelper {
         actorData.system.harleddegenskaper.grundskada.grund = await DiceHelper.BeraknaGrundskada(styrka);
         actorData.system.harleddegenskaper.grundskada.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.grundskada);
         actorData.system.harleddegenskaper.grundrustning = await DiceHelper.BeraknaGrundrustning(styrka, talighet);
+        actorData.system.harleddegenskaper.initiativ.grund = await DiceHelper.BeraknaInitiativ(actorData);        
+        actorData.system.harleddegenskaper.initiativ.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.initiativ);
+
+        // Update grundskada calculation
+        const baseGrundskada = await DiceHelper.BeraknaGrundskada(styrka);
+        actorData.system.harleddegenskaper.grundskada.grund = baseGrundskada;
+        
+        // Apply modifiers if they exist
+        if (actorData.system.harleddegenskaper.grundskada.modifierare) {
+            actorData.system.harleddegenskaper.grundskada.grund.tvarde += actorData.system.harleddegenskaper.grundskada.modifierare.tvarde;
+            actorData.system.harleddegenskaper.grundskada.grund.bonus += actorData.system.harleddegenskaper.grundskada.modifierare.bonus;
+        }
+        
+        actorData.system.harleddegenskaper.grundskada.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.grundskada);
+
+        // Add calculation for läkningstakt total
+        if (actorData.system.strid.lakningstakt) {
+            actorData.system.strid.lakningstakt.totalt = 
+                await CalculateHelper.BeraknaTotaltVarde(actorData.system.strid.lakningstakt);
+        }
+
+        // Handle grundrustning with bonus preservation
+        const baseGrundrustning = await DiceHelper.BeraknaGrundrustning(styrka, talighet);
+        if (!actorData.system.harleddegenskaper.grundrustning?.bonuslista) {
+            actorData.system.harleddegenskaper.grundrustning = baseGrundrustning;
+        } else {
+            actorData.system.harleddegenskaper.grundrustning.varde = baseGrundrustning.varde;
+            actorData.system.harleddegenskaper.grundrustning.totalt = 
+                await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.grundrustning);
+        }
+
         actorData.system.harleddegenskaper.initiativ.grund = await DiceHelper.BeraknaInitiativ(actorData);        
         actorData.system.harleddegenskaper.initiativ.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.initiativ);
     }

@@ -127,6 +127,10 @@ export default class harleddegenskaper extends foundry.abstract.DataModel {
                 tvarde: new fields.NumberField({...valueInteger}),
                 bonus: new fields.NumberField({...bonusInteger})
             }),
+            modifierare: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
             bonuslista: new fields.ArrayField(
                 new fields.ObjectField({
                     initial: {},
@@ -149,7 +153,15 @@ export default class harleddegenskaper extends foundry.abstract.DataModel {
                     nullable: false,
             }))
         }),
-        grundrustning: new fields.NumberField({required: true, nullable: false, integer: true, initial: 0, min: 0})
+        grundrustning: new fields.SchemaField({
+            varde: new fields.NumberField({...valueInteger}),
+            totalt: new fields.NumberField({...valueInteger}),
+            bonuslista: new fields.ArrayField(
+                new fields.ObjectField({
+                    initial: {},
+                    nullable: false,
+            }))
+        })
       };
     }
   }

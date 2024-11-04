@@ -90,7 +90,11 @@ export default class DiceHelper {
             varde = totalTarning - 4;
         }
 
-        return varde;
+        return {
+            varde: varde,
+            totalt: varde,
+            bonuslista: []
+        };
     }
 
     static async BeraknaInitiativ(actorData) {
