@@ -12,7 +12,7 @@
                     {{#if object.harSmarta}}
                         <div class="centerText">Smärta (-{{object.actor.system.berakning.svarighet.smarta}}T6)</div>
                     {{/if}}
-                    {{#if object.visaSar}}
+                    {{#if (and object.visaSar (gt object.hamtaAntalSar 0))}}
                         <div class="centerText" style="line-height: 26px; height: 26px; display: flex; margin-left: 185px;">Sår (-{{object.hamtaAntalSar}}T6) <input class="item-property pointer eventbutton" {{isChecked object.harSar}} type="checkbox" data-dtype="Boolean" data-source="set" data-value="harSar" /></div>
                     {{/if}}
                 {{/if}}
