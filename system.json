@@ -35,6 +35,8 @@
       }
     ]
   },
+  "packs": [],
+  "packFolders": [],
   "initiative": "@harleddegenskaper.initiativ.tarning + @harleddegenskaper.initiativ.bonus",
   "grid": {
     "gridDistance": 2,

@@ -407,23 +407,6 @@ export const RegisterHandlebarsHelpers = function () {
 		}
 	});
 
-	Handlebars.registerHelper("getActorSkillValue", function(actor, fardighet, config) {
-		if (actor.system.listdata.fardigheter[grupp] != undefined) {
-			for (const grupp in config.fardighetgrupper) {
-				for (const item of actor.system.listdata.fardigheter[grupp]) {
-					if (item.system.id == fardighet) {
-						return item.system.varde;
-					}
-				}
-			}
-		}		
-
-		return {
-			"tvarde": 0,
-			"bonus": 0
-		}
-	});	
-
 	Handlebars.registerHelper("getSkillAreaHeight", function(fardigheter) {
 		let style = "";
 		let numGroup = 0;

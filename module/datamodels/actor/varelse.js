@@ -13,6 +13,7 @@ export default class EonVarelse extends foundry.abstract.DataModel {
     static defineSchema() {
         const fields = foundry.data.fields;
         const valueInteger = {required: true, nullable: false, integer: true, initial: 0, min: 0};
+        const bonusInteger = {required: true, nullable: false, integer: true, initial: 0};
 
         const schema = {};
         schema.installningar = new fields.SchemaField({
@@ -26,6 +27,20 @@ export default class EonVarelse extends foundry.abstract.DataModel {
         });
 
         schema.skada = new fields.SchemaField({
+            forsvar: new fields.SchemaField({
+                namn: new fields.StringField({
+                    initial: '',
+                    nullable: false,
+                }),
+                anteckning: new fields.StringField({
+                    initial: '',
+                    nullable: false,
+                }),
+                varde : new fields.SchemaField({
+                    tvarde: new fields.NumberField({...valueInteger}),
+                    bonus: new fields.NumberField({...bonusInteger})
+                })
+            }),
             utmattning: new fields.SchemaField({
                 grund: new fields.NumberField({...valueInteger}),
                 varde: new fields.NumberField({...valueInteger})
