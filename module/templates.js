@@ -15,7 +15,7 @@ import { datavaluta } from "../packs/valuta.js";
 export const PreloadHandlebarsTemplates = async function () {
     const templatePaths = [
         // Actor Sheet Partials
-		"systems/eon-rpg/templates/actors/parts/navigation.html",
+		"systems/eon-rpg/templates/actors/parts/rollperson-navigation.html",
 
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-top.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-bio.html",
@@ -32,6 +32,8 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-religion.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-setting.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-skill.html",
+
+		"systems/eon-rpg/templates/actors/parts/varelse-navigation.html",
 
 		"systems/eon-rpg/templates/actors/parts/varelse-sheet-top.html",
 		"systems/eon-rpg/templates/actors/parts/varelse-sheet-skill.html",

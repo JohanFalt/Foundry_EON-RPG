@@ -7,7 +7,12 @@ export default class EonCreatureSheet extends ActorSheet {
     /** @override */
     static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
-			classes: ["EON varelse"]
+			classes: ["EON varelse"],
+            tabs: [{
+                navSelector: ".sheet-tabs",
+                contentSelector: ".sheet-body",
+                initial: "skill",
+            }]
 		});
 	}
   
@@ -59,6 +64,8 @@ export default class EonCreatureSheet extends ActorSheet {
         data.actor.system.listdata = [];
         data.actor.system.listdata.fardigheter = [];
         data.actor.system.listdata.vapen = [];
+        data.actor.system.listdata.vapen.narstrid = [];
+        data.actor.system.listdata.vapen.avstand = [];
         data.actor.system.listdata.egenskaper = [];
 
         for (const item of this.actor.items) {
@@ -71,13 +78,17 @@ export default class EonCreatureSheet extends ActorSheet {
             if (item.type == "Egenskap") {
                 data.actor.system.listdata.egenskaper.push(item);
             }
-            if ((item.type == "Närstridsvapen") || (item.type == "Avståndsvapen")) {    
-                data.actor.system.listdata.vapen.push(item);
+            if (item.type == "Närstridsvapen") {    
+                data.actor.system.listdata.vapen.narstrid.push(item);
+            }
+            if (item.type == "Avståndsvapen") {
+                data.actor.system.listdata.vapen.avstand.push(item);
             }
         }
 
         data.actor.system.listdata.fardigheter = data.actor.system.listdata.fardigheter.sort((a, b) => a.name.localeCompare(b.name));
-        data.actor.system.listdata.vapen = data.actor.system.listdata.vapen.sort((a, b) => a.name.localeCompare(b.name));
+        data.actor.system.listdata.vapen.narstrid = data.actor.system.listdata.vapen.narstrid.sort((a, b) => a.name.localeCompare(b.name));
+        data.actor.system.listdata.vapen.avstand = data.actor.system.listdata.vapen.avstand.sort((a, b) => a.name.localeCompare(b.name));
 
         console.log(data.actor.name);
         console.log(data.actor);
@@ -414,6 +425,10 @@ export default class EonCreatureSheet extends ActorSheet {
 
         if (dataset.type == "attribute") {
             DialogHelper.AttributeEditDialog(this.actor, dataset.source, dataset.attribute);
+            return;
+        }
+        if (dataset.type == "skada") {
+            DialogHelper.AttributeEditDialog(this.actor, dataset.type, dataset.attribute);
             return;
         }
 

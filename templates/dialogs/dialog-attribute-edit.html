@@ -23,22 +23,34 @@
         <div class="item-row" style="margin-left:110px;">
             <div>
                 <div class="dialog-section-small item-column">
+                    {{#if this.hasName}}
+                        <div class="item-property-area floating-label-group" style="margin-bottom: 50px;">
+                            <input class="text-value editable" type="text" name="attribut.namn" value="{{attribut.namn}}" data-dtype="String" autocomplete="off" autofocus required />
+                            <span class="floating-label">Namn</span>
+                        </div>
+                    {{else}}
+                        <div class="large-main-headline">{{attribut.namn}}</div>
+                    {{/if}}
 
-                    <div class="large-main-headline">{{attribut.namn}}</div>
-                    <!-- <div>
-                        Ob{{getDiceValue attribut.grund}}
-                    </div> -->
                     {{#if (eq object.typ "grundegenskaper")}}
                         <div>
                             <div class="dice-value tic pointer" data-property="grundegenskaper">{{getDiceValue attribut.grund}}</div>
                         </div>
                     {{else}}
-                        <div>
-                            <div class="dice-value disabled">{{getDiceValue attribut.grund}}</div>
-                        </div>
+                        {{#if (eq object.typ "skada")}}
+                            <div>
+                                <div class="large-main-headline">Värde</div>
+                                <div class="dice-value tic pointer">{{getDiceValue attribut.grund}}</div>
+                            </div>
+                        {{else}}
+                            <div>
+                                <div class="dice-value disabled">{{getDiceValue attribut.grund}}</div>
+                            </div>
+                        {{/if}}
                     {{/if}}
                 </div>
 
+                {{#if this.isNumericBonus}}
                 <div class="item-column">      
 
                     <div class="headline item-row" style="line-height: 25px; width:100%;">
@@ -57,8 +69,8 @@
                                 </div>
                             </div>
                             {{#if (or (eq ../object.typ "strid") (and (eq ../object.typ "harleddegenskaper") (eq ../object.nyckel "grundrustning")))}}
-                                <div class="floating-label-group tic pointer" data-key="{{key}}">
-                                    <input class="attribute-value editable" type="text" value="{{bonus.tvarde}}" />
+                                <div class="floating-label-group tic" data-key="{{key}}">
+                                    <input class="attribute-value editable pointer" type="text" value="{{bonus.tvarde}}" />
                                 </div>
                             {{else}}
                                 <div class="dice-value tic pointer" data-key="{{key}}">{{getDiceValue bonus}}</div>
@@ -72,6 +84,7 @@
                     {{/if}}
 
                 </div>
+                {{/if}}
 
                 
             </div>

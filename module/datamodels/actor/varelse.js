@@ -36,7 +36,7 @@ export default class EonVarelse extends foundry.abstract.DataModel {
                     initial: '',
                     nullable: false,
                 }),
-                varde : new fields.SchemaField({
+                grund : new fields.SchemaField({
                     tvarde: new fields.NumberField({...valueInteger}),
                     bonus: new fields.NumberField({...bonusInteger})
                 })

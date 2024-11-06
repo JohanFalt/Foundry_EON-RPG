@@ -29,13 +29,19 @@ export class DialogAttributeEdit extends FormApplication {
         this.isDialog = true;  
 
         if (attribute.typ == "bakgrund") {
-            this.options.title = `${actor.name} - ${attribute.nyckel}`;
-            
+            this.options.title = `${actor.name} - ${attribute.nyckel}`;            
         }
-        else {
+        else if (game.EON.CONFIG[attribute.typ]?.[attribute.nyckel] != undefined) {
             let headline = game.EON.CONFIG[attribute.typ][attribute.nyckel].namn.toLowerCase();
 
             this.options.title = `Editera ${headline}`;        
+        }
+        else {
+            let headline = "";
+
+            if (attribute.nyckel == 'forsvar') headline = 'försvar';
+
+            this.options.title = `Editera ${headline}`;
         }
         
         this.isNumericBonus = attribute.source === "strid" || 
@@ -49,6 +55,8 @@ export class DialogAttributeEdit extends FormApplication {
 
     getData() {
         const data = super.getData();
+        data.hasName = false;
+        data.isNumericBonus = true;
 
         data.CONFIG = this.config;
 
@@ -59,21 +67,45 @@ export class DialogAttributeEdit extends FormApplication {
             return data;
         }
         else if (this.object.typ === "strid") {
-            const attribute = this.actor.system.strid[this.object.nyckel];
+            const attribute = this.actor.system[this.object.typ]?.[this.object.nyckel];
+            let name = "";
+
+            if (this.config[this.object.typ]?.[this.object.nyckel]?.namn != undefined) {
+                name = this.config.strid[this.object.nyckel].namn;
+                data.isNumericBonus = true;
+            }
+
             data.attribut = {
-                namn: this.config.strid[this.object.nyckel].namn,
+                namn: name,
                 varde: attribute.varde || 0,
                 totalt: attribute.totalt || attribute.varde || 0,
                 bonuslista: attribute.bonuslista || []
             };
-            data.isNumericBonus = true;
-            return data;
         }
         else {
             data.attribut = this.actor.system[this.object.typ][this.object.nyckel];
-            data.attribut.namn = this.config[this.object.typ][this.object.nyckel].namn;
-        }
+
+            if (this.config[this.object.typ]?.[this.object.nyckel]?.namn != undefined) {
+                data.attribut.namn = this.config[this.object.typ][this.object.nyckel].namn;
+            }
+            else {
+                data.attribut.namn = this.actor.system[this.object.typ][this.object.nyckel].namn;
+                data.isNumericBonus = false;
+                data.hasName = true;
+            }
+            
+
+            // data.hasName = true;
+            // if (this.actor.system[this.object.typ]?.[this.object.nyckel]?.namn != undefined) {
+            //     name = this.actor.system[this.object.typ][this.object.nyckel].namn;
+            //     data.hasName = true;
+            //     data.isNumericBonus = false;
+            // }
+            // else 
+        }     
         
+        console.log(this.object.nyckel);
+        console.log(data);
 
         return data;
     }
@@ -130,7 +162,20 @@ export class DialogAttributeEdit extends FormApplication {
             }
             path.bonuslista.push(bonus);
         }
-        
+
+        const attributeKeys = Object.keys(formData).filter(k => k.startsWith("attribut."));
+
+        if (attributeKeys.length > 0) {
+            for (let key of attributeKeys) {
+                const index = key.split(".")[1];
+                const value = formData[key];
+
+                if (value !== undefined) {
+                    actorData.system[this.object.typ][this.object.nyckel][index] = value;
+                }
+            }
+        }
+
         const bonusKeys = Object.keys(formData).filter(k => k.startsWith("bonus."));
         if (bonusKeys.length > 0) {
             for (let key of bonusKeys) {
@@ -210,6 +255,16 @@ export class DialogAttributeEdit extends FormApplication {
             this.render();
             return;
         }
+        else if (this.object.typ === "skada") {
+            actorData.system[this.object.typ][this.object.nyckel].grund.bonus += 1;
+
+            if (actorData.system[this.object.typ][this.object.nyckel].grund.bonus > 3) {
+                actorData.system[this.object.typ][this.object.nyckel].grund.tvarde += 1;
+                actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 0;
+            }
+
+            await this.actor.update(actorData);
+        }
         else {
 			if (dataset.property != undefined) {
 				actorData.system[this.object.typ][this.object.nyckel].grund.bonus += 1;
@@ -275,7 +330,21 @@ export class DialogAttributeEdit extends FormApplication {
                 return;
             }
         }
+        else if (this.object.typ === "skada") {
+            actorData.system[this.object.typ][this.object.nyckel].grund.bonus -= 1;
 
+            if (actorData.system[this.object.typ][this.object.nyckel].grund.bonus < -1) {
+                actorData.system[this.object.typ][this.object.nyckel].grund.tvarde -= 1;
+                actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 3;
+            }
+
+            if (actorData.system[this.object.typ][this.object.nyckel].grund.tvarde < 0) {
+                actorData.system[this.object.typ][this.object.nyckel].grund.tvarde = 0;
+                actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 0;
+            }
+
+            await this.actor.update(actorData);
+        }
         else {
             if (dataset.property != undefined) {
                 actorData.system[this.object.typ][this.object.nyckel].grund.bonus -= 1;        
