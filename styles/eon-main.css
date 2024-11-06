@@ -540,7 +540,8 @@
     line-height: var(--eon-line-height-floattext);
 }
 
-.EON.itemsheet .tabButton {
+.EON.itemsheet .tabButton,
+.EON.varelse .tabButton {
     width: 33%;
 }
 
