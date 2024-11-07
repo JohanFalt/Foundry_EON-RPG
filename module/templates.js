@@ -809,7 +809,6 @@ export const RegisterHandlebarsHelpers = function () {
 			return item;
 		});
 		
-		console.log("Currency list:", currencyList);
 		return currencyList;
 	});
 
@@ -821,16 +820,12 @@ export const RegisterHandlebarsHelpers = function () {
 	});
 
 	Handlebars.registerHelper('sum', function(a, b) {
-		console.log('Sum helper inputs:', { a, b, typeA: typeof a, typeB: typeof b });
 		
 		// Convert inputs to numbers, defaulting to 0 if undefined/null/NaN
 		const numA = (a !== undefined && a !== null) ? parseInt(a) || 0 : 0;
 		const numB = (b !== undefined && b !== null) ? parseInt(b) || 0 : 0;
 		
-		console.log('Converted numbers:', { numA, numB });
-		
 		const result = numA + numB;
-		console.log('Sum result:', result);
 		
 		return result;
 	});
