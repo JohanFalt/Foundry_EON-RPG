@@ -80,21 +80,15 @@
                 <div style="width: 150px;">
                     <select class="inputdata" id="ritual.momentgrupp_{{key}}" data-source="ritual" data-key="{{key}}" style="width: 140px;">
                         <option>- Välj -</option>
-                        {{#select item.grupp}}
-                            {{#each ../EON.CONFIG.fardighetgrupper as |grupp key|}}
-                                <option value="{{key}}">{{grupp}}</option>
-                            {{/each}}
-                        {{/select}}
+                        {{selectOptions ../EON.CONFIG.fardighetgrupper selected=item.grupp}}
                     </select>
                 </div>
                 <div style="width: 150px;">
                     <select class="inputdata" id="ritual.moment_{{key}}" data-source="ritual" data-key="{{key}}" style="width: 140px;">
                         <option>- Välj -</option>
-                        {{#select item.fardighet}}
-                            {{#each (getActorSkillGroup ../EON.fardigheter item.grupp) as |fardighet key|}}
-                                <option value="{{key}}">{{fardighet.namn}}</option>
-                            {{/each}}
-                        {{/select}}
+                        {{#if item.grupp}}
+                            {{selectOptions (getActorSkillGroup ../EON.fardigheter item.grupp) selected=item.fardighet valueAttr="namn" keyAttr="key"}}
+                        {{/if}}
                     </select>
                 </div> 
                 <div class="pointer red item-delete" title="Ta bort moment" data-source="ritual" data-type="moment" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
