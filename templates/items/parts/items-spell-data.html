@@ -15,11 +15,7 @@
                 <div class="dual-box number-value-text floating-label-group">
                     <select class="text-value" name="system.aspekt">
                         <option value="">- Välj -</option>
-                        {{#select item.system.aspekt}}										
-                            {{#each EON.CONFIG.aspekter as |aspekt key|}}
-                                <option value="{{key}}">{{aspekt}}</option>
-                            {{/each}}
-                        {{/select}}
+                        {{selectOptions EON.CONFIG.aspekter selected=item.system.aspekt}}
                     </select>
                     <span class="floating-label">Aspekt</span>
                 </div>	
@@ -52,12 +48,8 @@
         <div class="item-column">
             <div class="item-property-area number-value-text floating-label-group">
                 <select class="text-value" name="system.omfang.yta">
-                    {{#select item.system.omfang.yta}}	
-                        <option value="0">- Skräddarsydd -</option>									
-                        {{#each EON.CONFIG.magi.omradesomfang as |yta key|}}
-                            <option value="{{key}}">{{yta}}</option>
-                        {{/each}}
-                    {{/select}}
+                    <option value="0">- Skräddarsydd -</option>
+                    {{selectOptions EON.CONFIG.magi.omradesomfang selected=item.system.omfang.yta}}
                 </select>
                 <span class="floating-label">Omfång</span>
             </div>
@@ -83,12 +75,8 @@
         <div class="item-column">
             <div class="item-property-area number-value-text floating-label-group">
                 <select class="text-value" name="system.rackvidd.stracka">
-                    {{#select item.system.rackvidd.stracka}}										
-                        <option value="0">- Skräddarsydd -</option>	
-                        {{#each EON.CONFIG.magi.rackvidd as |rackvidd key|}}
-                            <option value="{{key}}">{{rackvidd}}</option>
-                        {{/each}}
-                    {{/select}}
+                    <option value="0">- Skräddarsydd -</option>
+                    {{selectOptions EON.CONFIG.magi.rackvidd selected=item.system.rackvidd.stracka}}
                 </select>
                 <span class="floating-label">Räckvidd</span>
             </div>
@@ -114,12 +102,8 @@
         <div class="item-column">
             <div class="item-property-area number-value-text floating-label-group">
                 <select class="text-value" name="system.varaktighet.tid">
-                    {{#select item.system.varaktighet.tid}}										
-                        <option value="0">- Tillfällig -</option>	
-                        {{#each EON.CONFIG.magi.varaktighet as |varaktighet key|}}
-                            <option value="{{key}}">{{varaktighet}}</option>
-                        {{/each}}
-                    {{/select}}
+                    <option value="0">- Tillfällig -</option>
+                    {{selectOptions EON.CONFIG.magi.varaktighet selected=item.system.varaktighet.tid}}
                 </select>
                 <span class="floating-label">Varaktighet</span>
             </div>

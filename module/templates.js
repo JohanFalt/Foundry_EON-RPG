@@ -290,18 +290,40 @@ export const RegisterHandlebarsHelpers = function () {
 	Handlebars.registerHelper("getSkillnameRitualList", function(list) {
 		let oversatt = "";
 
+		if (!list || !Array.isArray(list)) {
+			console.warn("Invalid list in getSkillnameRitualList:", list);
+			return oversatt;
+		}
+
 		try {
 			for (const moment of list) {
-				if (oversatt != "") {
+				if (!moment.grupp || !moment.fardighet) {
+					console.warn("Missing grupp or fardighet in moment:", moment);
+					continue;
+				}
+
+				// First try to get from game.EON.fardigheter
+				let skillName = game.EON.fardigheter?.[moment.grupp]?.[moment.fardighet]?.namn;
+				
+				// If not found, try CONFIG.EON.fardigheter
+				if (!skillName) {
+					skillName = CONFIG.EON.fardigheter?.[moment.grupp]?.[moment.fardighet]?.namn;
+				}
+
+				// If still not found, use the raw fardighet name
+				if (!skillName) {
+					skillName = moment.fardighet;
+				}
+
+				if (oversatt !== "") {
 					oversatt += ", ";
 				}
-	
-				oversatt += game.EON.fardigheter[moment.grupp][moment.fardighet].namn;
+				oversatt += skillName;
 			}
 		}
-		catch {
-			ui.notifications.warn("Fel visa ritual - momentfärdigheter", {permanent: false});
-		}		
+		catch (error) {
+			console.error("Error in getSkillnameRitualList:", error, list);
+		}       
 
 		return oversatt;
 	});
@@ -809,7 +831,6 @@ export const RegisterHandlebarsHelpers = function () {
 			return item;
 		});
 		
-		console.log("Currency list:", currencyList);
 		return currencyList;
 	});
 
@@ -821,16 +842,12 @@ export const RegisterHandlebarsHelpers = function () {
 	});
 
 	Handlebars.registerHelper('sum', function(a, b) {
-		console.log('Sum helper inputs:', { a, b, typeA: typeof a, typeB: typeof b });
 		
 		// Convert inputs to numbers, defaulting to 0 if undefined/null/NaN
 		const numA = (a !== undefined && a !== null) ? parseInt(a) || 0 : 0;
 		const numB = (b !== undefined && b !== null) ? parseInt(b) || 0 : 0;
 		
-		console.log('Converted numbers:', { numA, numB });
-		
 		const result = numA + numB;
-		console.log('Sum result:', result);
 		
 		return result;
 	});

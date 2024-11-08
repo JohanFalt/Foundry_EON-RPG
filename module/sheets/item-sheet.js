@@ -52,6 +52,13 @@ export default class EonItemSheet extends ItemSheet {
 	async getData() {
 		const itemData = foundry.utils.duplicate(this.item);		
 
+		if (this.selectedRitual === -1 && itemData.system.ritual) {
+			const editedRitualIndex = itemData.system.ritual.findIndex(r => r.editera);
+			if (editedRitualIndex !== -1) {
+				this.selectedRitual = editedRitualIndex;
+			}
+		}
+
 		if (!itemData.system.installningar.skapad) {
 			const version = game.data.system.version;
 
@@ -237,6 +244,10 @@ export default class EonItemSheet extends ItemSheet {
 		html
 			.find('.currency-select')
 			.change(event => this._setCurrency(event));
+
+		html
+			.find('.ritual-fields')
+			.change(this._updateRitualFields.bind(this));
 	}
 
 	/** @override */
@@ -314,38 +325,47 @@ export default class EonItemSheet extends ItemSheet {
 
 	async _onItemEdit(event) {
 		event.preventDefault();
-        event.stopPropagation();
+		event.stopPropagation();
 
-        const element = event.currentTarget;
+		const element = event.currentTarget;
 		const dataset = element.dataset;
 
-        if (dataset.source == "ritual") {
+		if (dataset.source == "ritual") {
 			const key = parseInt(dataset.itemid);
 			const itemData = foundry.utils.duplicate(this.item);
+
+			if (this.selectedRitual !== -1) {
+				await this._setRitualData(event, this.selectedRitual);
+			}
 
 			for(const ritual of itemData.system.ritual) {
 				ritual.editera = false;
 			}
 
-			itemData.system.ritual[key].editera = !itemData.system.ritual[key].editera;
-			await this.item.update(itemData);
-
+			itemData.system.ritual[key].editera = true;
 			this.selectedRitual = key;
-        	this.render();
-            return;
-        }
+			
+			await this.item.update(itemData);
+			await this.render(true);
+			return;
+		}
 	}
 
 	async _onItemSave(event) {
 		event.preventDefault();
-        event.stopPropagation();
+		event.stopPropagation();
 
-        const element = event.currentTarget;
+		const element = event.currentTarget;
 		const dataset = element.dataset;
 
-        if (dataset.source == "ritual") {
+		if (dataset.source == "ritual") {
 			const itemData = foundry.utils.duplicate(this.item);
 
+			if (this.selectedRitual !== -1) {
+				await this._setRitualData(event, this.selectedRitual);
+			}
+
+			// Reset edit state for all rituals
 			for(const ritual of itemData.system.ritual) {
 				ritual.editera = false;
 			}
@@ -354,7 +374,7 @@ export default class EonItemSheet extends ItemSheet {
 			this.selectedRitual = -1;
 			this.render();
 			return;
-        }
+		}
 	}	
 
 	async _onItemActive(event) {		
@@ -412,7 +432,10 @@ export default class EonItemSheet extends ItemSheet {
 					itemData.system.ritual[this.selectedRitual].moment.splice(key, 1);
 				}
 				else {
-					itemData.system.ritual[this.selectedRitual].moment = [{grupp: "mystik", fardighet: "cermoni"}];
+					itemData.system.ritual[this.selectedRitual].moment = [{
+						grupp: "mystik",
+						fardighet: "Cermoni"
+					}];
 				}
 				
 				await this.item.update(itemData);
@@ -730,62 +753,74 @@ export default class EonItemSheet extends ItemSheet {
 
 	async _setRitualData(event, key) {
 		const itemData = foundry.utils.duplicate(this.item);
-
-		// for(const ritual of itemData.system.ritual) {
-		// 	ritual.editera = false;
-		// }
-
-		itemData.system.ritual[key].namn = document.getElementById("ritual.namn").value;
-
-		try {
-			itemData.system.ritual[key].bonus = parseInt(document.getElementById("ritual.bonus").value);
-		}
-		catch{
-			itemData.system.ritual[key].bonus = 0;
-			ui.notifications.warn("Fel läsa av ritual - bonus", {permanent: false});
+		
+		// Ensure ritual array exists
+		if (!itemData.system.ritual) {
+			itemData.system.ritual = [];
 		}
 
-		try {
-			itemData.system.ritual[key].overtag = parseInt(document.getElementById("ritual.overtag").value);
-		}
-		catch{
-			itemData.system.ritual[key].overtag = 0;
-			ui.notifications.warn("Fel läsa av ritual - övertag", {permanent: false});
-		}
+		// Get current ritual or create new one
+		const ritual = itemData.system.ritual[key] || {
+			namn: "",
+			bonus: 0,
+			overtag: 0,
+			kostnad: 0,
+			tid: "",
+			moment: []
+		};
 
-		try {
-			itemData.system.ritual[key].kostnad = parseInt(document.getElementById("ritual.kostnad").value);
-		}
-		catch{
-			itemData.system.ritual[key].kostnad = 0;
-			ui.notifications.warn("Fel läsa av ritual - kostnad", {permanent: false});
-		}
+		if (ritual.editera) {
+			// Update basic fields
+			const fields = {
+				namn: "ritual.namn",
+				bonus: "ritual.bonus",
+				overtag: "ritual.overtag",
+				kostnad: "ritual.kostnad",
+				tid: "ritual.tid"
+			};
 
-		try {
-			itemData.system.ritual[key].tid = document.getElementById("ritual.tid").value;
-		}
-		catch{
-			itemData.system.ritual[key].tid = "";
-			ui.notifications.warn("Fel läsa av ritual - tidsåtgång", {permanent: false});
-		}
-
-		try {
-			for (let value = 0; value < itemData.system.ritual[key].moment.length; value++) {
-				let grupp = document.getElementById("ritual.momentgrupp_" + value).value;
-
-				if (grupp == itemData.system.ritual[key].moment[value].grupp) {
-					itemData.system.ritual[key].moment[value].fardighet = document.getElementById("ritual.moment_" + value).value;
+			for (const [field, elementId] of Object.entries(fields)) {
+				const element = document.getElementById(elementId);
+				if (element) {
+					ritual[field] = element.type === "number" ? 
+						(parseInt(element.value) || 0) : 
+						element.value;
 				}
-				else {
-					itemData.system.ritual[key].moment[value].grupp = grupp;
-					itemData.system.ritual[key].moment[value].fardighet = "";
-				}			
+			}
+
+			// Handle moments
+			if (!ritual.moment) {
+				ritual.moment = [{
+					grupp: "mystik",
+					fardighet: "Cermoni"
+				}];
+			}
+
+			for (let i = 0; i < ritual.moment.length; i++) {
+				const gruppElement = document.getElementById(`ritual.momentgrupp_${i}`);
+				const momentElement = document.getElementById(`ritual.moment_${i}`);
+				
+				if (gruppElement && momentElement) {
+					const grupp = gruppElement.value;
+					const fardighet = momentElement.value;
+
+					if (grupp && grupp !== "- Välj -") {
+						ritual.moment[i].grupp = grupp;
+						if (fardighet && fardighet !== "- Välj -") {
+							ritual.moment[i].fardighet = fardighet;
+						}
+					}
+				}
 			}
 		}
-		catch {
-			itemData.system.ritual[key].moment = [{grupp: "mystik", fardighet: "cermoni"}];
-			ui.notifications.warn("Fel läsa av ritual - moment", {permanent: false});
-		}
+
+		// Update the specific ritual in the array
+		itemData.system.ritual[key] = ritual;
+
+		// Create the update object with the correct path
+		const update = {
+			"system.ritual": itemData.system.ritual
+		};
 
 		await this.item.update(itemData);
 	}
@@ -1159,6 +1194,28 @@ export default class EonItemSheet extends ItemSheet {
 			
 			await this.item.update(itemData);
 			this.render();
+		}
+	}
+
+	async _updateRitualFields(event) {
+		if (this.selectedRitual !== -1) {
+			const itemData = this.item.system.ritual[this.selectedRitual];
+			if (itemData) {
+				const fields = {
+					"ritual.namn": itemData.namn,
+					"ritual.bonus": itemData.bonus,
+					"ritual.overtag": itemData.overtag,
+					"ritual.kostnad": itemData.kostnad,
+					"ritual.tid": itemData.tid
+				};
+
+				for (const [id, value] of Object.entries(fields)) {
+					const element = document.getElementById(id);
+					if (element) {
+						element.value = value;
+					}
+				}
+			}
 		}
 	}
 }
