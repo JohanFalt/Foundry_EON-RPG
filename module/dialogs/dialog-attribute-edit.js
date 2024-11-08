@@ -10,6 +10,24 @@ export class DialogAttribute {
     }
 }
 
+/* 
+
+- De olika typerna av attribut -
+
+bakgrund 
+ändra custom-egenskaper från fliken rollperson bakgrund.
+
+strid
+rollpersons läkningstakt
+
+skada
+varelse försvar och vändning
+
+attribute
+ändra rollperson och varelses grundegenskaper och härledda grundegenskaper
+
+*/
+
 export class DialogAttributeEdit extends FormApplication {
 
     static get defaultOptions() {
@@ -40,6 +58,7 @@ export class DialogAttributeEdit extends FormApplication {
             let headline = "";
 
             if (attribute.nyckel == 'forsvar') headline = 'försvar';
+            if (attribute.nyckel == 'vandning') headline = 'vändning';
 
             this.options.title = `Editera ${headline}`;
         }
@@ -56,9 +75,11 @@ export class DialogAttributeEdit extends FormApplication {
     getData() {
         const data = super.getData();
         data.hasName = false;
+        data.hasDescription = false;
         data.isNumericBonus = true;
 
-        data.CONFIG = this.config;
+        data.EON = game.EON;
+		data.EON.CONFIG = CONFIG.EON;
 
         if (this.object.typ == "bakgrund") {
             this.object.varde = this.actor.system.altvarde[this.object.nyckel];
@@ -82,26 +103,24 @@ export class DialogAttributeEdit extends FormApplication {
                 bonuslista: attribute.bonuslista || []
             };
         }
+        else if (this.object.typ === "skada")  {
+            if (this.object.nyckel == "vandning") {
+                data.attribut = this.actor.system[this.object.typ][this.object.nyckel]
+            }
+            else if (this.actor.system[this.object.typ][this.object.nyckel].namn != undefined) {
+                data.attribut = this.actor.system[this.object.typ][this.object.nyckel];
+                data.hasName = true;    
+            }            
+
+            data.hasDescription = data.attribut.beskrivning != undefined
+            data.isNumericBonus = false;
+        }
         else {
             data.attribut = this.actor.system[this.object.typ][this.object.nyckel];
 
             if (this.config[this.object.typ]?.[this.object.nyckel]?.namn != undefined) {
                 data.attribut.namn = this.config[this.object.typ][this.object.nyckel].namn;
             }
-            else {
-                data.attribut.namn = this.actor.system[this.object.typ][this.object.nyckel].namn;
-                data.isNumericBonus = false;
-                data.hasName = true;
-            }
-            
-
-            // data.hasName = true;
-            // if (this.actor.system[this.object.typ]?.[this.object.nyckel]?.namn != undefined) {
-            //     name = this.actor.system[this.object.typ][this.object.nyckel].namn;
-            //     data.hasName = true;
-            //     data.isNumericBonus = false;
-            // }
-            // else 
         }     
         
         console.log(this.object.nyckel);

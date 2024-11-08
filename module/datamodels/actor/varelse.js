@@ -32,7 +32,7 @@ export default class EonVarelse extends foundry.abstract.DataModel {
                     initial: '',
                     nullable: false,
                 }),
-                anteckning: new fields.StringField({
+                beskrivning: new fields.StringField({
                     initial: '',
                     nullable: false,
                 }),
@@ -45,20 +45,6 @@ export default class EonVarelse extends foundry.abstract.DataModel {
                 grund: new fields.NumberField({...valueInteger}),
                 varde: new fields.NumberField({...valueInteger})
             }),
-            // sar: new fields.SchemaField({
-            //     huvud: new fields.NumberField({...valueInteger}),
-            //     torso: new fields.NumberField({...valueInteger}),
-            //     vansterarm: new fields.NumberField({...valueInteger}),
-            //     hogerarm: new fields.NumberField({...valueInteger}),
-            //     vansterben: new fields.NumberField({...valueInteger}),
-            //     hogerben: new fields.NumberField({...valueInteger}),
-            // }),
-            // smarta: new fields.NumberField({...valueInteger}),
-            //blodning: new fields.NumberField({...valueInteger}),
-            //blodningsvarighet: new fields.NumberField({...valueInteger}),
-            //infektion: new fields.NumberField({...valueInteger}),
-            //infektionsvarighet: new fields.NumberField({...valueInteger}),
-            //inreskada: new fields.NumberField({...valueInteger})
             vandning: new fields.ArrayField(
                 new fields.ObjectField({
                     initial: {},

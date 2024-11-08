@@ -17,7 +17,9 @@
                 <a class="item-edit" title="Editera egenskap" data-source="egenskap" data-itemid="{{egenskap._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
             </div>
         </div>
-        <div class="information-area information-box" style="margin-top: 0; max-width: 100%;">{{{egenskap.system.beskrivning}}}</div>
+        {{#if (ne egenskap.system.beskrivning "")}}
+            <div class="information-area information-box" style="margin-top: 0; max-width: 100%;">{{{egenskap.system.beskrivning}}}</div>
+        {{/if}}
     {{/each}}
 </div>
 
