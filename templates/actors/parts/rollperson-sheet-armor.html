@@ -38,8 +38,6 @@
                         <div style="width: 125px;">{{#if (ne rustning.material "")}}{{getArmorType rustning.material}}{{else}}&nbsp;{{/if}}</div>
                         <div class="centerText number-value-text" style="width: 50px;">
                             {{#with ../actor.system.harleddegenskaper.grundrustning}}
-                                <!-- Debug output -->
-                                <!-- {{log "Grundrustning values:" this}} -->
                             {{/with}}
                             {{sum 
                                 rustning.hugg 
