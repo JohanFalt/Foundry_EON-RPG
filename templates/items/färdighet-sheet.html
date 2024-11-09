@@ -47,15 +47,17 @@
 					<div class="information-area information-box">För att höja/sänka sitt färdighetsvärde höger-eller vänsterklickar på rutan.</div>
 
 					{{#if this.isPC}}
-						<div class="item-row">
-							<div class="headline-checkbox">Lättlärd</div>
-							<div><input class="svarighet pointer" type="checkbox" data-value="L" {{isChecked data.system.installningar.lattlard}} data-dtype="String" /></div>
-						</div>
-
-						<div class="item-row">
-							<div class="headline-checkbox">Svårlärd</div>
-							<div><input class="svarighet pointer" type="checkbox" data-value="S" {{isChecked data.system.installningar.svarlard}} data-dtype="String" /></div>
-						</div> 
+						{{#unless (eq item.system.grupp "ovriga")}}
+							<div class="item-row">
+								<div class="headline-checkbox">Lättlärd</div>
+								<div><input class="svarighet pointer" type="checkbox" data-value="L" {{isChecked data.system.installningar.lattlard}} data-dtype="String" /></div>
+							</div>
+				
+							<div class="item-row">
+								<div class="headline-checkbox">Svårlärd</div>
+								<div><input class="svarighet pointer" type="checkbox" data-value="S" {{isChecked data.system.installningar.svarlard}} data-dtype="String" /></div>
+							</div> 
+						{{/unless}}
 					{{/if}}
 
 					{{#if (eq item.system.grupp "mystik")}}
