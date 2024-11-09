@@ -1057,7 +1057,21 @@ export default class EonItemSheet extends ItemSheet {
 
 		const itemData = foundry.utils.duplicate(this.item);
 		const roll = new DiceRollContainer(this.actor, game.EON.CONFIG);
-		const improveThreshold = CalculateHelper.CalculateImproveDifficulty(this.actor, itemData);
+		
+		const isEffectivelyLattlard = itemData.system.installningar.lattlard || 
+									 itemData.system.expertis || 
+									 itemData.system.kannetecken || 
+									 itemData.system.hantverk;
+
+		let improveThreshold;
+		if (isEffectivelyLattlard && !itemData.system.installningar.lattlard) {
+			const originalLattlard = itemData.system.installningar.lattlard;
+			itemData.system.installningar.lattlard = true;
+			improveThreshold = CalculateHelper.CalculateImproveDifficulty(this.actor, itemData);
+			itemData.system.installningar.lattlard = originalLattlard;
+		} else {
+			improveThreshold = CalculateHelper.CalculateImproveDifficulty(this.actor, itemData);
+		}
 
 		roll.typeroll = CONFIG.EON.slag.fardighet;
 		roll.action = `Förbättringsslag ${itemData.name}`;
@@ -1065,10 +1079,8 @@ export default class EonItemSheet extends ItemSheet {
 		roll.bonus = itemData.system.varde.bonus;
 		roll.svarighet = parseInt(improveThreshold);
 
-		// Perform the roll and get the total result
 		const total = await RollDice(roll);
 
-		// Skill improvement logic
 		let improvementMessage = "";
 		if (this.actor.system.fardigheter[itemData.system.grupp].erf > 0) {
 			const tvarde = itemData.system.varde.tvarde;
@@ -1079,25 +1091,26 @@ export default class EonItemSheet extends ItemSheet {
 			if (tvarde === 0 && bonus === 0) {
 				// Special case for skills with value 0
 				if (currentErf >= 4) {
-					// Decrease erfarenhet by 4
 					await this.actor.update({
 						[`system.fardigheter.${gruppKey}.erf`]: Math.max(currentErf - 4, 0)
 					});
 
-					// Improve skill to rank 2 with 0 bonus
 					const improvementResult = await this._improveSkillToRankTwo();
 
 					if (improvementResult) {
-						improvementMessage = `Färdigheten <b>${this.item.name}</b> har förbättrats från 0 till 2T6!<br>
-											Fyra erfarenhetspoäng har förbrukats.`;
+						const { oldTvarde, oldBonus, newTvarde, newBonus } = improvementResult;
+						const oldValueStr = formatSkillValue(oldTvarde, oldBonus);
+						const newValueStr = formatSkillValue(newTvarde, newBonus);
+						
+						improvementMessage = `Färdigheten <b>${this.item.name}</b> har förbättrats från ${oldValueStr} till ${newValueStr}!<br>
+											 Fyra erfarenhetspoäng har förbrukats.`;
 					} else {
-						improvementMessage = `Kunde inte hitta färdigheten <b>${this.item.name}</b> för att förbättra.`;
+						improvementMessage = `Ett fel uppstod när färdigheten skulle förbättras.`;
 					}
 				} else {
 					improvementMessage = `För att förbättra färdigheten <b>${this.item.name}</b> från 0 till 2T6 krävs 4 erfarenhetspoäng.`;
 				}
 			} else {
-				// Decrease erfarenhet by 1
 				await this.actor.update({
 					[`system.fardigheter.${gruppKey}.erf`]: Math.max(currentErf - 1, 0)
 				});
@@ -1124,7 +1137,6 @@ export default class EonItemSheet extends ItemSheet {
 
 			const chatContent = `${roll.description}${improvementMessage}`;
 
-			// Send a single chat message with both roll result and improvement information
 			await ChatMessage.create({
 				content: chatContent,
 					speaker: ChatMessage.getSpeaker({ actor: this.actor })
@@ -1135,31 +1147,23 @@ export default class EonItemSheet extends ItemSheet {
 	}
 
 	async _improveSkill(item) {
-        // Find the skill item in the actor's items
-        //const skillItem = this.actor.items.find(item => item.name === this.item.nam && item.type === "Färdighet");
-
-		// Get the current skill value before improvement
 		let oldTvarde = item.system.varde.tvarde;
 		let oldBonus = item.system.varde.bonus;
 
-		// Copy the values for calculation
 		let tvarde = oldTvarde;
 		let bonus = oldBonus;
 
-		// Increase the skill value by +1 (adjusting bonus and tvarde accordingly)
 		bonus += 1;
 		if (bonus > 3) {
 			tvarde += 1;
 			bonus = bonus - 4; // Reset bonus and increase dice
 		}
 
-		// Update the skill item
 		await this.item.update({
 			"system.varde.tvarde": tvarde,
 			"system.varde.bonus": bonus
 		});
 
-		// Return old and new values
 		return {
 			oldTvarde,
 			oldBonus,
@@ -1169,10 +1173,20 @@ export default class EonItemSheet extends ItemSheet {
     }
 
     async _improveSkillToRankTwo() {
+		const oldTvarde = this.item.system.varde.tvarde;
+		const oldBonus = this.item.system.varde.bonus;
+
 		await this.item.update({
 			"system.varde.tvarde": 2,
 			"system.varde.bonus": 0
 		});
+
+		return {
+			oldTvarde,
+			oldBonus,
+			newTvarde: 2,
+			newBonus: 0
+		};
     }
 
 	async _setCurrency(event) {
