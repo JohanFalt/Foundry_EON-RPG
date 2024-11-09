@@ -7,7 +7,7 @@
     <div style="width: 100px;">Tid</div>
 </div>
 
-{{#each data.system.moment as |item key|}}
+{{#each item.system.moment as |item key|}}
     <div class="item-row" style="line-height: 25px; width:100%;">
         <div><input class="weapon-icon pointer item-active" type="checkbox" id="object.huvud_{{key}}" title="Huvudmomentet" value="{{item.huvud}}" data-source="moment" data-key="{{key}}" data-egenskap="huvud" {{isChecked item.huvud}} /></div>
         <div style="width: 150px;">

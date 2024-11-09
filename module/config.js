@@ -1,6 +1,7 @@
 export const eon = {};
 
 eon.ikoner = { 
+    egenskap: "systems/eon-rpg/assets/img/icons/skills.svg",
     fardighet: "systems/eon-rpg/assets/img/icons/archive-register.svg",
     sprak: "systems/eon-rpg/assets/img/icons/archive-register.svg",
     mysterie: "systems/eon-rpg/assets/img/icons/prayer.svg",

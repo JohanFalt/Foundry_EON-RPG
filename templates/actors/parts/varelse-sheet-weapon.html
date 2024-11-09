@@ -1,21 +1,3 @@
-<div class="item-box">    
-    <div class="large-headline">Försvar</div>
-    <div class="attribute item-row">
-        <div class="three-column item-row">
-            <div class="headline">{{actor.system.skada.forsvar.namn}}</div>
-            <div class="dice-value">{{getDiceValue actor.system.skada.forsvar.grund}}</div>
-            <div class="skill-icon">
-                <a class="item-edit" title="Editera grundskada" data-type="skada" data-attribute="forsvar">
-                    <i class="icon fa-solid fa-pen-to-square"></i>
-                </a>
-            </div>
-        </div> 
-    </div>
-    {{#if (ne actor.system.skada.forsvar.anteckning "")}}
-        <div class="information-area information-box">{{actor.system.skada.forsvar.anteckning}}</div>
-    {{/if}}    
-</div>
-
 <div class="item-box">
 
     <div class="large-headline">Vapen</div>
@@ -76,40 +58,90 @@
     {{/each}}
 </div>
 
-<div class="item-box"> 
-    <div class="skill-area">
-        <div class="headline skill-row skill">
-            <div class="three-column centerText">Skada</div><div class="three-column centerText">Utm.</div><div class="three-column centerText">Vändning</div>
+<div class="item-box item-row">    
+    <div class="three-column">
+        <div class="item-box item-column">
+            <div class="large-headline">Försvar</div>
+            <div class="attribute item-row">
+                <div class="headline">{{actor.system.skada.forsvar.namn}}</div>
+                <div class="dice-value">{{getDiceValue actor.system.skada.forsvar.grund}}</div>
+                <div class="skill-icon">
+                    <a class="item-edit" title="Editera grundskada" data-type="skada" data-attribute="forsvar">
+                        <i class="icon fa-solid fa-pen-to-square"></i>
+                    </a>
+                </div>
+            </div>
+            {{#if (ne actor.system.skada.forsvar.beskrivning "")}}
+                <div class="information-area information-box">{{{actor.system.skada.forsvar.beskrivning}}}</div>
+            {{/if}}
+        </div>   
+        
+        <div class="item-box item-column">
+            <div class="large-headline">Skydd</div>
+            <div class="clear">
+                <div class="pullLeft number-value-text floating-label-group">
+                    <input class="attribute-value editable skill-label skill-value" type="text" name="system.skada.skydd.hugg" value="{{actor.system.skada.skydd.hugg}}" data-dtype="Number" />
+                    <span class="floating-label">Hugg</span>
+                </div>
+                <div class="pullLeft number-value-text floating-label-group">
+                    <input class="attribute-value editable skill-label skill-value" type="text" name="system.skada.skydd.kross" value="{{actor.system.skada.skydd.kross}}" data-dtype="Number" />
+                    <span class="floating-label">Kross</span>
+                </div>
+                <div class="pullLeft number-value-text floating-label-group">
+                    <input class="attribute-value editable skill-label skill-value" type="text" name="system.skada.skydd.stick" value="{{actor.system.skada.skydd.stick}}" data-dtype="Number" />
+                    <span class="floating-label">Stick</span>
+                </div>
+                <div class="pullLeft number-value-text floating-label-group">
+                    <input class="attribute-value editable skill-label skill-value" type="text" name="system.skada.skydd.grund" value="{{actor.system.skada.skydd.grund}}" data-dtype="Number" />
+                    <span class="floating-label">Grund</span>
+                </div>
+            </div>
         </div>
-        <div class="skill-row skill">
-            <div class="three-column centerText number-value-text">1-4</div><div class="three-column centerText number-value-text">+1</div><div class="three-column centerText number-value-text">-</div>
+    </div>  
+
+    <div class="item-row item-right" style="width: 40%">
+        <div class="information-area information-box" style="max-width: 250px; width: 250px;">
+            <div class="headline skill-row skill">
+                <div class="three-column centerText">Skada</div>
+                <div class="three-column centerText">Utm.</div>
+                <div class="three-column centerText">Vändning</div>
+                
+            </div>
+            <div class="skill-row skill">
+                <div class="three-column centerText number-value-text">1-4</div><div class="three-column centerText number-value-text">+1</div><div class="three-column centerText number-value-text">-</div>
+            </div>
+            <div class="skill-row skill">
+                <div class="three-column centerText number-value-text">5-9</div><div class="three-column centerText number-value-text">+2</div><div class="three-column centerText number-value-text">-</div>
+            </div>
+            <div class="skill-row skill">
+                <div class="three-column centerText number-value-text">10-14</div><div class="three-column centerText number-value-text">+4</div><div class="three-column centerText number-value-text vrollable">1T10</div>
+            </div>
+            <div class="skill-row skill">
+                <div class="three-column centerText number-value-text">15-19</div><div class="three-column centerText number-value-text">+6</div><div class="three-column centerText number-value-text vrollable">1T10</div>
+            </div>
+            <div class="skill-row skill">
+                <div class="three-column centerText number-value-text">20-24</div><div class="three-column centerText number-value-text">+8</div><div class="three-column centerText number-value-text vrollable">1T10</div>
+            </div>
+            <div class="skill-row skill">
+                <div class="three-column centerText number-value-text">25-29</div><div class="three-column centerText number-value-text">+10</div><div class="three-column centerText number-value-text vrollable">1T10</div>
+            </div>
+            <div class="skill-row skill">
+                <div class="three-column centerText number-value-text">30-34</div><div class="three-column centerText number-value-text">+12</div><div class="three-column centerText number-value-text vrollable">1T10</div>
+            </div>
+            <div class="skill-row skill">
+                <div class="three-column centerText number-value-text">35-39</div><div class="three-column centerText number-value-text">+14</div><div class="three-column centerText number-value-text vrollable">1T10</div>
+            </div>
+            <div class="skill-row skill">
+                <div class="three-column centerText number-value-text">40-44</div><div class="three-column centerText number-value-text">+16</div><div class="three-column centerText number-value-text vrollable">1T10</div>
+            </div>
+            <div class="skill-row skill">
+                <div class="three-column centerText number-value-text">(+5)</div><div class="three-column centerText number-value-text">(+2)</div><div class="three-column centerText number-value-text">(...)</div>
+            </div>
         </div>
-        <div class="skill-row skill">
-            <div class="three-column centerText number-value-text">5-9</div><div class="three-column centerText number-value-text">+2</div><div class="three-column centerText number-value-text">-</div>
-        </div>
-        <div class="skill-row skill">
-            <div class="three-column centerText number-value-text">10-14</div><div class="three-column centerText number-value-text">+4</div><div class="three-column centerText number-value-text">1T10</div>
-        </div>
-        <div class="skill-row skill">
-            <div class="three-column centerText number-value-text">15-19</div><div class="three-column centerText number-value-text">+6</div><div class="three-column centerText number-value-text">1T10</div>
-        </div>
-        <div class="skill-row skill">
-            <div class="three-column centerText number-value-text">20-24</div><div class="three-column centerText number-value-text">+8</div><div class="three-column centerText number-value-text">1T10</div>
-        </div>
-        <div class="skill-row skill">
-            <div class="three-column centerText number-value-text">25-29</div><div class="three-column centerText number-value-text">+10</div><div class="three-column centerText number-value-text">1T10</div>
-        </div>
-        <div class="skill-row skill">
-            <div class="three-column centerText number-value-text">30-34</div><div class="three-column centerText number-value-text">+12</div><div class="three-column centerText number-value-text">1T10</div>
-        </div>
-        <div class="skill-row skill">
-            <div class="three-column centerText number-value-text">35-39</div><div class="three-column centerText number-value-text">+14</div><div class="three-column centerText number-value-text">1T10</div>
-        </div>
-        <div class="skill-row skill">
-            <div class="three-column centerText number-value-text">40-44</div><div class="three-column centerText number-value-text">+16</div><div class="three-column centerText number-value-text">1T10</div>
-        </div>
-        <div class="skill-row skill">
-            <div class="three-column centerText number-value-text">(+5)</div><div class="three-column centerText number-value-text">(+2)</div><div class="three-column centerText number-value-text">(...)</div>
+        <div class="skill-icon">
+            <a class="item-edit" title="Editera" data-type="skada" data-attribute="vandning">
+                <i class="icon fa-solid fa-pen-to-square"></i>
+            </a>
         </div>
     </div>
 </div>

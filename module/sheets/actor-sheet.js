@@ -201,9 +201,9 @@ export default class EonActorSheet extends ActorSheet {
 
         //for (const del in CONFIG.EON.kroppsdelar[bok]) {
         for (const del of data.actor.system.listdata.kroppsdelar) {
-            del.stick += data.actor.system.harleddegenskaper.grundrustning; 
-            del.kross += data.actor.system.harleddegenskaper.grundrustning; 
-            del.hugg += data.actor.system.harleddegenskaper.grundrustning; 
+            del.stick += data.actor.system.harleddegenskaper.grundrustning.totalt; 
+            del.kross += data.actor.system.harleddegenskaper.grundrustning.totalt; 
+            del.hugg += data.actor.system.harleddegenskaper.grundrustning.totalt; 
         } 
 
         // Beräkna utmattning och belastning
@@ -731,6 +731,8 @@ export default class EonActorSheet extends ActorSheet {
         * @param _event
     */
     async _onItemEdit(event) {
+        console.log("_onItemEdit");
+
 		var _a;
 
 		event.preventDefault();
@@ -772,6 +774,8 @@ export default class EonActorSheet extends ActorSheet {
         * @param _event
     */
     async _onItemAlter(event) {
+        console.log("_onItemAlter");
+
 		event.preventDefault();
         event.stopPropagation();
 
@@ -792,7 +796,7 @@ export default class EonActorSheet extends ActorSheet {
                 value = parseFloat(value);
             }
 
-            const item = this.actor.getEmbeddedDocument("Item", itemid);
+            const item = await this.actor.getEmbeddedDocument("Item", itemid);
             const itemData = foundry.utils.duplicate(item);
 
             if (fields.length == 1) {
@@ -814,7 +818,9 @@ export default class EonActorSheet extends ActorSheet {
         * Körs när något item blir aktiverat. Används främst när man klickar för ett föremål så det blir aktivt/buret/etc.
         * @param _event
     */
-    async _onItemActive(event) {		
+    async _onItemActive(event) {	
+        console.log("_onItemActive");
+        
 		event.preventDefault();
         event.stopPropagation();
 
@@ -824,13 +830,13 @@ export default class EonActorSheet extends ActorSheet {
         const itemid = dataset.itemid;
         const property = dataset.property;
 
-		const item = this.actor.getEmbeddedDocument("Item", itemid);
+		const item = await this.actor.getEmbeddedDocument("Item", itemid);
         const itemData = foundry.utils.duplicate(item);        
 		
 		let active = itemData.system.installningar[property];
 		itemData.system.installningar[property] = !active;
 
-		await item.update(itemData);
+		await item.update(itemData);                
 
         if (item.type == "Rustning") {
             const activeArmor = this.actor.items.filter(rustning => rustning.type === "Rustning" && rustning.system.installningar.buren && (rustning._id != item._id));
@@ -881,14 +887,14 @@ export default class EonActorSheet extends ActorSheet {
         return true;
 	}
 
-    _onItemSend(event) {
+    async _onItemSend(event) {
         event.preventDefault();
         event.stopPropagation();
 
         const element = event.currentTarget;
 		const dataset = element.dataset;
         const itemid = dataset.itemid;
-		const item = this.actor.getEmbeddedDocument("Item", itemid);
+		const item = await this.actor.getEmbeddedDocument("Item", itemid);
 
         const headline = `${item.name} (${item.type.toLowerCase()})`;
         const message = item.system.beskrivning;
@@ -903,6 +909,8 @@ export default class EonActorSheet extends ActorSheet {
         * @param _event
     */
     async _onsheetChange(event) {
+        console.log("_onsheetChange");
+
 		event.preventDefault();
 
 		const element = event.currentTarget;
@@ -1079,6 +1087,8 @@ export default class EonActorSheet extends ActorSheet {
         * @param _event
     */
     async _clickedCircle(event) {
+        console.log("_clickedCircle");
+
         event.preventDefault();
 		const element = event.currentTarget;
 		const dataset = element.dataset;
@@ -1086,7 +1096,7 @@ export default class EonActorSheet extends ActorSheet {
         // om det var ett item
         if (dataset.itemid != undefined) {
             const itemid = dataset.itemid;
-            const item = this.actor.getEmbeddedDocument("Item", itemid);
+            const item = await this.actor.getEmbeddedDocument("Item", itemid);
             const itemData = foundry.utils.duplicate(item);
             let found = false;
 

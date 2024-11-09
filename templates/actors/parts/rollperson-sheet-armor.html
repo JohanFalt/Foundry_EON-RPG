@@ -75,7 +75,7 @@
         <div>Delområde</div> 
     </div>
 
-    {{#each actor.system.listdata.utrustning.rustning as |rustning key|}}
+    {{#each actor.system.listdata.utrustning.rustning as | rustning key|}}
         <div class="item-row" style="line-height: 25px; width:100%;">
             <div class="weapon-icon"><a class="item-edit" title="Editera rustning" data-source="armor" data-itemid="{{rustning._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             {{#if (eq rustning.system.beskrivning "")}}

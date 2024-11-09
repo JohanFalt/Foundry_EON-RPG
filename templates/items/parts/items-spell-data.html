@@ -110,18 +110,18 @@
     
             <div class="item-row">
                 <div style="width: 100px;">Koncentration</div>
-                <div><input class="varaktighet pointer" type="checkbox" {{isChecked data.system.varaktighet.koncentration}} data-dtype="Boolean" data-field="varaktighet.koncentration" {{#if (gt item.system.varaktighet.tid 0)}}disabled readonly{{/if}} />
+                <div><input class="varaktighet pointer" type="checkbox" {{isChecked item.system.varaktighet.koncentration}} data-dtype="Boolean" data-field="varaktighet.koncentration" {{#if (gt item.system.varaktighet.tid 0)}}disabled readonly{{/if}} />
                 </div>
             </div>
         
             <div class="item-row">
                 <div style="width: 100px;">Momentan</div>
-                <div><input class="varaktighet pointer" type="checkbox" {{isChecked data.system.varaktighet.momentan}} data-dtype="Boolean" data-field="varaktighet.momentan" {{#if (gt item.system.varaktighet.tid 0)}}disabled readonly{{/if}} /></div>
+                <div><input class="varaktighet pointer" type="checkbox" {{isChecked item.system.varaktighet.momentan}} data-dtype="Boolean" data-field="varaktighet.momentan" {{#if (gt item.system.varaktighet.tid 0)}}disabled readonly{{/if}} /></div>
             </div>
         
             <div class="item-row">
                 <div style="width: 100px;">Immanent</div>
-                <div><input class="varaktighet pointer" type="checkbox" {{isChecked data.system.varaktighet.immanent}} data-dtype="Boolean" data-field="varaktighet.immanent" {{#if (gt item.system.varaktighet.tid 0)}}disabled readonly{{/if}} /></div>
+                <div><input class="varaktighet pointer" type="checkbox" {{isChecked item.system.varaktighet.immanent}} data-dtype="Boolean" data-field="varaktighet.immanent" {{#if (gt item.system.varaktighet.tid 0)}}disabled readonly{{/if}} /></div>
             </div>
         </div>
     </div>         
