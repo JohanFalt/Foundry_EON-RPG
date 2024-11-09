@@ -16,7 +16,7 @@
         <div>Moment</div>
     </div>
 
-    {{#each data.system.ritual as |item key|}}
+    {{#each item.system.ritual as |item key|}}
         <div class="item-row {{#if item.editera}}highlighted{{/if}}" style="line-height: 25px; width:100%;">
             {{#if item.editera}}
                 <div class="weapon-icon"><a class="item-save" title="Spara ritual" data-source="ritual" data-itemid="{{key}}"><i class="icon fa-solid fa-sd-card"></i></a></div>
@@ -35,7 +35,7 @@
 
 </div>
 
-{{#if (propertyTrueInList data.system.ritual "editera")}}
+{{#if (propertyTrueInList item.system.ritual "editera")}}
     <div class="item-box" style="width: 400px;">
         <div class="floating-label-group">
             <input class="text-value editable skill-label inputdata ritual-fields" type="text" id="ritual.namn" value="{{getListProperty item.system.ritual this.selectedRitual 'namn'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />

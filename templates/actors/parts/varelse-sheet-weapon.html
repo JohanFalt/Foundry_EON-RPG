@@ -71,8 +71,8 @@
                     </a>
                 </div>
             </div>
-            {{#if (ne actor.system.skada.forsvar.anteckning "")}}
-                <div class="information-area information-box">{{actor.system.skada.forsvar.anteckning}}</div>
+            {{#if (ne actor.system.skada.forsvar.beskrivning "")}}
+                <div class="information-area information-box">{{{actor.system.skada.forsvar.beskrivning}}}</div>
             {{/if}}
         </div>   
         
@@ -80,19 +80,19 @@
             <div class="large-headline">Skydd</div>
             <div class="clear">
                 <div class="pullLeft number-value-text floating-label-group">
-                    <input class="attribute-value editable skill-label skill-value" type="text" value="0" data-dtype="Number" />
+                    <input class="attribute-value editable skill-label skill-value" type="text" name="system.skada.skydd.hugg" value="{{actor.system.skada.skydd.hugg}}" data-dtype="Number" />
                     <span class="floating-label">Hugg</span>
                 </div>
                 <div class="pullLeft number-value-text floating-label-group">
-                    <input class="attribute-value editable skill-label skill-value" type="text" value="0" data-dtype="Number" />
+                    <input class="attribute-value editable skill-label skill-value" type="text" name="system.skada.skydd.kross" value="{{actor.system.skada.skydd.kross}}" data-dtype="Number" />
                     <span class="floating-label">Kross</span>
                 </div>
                 <div class="pullLeft number-value-text floating-label-group">
-                    <input class="attribute-value editable skill-label skill-value" type="text" value="0" data-dtype="Number" />
+                    <input class="attribute-value editable skill-label skill-value" type="text" name="system.skada.skydd.stick" value="{{actor.system.skada.skydd.stick}}" data-dtype="Number" />
                     <span class="floating-label">Stick</span>
                 </div>
                 <div class="pullLeft number-value-text floating-label-group">
-                    <input class="attribute-value editable skill-label skill-value" type="text" value="0" data-dtype="Number" />
+                    <input class="attribute-value editable skill-label skill-value" type="text" name="system.skada.skydd.grund" value="{{actor.system.skada.skydd.grund}}" data-dtype="Number" />
                     <span class="floating-label">Grund</span>
                 </div>
             </div>

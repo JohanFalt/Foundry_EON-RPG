@@ -10,7 +10,7 @@
 
 				<div class="item-column" style="min-width: 270px;">
 					<div class="item-property-area number-value-text floating-label-group">
-						{{#if data.system.aspekt}}
+						{{#if item.system.aspekt}}
 							<select class="text-value inputdata" name="system.id" data-source="aspekt">
 								<option value="">- Välj -</option>
 								{{#select item.system.id}}										
@@ -43,13 +43,13 @@
 					{{/if}}
 					
 					<div class="item-property-area number-value-text floating-label-group">
-						<input class="text-value editable" name="system.referens" type="text" value="{{data.system.referens}}" data-dtype="String" />
+						<input class="text-value editable" name="system.referens" type="text" value="{{item.system.referens}}" data-dtype="String" />
 						<span class="floating-label">Referens</span>
 					</div>
 
 					<div class="item-row" title="För att höja/sänka sitt färdighetsvärde höger-eller vänsterklickar på rutan">
 						<div class="headline-checkbox">Färdighetsvärde</div>
-						<div class="dice-value tic pointer" data-property="varde">{{getDiceValue data.system.varde}}</div>
+						<div class="dice-value tic pointer" data-property="varde">{{getDiceValue item.system.varde}}</div>
 					</div>
 
 					<div class="information-area information-box">För att höja/sänka sitt färdighetsvärde höger-eller vänsterklickar på rutan.</div>
@@ -57,34 +57,34 @@
 					{{#if this.isPC}}
 						<div class="item-row">
 							<div class="headline-checkbox">Lättlärd</div>
-							<div><input class="svarighet pointer" type="checkbox" data-value="L" {{isChecked data.system.installningar.lattlard}} data-dtype="String" /></div>
+							<div><input class="svarighet pointer" type="checkbox" data-value="L" {{isChecked item.system.installningar.lattlard}} data-dtype="String" /></div>
 						</div>
 
 						<div class="item-row">
 							<div class="headline-checkbox">Svårlärd</div>
-							<div><input class="svarighet pointer" type="checkbox" data-value="S" {{isChecked data.system.installningar.svarlard}} data-dtype="String" /></div>
+							<div><input class="svarighet pointer" type="checkbox" data-value="S" {{isChecked item.system.installningar.svarlard}} data-dtype="String" /></div>
 						</div> 
 					{{/if}}
 
 					{{#if (eq item.system.grupp "mystik")}}
 						<div class="item-row">
 							<div class="headline-checkbox">Aspekt</div>
-							<div><input class="item-property pointer" type="checkbox" {{isChecked data.system.aspekt}} data-dtype="Boolean" data-field="aspekt" /></div>
+							<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.aspekt}} data-dtype="Boolean" data-field="aspekt" /></div>
 						</div>
 					{{/if}}
 					
 					{{#if (eq item.system.grupp "ovriga")}}
 						<div class="item-row">
 							<div class="headline-checkbox">Hantverk</div>
-							<div><input class="item-property pointer" type="checkbox" {{isChecked data.system.hantverk}} data-dtype="Boolean" data-field="hantverk" /></div>
+							<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.hantverk}} data-dtype="Boolean" data-field="hantverk" /></div>
 						</div>
 						<div class="item-row">
 							<div class="headline-checkbox">Expertis</div>
-							<div><input class="item-property pointer" type="checkbox" {{isChecked data.system.expertis}} data-dtype="Boolean" data-field="expertis" /></div>
+							<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.expertis}} data-dtype="Boolean" data-field="expertis" /></div>
 						</div>  
 						<div class="item-row">
 							<div class="headline-checkbox">Kännetecken</div>
-							<div><input class="item-property pointer" type="checkbox" {{isChecked data.system.kannetecken}} data-dtype="Boolean" data-field="kannetecken" /></div>
+							<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.kannetecken}} data-dtype="Boolean" data-field="kannetecken" /></div>
 						</div>
 					{{/if}}					
 

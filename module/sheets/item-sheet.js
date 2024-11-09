@@ -465,7 +465,7 @@ export default class EonItemSheet extends ItemSheet {
 		}    
 		
 		const itemid = dataset.itemid;
-		const item = this.actor.getEmbeddedDocument("Item", itemid);
+		const item = await this.actor.getEmbeddedDocument("Item", itemid);
 		const namn = item.name;
 
         if (!item) {

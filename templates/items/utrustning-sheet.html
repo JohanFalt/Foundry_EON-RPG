@@ -10,7 +10,7 @@
 
                 <div class="pullLeft" style="min-width: 270px;">
 
-                    {{#if (eq data.system.typ "kongelat")}}
+                    {{#if (eq item.system.typ "kongelat")}}
                         <div class="item-property-area number-value-text floating-label-group">
                             <select class="text-value" name="name">                                
                                 {{#select item.name}}
@@ -29,7 +29,7 @@
                         </div>
                     {{/if}}
 
-                    {{#if (eq data.system.typ "utrustning")}}
+                    {{#if (eq item.system.typ "utrustning")}}
                         <div class="item-property-area number-value-text floating-label-group">
                             <select class="text-value" name="system.grupp">                                
                                 {{#select item.system.grupp}}
@@ -56,29 +56,29 @@
                         </div>  
 
                         <div class="item-property-area number-value-text floating-label-group ">
-                            <input class="attribute-value editable" name="system.antal" type="text" value="{{data.system.antal}}" data-dtype="Number" />
+                            <input class="attribute-value editable" name="system.antal" type="text" value="{{item.system.antal}}" data-dtype="Number" />
                             <span class="floating-label">Antal</span>
                         </div>
 
                         <div class="item-property-area number-value-text floating-label-group ">
-                            <input class="attribute-value editable" name="system.vikt" type="text" value="{{data.system.vikt}}" data-dtype="Number" />
+                            <input class="attribute-value editable" name="system.vikt" type="text" value="{{item.system.vikt}}" data-dtype="Number" />
                             <span class="floating-label">Vikt (kg)</span>
                         </div>
 
                         <div class="item-property-area number-value-text floating-label-group ">
-                            <input class="attribute-value editable" name="system.pris" type="text" value="{{data.system.pris}}" data-dtype="Number" />
+                            <input class="attribute-value editable" name="system.pris" type="text" value="{{item.system.pris}}" data-dtype="Number" />
                             <span class="floating-label">Pris (silver)</span>
                         </div>
                         
                         <div class="clear">
                             <div class="pullLeft item-headline caption">Behållare</div>
-                            <div class="pullLeft"><input class="item-active" name="system.installningar.behallare" type="checkbox" data-property="behallare" {{isChecked data.system.installningar.behallare}} data-dtype="Boolean" /></div>
+                            <div class="pullLeft"><input class="item-active" name="system.installningar.behallare" type="checkbox" data-property="behallare" {{isChecked item.system.installningar.behallare}} data-dtype="Boolean" /></div>
                         </div>
                     {{/if}}
 
-                    {{#if (eq data.system.typ "kongelat")}}                        
+                    {{#if (eq item.system.typ "kongelat")}}                        
 
-                        {{#each data.system.egenskaper as |egenskap key|}}
+                        {{#each item.system.egenskaper as |egenskap key|}}
                             <div class="item-property-area number-value-text floating-label-group ">
                                 <input class="attribute-value editable item-property" id="egenskap_{{egenskap.namn}}" type="text" value="{{egenskap.varde}}" data-dtype="Number" data-field="egenskaper" data-name="{{egenskap.namn}}" />
                                 <span class="floating-label">{{egenskap.label}}</span>
@@ -86,35 +86,35 @@
                         {{/each}}
 
                         <div class="item-property-area number-value-text floating-label-group ">
-                            <input class="attribute-value editable" name="system.antal" type="text" value="{{data.system.antal}}" data-dtype="Number" />
+                            <input class="attribute-value editable" name="system.antal" type="text" value="{{item.system.antal}}" data-dtype="Number" />
                             <span class="floating-label">Antal</span>
                         </div>
 
                         <div class="item-property-area number-value-text floating-label-group ">
-                            <input class="attribute-value editable" name="system.vikt" type="text" value="{{data.system.vikt}}" data-dtype="Number" />
+                            <input class="attribute-value editable" name="system.vikt" type="text" value="{{item.system.vikt}}" data-dtype="Number" />
                             <span class="floating-label">Vikt (kg)</span>
                         </div>
 
                         <div class="item-property-area number-value-text floating-label-group ">
-                            <input class="attribute-value editable" name="system.pris" type="text" value="{{data.system.pris}}" data-dtype="Number" />
+                            <input class="attribute-value editable" name="system.pris" type="text" value="{{item.system.pris}}" data-dtype="Number" />
                             <span class="floating-label">Pris (silver)</span>
                         </div>
 
                     {{/if}}
 
-                    {{#if data.system.installningar.behallare}}
+                    {{#if item.system.installningar.behallare}}
                         <div class="item-property-area number-value-text floating-label-group ">
-                            <input class="attribute-value editable" name="system.volym.antal" type="text" value="{{data.system.volym.antal}}" data-dtype="Number" />
+                            <input class="attribute-value editable" name="system.volym.antal" type="text" value="{{item.system.volym.antal}}" data-dtype="Number" />
                             <span class="floating-label">Antal</span>
                         </div>
 
                         <div class="item-property-area number-value-text floating-label-group ">
-                            <input class="attribute-value editable" name="system.volym.max" type="text" value="{{data.system.volym.max}}" data-dtype="Number" />
+                            <input class="attribute-value editable" name="system.volym.max" type="text" value="{{item.system.volym.max}}" data-dtype="Number" />
                             <span class="floating-label">Max antal</span>
                         </div>
 
                         <div class="item-property-area number-value-text floating-label-group ">
-                            <input class="attribute-value editable" name="system.volym.enhet" type="text" value="{{data.system.volym.enhet}}" data-dtype="String" />
+                            <input class="attribute-value editable" name="system.volym.enhet" type="text" value="{{item.system.volym.enhet}}" data-dtype="String" />
                             <span class="floating-label">Enhet</span>
                         </div>
                     {{/if}}
@@ -125,10 +125,10 @@
                         <div class="pointer red item-delete large-icon" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
                     {{/if}}     
                     
-                    {{#if (eq data.system.typ "kongelat")}}
+                    {{#if (eq item.system.typ "kongelat")}}
                         <div class="information-area top-sidetext">KONGELAT</div>
                     {{/if}}
-                    {{#if (eq data.system.typ "utrustning")}}
+                    {{#if (eq item.system.typ "utrustning")}}
                         <div class="information-area top-sidetext">UTRUSTNING</div>
                     {{/if}}
                 </div>

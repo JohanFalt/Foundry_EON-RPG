@@ -41,6 +41,12 @@ export default class EonVarelse extends foundry.abstract.DataModel {
                     bonus: new fields.NumberField({...bonusInteger})
                 })
             }),
+            skydd: new fields.SchemaField({
+                grund: new fields.NumberField({...valueInteger}),
+                hugg: new fields.NumberField({...valueInteger}),
+                kross: new fields.NumberField({...valueInteger}),
+                stick: new fields.NumberField({...valueInteger})
+            }),
             utmattning: new fields.SchemaField({
                 grund: new fields.NumberField({...valueInteger}),
                 varde: new fields.NumberField({...valueInteger})
