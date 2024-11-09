@@ -13,11 +13,7 @@
 						{{#if data.system.aspekt}}
 							<select class="text-value inputdata" name="system.id" data-source="aspekt">
 								<option value="">- Välj -</option>
-								{{#select item.system.id}}										
-									{{#each EON.CONFIG.aspekter as |aspekt key|}}
-										<option value="{{key}}">{{aspekt}}</option>
-									{{/each}}
-								{{/select}}
+								{{selectOptions EON.CONFIG.aspekter selected=item.system.id}}
 							</select>
 						{{else}}
 							<input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
@@ -30,12 +26,8 @@
 						<div class="item-property-area number-value-text floating-label-group">
 							<select class="text-value" name="system.attribut">
 								<option value="">- Välj -</option>
-								{{#select item.system.attribut}}										
-									<option value="">- Inget attribut -</option>
-									{{#each EON.CONFIG.grundegenskaper as |grundegenskap key|}}
-										<option value="{{key}}">{{grundegenskap.namn}}</option>
-									{{/each}}
-								{{/select}}
+								<option value="">- Inget attribut -</option>
+								{{selectOptions EON.CONFIG.grundegenskaper selected=item.system.attribut labelAttr="namn"}}
 							</select>
 							<span class="floating-label">Attribut</span>
 						</div>	
@@ -55,15 +47,17 @@
 					<div class="information-area information-box">För att höja/sänka sitt färdighetsvärde höger-eller vänsterklickar på rutan.</div>
 
 					{{#if this.isPC}}
-						<div class="item-row">
-							<div class="headline-checkbox">Lättlärd</div>
-							<div><input class="svarighet pointer" type="checkbox" data-value="L" {{isChecked data.system.installningar.lattlard}} data-dtype="String" /></div>
-						</div>
-
-						<div class="item-row">
-							<div class="headline-checkbox">Svårlärd</div>
-							<div><input class="svarighet pointer" type="checkbox" data-value="S" {{isChecked data.system.installningar.svarlard}} data-dtype="String" /></div>
-						</div> 
+						{{#unless (eq item.system.grupp "ovriga")}}
+							<div class="item-row">
+								<div class="headline-checkbox">Lättlärd</div>
+								<div><input class="svarighet pointer" type="checkbox" data-value="L" {{isChecked data.system.installningar.lattlard}} data-dtype="String" /></div>
+							</div>
+				
+							<div class="item-row">
+								<div class="headline-checkbox">Svårlärd</div>
+								<div><input class="svarighet pointer" type="checkbox" data-value="S" {{isChecked data.system.installningar.svarlard}} data-dtype="String" /></div>
+							</div> 
+						{{/unless}}
 					{{/if}}
 
 					{{#if (eq item.system.grupp "mystik")}}
