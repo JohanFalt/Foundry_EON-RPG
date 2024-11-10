@@ -120,6 +120,7 @@ export default class EonItemSheet extends ItemSheet {
 				}
 
 				const kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, game.data.system.version);
+				kroppsdelar.forEach(k => k.modifiera = false);
 				itemData.system.kroppsdel = kroppsdelar;
 				itemData.system.typ = "utrustning";
 			}
@@ -248,6 +249,14 @@ export default class EonItemSheet extends ItemSheet {
 		html
 			.find('.ritual-fields')
 			.change(this._updateRitualFields.bind(this));
+
+		html
+			.find('.modifiera-checkbox')
+			.change(this._onModifieraChange.bind(this));
+
+		html.find('.fa-square-plus').click(ev => this._ticValueUp(ev, 'armor'));
+
+		html.find('.fa-square-minus').click(ev => this._ticValueDown(ev));
 	}
 
 	/** @override */
@@ -489,21 +498,32 @@ export default class EonItemSheet extends ItemSheet {
 		await this.actor.deleteEmbeddedDocuments("Item", [itemid]);        
 	}
 
-	async _ticValueUp(event) {
+	async _ticValueUp(event, source) {
 		event.preventDefault();
-
 		const element = event.currentTarget;
 		const dataset = element.dataset;
-
 		const itemData = foundry.utils.duplicate(this.item);
-		const property = dataset.property;
 
+		if (source === 'armor') {
+			const kroppsdel = dataset.kroppsdel;
+			const property = dataset.property;
+			
+			const kroppsdelIndex = itemData.system.kroppsdel.findIndex(k => k.kroppsdel === kroppsdel);
+			if (kroppsdelIndex !== -1) {
+				itemData.system.kroppsdel[kroppsdelIndex][property]++;
+			}
+			
+			await this.item.update(itemData);
+			return;
+		}
+
+		const property = dataset.property;
 		const fields = property.split(".");
 
 		// bonus
 		if (fields.length == 1) {
 			itemData.system[property].bonus += 1;
-	
+
 			if (itemData.system[property].bonus > 3)  {
 				itemData.system[property].tvarde += 1;
 				itemData.system[property].bonus = 0;
@@ -512,17 +532,16 @@ export default class EonItemSheet extends ItemSheet {
 		// grundegenskaper
 		else if (fields.length == 3) {
 			itemData.system[fields[0]][fields[1]][fields[2]].bonus += 1;
-	
+
 			if (itemData.system[fields[0]][fields[1]][fields[2]].bonus > 3)  {
 				itemData.system[fields[0]][fields[1]][fields[2]].tvarde += 1;
 				itemData.system[fields[0]][fields[1]][fields[2]].bonus = 0;
 			}
 
 			itemData.system[fields[0]][fields[1]].totalt = await CalculateHelper.BeraknaTotaltVarde(itemData.system[fields[0]][fields[1]]);
-		}		
+		}       
 
 		await this.item.update(itemData);
-
 		this.render();
 	}
 
@@ -531,10 +550,24 @@ export default class EonItemSheet extends ItemSheet {
 
 		const element = event.currentTarget;
 		const dataset = element.dataset;
-
 		const itemData = foundry.utils.duplicate(this.item);
-		const property = dataset.property;
 
+		if (dataset.source === 'armor') {
+			const kroppsdel = dataset.kroppsdel;
+			const property = dataset.property;
+			
+			const kroppsdelIndex = itemData.system.kroppsdel.findIndex(k => k.kroppsdel === kroppsdel);
+			if (kroppsdelIndex !== -1) {
+				// Ensure we don't go below 0
+				itemData.system.kroppsdel[kroppsdelIndex][property] = 
+					Math.max(0, itemData.system.kroppsdel[kroppsdelIndex][property] - 1);
+			}
+			
+			await this.item.update(itemData);
+			return;
+		}
+
+		const property = dataset.property;
 		const fields = property.split(".");
 
 		// bonus
@@ -1231,6 +1264,24 @@ export default class EonItemSheet extends ItemSheet {
 				}
 			}
 		}
+	}
+
+	async _onModifieraChange(event) {
+		event.preventDefault();
+		
+		const element = event.currentTarget;
+		const kroppsdel = element.dataset.kroppsdel;
+		const isChecked = element.checked;
+		
+		const itemData = foundry.utils.duplicate(this.item);
+		
+		const kroppsdelIndex = itemData.system.kroppsdel.findIndex(k => k.kroppsdel === kroppsdel);
+		if (kroppsdelIndex !== -1) {
+			itemData.system.kroppsdel[kroppsdelIndex].modifiera = isChecked;
+		}
+		
+		await this.item.update(itemData);
+		this.render();
 	}
 }
 
