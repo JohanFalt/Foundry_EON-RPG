@@ -29,6 +29,7 @@
             <div class="item-column" style="min-width: 270px;">
                 <div>
                     <div class="dialog-section-small item-column">
+
                         {{#if this.hasName}}
                             <div class="item-property-area floating-label-group" style="margin-bottom: 50px;">
                                 <input class="text-value editable" type="text" name="attribut.namn" value="{{attribut.namn}}" data-dtype="String" autocomplete="off" autofocus required />
@@ -43,17 +44,34 @@
                                 <div class="dice-value tic pointer" data-property="grundegenskaper">{{getDiceValue attribut.grund}}</div>
                             </div>
                         {{else}}
-                            {{#if (eq object.typ "skada")}}
-                                <div>
-                                    <div class="large-main-headline">Värde</div>
-                                    <div class="dice-value tic pointer">{{getDiceValue attribut.grund}}</div>
+                            {{#if (and (eq object.typ "skada") (eq object.nyckel "vandning"))}}
+                                <div class="item-column">                                
+                                    {{#each attribut as | vandning key|}}
+                                        <div class="item-row">
+                                            <div class="three-column centerText">{{vandning.skada}}</div>
+                                            <div class="three-column centerText"><input class="attribute-value editable skill-label skill-value" type="text" name="attribut.{{key}}.utmattning" value="{{vandning.utmattning}}" /></div>
+                                            {{#if (ne key 9)}}
+                                                <div class="three-column centerText pointer"><a class="item-active" data-key="vandning.{{key}}">{{#if vandning.vandning}}<i class="fa-solid fa-toggle-on green"></i>{{else}}<i class="fa-solid fa-toggle-off red"></i>{{/if}}</a></div>
+                                            {{else}}     
+                                                <div class="three-column centerText"></div>                                           
+                                            {{/if}}
+                                        </div>
+                                    {{/each}}
                                 </div>
                             {{else}}
-                                <div>
-                                    <div class="dice-value disabled">{{getDiceValue attribut.grund}}</div>
-                                </div>
+                                {{#if (eq object.typ "skada")}}
+                                    <div>
+                                        <div class="large-main-headline">Värde</div>
+                                        <div class="dice-value tic pointer">{{getDiceValue attribut.grund}}</div>
+                                    </div>
+                                {{else}}
+                                    <div>
+                                        <div class="dice-value disabled">{{getDiceValue attribut.grund}}</div>
+                                    </div>
+                                {{/if}}
                             {{/if}}
                         {{/if}}
+
                         {{#if this.hasDescription}}
                             <div class="large-headline">Beskrivning</div>
                             <div class="editor-box">
@@ -63,49 +81,46 @@
                     </div>
 
                     {{#if this.isNumericBonus}}
-                    <div class="item-column">      
+                        <div class="item-column">
 
-                        <div class="headline item-row" style="line-height: 25px; width:100%;">
-                            <div class="pointer item-create weapon-icon" title="Lägg till bonus" data-type="bonus"><i class="fa-solid fa-square-plus green"></i></div>       
-                            <div class="headline">Bonus</div>
-                        </div>
-
-                        {{#if attribut.bonuslista}}
-                        <div class="bonus-list">
-                            {{#each attribut.bonuslista as |bonus key|}}
-                            <div class="item-row">
-                                <div>
-                                    <div class="floating-label-group">
-                                        <input class="inputdata" type="text" value="{{bonus.namn}}" id="object.name_{{key}}" data-key="{{key}}" />
-                                        <span class="floating-label">Namn</span>
-                                    </div>
-                                </div>
-                                {{#if (or (eq ../object.typ "strid") (and (eq ../object.typ "harleddegenskaper") (eq ../object.nyckel "grundrustning")))}}
-                                    <div class="floating-label-group tic" data-key="{{key}}">
-                                        <input class="attribute-value editable pointer" type="text" value="{{bonus.tvarde}}" />
-                                    </div>
-                                {{else}}
-                                    <div class="dice-value tic pointer" data-key="{{key}}">{{getDiceValue bonus}}</div>
-                                {{/if}}
-                                <div class="pointer red item-delete" title="Ta bort bonus" data-key="{{key}}">
-                                    <i class="icon fa-solid fa-trash-can"></i>
-                                </div>
+                            <div class="headline item-row" style="line-height: 25px; width:100%;">
+                                <div class="pointer item-create weapon-icon" title="Lägg till bonus" data-type="bonus"><i class="fa-solid fa-square-plus green"></i></div>       
+                                <div class="headline">Bonus</div>
                             </div>
-                            {{/each}}
+
+                            {{#if attribut.bonuslista}}
+                                <div class="bonus-list">
+                                    {{#each attribut.bonuslista as |bonus key|}}
+                                        <div class="item-row">
+                                            <div>
+                                                <div class="floating-label-group">
+                                                    <input class="inputdata" type="text" value="{{bonus.namn}}" id="object.name_{{key}}" data-key="{{key}}" />
+                                                    <span class="floating-label">Namn</span>
+                                                </div>
+                                            </div>
+
+                                            {{#if (or (eq ../object.typ "strid") (and (eq ../object.typ "harleddegenskaper") (eq ../object.nyckel "grundrustning")))}}
+                                                <div class="floating-label-group tic" data-key="{{key}}">
+                                                    <input class="attribute-value editable pointer" type="text" value="{{bonus.tvarde}}" />
+                                                </div>
+                                            {{else}}
+                                                <div class="dice-value tic pointer" data-key="{{key}}">{{getDiceValue bonus}}</div>
+                                            {{/if}}
+
+                                            <div class="pointer red item-delete" title="Ta bort bonus" data-key="{{key}}">
+                                                <i class="icon fa-solid fa-trash-can"></i>
+                                            </div>
+                                        </div>
+                                    {{/each}}
+                                </div>
+                            {{/if}}
+
                         </div>
-                        {{/if}}
-
-                    </div>
-                    {{/if}}
-
-                    
+                    {{/if}}                    
                 </div>
-                
-                
             </div> 
-            
             <div class="pullLeft" style="flex-grow: 1; text-align: right;">
-                <div class="information-area top-sidetext">{{#if (eq object.typ "grundegenskaper")}}GRUNDEGENSKAP{{else}}HÄRLETT ATTRIBUT{{/if}}</div>
+                <div class="information-area top-sidetext">{{this.headline}}</div>
             </div>
 
         {{/if}}

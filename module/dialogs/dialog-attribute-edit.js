@@ -72,11 +72,12 @@ export class DialogAttributeEdit extends FormApplication {
         return "systems/eon-rpg/templates/dialogs/dialog-attribute-edit.html";
 	}  
 
-    getData() {
+    async getData() {
         const data = super.getData();
         data.hasName = false;
         data.hasDescription = false;
         data.isNumericBonus = true;
+        data.headline = "";
 
         data.EON = game.EON;
 		data.EON.CONFIG = CONFIG.EON;
@@ -122,6 +123,27 @@ export class DialogAttributeEdit extends FormApplication {
                 data.attribut.namn = this.config[this.object.typ][this.object.nyckel].namn;
             }
         }     
+
+        if (data.hasDescription) {
+            data.enrichedBeskrivning = await TextEditor.enrichHTML(data.attribut.beskrivning);
+        }
+
+        if (this.object.typ == "grundegenskaper") {
+            data.headline = "GRUNDEGENSKAP";
+        }
+        else if (this.object.typ == "strid") {
+            data.headline = "STRID";
+        }
+        else if (this.object.typ == "skada") {
+            data.headline = this.object.nyckel.toUpperCase();
+
+            if (this.object.nyckel == "forsvar") {
+                data.headline = "FÖRSVAR";
+            }            
+        }
+        else {
+            data.headline = 'HÄRLETT ATTRIBUT';
+        }
         
         console.log(this.object.nyckel);
         console.log(data);
@@ -147,6 +169,10 @@ export class DialogAttributeEdit extends FormApplication {
         html
             .find('.item-create')
             .click(this._addBonus.bind(this));
+
+        html
+			.find(".item-active")
+			.click(this._onItemActive.bind(this));
         
         html
             .find('.item-delete')
@@ -186,11 +212,21 @@ export class DialogAttributeEdit extends FormApplication {
 
         if (attributeKeys.length > 0) {
             for (let key of attributeKeys) {
-                const index = key.split(".")[1];
+                const i = (key.match(/\./g) || []).length;
                 const value = formData[key];
+                const index = key.split(".")[1];
 
-                if (value !== undefined) {
-                    actorData.system[this.object.typ][this.object.nyckel][index] = value;
+                if (i == 1) {
+                    if (value !== undefined) {
+                        actorData.system[this.object.typ][this.object.nyckel][index] = value;
+                    }
+                }    
+                if (i == 2) {      
+                    const attribut = key.split(".")[2];
+                    
+                    if (value !== undefined) {
+                        actorData.system[this.object.typ][this.object.nyckel][index][attribut] = value;
+                    } 
                 }
             }
         }
@@ -432,6 +468,31 @@ export class DialogAttributeEdit extends FormApplication {
         await this.actor.update(actorData);
         this.render();
     }
+
+    /**
+        * Körs när något item blir aktiverat. 
+        * @param _event
+    */
+    async _onItemActive(event) {	
+        console.log("_onItemActive");
+        
+		event.preventDefault();
+        event.stopPropagation();
+
+		const element = event.currentTarget;
+		const dataset = element.dataset;
+        const actorData = foundry.utils.duplicate(this.actor);
+
+        if ((this.object.typ == "skada") && (this.object.nyckel == "vandning")) {
+            const key = dataset.key.split(".")[0];
+            const index = parseInt(dataset.key.split(".")[1]);
+
+            actorData.system[this.object.typ][this.object.nyckel][index][key] = !actorData.system[this.object.typ][this.object.nyckel][index][key];
+        }
+
+        await this.actor.update(actorData);
+		this.render();
+	}
 
     async _deleteBonus(event) {
         event.preventDefault();

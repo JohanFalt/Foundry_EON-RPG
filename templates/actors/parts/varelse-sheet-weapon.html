@@ -107,10 +107,15 @@
                 <div class="three-column centerText">Vändning</div>
                 
             </div>
-            <div class="skill-row skill">
-                <div class="three-column centerText number-value-text">1-4</div><div class="three-column centerText number-value-text">+1</div><div class="three-column centerText number-value-text">-</div>
-            </div>
-            <div class="skill-row skill">
+
+            {{#each actor.system.skada.vandning as | vandning key|}}
+                <div class="skill-row skill">
+                    <div class="three-column centerText number-value-text">{{vandning.skada}}</div>
+                    <div class="three-column centerText number-value-text">{{vandning.utmattning}}</div>
+                    <div class="three-column centerText number-value-text">{{#if vandning.vandning}}1T10{{else}}-{{/if}}</div>
+                </div>
+            {{/each}}
+            <!-- <div class="skill-row skill">
                 <div class="three-column centerText number-value-text">5-9</div><div class="three-column centerText number-value-text">+2</div><div class="three-column centerText number-value-text">-</div>
             </div>
             <div class="skill-row skill">
@@ -136,7 +141,7 @@
             </div>
             <div class="skill-row skill">
                 <div class="three-column centerText number-value-text">(+5)</div><div class="three-column centerText number-value-text">(+2)</div><div class="three-column centerText number-value-text">(...)</div>
-            </div>
+            </div> -->
         </div>
         <div class="skill-icon">
             <a class="item-edit" title="Editera" data-type="skada" data-attribute="vandning">

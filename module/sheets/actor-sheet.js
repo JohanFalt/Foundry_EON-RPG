@@ -73,8 +73,6 @@ export default class EonActorSheet extends ActorSheet {
         data.EON = game.EON;
         data.EON.CONFIG = CONFIG.EON;
 
-        data.enrichedBeskrivning = await TextEditor.enrichHTML(this.actor.system.bakgrund.beskrivning);        
-
         data.actor.system.listdata = [];
         data.actor.system.listdata.fardigheter = [];
         data.actor.system.listdata.fardigheter.strid = [];
@@ -199,7 +197,10 @@ export default class EonActorSheet extends ActorSheet {
         data.actor.system.listdata.utrustning.vapen.skold = data.actor.system.listdata.utrustning.vapen.skold.sort((a, b) => a.name.localeCompare(b.name));
         data.actor.system.listdata.utrustning.rustning = data.actor.system.listdata.utrustning.rustning.sort((a, b) => a.name.localeCompare(b.name));
 
-        //for (const del in CONFIG.EON.kroppsdelar[bok]) {
+        data.actor.system.listdata.valuta = data.actor.items
+            .filter(item => item.type === "Valuta")
+            .sort((a, b) => a.name.localeCompare(b.name));
+
         for (const del of data.actor.system.listdata.kroppsdelar) {
             del.stick += data.actor.system.harleddegenskaper.grundrustning.totalt; 
             del.kross += data.actor.system.harleddegenskaper.grundrustning.totalt; 
@@ -252,14 +253,13 @@ export default class EonActorSheet extends ActorSheet {
         }
 
         data.listData = SelectHelper.SetupActor(data.actor);
+        data.enrichedBeskrivning = await TextEditor.enrichHTML(this.actor.system.bakgrund.beskrivning);
 
         console.log(data.actor.name);
         console.log(data.actor);
         console.log(data.EON);
 
-        data.actor.system.listdata.valuta = data.actor.items
-            .filter(item => item.type === "Valuta")
-            .sort((a, b) => a.name.localeCompare(b.name));
+        
 
         return data;
     }

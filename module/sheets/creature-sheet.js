@@ -45,6 +45,8 @@ export default class EonCreatureSheet extends ActorSheet {
 
 		if (!actorData.system.installningar.skapad) {
             await CreateHelper.SkapaFardigheter(this.actor, CONFIG.EON, version);
+            actorData.system.skada.vandning = await CreateHelper.SkapaVandningar();
+
             actorData.system.installningar.skapad = true;
             actorData.system.installningar.version = version;
             await this.actor.update(actorData);
@@ -57,9 +59,7 @@ export default class EonCreatureSheet extends ActorSheet {
         const data = await super.getData();	
 
         data.EON = game.EON;
-        data.EON.CONFIG = CONFIG.EON;
-
-        data.listData = SelectHelper.SetupActor(this.actor);
+        data.EON.CONFIG = CONFIG.EON;        
 
         data.actor.system.listdata = [];
         data.actor.system.listdata.fardigheter = [];
@@ -89,6 +89,10 @@ export default class EonCreatureSheet extends ActorSheet {
         data.actor.system.listdata.fardigheter = data.actor.system.listdata.fardigheter.sort((a, b) => a.name.localeCompare(b.name));
         data.actor.system.listdata.vapen.narstrid = data.actor.system.listdata.vapen.narstrid.sort((a, b) => a.name.localeCompare(b.name));
         data.actor.system.listdata.vapen.avstand = data.actor.system.listdata.vapen.avstand.sort((a, b) => a.name.localeCompare(b.name));
+
+        data.listData = SelectHelper.SetupActor(this.actor);
+
+        data.enrichedBeskrivning = await TextEditor.enrichHTML(this.actor.system.bakgrund.beskrivning);
 
         console.log(data.actor.name);
         console.log(data.actor);
