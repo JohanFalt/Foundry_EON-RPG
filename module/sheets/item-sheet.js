@@ -177,6 +177,7 @@ export default class EonItemSheet extends ItemSheet {
 
 		console.log(data.item.type);
 		console.log(data.item);
+		console.log(data.EON);
 		
 		return data;
 	}

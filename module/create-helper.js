@@ -42,6 +42,41 @@ export default class CreateHelper {
         }     
     }
 
+    static async SkapaVandningar(actor, version) {
+        let vandningar = [];
+        let vandning = {};
+
+        vandning = {
+            skada: "1-4",
+            utmattning: "0",
+            vandning: false
+        };    
+        vandningar.push(vandning);  
+
+        for (let i = 1; i < 9; i++) {
+            let min = i * 5;
+            let max = min + 4;
+
+            let value = `${min}-${max}`;
+
+            vandning = {
+                skada: value,
+                utmattning: "0",
+                vandning: false
+            };
+            vandningar.push(vandning);
+        }
+
+        vandning = {
+            skada: "(+5)",
+            utmattning: "(0)",
+            vandning: false
+        };    
+        vandningar.push(vandning);
+
+        return vandningar;     
+    }
+
     static async SkapaKaraktarsdrag(actorData) {
         let drag = {
             namn: "",
@@ -66,7 +101,6 @@ export default class CreateHelper {
     }
 
     static async SkapaKroppsdelar(config, version) {
-
         let bok = "grund";
         let kroppsdelar = [];
 
