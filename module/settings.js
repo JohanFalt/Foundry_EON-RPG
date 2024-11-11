@@ -238,6 +238,22 @@ export const systemSettings = function() {
 		default: "",
 		type: String,
 	});
+
+    game.settings.register("eon-rpg", "vd_allman", {
+		name: "Vändning - Allmän varelser",
+		scope: "world",
+		config: false,
+		default: "",
+		type: String,
+	});
+
+    game.settings.register("eon-rpg", "vd_grotttroll", {
+		name: "Vändning - Grotttroll",
+		scope: "world",
+		config: false,
+		default: "",
+		type: String,
+	});
 };
 
 export class Books extends FormApplication {

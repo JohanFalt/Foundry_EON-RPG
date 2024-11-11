@@ -39,19 +39,37 @@
                             <div class="large-main-headline">{{attribut.namn}}</div>
                         {{/if}}
 
-                        {{#if (eq object.typ "grundegenskaper")}}
-                            <div>
-                                <div class="dice-value tic pointer" data-property="grundegenskaper">{{getDiceValue attribut.grund}}</div>
-                            </div>
+                        {{#if (or (eq object.typ "grundegenskaper") (eq object.typ "harleddegenskaper"))}}
+                            {{#if (eq object.typ "grundegenskaper")}}
+                                <div>
+                                    <div class="dice-value tic pointer" data-property="grundegenskaper">{{getDiceValue attribut.grund}}</div>
+                                </div>
+                            {{/if}}
+                            {{#if (and (eq object.typ "harleddegenskaper") (eq isPC false))}}
+                                <div>
+                                    <div class="dice-value tic pointer" data-property="grundegenskaper">{{getDiceValue attribut.grund}}</div>
+                                </div>
+                            {{/if}}
+                            {{#if (and (eq object.typ "harleddegenskaper") (eq isPC true))}}
+                                <div>
+                                    <div class="dice-value disabled">{{getDiceValue attribut.grund}}</div>
+                                </div>
+                            {{/if}}
                         {{else}}
                             {{#if (and (eq object.typ "skada") (eq object.nyckel "vandning"))}}
-                                <div class="item-column">                                
-                                    {{#each attribut as | vandning key|}}
-                                        <div class="item-row">
+                                <div class="item-column">      
+                                    <div>
+                                        <select class="text-value editable" name="attribut.vandningid" style="width: 300px">
+                                            {{selectOptions this.vandningLista selected=attribut.vandningid localize=false}}  
+                                        </select>
+                                    </div>
+                                    
+                                    {{#each attribut.lista as | vandning key|}}
+                                        <div class="item-row" style="line-height: 25px; height: 32px;">
                                             <div class="three-column centerText">{{vandning.skada}}</div>
-                                            <div class="three-column centerText"><input class="attribute-value editable skill-label skill-value" type="text" name="attribut.{{key}}.utmattning" value="{{vandning.utmattning}}" /></div>
+                                            <div class="three-column centerText"><input class="attribute-value editable skill-label skill-value" type="text" name="attribut.lista.{{key}}.utmattning" value="{{vandning.utmattning}}" /></div>
                                             {{#if (ne key 9)}}
-                                                <div class="three-column centerText pointer"><a class="item-active" data-key="vandning.{{key}}">{{#if vandning.vandning}}<i class="fa-solid fa-toggle-on green"></i>{{else}}<i class="fa-solid fa-toggle-off red"></i>{{/if}}</a></div>
+                                                <div class="three-column centerText pointer"><a class="item-active" data-key="lista.{{key}}">{{#if vandning.vandning}}<i class="fa-solid fa-toggle-on green"></i>{{else}}<i class="fa-solid fa-toggle-off red"></i>{{/if}}</a></div>
                                             {{else}}     
                                                 <div class="three-column centerText"></div>                                           
                                             {{/if}}

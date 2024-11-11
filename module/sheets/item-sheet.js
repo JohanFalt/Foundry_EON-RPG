@@ -165,7 +165,12 @@ export default class EonItemSheet extends ItemSheet {
 			data.hasActor = true;
 
 			if (this.item.type == "Färdighet") {
-				data.hasExperience = this.item.actor.system.fardigheter[this.item.system.grupp].erf > 0;
+				if (this.item.actor.type.toLowerCase().replace(" ", "") == "rollperson") {
+					data.hasExperience = this.item.actor.system.fardigheter[this.item.system.grupp].erf > 0;
+				}
+				else {
+					data.hasExperience = false;
+				}				
 
 				if ((this.item.system.grupp == "mystik") && (this.item.system.id == "teoretiskmagi")) {
 					data.item.system.installningar.kantabort = true;

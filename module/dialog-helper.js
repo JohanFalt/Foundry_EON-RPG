@@ -68,4 +68,14 @@ export default class classDialogHelper {
 		combatRollUse.render(true);
     }
 
+    static async VandningDialog(actor) {
+        const vandningid = actor.system.skada?.vandning?.vandningid;
+
+        if ((vandningid != undefined) || (vandningid != "")) {
+            let vandning = game.settings.get("eon-rpg", vandningid);
+
+            const table = game.tables.find(i => i._id === vandning);
+            table.draw();
+        }
+    }
 }

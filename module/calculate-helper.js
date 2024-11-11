@@ -103,6 +103,10 @@ export default class CalculateHelper {
     }
 
     static async BeraknaHarleddEgenskaper(actorData) {
+        if (actorData.type.toLowerCase().replace(" ", "") != "rollperson") {
+            return;
+        }
+
         let styrka = actorData.system.grundegenskaper.styrka.totalt;
         let rorlighet = actorData.system.grundegenskaper.rorlighet.totalt;
         let talighet = actorData.system.grundegenskaper.talighet.totalt;

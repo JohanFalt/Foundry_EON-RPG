@@ -51,12 +51,29 @@ export default class EonVarelse extends foundry.abstract.DataModel {
                 grund: new fields.NumberField({...valueInteger}),
                 varde: new fields.NumberField({...valueInteger})
             }),
-            vandning: new fields.ArrayField(
-                new fields.ObjectField({
-                    initial: {},
-                    nullable: false,
-            }))
+            vandning: new fields.SchemaField({
+                lista: new fields.ArrayField(                
+                    new fields.ObjectField({
+                        initial: {},
+                        nullable: false,
+                })),
+                vandningid: new fields.StringField({required: true, initial: ""})
+            }),
+            
         });
+
+        schema.strid = new fields.SchemaField({
+            lakningstakt: new fields.SchemaField({
+                varde: new fields.NumberField({...valueInteger}),
+                totalt: new fields.NumberField({...valueInteger}),
+                bonuslista: new fields.ArrayField(
+                    new fields.ObjectField({
+                        initial: {},
+                        nullable: false,
+                    })
+                )
+            })
+        }),
 
         schema.egenskap = new fields.SchemaField({
             fokus: new fields.SchemaField({

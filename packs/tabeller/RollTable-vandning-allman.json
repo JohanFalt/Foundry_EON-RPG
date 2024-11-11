@@ -1,0 +1,69 @@
+{
+    "id": "vd_allman",
+    "version": "1.0.0",
+    "mapp": "Vandningstabell",
+    "tabell": {
+        "name": "Vändning - Allmän varelser",
+        "img": "icons/svg/d20-grey.svg",
+        "formula": "1d10",
+        "description": "",
+        "results": [
+            {
+            "type": 0,
+            "weight": 1,
+            "range": [
+                1,
+                3
+            ],
+            "drawn": false,
+            "_id": "XbIHcnZuVOOf4k0s",
+            "text": "Varelsen kommer i fördelaktigt läge. [Nästa runda har varelsen +1T6 på sin attack.]",
+            "img": "icons/svg/d20-black.svg",
+            "documentId": null,
+            "flags": {}
+            },
+            {
+            "type": 0,
+            "weight": 1,
+            "range": [
+                4,
+                6
+            ],
+            "drawn": false,
+            "_id": "amwPwaMRSb4i4bTH",
+            "text": "Sargande träff får varelsen ur balans. [Omtöcknad.]",
+            "img": "icons/svg/d20-black.svg",
+            "documentId": null,
+            "flags": {}
+            },
+            {
+            "type": 0,
+            "weight": 1,
+            "range": [
+                7,
+                9
+            ],
+            "drawn": false,
+            "_id": "sHimokqFqWsJyM29",
+            "text": "Kraftig träff som får varelsen att stappla. [Faller.]",
+            "img": "icons/svg/d20-black.svg",
+            "documentId": null,
+            "flags": {}
+            },
+            {
+            "type": 0,
+            "weight": 1,
+            "range": [
+                10,
+                10
+            ],
+            "drawn": false,
+            "_id": "UZXTOLTSHQ79XrTM",
+            "text": "Kraftig blödning. [+2 Utmattning per runda.]",
+            "img": "icons/svg/d20-black.svg",
+            "documentId": null,
+            "flags": {}
+            }
+        ]
+    }
+}

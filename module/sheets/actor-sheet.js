@@ -257,9 +257,7 @@ export default class EonActorSheet extends ActorSheet {
 
         console.log(data.actor.name);
         console.log(data.actor);
-        console.log(data.EON);
-
-        
+        console.log(data.EON);        
 
         return data;
     }
@@ -331,7 +329,7 @@ export default class EonActorSheet extends ActorSheet {
 
         const droppedItem = await Item.implementation.fromDropData(_data);
 
-        if ((droppedItem.type == "Folkslag") && (this.actor.type === "Rollperson")) {
+        if ((droppedItem.type == "Folkslag") && (this.actor.type.toLowerCase().replace(" ", "") == "rollperson")) {
             await this.LaggtillFolkslag(droppedItem);
         }
         else if (droppedItem.type == "Folkslag") {

@@ -39,7 +39,7 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/actors/parts/varelse-sheet-skill.html",
 		"systems/eon-rpg/templates/actors/parts/varelse-sheet-property.html",		
 		"systems/eon-rpg/templates/actors/parts/varelse-sheet-weapon.html",
-		"systems/eon-rpg/templates/actors/parts/varelse-sheet-health.html",
+		//"systems/eon-rpg/templates/actors/parts/varelse-sheet-health.html",
 
 		"systems/eon-rpg/templates/items/parts/navigation-weapon.html",
 		"systems/eon-rpg/templates/items/parts/navigation-faith.html",
@@ -104,8 +104,9 @@ export async function Setup() {
 export async function RegisterRollableTables() {
 	let stridfolderData = false;
 	let skadefolderData = false;
+	let vandningfolderData = false;
 
-	// skapa mapp-strukturen först
+	// skapa mapp-strukturen först strid
 	for (const folder of game.folders) {
 		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Strid")) {
 			stridfolderData = folder;
@@ -124,6 +125,7 @@ export async function RegisterRollableTables() {
 		});
 	}
 
+	// skapa mapp-strukturen först skada
 	for (const folder of game.folders) {
 		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Skadetabell")) {
 			skadefolderData = folder;
@@ -136,9 +138,28 @@ export async function RegisterRollableTables() {
 		skadefolderData = await Folder.create({
 			name: "[EON] Skadetabell",
 			type: "RollTable",
-			parent: stridfolderData._id,
+			parent: null,
 			sorting: 'm',
 			"flags.eon.folderId": "Skadetabell"
+		});
+	}
+
+	// skapa mapp-strukturen först vändning
+	for (const folder of game.folders) {
+		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Vandningstabell")) {
+			vandningfolderData = folder;
+			break;
+		}
+	}
+
+	if (!vandningfolderData) {
+		// Create a new Folder
+		vandningfolderData = await Folder.create({
+			name: "[EON] Vändningstabell",
+			type: "RollTable",
+			parent: null,
+			sorting: 'm',
+			"flags.eon.folderId": "Vandningstabell"
 		});
 	}
 
@@ -154,8 +175,8 @@ export async function RegisterRollableTables() {
 			id = game.settings.get('eon-rpg', fileData.id);
 		}
 		catch(err) {
-			// om tabellen inte har en inställning hoppa över denna
-			console.error(`Ingen inställning för ${fileData.id}`);
+			// om tabellen inte har en inställning hoppa över denna (settings.js)
+			console.log(`${fileData.id} finns inte registrerad i systemet`);
 			continue;
 		}
 
@@ -168,6 +189,9 @@ export async function RegisterRollableTables() {
 			}
 			if (fileData.mapp == "Strid") {
 				folderData = stridfolderData;
+			}
+			if (fileData.mapp == "Vandningstabell") {
+				folderData = vandningfolderData;
 			}
 		}	
 
@@ -182,6 +206,12 @@ export async function RegisterRollableTables() {
 		}		
 
 		if (id == "") {
+			let formula = `1d${range}`;
+
+			if (fileData.tabell?.formula != undefined) {
+				formula = fileData.tabell?.formula;
+			}
+
 			let tabell = await RollTable.implementation.create({
 				name: fileData.tabell.name,
 				results: fileData.tabell.results,
@@ -190,7 +220,7 @@ export async function RegisterRollableTables() {
 				folder: folderData._id,
 				replacement: true,
 				displayRoll: true,
-				formula: `1d${range}`
+				formula: formula
 			});
 
 			console.log(`Tabell ${fileData.id} skapad ${tabell._id}`);
