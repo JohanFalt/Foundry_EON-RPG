@@ -31,6 +31,10 @@ export class WeaponRoll {
     #_harSar = false;
     #_visaSar = false;
 
+    #_attacktype = 'normal';
+
+    #_lastAttackType = 'normal';
+
     constructor(actor, item) {
         if (actor.system.berakning.svarighet.smarta > 0) {
             this.#_harSmarta = true;
@@ -260,6 +264,14 @@ export class WeaponRoll {
     }
 
     setCombatmode(type = "") {
+        if (type == "attack") {
+            this.#_lastAttackType = 'normal';
+            this.#_attacktype = 'normal';
+        }
+        else if (type == "damage") {
+            this.#_lastAttackType = this.#_attacktype;
+        }
+
         this.#_isattack = false;
         this.#_isdamage = false;
         this.#_isdefence = false;
@@ -270,9 +282,9 @@ export class WeaponRoll {
             this.#_harSar = false;
         }
         else if (type == "damage") {
-            this.#_isdamage = true;   
+            this.#_isdamage = true;
             this.#_visaSar = false;
-            this.#_harSar = false;         
+            this.#_harSar = false;
         }
         else if (type == "defence") {
             this.#_usehugg = false;
@@ -285,10 +297,13 @@ export class WeaponRoll {
             this.#_isdefence = true;
         }
 
-        this.setWeaponDamage();
+        this.#_grundTarning = this.grundTarning;
+        this.#_grundBonus = this.grundBonus;
 
-        this.#_totalTarning = this.grundTarning;
-        this.#_totalBonus = this.grundBonus;
+        this.#_totalTarning = this.#_grundTarning;
+        this.#_totalBonus = this.#_grundBonus;
+
+        this.updateAttackModifiers();
     }
 
     setDamageType(type = "") {
@@ -338,6 +353,10 @@ export class WeaponRoll {
         if (type == "stick") {
             this.#_usestick = true;
         }
+
+        if (this.#_isdamage) {
+            this.setWeaponDamage();
+        }
     }
 
     setWeaponDamage(type = "") {
@@ -357,7 +376,6 @@ export class WeaponRoll {
         }
         else if ((this.vapen.type == "Närstridsvapen") && (type != "")) {
             this.#_vapenskada = this.#_actorGrundskada;
-
             this.#_vapenskada = DiceHelper.AdderaVarden(this.vapen.system[type], this.#_actorGrundskada);            
         }
         else if (this.vapen.type == "Närstridsvapen") {
@@ -371,12 +389,87 @@ export class WeaponRoll {
                 this.#_vapenskada = DiceHelper.AdderaVarden(this.vapen.system.stick, this.#_actorGrundskada);
             } 
         }   
-        
+
+        if (this.#_isdamage) {
+            switch(this.#_lastAttackType) {
+                case 'tungt':
+                    this.#_vapenskada.tvarde += 2;
+                    break;
+                case 'snabbt':
+                    this.#_vapenskada.tvarde -= 1;
+                    break;
+                // Group attack has no damage modifier
+            }
+            
+            // Ensure damage doesn't go below 0
+            if (this.#_vapenskada.tvarde < 0) {
+                this.#_vapenskada.tvarde = 0;
+            }
+        }
+
         this.#_grundTarning = this.#_vapenskada.tvarde;
         this.#_grundBonus = this.#_vapenskada.bonus;
 
         this.#_totalTarning = this.#_grundTarning;
         this.#_totalBonus = this.#_grundBonus;
+    }
+
+    get attacktype() {
+        return this.#_attacktype;
+    }
+
+    set attacktype(type) {
+        this.#_attacktype = type;
+        this.updateAttackModifiers();
+    }
+
+    updateAttackModifiers() {
+        this.#_totalTarning = this.grundTarning;
+        this.#_totalBonus = this.grundBonus;
+        
+        // For attack rolls
+        if (this.#_isattack) {
+            switch(this.#_attacktype) {
+                case 'tungt':
+                    this.#_totalTarning -= 1;  // -1T6 to hit
+                    break;
+                case 'snabbt':
+                    this.#_totalTarning += 1;  // +1T6 to hit
+                    break;
+                case 'grupp':
+                    this.#_totalTarning -= 1;  // -1T6 to hit
+                    break;
+            }
+        }
+        
+        // For damage rolls
+        if (this.#_isdamage) {
+            // Get base weapon damage
+            let damageDice = this.#_vapenskada.tvarde;
+            
+            switch(this.#_attacktype) {
+                case 'tungt':
+                    damageDice += 2;  // +2T6 damage
+                    break;
+                case 'snabbt':
+                    damageDice -= 1;  // -1T6 damage
+                    break;
+                // Group attack has no damage modifier
+            }
+            
+            // Update total damage dice
+            this.#_vapenskada.tvarde = Math.max(0, damageDice);  // Ensure non-negative
+            this.#_totalTarning = this.#_vapenskada.tvarde;
+        }
+        
+        // Ensure we don't go below 0 dice
+        if (this.#_totalTarning < 0) {
+            this.#_totalTarning = 0;
+        }
+    }
+
+    get lastAttackType() {
+        return this.#_lastAttackType;
     }
 }
 
@@ -395,7 +488,9 @@ export class DialogWeaponRoll extends FormApplication {
             template: "systems/eon-rpg/templates/dialogs/dialog-weapon-roll.html",
             closeOnSubmit: false,
             submitOnChange: true,
-            resizable: true
+            resizable: true,
+            width: 700,
+            height: 500
         });
     }
 
@@ -406,6 +501,8 @@ export class DialogWeaponRoll extends FormApplication {
 
     activateListeners(html) {
         super.activateListeners(html);
+
+        console.log("Activating listeners for weapon roll dialog");
 
         html
             .find('.mode')
@@ -426,6 +523,8 @@ export class DialogWeaponRoll extends FormApplication {
         html
             .find('.closebutton')
             .click(this._closeForm.bind(this));
+
+        html.find('.attacktype').click(this._onAttackTypeClick.bind(this));
     }    
 
     async _updateObject(event, formData) {
@@ -471,6 +570,11 @@ export class DialogWeaponRoll extends FormApplication {
 
         const element = event.currentTarget;
 		const dataset = element.dataset;
+
+        if (dataset?.type && element.classList.contains('attacktype')) {
+            console.log("Attack type clicked:", dataset.type);
+            this.object.attacktype = dataset.type;
+        }
 
         if (dataset?.source == "set") {
             this.object[dataset.value] = !this.object[dataset.value];
@@ -570,10 +674,11 @@ export class DialogWeaponRoll extends FormApplication {
         }
 
         if (this.object.isattack)  {
-            roll.action = `Anfaller med ${this.object.vapennamn.toLowerCase()}`; 
+            roll.action = `Anfaller ${this.object.attacktype} med ${this.object.vapennamn.toLowerCase()}`; 
         }
         else if ((this.object.isdamage) && ((this.object.usehugg) || (this.object.usekross) || (this.object.usestick))) {
             let skadetyp = "";
+            let attacktyp = "";
 
             if (this.object.usehugg) {
                 skadetyp = "hugg";
@@ -585,7 +690,22 @@ export class DialogWeaponRoll extends FormApplication {
                 skadetyp = "stick";
             }
 
-            roll.action = `Skadeslag ${this.object.vapennamn.toLowerCase()} (${skadetyp})`;
+            // Get attack type from lastAttackType
+            switch(this.object.lastAttackType) {
+                case 'tungt':
+                    attacktyp = "tungt ";
+                    break;
+                case 'snabbt':
+                    attacktyp = "snabbt ";
+                    break;
+                case 'grupp':
+                    attacktyp = "grupp ";
+                    break;
+                default:
+                    attacktyp = "";
+            }
+
+            roll.action = `Skadeslag ${this.object.vapennamn.toLowerCase()} (${attacktyp}${skadetyp})`;
         }
         else if (this.object.isdamage) {
             ui.notifications.error("Du måste välja vilken skadetype du använder dig av innan du slår med tärningarna.");
@@ -608,6 +728,24 @@ export class DialogWeaponRoll extends FormApplication {
         const result = await RollDice(roll);
 
         if (this.object.isattack) {
+            let utmattningIncrease = 0;
+            switch(this.object.attacktype) {
+                case 'tungt':
+                    utmattningIncrease = 2;
+                    break;
+                case 'snabbt':
+                case 'grupp':
+                    utmattningIncrease = 1;
+                    break;
+            }
+
+            if (utmattningIncrease > 0) {
+                const currentUtmattning = this.actor.system.skada.utmattning.varde;
+                await this.actor.update({
+                    "system.skada.utmattning.varde": Number(currentUtmattning) + utmattningIncrease
+                });
+            }
+
             this.object.setCombatmode("damage");
             this.object.close = false;
         }
@@ -624,4 +762,12 @@ export class DialogWeaponRoll extends FormApplication {
     _closeForm(event) {
         this.object.close = true;
     }    
+
+    _onAttackTypeClick(event) {
+        event.preventDefault();
+        const button = event.currentTarget;
+        const type = button.dataset.type;
+        this.object.attacktype = type;
+        this.render(true);
+    }
 }
