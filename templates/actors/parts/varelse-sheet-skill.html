@@ -12,23 +12,11 @@
 
     {{#each actor.system.listdata.fardigheter as | fardighet key|}}
         <div class="skill-row skill">
-            {{#if (eq fardighet.type "Språk")}}   
-                <div class="caption normalskill">{{fardighet.name}}</div>
-                <div class="resource-box">
-                    <span class="resource-value {{#if fardighet.system.talabrytning}}active{{/if}}" style="margin-top: 5px;" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="talabrytning" data-type="boolean" title="Talar med brytning"></span>
-                    <span class="resource-value {{#if fardighet.system.talaflytande}}active{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="talaflytande" data-type="boolean" title="Talar flytande"></span>
-                    <span class="resource-value {{#if fardighet.system.lasaskriva}}active{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="lasaskriva" data-type="boolean" title="Kan läsa och skriva"></span>
-                </div>
-                <div class="pointer language-icon">
-                    <a class="item-edit" title="Editera språk" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
-                </div>
-            {{else}}
-                <div class="vrollable caption normalskill" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div>                     
-                <div class="dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
-                <div class="pointer skill-icon">
-                    <a class="item-edit" title="Editera färdighet" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
-                </div>
-            {{/if}}
+            <div class="vrollable caption normalskill" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div>                     
+            <div class="dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
+            <div class="pointer skill-icon">
+                <a class="item-edit" title="Editera färdighet" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
+            </div>
         </div>
     {{/each}}
 </div>

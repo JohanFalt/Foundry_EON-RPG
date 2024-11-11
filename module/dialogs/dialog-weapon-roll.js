@@ -4,6 +4,8 @@ import { RollDice } from "../dice-helper.js";
 
 export class WeaponRoll {
 
+    #_isPC = false;
+
     #_totalTarning = 0;
     #_totalBonus = 0;
     #_grundTarning = 0;
@@ -36,13 +38,8 @@ export class WeaponRoll {
     #_lastAttackType = 'normal';
 
     constructor(actor, item) {
-        if (actor.system.berakning.svarighet.smarta > 0) {
-            this.#_harSmarta = true;
-        }
-
-        if ((actor.system.skada.sar.hogerarm > 0) || (actor.system.skada.sar.vansterarm > 0)) {
-            this.#_harSar = false;
-            this.#_visaSar = true;
+        if (actor.type.toLowerCase().replace(" ", "") == "rollperson") {
+            this.#_isPC = true;
         }
 
         this.actorAttribut = {
@@ -65,14 +62,30 @@ export class WeaponRoll {
             this.#_isdefence = true;             
         }
 
-        // läs in värdena för vapenfärdigheten
-        for (const fardighet of actor.system.listdata.fardigheter.strid) {
-            if (fardighet.system.id == item.system.grupp) {
-				this.actorAttribut = fardighet.system.varde;
-                this.actorAttributNamn = fardighet.name;
-                break;
-			}
-		}     
+        if (this.#_isPC) {
+            if (actor.system.berakning.svarighet.smarta > 0) {
+                this.#_harSmarta = true;
+            }
+
+            if ((actor.system.skada.sar.hogerarm > 0) || (actor.system.skada.sar.vansterarm > 0)) {
+                this.#_harSar = false;
+                this.#_visaSar = true;
+            }
+
+            // läs in värdena för vapenfärdigheten
+            if (actor.system.listdata?.fardigheter?.strid != undefined) {
+                for (const fardighet of actor.system.listdata?.fardigheter?.strid) {
+                    if (fardighet.system.id == item.system.grupp) {
+                        this.actorAttribut = fardighet.system.varde;
+                        this.actorAttributNamn = fardighet.name;
+                        break;
+                    }
+                }     
+            }
+        }
+        else {
+            this.actorAttribut = item.system.traffa;
+        }    
 
         this.setDamageType();
 
@@ -81,8 +94,7 @@ export class WeaponRoll {
         }
         else {
             this.setCombatmode("attack");
-        }
-        
+        }        
     }
 
     get visaTarning() {
@@ -219,6 +231,10 @@ export class WeaponRoll {
     }
 
     get hamtaAntalSar() {
+        if (!this.#_isPC) {
+            return 0;
+        }
+
         return this.actor.system.skada.sar.hogerarm + this.actor.system.skada.sar.vansterarm;
     }
 
@@ -360,7 +376,14 @@ export class WeaponRoll {
     }
 
     setWeaponDamage(type = "") {
-        this.#_actorGrundskada = this.actor.system.harleddegenskaper.grundskada.totalt;
+        this.#_actorGrundskada = {
+            "tvarde": 0,
+            "bonus": 0
+        };
+
+        if (this.#_isPC) {
+            this.#_actorGrundskada = this.actor.system.harleddegenskaper.grundskada.totalt;
+        }        
 
         if (!this.#_isdamage) {
             this.#_vapenskada = {
@@ -474,8 +497,16 @@ export class WeaponRoll {
 }
 
 export class DialogWeaponRoll extends FormApplication {
+
+    #_isPC = false;
+
     constructor(actor, roll) {
         super(roll, {submitOnChange: true, closeOnSubmit: false});
+
+        if (actor.type.toLowerCase().replace(" ", "") == "rollperson") {
+            this.#_isPC = true;
+        }
+
         this.actor = actor;     
         this.config = game.EON.CONFIG;   
         this.isDialog = true;  
@@ -622,11 +653,11 @@ export class DialogWeaponRoll extends FormApplication {
 
         let description = "";
 
-        if ((this.object.harSmarta) && (!this.object.isdamage)) {
+        if ((this.object.harSmarta) && (!this.object.isdamage) && (this.#_isPC)) {
             description += `${this.actor.system.berakning.svarighet.smarta}T6 smärta</br >`;
         }
 
-        if (this.object.harSar) {
+        if ((this.object.harSar) && (this.#_isPC)) {
             if (this.actor.system.skada.sar.hogerarm > 0) {
                 description += `Har ${this.actor.system.skada.sar.hogerarm} sår i höger arm (${this.actor.system.skada.sar.hogerarm}T6)<br />`;
             }
@@ -634,7 +665,7 @@ export class DialogWeaponRoll extends FormApplication {
                 description += `Har ${this.actor.system.skada.sar.vansterarm} sår i vänster arm (${this.actor.system.skada.sar.vansterarm}T6)<br />`;
             }
         }
-        if ((this.object.visaSar) && (!this.object.harSar)) {
+        if ((this.object.visaSar) && (!this.object.harSar) && (this.#_isPC)) {
             if (this.actor.system.skada.sar.hogerarm > 0) {
                 description += `Ignorerar ${this.actor.system.skada.sar.hogerarm} sår i höger arm<br />`;
             }

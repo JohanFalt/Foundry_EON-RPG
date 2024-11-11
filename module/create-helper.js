@@ -42,7 +42,7 @@ export default class CreateHelper {
         }     
     }
 
-    static async SkapaVandningar(actor, version) {
+    static async SkapaVandningar() {
         let vandningar = [];
         let vandning = {};
 

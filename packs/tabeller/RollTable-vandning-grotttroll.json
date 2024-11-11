@@ -1,0 +1,152 @@
+{
+    "id": "vd_grotttroll",
+    "version": "1.0.0",
+    "mapp": "Vandningstabell",
+    "tabell": {
+        "name": "Vändning - Grotttroll",
+        "img": "icons/svg/d20-grey.svg",
+        "description": "",
+        "results": [
+            {
+            "type": 0,
+            "weight": 1,
+            "range": [
+                1,
+                1
+            ],
+            "drawn": false,
+            "_id": "XbIHcnZuVOOf4k0s",
+            "text": "Trollet slår ut med en av sina väldiga armar mot den som orsakade skadan. [Anfallaren måste lyckas med Undvika mot 16 för att inte få 7T6 Krosskada i slumpvis kroppsdel]. Om Avståndsanfall: Trollet kastar iväg en sten mot anfallaren. [Anfallaren måste lyckas med Undvika mot 16 för att inte bli träffad.]",
+            "img": "icons/svg/d20-black.svg",
+            "documentId": null,
+            "flags": {}
+            },
+            {
+            "type": 0,
+            "weight": 1,
+            "range": [
+                2,
+                2
+            ],
+            "drawn": false,
+            "_id": "amwPwaMRSb4i4bTH",
+            "text": "Vapnet som utförde attacken slits ur motståndarens hand (är det Bräcklig är det nu i flisor) och slängs två avstånd ut i terrängen. Om Slagsmål: Anfallaren drabbas av ett Trollkast. Om Avståndsanfall: Trollet kastar iväg en sten mot anfallaren [Anfallaren måste lyckas Undvika mot 16 för att inte bli träffad.]",
+            "img": "icons/svg/d20-black.svg",
+            "documentId": null,
+            "flags": {}
+            },
+            {
+            "type": 0,
+            "weight": 1,
+            "range": [
+                3,
+                3
+            ],
+            "drawn": false,
+            "_id": "sHimokqFqWsJyM29",
+            "text": "Trollet blir ilsket och greppar efter motståndaren och får tag i dess rustning/kläder som slits sönder. Slumpa vilken kroppsdel som drabbas. [Rustningsskada.]",
+            "img": "icons/svg/d20-black.svg",
+            "documentId": null,
+            "flags": {}
+            },
+            {
+            "type": 0,
+            "weight": 1,
+            "range": [
+                4,
+                4
+            ],
+            "drawn": false,
+            "_id": "UZXTOLTSHQ79XrTM",
+            "text": "Skadan får trollet att vråla i smärta. En slumpvis person i närheten får saliv och stinkande blod i ansiktet. [Personen får +2 Utmattning.]",
+            "img": "icons/svg/d20-black.svg",
+            "documentId": null,
+            "flags": {}
+            },
+            {
+            "type": 0,
+            "weight": 1,
+            "range": [
+                5,
+                5
+            ],
+            "drawn": false,
+            "_id": "Y9RAWpJGNhsyENnT",
+            "text": "Skadan får trollets grå hud att slitas upp. [+3 Utmattning.]",
+            "img": "icons/svg/d20-black.svg",
+            "documentId": null,
+            "flags": {}
+            },
+            {
+            "type": 0,
+            "weight": 1,
+            "range": [
+                6,
+                6
+            ],
+            "drawn": false,
+            "_id": "ZWKNVsDnvyz6d2MZ",
+            "text": "Kraftig blödning. [+3 Utmattning, Trollets regenerering sänks med ett.]",
+            "img": "icons/svg/d20-black.svg",
+            "documentId": null,
+            "flags": {}
+            },
+            {
+            "type": 0,
+            "weight": 1,
+            "range": [
+                7,
+                7
+            ],
+            "drawn": false,
+            "_id": "7oAUoOxSCvl2hjJZ",
+            "text": "Sårad arm. [+3 Utmattning och Tappar.]",
+            "img": "icons/svg/d20-black.svg",
+            "documentId": null,
+            "flags": {}
+            },
+            {
+            "type": 0,
+            "weight": 1,
+            "range": [
+                8,
+                8
+            ],
+            "drawn": false,
+            "_id": "E6PIT9egg92mrWof",
+            "text": "Trollet faller vrålande omkull med ett brak. [+5 Utmattning och Faller.]",
+            "img": "icons/svg/d20-black.svg",
+            "documentId": null,
+            "flags": {}
+            },
+            {
+            "type": 0,
+            "weight": 1,
+            "range": [
+                9,
+                9
+            ],
+            "drawn": false,
+            "_id": "m5dOAHKmHYgrxK5u",
+            "text": "Skadan får trollet att vackla till. [Trollet är Tillbakaknuffat och är automatiskt försvarare nästa runda.]",
+            "img": "icons/svg/d20-black.svg",
+            "documentId": null,
+            "flags": {}
+            },
+            {
+            "type": 0,
+            "weight": 1,
+            "range": [
+                10,
+                10
+            ],
+            "drawn": false,
+            "_id": "RwuzCyIswP2o4Bb7",
+            "text": "Vital träff som allvarligt skadar trollet. [+5 Utmattning. Upphör att regenerera skador.]",
+            "img": "icons/svg/d20-black.svg",
+            "documentId": null,
+            "flags": {}
+            }
+        ]
+    }
+}

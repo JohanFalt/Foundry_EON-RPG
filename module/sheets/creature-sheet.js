@@ -45,7 +45,7 @@ export default class EonCreatureSheet extends ActorSheet {
 
 		if (!actorData.system.installningar.skapad) {
             await CreateHelper.SkapaFardigheter(this.actor, CONFIG.EON, version);
-            actorData.system.skada.vandning = await CreateHelper.SkapaVandningar();
+            actorData.system.skada.vandning.lista = await CreateHelper.SkapaVandningar();
 
             actorData.system.installningar.skapad = true;
             actorData.system.installningar.version = version;
@@ -111,6 +111,11 @@ export default class EonCreatureSheet extends ActorSheet {
 			.find('.inputdata')
 			.change(event => this._onsheetChange(event));
 
+        // Rollable stuff
+		html
+            .find(".vrollable")
+            .click(this._onRollDialog.bind(this));
+
         html
 			.find(".item-create")
 			.click(this._onItemCreate.bind(this));
@@ -119,6 +124,52 @@ export default class EonCreatureSheet extends ActorSheet {
 			.find(".item-edit")
 			.click(this._onItemEdit.bind(this));
     }
+
+    /**
+        * Aktiveras om man klickat på något för att slå ett tärningsslag. Saknas slaget man skickar in får man ett felmeddelande.
+        * Finns flera olika typer av tärningsslag man kan slå (source):
+        * [attribute], [skill], [mystery], [spell], [weapon], [initiative]
+        * @param event
+    */
+    _onRollDialog(event) {		
+		event.preventDefault();
+
+		const element = event.currentTarget;
+		const dataset = element.dataset;
+
+        if (dataset.source == "attribute") {
+            let title = "";
+            if (dataset.title != undefined) {
+                title = dataset.title
+            }
+            DialogHelper.AttributeDialog(this.actor, dataset.type, dataset.key, title);
+            return;
+        }
+
+        if (dataset.source == "skill") {
+            DialogHelper.SkillDialog(event, this.actor);
+			return;
+        }   
+
+        if (dataset.source == "vandning") {
+            DialogHelper.VandningDialog(this.actor);
+			return;
+        }        
+
+        if (dataset.source == "weapon") {
+            DialogHelper.WeaponDialog(event, this.actor);
+			return;
+        }
+
+        if (dataset.source == "initiative") {
+            DialogHelper.CombatDialog(this.actor);
+            return;
+        }
+        
+		ui.notifications.error("Slag saknar funktion");
+
+        return;
+	}
 
     /**
         * Körs när något blir ändrat på rollformuläret som kan få vidare effekt för andra saker. Att man t ex ställer in något på Skräddarsytt.

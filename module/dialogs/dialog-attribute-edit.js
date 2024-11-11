@@ -79,6 +79,13 @@ export class DialogAttributeEdit extends FormApplication {
         data.isNumericBonus = true;
         data.headline = "";
 
+        data.isPC = false;
+
+		if (this.actor != undefined)
+		{
+			data.isPC = this.actor.type.toLowerCase().replace(" ", "") == "rollperson";
+		}
+
         data.EON = game.EON;
 		data.EON.CONFIG = CONFIG.EON;
 
@@ -106,7 +113,21 @@ export class DialogAttributeEdit extends FormApplication {
         }
         else if (this.object.typ === "skada")  {
             if (this.object.nyckel == "vandning") {
-                data.attribut = this.actor.system[this.object.typ][this.object.nyckel]
+                data.attribut = this.actor.system[this.object.typ][this.object.nyckel];
+                data.vandningLista = {};
+                data.valtid = "";
+                let lista = {
+                    "": "- Välj -"
+                };
+
+                // hämta alla vändningstabeller som finns registrerade i systemet.
+                game.settings.settings.forEach(setting => {
+                    if ((setting.namespace == 'eon-rpg') && (setting.key.indexOf('vd_') > -1)) {
+                        lista = Object.assign(lista, {[setting.key] : setting.name});
+                    }                    
+                }); 
+                
+                data.vandningLista = lista;
             }
             else if (this.actor.system[this.object.typ][this.object.nyckel].namn != undefined) {
                 data.attribut = this.actor.system[this.object.typ][this.object.nyckel];
@@ -139,7 +160,10 @@ export class DialogAttributeEdit extends FormApplication {
 
             if (this.object.nyckel == "forsvar") {
                 data.headline = "FÖRSVAR";
-            }            
+            } 
+            if (this.object.nyckel == "vandning") {
+                data.headline = "VÄNDNING";
+            }
         }
         else {
             data.headline = 'HÄRLETT ATTRIBUT';
@@ -213,19 +237,21 @@ export class DialogAttributeEdit extends FormApplication {
         if (attributeKeys.length > 0) {
             for (let key of attributeKeys) {
                 const i = (key.match(/\./g) || []).length;
-                const value = formData[key];
-                const index = key.split(".")[1];
+                const value = formData[key];                
 
                 if (i == 1) {
                     if (value !== undefined) {
+                        const index = key.split(".")[1];
                         actorData.system[this.object.typ][this.object.nyckel][index] = value;
                     }
                 }    
-                if (i == 2) {      
-                    const attribut = key.split(".")[2];
+                if (i == 3) {      
+                    const egenskap = key.split(".")[1];
+                    const index = key.split(".")[2];
+                    const attribut = key.split(".")[3];
                     
                     if (value !== undefined) {
-                        actorData.system[this.object.typ][this.object.nyckel][index][attribut] = value;
+                        actorData.system[this.object.typ][this.object.nyckel][egenskap][index][attribut] = value;
                     } 
                 }
             }
@@ -324,7 +350,7 @@ export class DialogAttributeEdit extends FormApplication {
 			if (dataset.property != undefined) {
 				actorData.system[this.object.typ][this.object.nyckel].grund.bonus += 1;
 
-				if (actorData.system[this.object.typ][this.object.nyckel].grund.bonus > 3) {
+				if ((actorData.system[this.object.typ][this.object.nyckel].grund.bonus > 3) && (actorData.system[this.object.typ][this.object.nyckel].grund.tvarde < 6)) {
 					actorData.system[this.object.typ][this.object.nyckel].grund.tvarde += 1;
 					actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 0;
 				}
@@ -339,7 +365,7 @@ export class DialogAttributeEdit extends FormApplication {
 				let bonus = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].bonus;
 
 				bonus += 1;
-				if (bonus > 3) {
+				if ((bonus > 3) && (actorData.system[this.object.typ][this.object.nyckel].grund.tvarde < 6)) {
 					tvarde += 1;
 					bonus = 0;
 				}
@@ -487,7 +513,7 @@ export class DialogAttributeEdit extends FormApplication {
             const key = dataset.key.split(".")[0];
             const index = parseInt(dataset.key.split(".")[1]);
 
-            actorData.system[this.object.typ][this.object.nyckel][index][key] = !actorData.system[this.object.typ][this.object.nyckel][index][key];
+            actorData.system[this.object.typ][this.object.nyckel][key][index].vandning = !actorData.system[this.object.typ][this.object.nyckel][key][index].vandning;
         }
 
         await this.actor.update(actorData);
