@@ -16,6 +16,23 @@
                         <div class="centerText" style="line-height: 26px; height: 26px; display: flex; margin-left: 185px;">Sår (-{{object.hamtaAntalSar}}T6) <input class="item-property pointer eventbutton" {{isChecked object.harSar}} type="checkbox" data-dtype="Boolean" data-source="set" data-value="harSar" /></div>
                     {{/if}}
                 {{/if}}
+
+                {{#if object.isattack}}
+                    <div class="attack-info centerText" style="margin-top: 10px;">
+                        {{#if (eq object.attacktype 'tungt')}}
+                            <div>Utmattning +2</div>
+                            <div>Skada +2T6</div>
+                            <div>Färdighetstärningar -1T6</div>
+                        {{else if (eq object.attacktype 'snabbt')}}
+                            <div>Utmattning +1</div>
+                            <div>Skada -1T6</div>
+                            <div>Färdighetstärningar +1T6</div>
+                        {{else if (eq object.attacktype 'grupp')}}
+                            <div>Utmattning +1</div>
+                            <div>Färdighetstärningar -1T6</div>
+                        {{/if}}
+                    </div>
+                {{/if}}
             </div>
 
             <div class="dialog-area centerText">
@@ -37,9 +54,21 @@
                             <button class="attacktype three-button pullLeft {{#if object.usestick}}active{{/if}}" data-type="stick">Stick</button>
                         {{/if}}
                     {{else}}  
-                        <div>&nbsp;</div>
+                        {{#if object.isattack}}
+                            <button class="attacktype three-button pullLeft {{#if (or (not object.attacktype) (eq object.attacktype 'normal'))}}active{{/if}}" 
+                                    data-type="normal" 
+                                    title="standard">Standard</button>
+                            <button class="attacktype three-button pullLeft {{#if (eq object.attacktype 'tungt')}}active{{/if}}" 
+                                    data-type="tungt" 
+                                    title="Utmattning +2&#10;Skada +2T6&#10;Färdighetstärningar -1T6">Kraftfult</button>
+                            <button class="attacktype three-button pullLeft {{#if (eq object.attacktype 'snabbt')}}active{{/if}}" 
+                                    data-type="snabbt" 
+                                    title="Utmattning +1&#10;Skada -1T6&#10;Färdighetstärningar +1T6">Snabbt</button>
+                            <button class="attacktype three-button pullLeft {{#if (eq object.attacktype 'grupp')}}active{{/if}}" 
+                                    data-type="grupp" 
+                                    title="Utmattning +1&#10;Färdighetstärningar -1T6">Gruppanfall</button>
+                        {{/if}}
                     {{/if}}
-                    
                 </div>
             </div>
         </div>
@@ -66,7 +95,6 @@
                         Ob<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.tvarde}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.bonus}}" disabled readonly />
                     {{/if}}        
                 </div>
-
             </div>
         </div>
     </div>
