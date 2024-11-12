@@ -57,6 +57,11 @@ export class WeaponRoll {
         this.vapen = item;
         this.vapennamn = item["name"];
 
+        const weaponData = item.system;
+        this.vapen.isRangedWeapon = weaponData.grupp === "bage" || 
+                                    weaponData.grupp === "kastvapen" || 
+                                    (weaponData.rackvidd && ["kort", "medellangt", "langt", "mycketlangt"].includes(weaponData.rackvidd));
+
         if (item.type == "Sköld") {            
             this.#_isattack = false;
             this.#_isdefence = true;             
@@ -286,6 +291,42 @@ export class WeaponRoll {
         }
         else if (type == "damage") {
             this.#_lastAttackType = this.#_attacktype;
+            
+            if (this.vapen.type == "Avståndsvapen" || this.vapen.type == "Sköld") {
+                this.setDamageType();
+                this.setWeaponDamage();
+            }
+            else if (this.vapen.type == "Närstridsvapen") {
+                let highestDamage = -1;
+                let bestDamageType = "";
+                
+                if (this.vapen.system.hugg.aktiv) {
+                    const damage = this.vapen.system.hugg.tvarde + (this.vapen.system.hugg.bonus / 3);
+                    if (damage > highestDamage) {
+                        highestDamage = damage;
+                        bestDamageType = "hugg";
+                    }
+                }
+                if (this.vapen.system.kross.aktiv) {
+                    const damage = this.vapen.system.kross.tvarde + (this.vapen.system.kross.bonus / 3);
+                    if (damage > highestDamage) {
+                        highestDamage = damage;
+                        bestDamageType = "kross";
+                    }
+                }
+                if (this.vapen.system.stick.aktiv) {
+                    const damage = this.vapen.system.stick.tvarde + (this.vapen.system.stick.bonus / 3);
+                    if (damage > highestDamage) {
+                        highestDamage = damage;
+                        bestDamageType = "stick";
+                    }
+                }
+                
+                if (bestDamageType) {
+                    this.setDamageType(bestDamageType);
+                    this.setWeaponDamage(bestDamageType);
+                }
+            }
         }
 
         this.#_isattack = false;
@@ -353,12 +394,6 @@ export class WeaponRoll {
                 antal += 1;
                 this.#_usestick = true;
             }
-
-            if (antal != 1) {
-                this.#_usehugg = false;
-                this.#_usekross = false;
-                this.#_usestick = false;
-            }
         }
         if (type == "hugg") {
             this.#_usehugg = true;
@@ -385,32 +420,23 @@ export class WeaponRoll {
             this.#_actorGrundskada = this.actor.system.harleddegenskaper.grundskada.totalt;
         }        
 
-        if (!this.#_isdamage) {
-            this.#_vapenskada = {
-                "tvarde": 0,
-                "bonus": 0
-            };
-        }
-        else if (this.vapen.type == "Avståndsvapen") {
+        if (this.vapen.type == "Avståndsvapen") {
             this.#_vapenskada = this.vapen.system.skada;
         }
         else if (this.vapen.type == "Sköld") {            
             this.#_vapenskada = DiceHelper.AdderaVarden(this.vapen.system.skada, this.#_actorGrundskada);
         }
         else if ((this.vapen.type == "Närstridsvapen") && (type != "")) {
-            this.#_vapenskada = this.#_actorGrundskada;
             this.#_vapenskada = DiceHelper.AdderaVarden(this.vapen.system[type], this.#_actorGrundskada);            
         }
         else if (this.vapen.type == "Närstridsvapen") {
-            if (this.#_usehugg) {
+            if (this.vapen.system.hugg.aktiv) {
                 this.#_vapenskada = DiceHelper.AdderaVarden(this.vapen.system.hugg, this.#_actorGrundskada);
-            }
-            if (this.#_usekross) {
+            } else if (this.vapen.system.kross.aktiv) {
                 this.#_vapenskada = DiceHelper.AdderaVarden(this.vapen.system.kross, this.#_actorGrundskada);
-            }
-            if (this.#_usestick) {
+            } else if (this.vapen.system.stick.aktiv) {
                 this.#_vapenskada = DiceHelper.AdderaVarden(this.vapen.system.stick, this.#_actorGrundskada);
-            } 
+            }
         }   
 
         if (this.#_isdamage) {
@@ -421,10 +447,8 @@ export class WeaponRoll {
                 case 'snabbt':
                     this.#_vapenskada.tvarde -= 1;
                     break;
-                // Group attack has no damage modifier
             }
             
-            // Ensure damage doesn't go below 0
             if (this.#_vapenskada.tvarde < 0) {
                 this.#_vapenskada.tvarde = 0;
             }
@@ -442,7 +466,11 @@ export class WeaponRoll {
     }
 
     set attacktype(type) {
-        this.#_attacktype = type;
+        if (this.vapen.isRangedWeapon && type !== 'normal') {
+            this.#_attacktype = 'normal';
+        } else {
+            this.#_attacktype = type;
+        }
         this.updateAttackModifiers();
     }
 
@@ -450,42 +478,47 @@ export class WeaponRoll {
         this.#_totalTarning = this.grundTarning;
         this.#_totalBonus = this.grundBonus;
         
-        // For attack rolls
         if (this.#_isattack) {
             switch(this.#_attacktype) {
                 case 'tungt':
-                    this.#_totalTarning -= 1;  // -1T6 to hit
+                    this.#_totalTarning -= 1;  // -1T6 för att träffa
                     break;
                 case 'snabbt':
-                    this.#_totalTarning += 1;  // +1T6 to hit
+                    this.#_totalTarning += 1;  // +1T6 för att träffa
                     break;
                 case 'grupp':
-                    this.#_totalTarning -= 1;  // -1T6 to hit
+                    this.#_totalTarning -= 1;  // -1T6 för att träffa
                     break;
             }
         }
         
-        // For damage rolls
+        if (this.#_isdefence) {
+            switch(this.#_attacktype) {
+                case 'defensivt':
+                    this.#_totalTarning += 1;  // +1T6 för att försvara
+                    break;
+                case 'kontring':
+                    this.#_totalTarning -= 1;  // -1T6 för att försvara
+                    break;
+            }
+        }
+
         if (this.#_isdamage) {
-            // Get base weapon damage
             let damageDice = this.#_vapenskada.tvarde;
             
             switch(this.#_attacktype) {
                 case 'tungt':
-                    damageDice += 2;  // +2T6 damage
+                    damageDice += 2;  // +2T6 skada
                     break;
                 case 'snabbt':
-                    damageDice -= 1;  // -1T6 damage
+                    damageDice -= 1;  // -1T6 skada
                     break;
-                // Group attack has no damage modifier
             }
             
-            // Update total damage dice
-            this.#_vapenskada.tvarde = Math.max(0, damageDice);  // Ensure non-negative
+            this.#_vapenskada.tvarde = Math.max(0, damageDice);
             this.#_totalTarning = this.#_vapenskada.tvarde;
         }
         
-        // Ensure we don't go below 0 dice
         if (this.#_totalTarning < 0) {
             this.#_totalTarning = 0;
         }
@@ -721,7 +754,7 @@ export class DialogWeaponRoll extends FormApplication {
                 skadetyp = "stick";
             }
 
-            // Get attack type from lastAttackType
+            // Hämta attacktyp från lastAttackType
             switch(this.object.lastAttackType) {
                 case 'tungt':
                     attacktyp = "tungt ";
@@ -744,7 +777,30 @@ export class DialogWeaponRoll extends FormApplication {
             return;
         }
         else if (this.object.isdefence) {
-            roll.action = `Försvarar med ${this.object.vapennamn.toLowerCase()}`;            
+            let utmattningIncrease = 0;
+            let defenseType = "";
+
+            switch(this.object.attacktype) {
+                case 'defensivt':
+                    utmattningIncrease = 1;
+                    defenseType = "Defensivt";
+                    break;
+                case 'kontring':
+                    utmattningIncrease = 1;
+                    defenseType = "Kontrings";
+                    break;
+                default:
+                    defenseType = "Standard";
+            }
+
+            if (utmattningIncrease > 0) {
+                const currentUtmattning = this.actor.system.skada.utmattning.varde;
+                await this.actor.update({
+                    "system.skada.utmattning.varde": Number(currentUtmattning) + utmattningIncrease
+                });
+            }
+
+            roll.action = `${defenseType} försvar med ${this.object.vapennamn.toLowerCase()}`;            
         }
         else {
             ui.notifications.error("Du måste välja sättet du använder ditt vapen för innan du slår med tärningarna.");
