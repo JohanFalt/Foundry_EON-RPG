@@ -39,7 +39,7 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/actors/parts/varelse-sheet-skill.html",
 		"systems/eon-rpg/templates/actors/parts/varelse-sheet-property.html",		
 		"systems/eon-rpg/templates/actors/parts/varelse-sheet-weapon.html",
-		//"systems/eon-rpg/templates/actors/parts/varelse-sheet-health.html",
+		"systems/eon-rpg/templates/actors/parts/varelse-sheet-bio.html",
 
 		"systems/eon-rpg/templates/items/parts/navigation-weapon.html",
 		"systems/eon-rpg/templates/items/parts/navigation-faith.html",
@@ -495,7 +495,7 @@ export const RegisterHandlebarsHelpers = function () {
 			return "";
 		}
 
-		return CONFIG.EON.grundegenskaper[attribut].kort;
+		return "("+CONFIG.EON.grundegenskaper[attribut].kort+")";
 	});
 
 	// Hämtar mysteriets färdigheter och listar dessa snyggt

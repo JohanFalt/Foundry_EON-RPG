@@ -1074,6 +1074,7 @@ export default class EonItemSheet extends ItemSheet {
 
 			const itemData = foundry.utils.duplicate(this.item);
 			itemData.name = game.EON.CONFIG.aspekter[value];
+			itemData.system.id = value;
 			await this.item.update(itemData);
 			this.render();
 

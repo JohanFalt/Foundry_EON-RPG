@@ -39,7 +39,7 @@
                     <div class="vrollable caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div> 
                         
                     <div class="dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
-                    <div class="skill-short">({{getAttributeShortName fardighet.system.attribut}})</div>
+                    <div class="skill-short">{{getAttributeShortName fardighet.system.attribut}}</div>
                     <div class="pointer skill-icon">
                         <a class="item-edit" title="Editera färdighet" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
                     </div>

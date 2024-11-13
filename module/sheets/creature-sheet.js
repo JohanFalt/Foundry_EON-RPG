@@ -51,10 +51,6 @@ export default class EonCreatureSheet extends ActorSheet {
             actorData.system.installningar.version = version;
             await this.actor.update(actorData);
 		}	
-        else {
-            //await CalculateHelper.hanteraBerakningar(actorData);            
-            //await this.actor.update(actorData);
-        }
         
         const data = await super.getData();	
 
@@ -114,6 +110,10 @@ export default class EonCreatureSheet extends ActorSheet {
         // Rollable stuff
 		html
             .find(".vrollable")
+            .click(this._onRollDialog.bind(this));
+
+        html
+            .find('.macroBtn')
             .click(this._onRollDialog.bind(this));
 
         html
@@ -182,14 +182,14 @@ export default class EonCreatureSheet extends ActorSheet {
 		const dataset = element.dataset;
 
 		const source = dataset.source;
-		const actorData = foundry.utils.duplicate(this.actor);	        
+		const actorData = foundry.utils.duplicate(this.actor);	
 
         if ((source == "varelsegrupp") || (source == "varelsemall"))  {
             var grupp = document.getElementById("varelsegrupp");
             var mall = document.getElementById("varelsemall");
 
             if (mall.value == "custom") {
-                // ja vad göra nu?
+                // TODO: ja vad göra nu?
                 return;
             }
 
@@ -198,10 +198,10 @@ export default class EonCreatureSheet extends ActorSheet {
             let mallData = game.EON.djur.variant[mall.value];
 
             if ((gruppData == undefined) || (gruppData?.namn == undefined)) {
-                return;
+                gruppData = game.EON.djur.varelsemall['ingen'];
             }
             if ((mallData == undefined) || (mallData?.namn == undefined)) {
-                return;
+                mallData = game.EON.djur.variant['ingen'];
             }
 
             /* if (this.actor.system.installningar.varelsemall != "") {
@@ -218,7 +218,10 @@ export default class EonCreatureSheet extends ActorSheet {
                     return;
             }
  */
-            actorData.name = mallData.namn;
+            if ((actorData.name != '') && (mallData.namn != '')) {
+                actorData.name = mallData.namn;
+            }
+            
             actorData.system.bakgrund.beskrivning = mallData.beskrivning;
             actorData.system.referens = mallData.referens;
 
@@ -233,9 +236,9 @@ export default class EonCreatureSheet extends ActorSheet {
                     continue;
                 }
 
-                let mallExists = (mallData.harleddegenskaper[egenskap] == undefined) ? false : true;
+                let mallExists = (mallData.harleddegenskaper?.[egenskap] == undefined) ? false : true;
                 let mallVarde = false;
-                let gruppExists = (gruppData.harleddegenskaper[egenskap] == undefined) ? false : true;
+                let gruppExists = (gruppData.harleddegenskaper?.[egenskap] == undefined) ? false : true;
                 let gruppVarde = false;
 
                 if (mallExists) {
