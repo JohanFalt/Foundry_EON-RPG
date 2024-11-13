@@ -3,7 +3,6 @@
         <div class="headline">
             <div class="clear attribute-area">
                 <div class="pullLeft large-main-headline">{{actor.name}}</div>
-                <div class="pullLeft skill-icon"><i class="icon fa-solid fa-pen-to-square"></i></div>
             </div>
         </div>
 
@@ -75,7 +74,16 @@
                     <input class="attribute-value editable skill-label skill-value" name="system.skada.utmattning.varde" type="text" value="{{actor.system.skada.utmattning.varde}}" data-dtype="Number" />
                     <span class="floating-label">Värde</span>
                 </div>
-            </div>             
+            </div>  
+
+            <div class="headline">
+                <div class="attribute-area">Återhämtning</div>
+            </div>
+            
+            <div class="number-value-text">
+                <input class="attribute-value editable skill-label skill-value" type="text" name="system.strid.aterhamtning" value="{{actor.system.strid.aterhamtning}}" data-dtype="Number" />
+            </div>
+
             <!-- <div class="headline">
                 <div class="attribute-area">Focus</div>
             </div>

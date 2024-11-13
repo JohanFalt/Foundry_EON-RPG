@@ -99,11 +99,15 @@
         </div>
 
         <div class="three-column item-row">
-            <div class="headline">Återhämtning</div>
-            <div class="clear">
-                <div class="pullLeft number-value-text">
-                    <input class="attribute-value editable skill-label skill-value" type="text" value="0" data-dtype="Number" />
-                </div>
+            <div class="headline">Grundskada</div>
+            <div class="dice-value">{{getDiceValue data.system.harleddegenskaper.grundskada.totalt}}</div>
+            <div class="pullLeft skill-icon">
+                <a class="item-edit" title="Editera grundskada" 
+                    data-type="attribute" 
+                    data-source="harleddegenskaper" 
+                    data-attribute="grundskada">
+                    <i class="icon fa-solid fa-pen-to-square"></i>
+                </a>
             </div>
         </div>
     </div>  

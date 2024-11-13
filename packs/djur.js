@@ -1,6 +1,11 @@
 export const datadjur = {
     "djur": {
         "varelsemall": {
+            "ingen": {
+                "namn": "",
+                "beskrivning": "",
+                "referens": ""
+            },
             "litenvarelse": {
                 "namn": "Liten varelse",
                 "beskrivning": "",
@@ -303,6 +308,11 @@ export const datadjur = {
             }
         },
         "variant": {
+            "ingen": {
+                "namn": "",
+                "typ": "",
+                "referens": ""
+            },
             "giftorm": {
                 "namn": "Giftorm",
                 "typ": "litenvarelse",

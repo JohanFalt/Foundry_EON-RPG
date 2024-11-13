@@ -29,7 +29,7 @@ export default class EonVarelse extends foundry.abstract.DataModel {
         schema.skada = new fields.SchemaField({
             forsvar: new fields.SchemaField({
                 namn: new fields.StringField({
-                    initial: '',
+                    initial: 'Undvika',
                     nullable: false,
                 }),
                 beskrivning: new fields.StringField({
@@ -72,7 +72,8 @@ export default class EonVarelse extends foundry.abstract.DataModel {
                         nullable: false,
                     })
                 )
-            })
+            }),
+            aterhamtning: new fields.NumberField({...valueInteger})
         }),
 
         schema.egenskap = new fields.SchemaField({
@@ -82,7 +83,11 @@ export default class EonVarelse extends foundry.abstract.DataModel {
             })
         });
 
-        schema.bakgrund = new fields.SchemaField({            
+        schema.bakgrund = new fields.SchemaField({         
+            kon: new fields.StringField({required: true, nullable: false, initial: ""}),
+            alder: new fields.StringField({required: true, nullable: false, initial: ""}),
+            langd: new fields.StringField({required: true, nullable: false, initial: ""}),
+            vikt: new fields.StringField({required: true, nullable: false, initial: ""}),   
             beskrivning : new fields.HTMLField()
         });
 
