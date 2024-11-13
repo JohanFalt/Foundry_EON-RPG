@@ -495,7 +495,7 @@ export const RegisterHandlebarsHelpers = function () {
 			return "";
 		}
 
-		return CONFIG.EON.grundegenskaper[attribut].kort;
+		return "("+CONFIG.EON.grundegenskaper[attribut].kort+")";
 	});
 
 	// Hämtar mysteriets färdigheter och listar dessa snyggt

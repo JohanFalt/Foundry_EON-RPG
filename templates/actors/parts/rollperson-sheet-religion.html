@@ -15,7 +15,7 @@
             <div class="vrollable pullLeft caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div> 
                     
             <div class="pullLeft dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
-            <div class="pullLeft skill-short">({{getAttributeShortName fardighet.system.attribut}})</div>
+            <div class="pullLeft skill-short">{{getAttributeShortName fardighet.system.attribut}}</div>
         </div>
     {{/each}}
 
