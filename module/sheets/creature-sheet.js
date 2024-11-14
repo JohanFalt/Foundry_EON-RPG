@@ -262,6 +262,8 @@ export default class EonCreatureSheet extends ActorSheet {
                 }
             }
 
+            actorData.system.strid.aterhamtning = mallData.strid.aterhamtning;
+
             await this.actor.update(actorData);
             this.render();
             return;
