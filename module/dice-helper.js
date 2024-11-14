@@ -181,6 +181,7 @@ export class DiceRollContainer {
         this.svarighet = 0;
 		this.dicetype = "d6";
 		this.obRoll = true;
+        this.actorName = actor.name;
     }
 }
 
@@ -336,10 +337,13 @@ export async function RollDice(diceRoll) {
     const html = await renderTemplate(template, templateData);
 
     const chatData = {
-        //type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-        rolls: allDices,
+        user: game.user.id,
+        speaker: {
+            actor: diceRoll.actor?.id,
+            token: diceRoll.actor?.token?.id,
+            alias: diceRoll.actorName
+        },
         content: html,
-        speaker: ChatMessage.getSpeaker(),
         rollMode: game.settings.get("core", "rollMode")        
     };
     ChatMessage.applyRollMode(chatData, "roll");
