@@ -192,32 +192,20 @@ export default class EonCreatureSheet extends ActorSheet {
                 // TODO: ja vad göra nu?
                 return;
             }
+            
+            let gruppData = game.EON.djur.varelsemall['ingen'];
 
-            let gruppData = game.EON.djur.varelsemall[grupp.value];
-            gruppData.typ = grupp.value;
-            let mallData = game.EON.djur.variant[mall.value];
+            if (grupp.value != "") {
+                gruppData = game.EON.djur.varelsemall[grupp.value];
+                gruppData.typ = grupp.value;
+            }  
 
-            if ((gruppData == undefined) || (gruppData?.namn == undefined)) {
-                gruppData = game.EON.djur.varelsemall['ingen'];
+            let mallData = game.EON.djur.variant['ingen'];
+
+            if (mall.value != "") {
+                mallData = game.EON.djur.variant[mall.value];
             }
-            if ((mallData == undefined) || (mallData?.namn == undefined)) {
-                mallData = game.EON.djur.variant['ingen'];
-            }
 
-            /* if (this.actor.system.installningar.varelsemall != "") {
-                const performDelete = await new Promise((resolve) => {
-                    Dialog.confirm({
-                        title: "Varning!",
-                        yes: () => resolve(true),
-                        no: () => resolve(false),
-                        content: "Om du byter varelsemall kommer alla ändringar du gjort på dina härledda grundegenskaper att nollställas enligt den nya varelsemallen"
-                    });
-                });
-
-                if (!performDelete)
-                    return;
-            }
- */
             if ((actorData.name != '') && (mallData.namn != '')) {
                 actorData.name = mallData.namn;
             }

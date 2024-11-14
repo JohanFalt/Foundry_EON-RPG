@@ -74,8 +74,44 @@ export default class classDialogHelper {
         if ((vandningid != undefined) || (vandningid != "")) {
             let vandning = game.settings.get("eon-rpg", vandningid);
 
-            const table = game.tables.find(i => i._id === vandning);
-            table.draw();
+            // Template for the dialog form
+            const template = `
+                <form>
+                    <div class="form-group">
+                        <label>Modifiering</label>
+                        <input id="numberValue" value="" />
+                    </div>
+                </form>`;
+
+            // Define dialog buttons
+            const buttons = {
+                submit: {
+                    icon: '<i class="fas fa-check"></i>',
+                    label: 'Skicka',
+                    callback: async (html) => {
+                        let value = html.find('#numberValue')[0].value;
+                        let formula = "1d10";
+
+                        if (value != "") {
+                            formula = `1d10+${value}`;
+                        }
+
+                        const roll = await new Roll(formula);
+                        const table = game.tables.find(i => i._id === vandning);
+                        await table.draw({roll});
+                    }
+                }
+            }
+
+            // Display the dialog
+            new Dialog({
+                title: 'Slå för vändning',
+                content: template,
+                buttons,
+                default: 'submit'
+            }, {
+                classes: ['eon']
+            }).render(true);
         }
     }
 }

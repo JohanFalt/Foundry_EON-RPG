@@ -416,9 +416,7 @@ export class WeaponRoll {
             "bonus": 0
         };
 
-        if (this.#_isPC) {
-            this.#_actorGrundskada = this.actor.system.harleddegenskaper.grundskada.totalt;
-        }        
+        this.#_actorGrundskada = this.actor.system.harleddegenskaper.grundskada.totalt;
 
         if (this.vapen.type == "Avståndsvapen") {
             this.#_vapenskada = this.vapen.system.skada;
