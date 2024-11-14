@@ -368,41 +368,57 @@ export class WeaponRoll {
         this.#_usekross = false;
         this.#_usestick = false;
 
+        // If a specific type is selected, use that
+        if (type) {
+            if (type === "hugg") this.#_usehugg = true;
+            else if (type === "kross") this.#_usekross = true;
+            else if (type === "stick") this.#_usestick = true;
+            return;
+        }
+
+        // For ranged weapons and shields, use their fixed damage type
         if ((this.vapen.type == "Avståndsvapen") || (this.vapen.type == "Sköld")) {
             if (this.vapen.system.skadetyp == "hugg") {
                 this.#_usehugg = true;
-            }
-            if (this.vapen.system.skadetyp == "kross") {
+            } else if (this.vapen.system.skadetyp == "kross") {
                 this.#_usekross = true;
-            }
-            if (this.vapen.system.skadetyp == "stick") {
+            } else if (this.vapen.system.skadetyp == "stick") {
                 this.#_usestick = true;
             }
+            return;
         }
+
+        // For melee weapons, find the highest damage
         if (this.vapen.type == "Närstridsvapen") {
-            let antal = 0;
+            let highestDamage = -1;
+            let bestDamageType = null;
 
             if (this.vapen.system.hugg.aktiv) {
-                antal += 1;
-                this.#_usehugg = true;
+                const damage = this.vapen.system.hugg.tvarde + (this.vapen.system.hugg.bonus / 3);
+                if (damage > highestDamage) {
+                    highestDamage = damage;
+                    bestDamageType = "hugg";
+                }
             }
             if (this.vapen.system.kross.aktiv) {
-                antal += 1;
-                this.#_usekross = true;
+                const damage = this.vapen.system.kross.tvarde + (this.vapen.system.kross.bonus / 3);
+                if (damage > highestDamage) {
+                    highestDamage = damage;
+                    bestDamageType = "kross";
+                }
             }
             if (this.vapen.system.stick.aktiv) {
-                antal += 1;
-                this.#_usestick = true;
+                const damage = this.vapen.system.stick.tvarde + (this.vapen.system.stick.bonus / 3);
+                if (damage > highestDamage) {
+                    highestDamage = damage;
+                    bestDamageType = "stick";
+                }
             }
-        }
-        if (type == "hugg") {
-            this.#_usehugg = true;
-        }
-        if (type == "kross") {
-            this.#_usekross = true;
-        }
-        if (type == "stick") {
-            this.#_usestick = true;
+
+            // Set only the highest damage type as active
+            if (bestDamageType === "hugg") this.#_usehugg = true;
+            else if (bestDamageType === "kross") this.#_usekross = true;
+            else if (bestDamageType === "stick") this.#_usestick = true;
         }
 
         if (this.#_isdamage) {
@@ -712,6 +728,7 @@ export class DialogWeaponRoll extends FormApplication {
         roll.action = this.object.vapennamn;                       
 
         roll.info = this.object.vapen.system.egenskaper;
+        roll.actorName = this.actor.name;
 
         var grundvarde = "";
 
