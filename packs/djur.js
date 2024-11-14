@@ -1,6 +1,11 @@
 export const datadjur = {
     "djur": {
         "varelsemall": {
+            "ingen": {
+                "namn": "",
+                "beskrivning": "",
+                "referens": ""
+            },
             "litenvarelse": {
                 "namn": "Liten varelse",
                 "beskrivning": "",
@@ -303,13 +308,18 @@ export const datadjur = {
             }
         },
         "variant": {
+            "ingen": {
+                "namn": "",
+                "typ": "",
+                "referens": ""
+            },
             "giftorm": {
                 "namn": "Giftorm",
                 "typ": "litenvarelse",
                 "referens": "s278",
                 "strid": {
                     "narstrid": {
-                        "egenskaper": ["Bettet från giftormen fungerar som ett Nervgift (se sida 257) – förutsatt att bettet går igenom huden."]
+                        "egenskaper": ["Bettet från giftormen fungerar som ett Nervgift (se sida 257) - förutsatt att bettet går igenom huden."]
                     }                    
                 }
             },

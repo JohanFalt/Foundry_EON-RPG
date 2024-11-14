@@ -7,7 +7,7 @@
     <div style="width: 100px;">Tid</div>
 </div>
 
-{{#each data.system.moment as |item key|}}
+{{#each item.system.moment as |item key|}}
     <div class="item-row" style="line-height: 25px; width:100%;">
         <div><input class="weapon-icon pointer item-active" type="checkbox" id="object.huvud_{{key}}" title="Huvudmomentet" value="{{item.huvud}}" data-source="moment" data-key="{{key}}" data-egenskap="huvud" {{isChecked item.huvud}} /></div>
         <div style="width: 150px;">
@@ -30,13 +30,13 @@
     <div class="pullLeft two-column">
         <div class="large-headline textbox-headline">Mirakel</div>
         <div class="tall-editor-box">
-            {{editor (enrichText item.system.mirakel) target="system.mirakel" button=true owner=owner editable=true}}
+            {{editor enrichedMirakel target="system.mirakel" button=true owner=owner editable=true}}
         </div>
     </div> 
     <div class="pullLeft two-column">
         <div class="large-headline textbox-headline">Cermoni</div>
         <div class="tall-editor-box">
-            {{editor (enrichText item.system.cermoni) target="system.cermoni" button=true owner=owner editable=true}}
+            {{editor enrichedCermoni target="system.cermoni" button=true owner=owner editable=true}}
         </div>
     </div>
 </div>

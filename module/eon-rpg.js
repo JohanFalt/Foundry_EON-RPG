@@ -7,6 +7,7 @@ import { eon } from "./config.js";
 import { systemSettings } from "./settings.js";
 import * as Templates from "./templates.js";
 import * as Migration from "./migration.js";
+import { datavaluta } from '../packs/valuta.js';
 
 /* ------------------------------------ */
 /* 1. Init system						*/
@@ -27,6 +28,9 @@ Hooks.once("init", async function() {
     CONFIG.Item.dataModels.Rustning = models.EonRustning;
     CONFIG.Item.dataModels.Utrustning = models.EonUtrustning;
     CONFIG.Item.dataModels.Skada = models.EonSkada;
+    CONFIG.Item.dataModels.Valuta = models.EonValuta;
+
+    CONFIG.Item.dataModels.Egenskap = models.EonEgenskap;
 
     // Register System Settings
 	systemSettings();
@@ -40,6 +44,8 @@ Hooks.once("init", async function() {
     CONFIG.EON.settings.hinderenceSkillGroupMovement = game.settings.get("eon-rpg", "hinderenceAttributeMovement");
     CONFIG.EON.settings.textfont = game.settings.get("eon-rpg", "textfont");
     CONFIG.EON.settings.headlinefont = game.settings.get("eon-rpg", "headlinefont");
+
+    CONFIG.EON.datavaluta = datavaluta;
 
     Actors.unregisterSheet("core", ActorSheet);
     Actors.registerSheet("EON", sheets.EonActorSheet, { types: ["Rollperson"], makeDefault: true });
@@ -78,6 +84,8 @@ Hooks.once("ready", async () => {
                 game.settings.set("eon-rpg", "systemVersion", systemVersion);
             }
         }
+
+        await Templates.RegisterRollableTables();
     } 
 });
 

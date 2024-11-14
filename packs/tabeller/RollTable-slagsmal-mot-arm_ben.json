@@ -1,0 +1,292 @@
+{
+	"id": "rt_slagsmal_armben",
+	"version": "1.0.0",
+	"mapp": "Skadetabell",
+	"tabell": {
+	  "name": "Slagsmål mot arm/ben",
+	  "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg",
+	  "description": "",
+	  "results": [
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            1,
+            1
+          ],
+          "drawn": false,
+          "_id": "AkLwRgat8VI9qtH3",
+          "text": "Rustning eller klädesplagg slits bort. [Rustningsskada.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            2,
+            2
+          ],
+          "drawn": false,
+          "_id": "lUnJRjewWcIaBEcm",
+          "text": "Får fatt på fingrar/tår och knäcker till. [Tappar eller Faller.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            3,
+            3
+          ],
+          "drawn": false,
+          "_id": "uYMPwd7owyxFuUvA",
+          "text": "Bett i handen/foten som börjar blöda kraftigt. [Omtöcknad.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            4,
+            4
+          ],
+          "drawn": false,
+          "_id": "dHkV8r4zBdWuA8Oc",
+          "text": "Spark som träffar armbågen/knät. [Tappar eller Faller.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            5,
+            5
+          ],
+          "drawn": false,
+          "_id": "fBpm05xg6C7WjnoO",
+          "text": "Ett fulslag ger ett rejält och smärtsamt blåmärke. [Omtöcknad.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            6,
+            6
+          ],
+          "drawn": false,
+          "_id": "Z0vl2qvdbfZOQfTA",
+          "text": "Ett rejält grepp om låret/överarmen tvingar ned offret på marken. [Faller.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            7,
+            7
+          ],
+          "drawn": false,
+          "_id": "WSeMFq599n7xcAsT",
+          "text": "Grepp om armen/benet får personen att stappla bakåt. [Tillbakaknuffad.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            8,
+            8
+          ],
+          "drawn": false,
+          "_id": "g9063pFQyOIHh3PV",
+          "text": "Vaden/underarmen fastlåses i ett plågsamt grepp. [Tappar eller Faller.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            9,
+            9
+          ],
+          "drawn": false,
+          "_id": "AwTrEOcaAArXJhja",
+          "text": "Offret faller med motståndaren över sig. Armen/benet hamnar i en onaturlig vinkel. [Faller, Omtöcknad.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            10,
+            10
+          ],
+          "drawn": false,
+          "_id": "M3zQmOx6gWS0C6Wb",
+          "text": "Får foten/handen stampad på. [Brytrisk 10 (arm/ben), Omtöcknad.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            11,
+            11
+          ],
+          "drawn": false,
+          "_id": "tMmQfKvbzMQiV0qr",
+          "text": "Armbågen/knät får en hård smäll. [Tappar eller Faller.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            12,
+            12
+          ],
+          "drawn": false,
+          "_id": "MUzeDDQyBR2tttuI",
+          "text": "Armen/benet hålls fast i ett smärt- samt grepp. [Omtöcknad, Tappar eller Faller.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            13,
+            13
+          ],
+          "drawn": false,
+          "_id": "TsCTjUWAVnYOR5or",
+          "text": "Handleden/fotleden fasthållen, böjs i fel vinkel och knäcks till. [Brytrisk 12 (arm/ben).]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            14,
+            14
+          ],
+          "drawn": false,
+          "_id": "2c8soLkNpGiNRrv3",
+          "text": "En spark mot armen/benet får offret att tumla bakåt. [Omtöcknad, Tillbakaknuffad.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            15,
+            15
+          ],
+          "drawn": false,
+          "_id": "3ussEjj3Y11wK8Ta",
+          "text": "Muskelvävnaden slits sönder och armen/benet sväller upp på grund av inre blödningar. [Tappar eller Faller, Infektion 2/4.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            16,
+            16
+          ],
+          "drawn": false,
+          "_id": "CmGwdTgJoq2fBMJG",
+          "text": "Kroppsdelen vrids i en onaturlig vinkel. [Tappar eller Faller, Brytrisk 14 (arm/ben).]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            17,
+            17
+          ],
+          "drawn": false,
+          "_id": "GRxi4zms4Paqyb1h",
+          "text": "Träff på nervknut sprider en ilande smärta genom kroppen. [Tappar eller Faller, 1 Smärta.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            18,
+            18
+          ],
+          "drawn": false,
+          "_id": "tUgSKCbsLiOmUwbJ",
+          "text": "Slag mot handryggen/fotryggen får den att vridas ur led. [Omtöcknad, Sår.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            19,
+            19
+          ],
+          "drawn": false,
+          "_id": "R0RTV0vaaVlGYjVl",
+          "text": "Slås omkull men försöker i panik bromsa effekten med armen/benet. [Tappar eller Faller, Brytrisk 16 (arm/ ben).]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        },
+        {
+          "type": 0,
+          "weight": 1,
+          "range": [
+            20,
+            20
+          ],
+          "drawn": false,
+          "_id": "iQDrXL1xwu6F9q1a",
+          "text": "Armbågen/knät böjs i onaturlig vinkel och något slits sönder. Leden är blå och uppsvälld i flera dagar efteråt. [Tappar och Faller, 2 Sår.]",
+          "documentId": null,
+          "flags": {},
+          "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+        }
+      ]
+	}
+}

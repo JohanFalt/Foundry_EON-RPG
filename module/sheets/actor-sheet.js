@@ -1,7 +1,9 @@
 import DialogHelper from "../dialog-helper.js";
 import CreateHelper from "../create-helper.js";
 import CalculateHelper from "../calculate-helper.js";
+import SelectHelper from "../select-helpers.js"
 import { SendMessage } from "../dice-helper.js";
+import { datavaluta } from '../../packs/valuta.js';
 
 export default class EonActorSheet extends ActorSheet {
 
@@ -23,7 +25,9 @@ export default class EonActorSheet extends ActorSheet {
 
         this.locked = false;
 		this.isCharacter = true;	
+        this.isPC = true;
 		this.isGM = game.user.isGM;	
+        this.datavaluta = datavaluta;	
     }
 
     /** @override */
@@ -92,12 +96,13 @@ export default class EonActorSheet extends ActorSheet {
         data.actor.system.listdata.utrustning.vapen.narstrid = [];
         data.actor.system.listdata.utrustning.vapen.avstand = [];
         data.actor.system.listdata.utrustning.vapen.skold = [];
-        data.actor.system.listdata.utrustning.mynt = [];
         data.actor.system.listdata.utrustning.foremal = [];
         data.actor.system.listdata.kroppsdelar = [];
         data.actor.system.listdata.kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, version);
         data.actor.system.listdata.skador = [];
+        data.actor.system.listdata.datavaluta = this.datavaluta;
 
+        data.actor.system.listdata.valuta = [];
         data.actor.system.altvarde = [];
 
         let totalVikt = 0;
@@ -151,16 +156,20 @@ export default class EonActorSheet extends ActorSheet {
                 }
             }
             if (item.type == "Utrustning") {
-                if (item.system.typ == "mynt") {
-                    data.actor.system.listdata.utrustning.mynt.push(item);
-                }
-                else if (item.system.typ == "kongelat") {
+                if (item.system.typ == "kongelat") {
                     data.actor.system.listdata.magi.kongelat.push(item);
                 }                
                 else {
                     data.actor.system.listdata.utrustning.foremal.push(item);
                 }                
 
+                if (item.system.installningar.buren) {
+                    totalVikt += parseFloat(item.system.vikt) * parseFloat(item.system.antal);    
+                    totalViktUtrustning += parseFloat(item.system.vikt) * parseFloat(item.system.antal);                 
+                }
+            }
+            if (item.type == "Valuta") {
+                data.actor.system.listdata.valuta.push(item);
                 if (item.system.installningar.buren) {
                     totalVikt += parseFloat(item.system.vikt) * parseFloat(item.system.antal);    
                     totalViktUtrustning += parseFloat(item.system.vikt) * parseFloat(item.system.antal);                 
@@ -188,11 +197,14 @@ export default class EonActorSheet extends ActorSheet {
         data.actor.system.listdata.utrustning.vapen.skold = data.actor.system.listdata.utrustning.vapen.skold.sort((a, b) => a.name.localeCompare(b.name));
         data.actor.system.listdata.utrustning.rustning = data.actor.system.listdata.utrustning.rustning.sort((a, b) => a.name.localeCompare(b.name));
 
-        //for (const del in CONFIG.EON.kroppsdelar[bok]) {
+        data.actor.system.listdata.valuta = data.actor.items
+            .filter(item => item.type === "Valuta")
+            .sort((a, b) => a.name.localeCompare(b.name));
+
         for (const del of data.actor.system.listdata.kroppsdelar) {
-            del.stick += data.actor.system.harleddegenskaper.grundrustning; 
-            del.kross += data.actor.system.harleddegenskaper.grundrustning; 
-            del.hugg += data.actor.system.harleddegenskaper.grundrustning; 
+            del.stick += data.actor.system.harleddegenskaper.grundrustning.totalt; 
+            del.kross += data.actor.system.harleddegenskaper.grundrustning.totalt; 
+            del.hugg += data.actor.system.harleddegenskaper.grundrustning.totalt; 
         } 
 
         // Beräkna utmattning och belastning
@@ -240,9 +252,12 @@ export default class EonActorSheet extends ActorSheet {
             data.actor.system.berakning.belastning.totaltavdrag = CalculateHelper.BeraknaBelastningAvdrag(data.actor.system.berakning.belastning.rustning);
         }
 
+        data.listData = SelectHelper.SetupActor(data.actor);
+        data.enrichedBeskrivning = await TextEditor.enrichHTML(this.actor.system.bakgrund.beskrivning);
+
         console.log(data.actor.name);
         console.log(data.actor);
-        console.log(data.EON);
+        console.log(data.EON);        
 
         return data;
     }
@@ -314,7 +329,7 @@ export default class EonActorSheet extends ActorSheet {
 
         const droppedItem = await Item.implementation.fromDropData(_data);
 
-        if ((droppedItem.type == "Folkslag") && (this.actor.type === "Rollperson")) {
+        if ((droppedItem.type == "Folkslag") && (this.actor.type.toLowerCase().replace(" ", "") == "rollperson")) {
             await this.LaggtillFolkslag(droppedItem);
         }
         else if (droppedItem.type == "Folkslag") {
@@ -541,7 +556,8 @@ export default class EonActorSheet extends ActorSheet {
 
 			itemData = {
                 name: "Nytt avståndsvapen",
-                type: "Avståndsvapen",                
+                type: "Avståndsvapen",
+                
                 system: {
                     installningar: {
                         skapad: true,
@@ -557,7 +573,8 @@ export default class EonActorSheet extends ActorSheet {
 
 			itemData = {
                 name: "Ny sköld",
-                type: "Sköld",                
+                type: "Sköld",
+                
                 system: {
                     installningar: {
                         skapad: true,
@@ -603,24 +620,37 @@ export default class EonActorSheet extends ActorSheet {
             };
 		}
 
-        if (type == "mynt") {
+        if (type == "valuta") {
             found = true;
 
-			itemData = {
-                name: "Silvermynt",
-                type: "Utrustning",                
+            const getCurrencyData = (currencyName) => {
+                if (currencyName) {
+                    const currency = Object.values(this.datavaluta.valuta)
+                        .find(currency => currency.namn === currencyName);
+                    if (currency) return currency;
+                }
+            
+                const firstCurrency = Object.values(this.datavaluta.valuta)[0];
+                return firstCurrency;
+            };
+
+            const currencyData = getCurrencyData('Denar');
+
+            itemData = {
+                name: currencyData.namn,
+                type: "Valuta",                
                 system: {
                     installningar: {
                         skapad: true,
                         version: version,
-                        behallare: true
+                        buren: false
                     },
-                    typ: "mynt",
-                    volym: {
-                        enhet: "st",
-                        antal: 0,
-                        max: 50
-                    }
+
+                    ursprung: currencyData.ursprung,
+                    metall: currencyData.metall,
+                    silver_varde: currencyData.silver_varde,
+                    vikt: currencyData.vikt,
+                    antal: 0
                 }
             };
 		}
@@ -699,6 +729,8 @@ export default class EonActorSheet extends ActorSheet {
         * @param _event
     */
     async _onItemEdit(event) {
+        console.log("_onItemEdit");
+
 		var _a;
 
 		event.preventDefault();
@@ -707,7 +739,11 @@ export default class EonActorSheet extends ActorSheet {
         const element = event.currentTarget;
 		const dataset = element.dataset;
 
-        if (dataset.type == "attribute") {
+        if (dataset.type === "strid") {
+            DialogHelper.AttributeEditDialog(this.actor, dataset.type, dataset.attribute);
+            return;
+        }
+        else if (dataset.type == "attribute") {
             DialogHelper.AttributeEditDialog(this.actor, dataset.source, dataset.attribute);
             return;
         }
@@ -736,6 +772,8 @@ export default class EonActorSheet extends ActorSheet {
         * @param _event
     */
     async _onItemAlter(event) {
+        console.log("_onItemAlter");
+
 		event.preventDefault();
         event.stopPropagation();
 
@@ -756,7 +794,7 @@ export default class EonActorSheet extends ActorSheet {
                 value = parseFloat(value);
             }
 
-            const item = this.actor.getEmbeddedDocument("Item", itemid);
+            const item = await this.actor.getEmbeddedDocument("Item", itemid);
             const itemData = foundry.utils.duplicate(item);
 
             if (fields.length == 1) {
@@ -778,7 +816,9 @@ export default class EonActorSheet extends ActorSheet {
         * Körs när något item blir aktiverat. Används främst när man klickar för ett föremål så det blir aktivt/buret/etc.
         * @param _event
     */
-    async _onItemActive(event) {		
+    async _onItemActive(event) {	
+        console.log("_onItemActive");
+        
 		event.preventDefault();
         event.stopPropagation();
 
@@ -788,13 +828,13 @@ export default class EonActorSheet extends ActorSheet {
         const itemid = dataset.itemid;
         const property = dataset.property;
 
-		const item = this.actor.getEmbeddedDocument("Item", itemid);
+		const item = await this.actor.getEmbeddedDocument("Item", itemid);
         const itemData = foundry.utils.duplicate(item);        
 		
 		let active = itemData.system.installningar[property];
 		itemData.system.installningar[property] = !active;
 
-		await item.update(itemData);
+		await item.update(itemData);                
 
         if (item.type == "Rustning") {
             const activeArmor = this.actor.items.filter(rustning => rustning.type === "Rustning" && rustning.system.installningar.buren && (rustning._id != item._id));
@@ -845,14 +885,14 @@ export default class EonActorSheet extends ActorSheet {
         return true;
 	}
 
-    _onItemSend(event) {
+    async _onItemSend(event) {
         event.preventDefault();
         event.stopPropagation();
 
         const element = event.currentTarget;
 		const dataset = element.dataset;
         const itemid = dataset.itemid;
-		const item = this.actor.getEmbeddedDocument("Item", itemid);
+		const item = await this.actor.getEmbeddedDocument("Item", itemid);
 
         const headline = `${item.name} (${item.type.toLowerCase()})`;
         const message = item.system.beskrivning;
@@ -867,6 +907,8 @@ export default class EonActorSheet extends ActorSheet {
         * @param _event
     */
     async _onsheetChange(event) {
+        console.log("_onsheetChange");
+
 		event.preventDefault();
 
 		const element = event.currentTarget;
@@ -884,6 +926,14 @@ export default class EonActorSheet extends ActorSheet {
             }
             else {
                 let data = game.EON.folkslag[e.value];
+
+                if (data?.lakningstakt) {
+                    actorData.system.strid.lakningstakt = {
+                        varde: data.lakningstakt,
+                        totalt: data.lakningstakt,
+                        bonuslista: []
+                    };
+                }
 
                 if ((data == undefined) || (data?.namn == undefined)) {
                     return;
@@ -916,7 +966,7 @@ export default class EonActorSheet extends ActorSheet {
 
                 await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
 
-                actorData.system.strid.lakningstakt = parseInt(data.lakningstakt);
+                actorData.system.strid.lakningstakt.varde = data.lakningstakt;
                 actorData.system.bakgrund.folkslag = e.value;            
 
                 await this.actor.update(actorData);
@@ -994,6 +1044,12 @@ export default class EonActorSheet extends ActorSheet {
             this.render();
             return;
         }
+        if (source == "lakningstakt") {
+            let value = parseInt(element.value);
+            actorData.system.strid.lakningstakt = value;
+            await this.actor.update(actorData);
+            return;
+        }
 	}
 
     /**
@@ -1029,6 +1085,8 @@ export default class EonActorSheet extends ActorSheet {
         * @param _event
     */
     async _clickedCircle(event) {
+        console.log("_clickedCircle");
+
         event.preventDefault();
 		const element = event.currentTarget;
 		const dataset = element.dataset;
@@ -1036,7 +1094,7 @@ export default class EonActorSheet extends ActorSheet {
         // om det var ett item
         if (dataset.itemid != undefined) {
             const itemid = dataset.itemid;
-            const item = this.actor.getEmbeddedDocument("Item", itemid);
+            const item = await this.actor.getEmbeddedDocument("Item", itemid);
             const itemData = foundry.utils.duplicate(item);
             let found = false;
 

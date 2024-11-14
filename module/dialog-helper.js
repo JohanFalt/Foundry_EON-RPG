@@ -36,36 +36,46 @@ export default class classDialogHelper {
         const item = await actor.getEmbeddedDocument("Item", dataset.itemid);
 
         const roll = new SpellRoll(item, actor);
-		    let spellRollUse = new DialogSpellRoll(actor, roll);
-		    spellRollUse.render(true);
+		let spellRollUse = new DialogSpellRoll(actor, roll);
+		spellRollUse.render(true);
     }
 
     static async AttributeDialog(actor, type, key, title) {
         const roll = new AttributeRoll(actor, type, key, title);
-		    let attributeRollUse = new DialogAttributeRoll(actor, roll);
-		    attributeRollUse.render(true);
+		let attributeRollUse = new DialogAttributeRoll(actor, roll);
+		attributeRollUse.render(true);
     }
 
     static AttributeEditDialog(actor, type, key) {
         const attribute = new DialogAttribute(type, key);
-		    let attributeRollUse = new DialogAttributeEdit(actor, attribute);
-		    attributeRollUse.render(true);
+		let attributeRollUse = new DialogAttributeEdit(actor, attribute);
+		attributeRollUse.render(true);
     }
 
     static async WeaponDialog(event, actor) {
-		    const element = event.currentTarget;
-		    const dataset = element.dataset; 
+		const element = event.currentTarget;
+		const dataset = element.dataset; 
         const item = await actor.getEmbeddedDocument("Item", dataset.itemid);
 
         const roll = new WeaponRoll(actor, item);
-		    let weaponRollUse = new DialogWeaponRoll(actor, roll);
-		    weaponRollUse.render(true);
+		let weaponRollUse = new DialogWeaponRoll(actor, roll);
+		weaponRollUse.render(true);
     }
 
     static async CombatDialog(actor) {
         const roll = new CombatRoll(actor);
         let combatRollUse = new DialogCombat(actor, roll);
-		    combatRollUse.render(true);
+		combatRollUse.render(true);
     }
 
+    static async VandningDialog(actor) {
+        const vandningid = actor.system.skada?.vandning?.vandningid;
+
+        if ((vandningid != undefined) || (vandningid != "")) {
+            let vandning = game.settings.get("eon-rpg", vandningid);
+
+            const table = game.tables.find(i => i._id === vandning);
+            table.draw();
+        }
+    }
 }

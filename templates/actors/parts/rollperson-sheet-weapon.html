@@ -4,15 +4,37 @@
         <div class="three-column item-row">
             <div class="headline">Grundskada</div>
             <div class="dice-value">{{getDiceValue data.system.harleddegenskaper.grundskada.totalt}}</div>
+            <div class="pullLeft skill-icon">
+                <a class="item-edit" title="Editera grundskada" 
+                    data-type="attribute" 
+                    data-source="harleddegenskaper" 
+                    data-attribute="grundskada">
+                    <i class="icon fa-solid fa-pen-to-square"></i>
+                </a>
+            </div>
         </div>   
         <div class="three-column item-row">
             <div class="headline">Grundrustning</div>
-            <!-- <div class="number-value-text"><input class="attribute-value editable" type="text" value="{{data.system.harleddegenskaper.grundrustning}}" disabled readonly /></div> -->
-            <div class="dice-value">{{getDiceValue data.system.harleddegenskaper.grundrustning}}</div>
+            <div class="dice-value">{{data.system.harleddegenskaper.grundrustning.totalt}}</div>
+            <div class="pullLeft skill-icon">
+                <a class="item-edit" title="Editera grundrustning" 
+                   data-type="attribute" 
+                   data-source="harleddegenskaper"
+                   data-attribute="grundrustning">
+                    <i class="icon fa-solid fa-pen-to-square"></i>
+                </a>
+            </div>
         </div>     
         <div class="three-column item-row">
             <div class="headline">Läkningstakt</div>
-            <div class="number-value-text"><input class="attribute-value editable skill-label skill-value" type="number" name="system.strid.lakningstakt" value="{{data.system.strid.lakningstakt}}" data-dtype="Number" /></div>
+            <div class="dice-value">{{data.system.strid.lakningstakt.totalt}}</div>
+            <div class="pullLeft skill-icon">
+                <a class="item-edit" title="Editera läkningstakt" 
+                   data-type="strid" 
+                   data-attribute="lakningstakt">
+                    <i class="icon fa-solid fa-pen-to-square"></i>
+                </a>
+            </div>
         </div>
     </div>
 

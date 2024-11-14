@@ -12,9 +12,42 @@
                     {{#if object.harSmarta}}
                         <div class="centerText">Smärta (-{{object.actor.system.berakning.svarighet.smarta}}T6)</div>
                     {{/if}}
-                    {{#if object.visaSar}}
+                    {{#if (and object.visaSar (gt object.hamtaAntalSar 0))}}
                         <div class="centerText" style="line-height: 26px; height: 26px; display: flex; margin-left: 185px;">Sår (-{{object.hamtaAntalSar}}T6) <input class="item-property pointer eventbutton" {{isChecked object.harSar}} type="checkbox" data-dtype="Boolean" data-source="set" data-value="harSar" /></div>
                     {{/if}}
+                {{/if}}
+
+                {{#if object.isattack}}
+                    <div class="attack-info centerText" style="margin-top: 10px;">
+                        {{#if (eq object.attacktype 'tungt')}}
+                            <div>Utmattning +2</div>
+                            <div>Skada +2T6</div>
+                            <div>Färdighetstärningar -1T6</div>
+                        {{else if (eq object.attacktype 'snabbt')}}
+                            <div>Utmattning +1</div>
+                            <div>Skada -1T6</div>
+                            <div>Färdighetstärningar +1T6</div>
+                        {{else if (eq object.attacktype 'grupp')}}
+                            <div>Utmattning +1</div>
+                            <div>Färdighetstärningar -1T6</div>
+                        {{/if}}
+                    </div>
+                {{/if}}
+
+                {{#if object.isdefence}}
+                    <div class="attack-info centerText" style="margin-top: 10px;">
+                        {{#if (eq object.attacktype 'defensivt')}}
+                            <div>Utmattning +1</div>
+                            <div>Färdighetstärningar +1T6</div>
+                            <div>Lyckas med minst 2 Övertag för att bli anfallare</div>
+                        {{else if (eq object.attacktype 'kontring')}}
+                            <div>Utmattning +1</div>
+                            <div>Färdighetstärningar -1T6</div>
+                            <div>Blir alltid anfallare, oavsett utfall</div>
+                        {{else if (eq object.attacktype 'normal')}}
+                            <div>Lyckas försvara för att bli anfallare</div>
+                        {{/if}}
+                    </div>
                 {{/if}}
             </div>
 
@@ -22,7 +55,9 @@
                 <div class="clear">
                     <button class="three-button pullLeft mode {{#if object.isattack}}active{{/if}}" data-type="attack">Anfall</button>
                     <button class="three-button pullLeft mode {{#if object.isdamage}}active{{/if}}" data-type="damage">Skada</button>
-                    <button class="three-button pullLeft mode {{#if object.isdefence}}active{{/if}}" data-type="defence">Försvar</button>
+                    {{#unless object.vapen.isRangedWeapon}}
+                        <button class="three-button pullLeft mode {{#if object.isdefence}}active{{/if}}" data-type="defence">Försvar</button>
+                    {{/unless}}
                 </div>
 
                 <div id="attack_area" class="clear" style="height: 40px;">
@@ -37,9 +72,34 @@
                             <button class="attacktype three-button pullLeft {{#if object.usestick}}active{{/if}}" data-type="stick">Stick</button>
                         {{/if}}
                     {{else}}  
-                        <div>&nbsp;</div>
+                        {{#if object.isattack}}
+                            {{#unless object.vapen.isRangedWeapon}}
+                                <button class="attacktype three-button pullLeft {{#if (or (not object.attacktype) (eq object.attacktype 'normal'))}}active{{/if}}" 
+                                        data-type="normal" 
+                                        title="standard">Standard</button>
+                                <button class="attacktype three-button pullLeft {{#if (eq object.attacktype 'tungt')}}active{{/if}}" 
+                                        data-type="tungt" 
+                                        title="Utmattning +2&#10;Skada +2T6&#10;Färdighetstärningar -1T6">Kraftfult</button>
+                                <button class="attacktype three-button pullLeft {{#if (eq object.attacktype 'snabbt')}}active{{/if}}" 
+                                        data-type="snabbt" 
+                                        title="Utmattning +1&#10;Skada -1T6&#10;Färdighetstärningar +1T6">Snabbt</button>
+                                <button class="attacktype three-button pullLeft {{#if (eq object.attacktype 'grupp')}}active{{/if}}" 
+                                        data-type="grupp" 
+                                        title="Utmattning +1&#10;Färdighetstärningar -1T6">Gruppanfall</button>
+                            {{/unless}}
+                        {{/if}}
+                        {{#if object.isdefence}}
+                            <button class="attacktype three-button pullLeft {{#if (or (not object.attacktype) (eq object.attacktype 'normal'))}}active{{/if}}" 
+                                    data-type="normal" 
+                                    title="Utmattning +0&#10;Färdighetstärningar +0">Standard</button>
+                            <button class="attacktype three-button pullLeft {{#if (eq object.attacktype 'defensivt')}}active{{/if}}" 
+                                    data-type="defensivt" 
+                                    title="Utmattning +1&#10;Färdighetstärningar +1T6">Defensivt</button>
+                            <button class="attacktype three-button pullLeft {{#if (eq object.attacktype 'kontring')}}active{{/if}}" 
+                                    data-type="kontring" 
+                                    title="Utmattning +1&#10;Färdighetstärningar -1T6">Kontring</button>
+                        {{/if}}
                     {{/if}}
-                    
                 </div>
             </div>
         </div>
@@ -66,7 +126,6 @@
                         Ob<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.tvarde}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.bonus}}" disabled readonly />
                     {{/if}}        
                 </div>
-
             </div>
         </div>
     </div>

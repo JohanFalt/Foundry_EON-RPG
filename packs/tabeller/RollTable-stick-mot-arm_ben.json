@@ -1,0 +1,292 @@
+{
+  "id": "rt_stick_armben",
+  "version": "1.0.0",
+  "mapp": "Skadetabell",
+  "tabell": {
+      "name": "Stick mot arm/ben",
+      "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg",
+      "description": "",
+      "results": [
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  1,
+                  1
+              ],
+              "drawn": false,
+              "_id": "AkLwRgat8VI9qtH3",
+              "text": "Rispar upp huden. [Omtöcknad.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  2,
+                  2
+              ],
+              "drawn": false,
+              "_id": "lUnJRjewWcIaBEcm",
+              "text": "Vapnet borrar sig in nära armbågen eller knäleden. [Tappar eller Faller.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  3,
+                  3
+              ],
+              "drawn": false,
+              "_id": "uYMPwd7owyxFuUvA",
+              "text": "Huden fläks upp och orsakar en ymnig blödning. [Blödning 1/5.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  4,
+                  4
+              ],
+              "drawn": false,
+              "_id": "dHkV8r4zBdWuA8Oc",
+              "text": "Vapnet sjunker djupt in i köttet. [Tappar eller Faller.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  5,
+                  5
+              ],
+              "drawn": false,
+              "_id": "fBpm05xg6C7WjnoO",
+              "text": "Rustning, kläder eller del av vapnet fastnar i såret. [Infektion 1/4.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  6,
+                  6
+              ],
+              "drawn": false,
+              "_id": "Z0vl2qvdbfZOQfTA",
+              "text": "Djup sår i handen eller foten. [Tappar eller Faller.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  7,
+                  7
+              ],
+              "drawn": false,
+              "_id": "WSeMFq599n7xcAsT",
+              "text": "Vapnet fastnar och orsakar stark smärta då det slits loss. [1 Smärta.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  8,
+                  8
+              ],
+              "drawn": false,
+              "_id": "g9063pFQyOIHh3PV",
+              "text": "Vapnet borrar sig in i benpipan. [Tappar eller Faller, 1 Smärta.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  9,
+                  9
+              ],
+              "drawn": false,
+              "_id": "AwTrEOcaAArXJhja",
+              "text": "Sjunker in djupt vid axeln eller höften och blodet väller fram. [Blödning 1/10.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  10,
+                  10
+              ],
+              "drawn": false,
+              "_id": "M3zQmOx6gWS0C6Wb",
+              "text": "Djupt sår. [Tappar eller Faller, Sår.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  11,
+                  11
+              ],
+              "drawn": false,
+              "_id": "tMmQfKvbzMQiV0qr",
+              "text": "Smuts, del av kläder, eller bit av vapnet fastnar i såret. [Infektion 2/10.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  12,
+                  12
+              ],
+              "drawn": false,
+              "_id": "MUzeDDQyBR2tttuI",
+              "text": "Vapnet sätter sig djupt i underarmen eller vaden och fastnar i benpipan. [Tappar eller Faller, Brytrisk 10 (arm/ ben).]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  13,
+                  13
+              ],
+              "drawn": false,
+              "_id": "TsCTjUWAVnYOR5or",
+              "text": "Underarmen eller vaden genom- bor rad och blodet väller ut. [Blödning 1/16.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  14,
+                  14
+              ],
+              "drawn": false,
+              "_id": "2c8soLkNpGiNRrv3",
+              "text": "Armbågen eller knät genomborras. [Tappar eller Faller, Sår.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  15,
+                  15
+              ],
+              "drawn": false,
+              "_id": "3ussEjj3Y11wK8Ta",
+              "text": "Djupt sår i muskler och vävnad. [1 Smärta, Sår.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  16,
+                  16
+              ],
+              "drawn": false,
+              "_id": "CmGwdTgJoq2fBMJG",
+              "text": "Vapnet borrar sig genom köttet och skär upp muskler och vävnad. [Tappar eller Faller, 1 Smärta, Sår.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  17,
+                  17
+              ],
+              "drawn": false,
+              "_id": "GRxi4zms4Paqyb1h",
+              "text": "Armen eller benet genomborrat och blodet väller fram. [Blödning 1/20.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  18,
+                  18
+              ],
+              "drawn": false,
+              "_id": "tUgSKCbsLiOmUwbJ",
+              "text": "[Död 6] Axeln eller höftleden genom- borrad. [Tappar eller Faller, 1 Smärta, Sår.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  19,
+                  19
+              ],
+              "drawn": false,
+              "_id": "R0RTV0vaaVlGYjVl",
+              "text": "[Död 8] Pulsådern slits upp och blodet pulserar ut i taktfasta stötar. [Blödning 2/10, Sår.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          },
+          {
+              "type": 0,
+              "weight": 1,
+              "range": [
+                  20,
+                  20
+              ],
+              "drawn": false,
+              "_id": "iQDrXL1xwu6F9q1a",
+              "text": "[Död 10] Armen eller benet genom- borras och rester av rustning, kläder eller vapnet blir kvar i såret. [Tappar eller Faller, Sår, Infektion 3/10.]",
+              "documentId": null,
+              "flags": {},
+              "img": "systems/eon-rpg/assets/img/icons/internal-injury.svg"
+          }
+      ]
+  }
+}

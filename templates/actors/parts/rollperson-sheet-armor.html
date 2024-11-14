@@ -36,9 +36,26 @@
                     <div class="item-row" style="line-height: 25px; width:100%;">
                         <div style="width: 100px;">{{rustning.namn}}</div>
                         <div style="width: 125px;">{{#if (ne rustning.material "")}}{{getArmorType rustning.material}}{{else}}&nbsp;{{/if}}</div>
-                        <div class="centerText number-value-text" style="width: 50px;">{{rustning.hugg}}</div>
-                        <div class="centerText number-value-text" style="width: 50px;">{{rustning.kross}}</div>
-                        <div class="centerText number-value-text" style="width: 50px;">{{rustning.stick}}</div>
+                        <div class="centerText number-value-text" style="width: 50px;">
+                            {{#with ../actor.system.harleddegenskaper.grundrustning}}
+                            {{/with}}
+                            {{sum 
+                                rustning.hugg 
+                                ../actor.system.harleddegenskaper.grundrustning.totalt
+                            }}
+                        </div>
+                        <div class="centerText number-value-text" style="width: 50px;">
+                            {{sum 
+                                rustning.kross 
+                                ../actor.system.harleddegenskaper.grundrustning.totalt
+                            }}
+                        </div>
+                        <div class="centerText number-value-text" style="width: 50px;">
+                            {{sum 
+                                rustning.stick 
+                                ../actor.system.harleddegenskaper.grundrustning.totalt
+                            }}
+                        </div>
                     </div>                    
                 {{/each}}
             </div>
@@ -58,7 +75,7 @@
         <div>Delområde</div> 
     </div>
 
-    {{#each actor.system.listdata.utrustning.rustning as |rustning key|}}
+    {{#each actor.system.listdata.utrustning.rustning as | rustning key|}}
         <div class="item-row" style="line-height: 25px; width:100%;">
             <div class="weapon-icon"><a class="item-edit" title="Editera rustning" data-source="armor" data-itemid="{{rustning._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             {{#if (eq rustning.system.beskrivning "")}}

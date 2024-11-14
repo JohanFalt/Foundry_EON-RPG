@@ -1,0 +1,24 @@
+<div class="item-box skill-area">
+    <div>
+        <div class="item-row headline" style="line-height: 25px; width:100%; border-bottom-style: solid; border-bottom-width: 1px; border-top-style: solid; border-top-width: 1px;">
+            <div class="weapon-icon">
+                <a class="item-create" title="Lägg till färdighet" data-type="färdighet">
+                    <i class="fa-solid fa-square-plus green"></i>
+                </a>
+            </div>
+            <div>Färdigheter</div>
+        </div>
+    </div>
+
+    {{#each actor.system.listdata.fardigheter as | fardighet key|}}
+        <div class="skill-row skill">
+            <div class="vrollable caption normalskill" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div>                     
+            <div class="dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
+            <div class="pointer skill-icon">
+                <a class="item-edit" title="Editera färdighet" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
+            </div>
+        </div>
+    {{/each}}
+</div>
+
+

@@ -7,13 +7,36 @@ export default class CalculateHelper {
             return false;
         }
 
-        let totalTarning = parseInt(attribut.grund.tvarde);
-        let totalBonus = parseInt(attribut.grund.bonus);
+        // Special handling för läkningstakt och grundrustning
+        if (attribut.varde !== undefined) {
+            let total = parseInt(attribut.varde) || 0;
+            if (attribut.bonuslista?.length > 0) {
+                attribut.bonuslista.forEach(bonus => {
+                    total += parseInt(bonus.tvarde) || 0;
+                });
+            }
+            attribut.totalt = total;
+            return total;
+        }
+
+        if (!attribut.grund) {
+            let totalValue = parseInt(attribut.varde) || 0;
+            if (attribut.bonuslista) {
+                for (const bonus of attribut.bonuslista) {
+                    totalValue += parseInt(bonus.tvarde) || 0;
+                }
+            }
+            attribut.totalt = totalValue;
+            return totalValue;
+        }
+
+        let totalTarning = Math.floor(parseInt(attribut.grund.tvarde));
+        let totalBonus = Math.floor(parseInt(attribut.grund.bonus));
 
         if(attribut.bonuslista.length > 0) {
 			for (const bonus of attribut.bonuslista) {
-				totalTarning += bonus.tvarde;
-				totalBonus += bonus.bonus;
+				totalTarning += Math.floor(parseInt(bonus.tvarde || 0));
+				totalBonus += Math.floor(parseInt(bonus.bonus || 0));
 			}
 
 			if (totalBonus > 3) {
@@ -39,8 +62,8 @@ export default class CalculateHelper {
 		}
 
         return {
-            tvarde: totalTarning,
-            bonus: totalBonus
+            tvarde: Math.floor(totalTarning),
+            bonus: Math.floor(totalBonus)
         }
     }
 
@@ -80,6 +103,10 @@ export default class CalculateHelper {
     }
 
     static async BeraknaHarleddEgenskaper(actorData) {
+        if (actorData.type.toLowerCase().replace(" ", "") != "rollperson") {
+            return;
+        }
+
         let styrka = actorData.system.grundegenskaper.styrka.totalt;
         let rorlighet = actorData.system.grundegenskaper.rorlighet.totalt;
         let talighet = actorData.system.grundegenskaper.talighet.totalt;
@@ -106,6 +133,37 @@ export default class CalculateHelper {
         actorData.system.harleddegenskaper.grundskada.grund = await DiceHelper.BeraknaGrundskada(styrka);
         actorData.system.harleddegenskaper.grundskada.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.grundskada);
         actorData.system.harleddegenskaper.grundrustning = await DiceHelper.BeraknaGrundrustning(styrka, talighet);
+        actorData.system.harleddegenskaper.initiativ.grund = await DiceHelper.BeraknaInitiativ(actorData);        
+        actorData.system.harleddegenskaper.initiativ.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.initiativ);
+
+        // Update grundskada calculation
+        const baseGrundskada = await DiceHelper.BeraknaGrundskada(styrka);
+        actorData.system.harleddegenskaper.grundskada.grund = baseGrundskada;
+        
+        // Apply modifiers if they exist
+        if (actorData.system.harleddegenskaper.grundskada.modifierare) {
+            actorData.system.harleddegenskaper.grundskada.grund.tvarde += actorData.system.harleddegenskaper.grundskada.modifierare.tvarde;
+            actorData.system.harleddegenskaper.grundskada.grund.bonus += actorData.system.harleddegenskaper.grundskada.modifierare.bonus;
+        }
+        
+        actorData.system.harleddegenskaper.grundskada.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.grundskada);
+
+        // Add calculation for läkningstakt total
+        if (actorData.system.strid.lakningstakt) {
+            actorData.system.strid.lakningstakt.totalt = 
+                await CalculateHelper.BeraknaTotaltVarde(actorData.system.strid.lakningstakt);
+        }
+
+        // Handle grundrustning with bonus preservation
+        const baseGrundrustning = await DiceHelper.BeraknaGrundrustning(styrka, talighet);
+        if (!actorData.system.harleddegenskaper.grundrustning?.bonuslista) {
+            actorData.system.harleddegenskaper.grundrustning = baseGrundrustning;
+        } else {
+            actorData.system.harleddegenskaper.grundrustning.varde = baseGrundrustning.varde;
+            actorData.system.harleddegenskaper.grundrustning.totalt = 
+                await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.grundrustning);
+        }
+
         actorData.system.harleddegenskaper.initiativ.grund = await DiceHelper.BeraknaInitiativ(actorData);        
         actorData.system.harleddegenskaper.initiativ.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.initiativ);
     }
@@ -163,6 +221,36 @@ export default class CalculateHelper {
         return avdrag;
     }
 
+    // Beräkna svårigheten att höja färdighet
+    static CalculateImproveDifficulty(actor, item) {
+        const tvarde = item.system.varde.tvarde;
+        const bonus = item.system.varde.bonus;
+        const isLattlard = item.system.installningar.lattlard;
+        const isSvarlard = item.system.installningar.svarlard;
+        const attributeValue = actor.system.grundegenskaper[item.system.attribut]?.totalt.tvarde * 4 + actor.system.grundegenskaper[item.system.attribut]?.totalt.bonus;       
+    
+        if (tvarde === 0 && bonus === 0) {
+            return Infinity; // This ensures that a roll can never succeed for a 0-value skill
+        }
+        const rank = ((tvarde - 2) * 4) + bonus;
+        let difficulty = 4 + (rank * 2);
+    
+        // Check if skill is less than the attribute it's based on
+        const skillValue = tvarde * 4 + bonus;
+        if (skillValue < attributeValue) {
+            difficulty -= 2;
+        }
+    
+        if (isLattlard) {
+            difficulty -= 2;
+        } else if (isSvarlard) {
+            difficulty += 4;
+        }
+    
+        // For lättlärd skills, we allow the difficulty to be less than 4
+        return isLattlard ? difficulty : Math.max(difficulty, 4);
+    }
+
     static _beraknaRustningBelastning(rustning) {
         let grundUtmattning = 0;
 
@@ -183,12 +271,14 @@ export default class CalculateHelper {
         }
 
         return grundUtmattning;
-    }
+    }    
 
     static isNumeric(str) {
         if (typeof str == "number") return true;
         if (typeof str != "string") return false;
         return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
                !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
-      }
+    }
+
+    
 }

@@ -10,6 +10,24 @@ export class DialogAttribute {
     }
 }
 
+/* 
+
+- De olika typerna av attribut -
+
+bakgrund 
+ändra custom-egenskaper från fliken rollperson bakgrund.
+
+strid
+rollpersons läkningstakt
+
+skada
+varelse försvar och vändning
+
+attribute
+ändra rollperson och varelses grundegenskaper och härledda grundegenskaper
+
+*/
+
 export class DialogAttributeEdit extends FormApplication {
 
     static get defaultOptions() {
@@ -29,16 +47,24 @@ export class DialogAttributeEdit extends FormApplication {
         this.isDialog = true;  
 
         if (attribute.typ == "bakgrund") {
-            this.options.title = `${actor.name} - ${attribute.nyckel}`;
-            
+            this.options.title = `${actor.name} - ${attribute.nyckel}`;            
         }
-        else {
+        else if (game.EON.CONFIG[attribute.typ]?.[attribute.nyckel] != undefined) {
             let headline = game.EON.CONFIG[attribute.typ][attribute.nyckel].namn.toLowerCase();
 
-            //this.options.title = `${actor.name} - ${game.EON.CONFIG[attribute.typ][attribute.nyckel].namn}`;        
             this.options.title = `Editera ${headline}`;        
         }
+        else {
+            let headline = "";
+
+            if (attribute.nyckel == 'forsvar') headline = 'försvar';
+            if (attribute.nyckel == 'vandning') headline = 'vändning';
+
+            this.options.title = `Editera ${headline}`;
+        }
         
+        this.isNumericBonus = attribute.source === "strid" || 
+            (attribute.source === "harleddegenskaper" && attribute.key === "grundrustning");
     }
 
     /** @override */
@@ -46,19 +72,105 @@ export class DialogAttributeEdit extends FormApplication {
         return "systems/eon-rpg/templates/dialogs/dialog-attribute-edit.html";
 	}  
 
-    getData() {
+    async getData() {
         const data = super.getData();
+        data.hasName = false;
+        data.hasDescription = false;
+        data.isNumericBonus = true;
+        data.headline = "";
 
-        data.CONFIG = this.config;
+        data.isPC = false;
+
+		if (this.actor != undefined)
+		{
+			data.isPC = this.actor.type.toLowerCase().replace(" ", "") == "rollperson";
+		}
+
+        data.EON = game.EON;
+		data.EON.CONFIG = CONFIG.EON;
 
         if (this.object.typ == "bakgrund") {
             this.object.varde = this.actor.system.altvarde[this.object.nyckel];
+            data.namn = this.object.nyckel;
+            data.varde = this.object.varde;
+            return data;
+        }
+        else if (this.object.typ === "strid") {
+            const attribute = this.actor.system[this.object.typ]?.[this.object.nyckel];
+            let name = "";
+
+            if (this.config[this.object.typ]?.[this.object.nyckel]?.namn != undefined) {
+                name = this.config.strid[this.object.nyckel].namn;
+                data.isNumericBonus = true;
+            }
+
+            data.attribut = {
+                namn: name,
+                varde: attribute.varde || 0,
+                totalt: attribute.totalt || attribute.varde || 0,
+                bonuslista: attribute.bonuslista || []
+            };
+        }
+        else if (this.object.typ === "skada")  {
+            if (this.object.nyckel == "vandning") {
+                data.attribut = this.actor.system[this.object.typ][this.object.nyckel];
+                data.vandningLista = {};
+                data.valtid = "";
+                let lista = {
+                    "": "- Välj -"
+                };
+
+                // hämta alla vändningstabeller som finns registrerade i systemet.
+                game.settings.settings.forEach(setting => {
+                    if ((setting.namespace == 'eon-rpg') && (setting.key.indexOf('vd_') > -1)) {
+                        lista = Object.assign(lista, {[setting.key] : setting.name});
+                    }                    
+                }); 
+                
+                data.vandningLista = lista;
+            }
+            else if (this.actor.system[this.object.typ][this.object.nyckel].namn != undefined) {
+                data.attribut = this.actor.system[this.object.typ][this.object.nyckel];
+                data.hasName = true;    
+            }            
+
+            data.hasDescription = data.attribut.beskrivning != undefined
+            data.isNumericBonus = false;
         }
         else {
             data.attribut = this.actor.system[this.object.typ][this.object.nyckel];
-            data.attribut.namn = this.config[this.object.typ][this.object.nyckel].namn;
+
+            if (this.config[this.object.typ]?.[this.object.nyckel]?.namn != undefined) {
+                data.attribut.namn = this.config[this.object.typ][this.object.nyckel].namn;
+            }
+        }     
+
+        if (data.hasDescription) {
+            data.enrichedBeskrivning = await TextEditor.enrichHTML(data.attribut.beskrivning);
+        }
+
+        if (this.object.typ == "grundegenskaper") {
+            data.headline = "GRUNDEGENSKAP";
+        }
+        else if (this.object.typ == "strid") {
+            data.headline = "STRID";
+        }
+        else if (this.object.typ == "skada") {
+            data.headline = this.object.nyckel.toUpperCase();
+
+            if (this.object.nyckel == "forsvar") {
+                data.headline = "FÖRSVAR";
+            } 
+            if (this.object.nyckel == "vandning") {
+                data.headline = "VÄNDNING";
+            }
+        }
+        else {
+            data.headline = 'HÄRLETT ATTRIBUT';
         }
         
+        console.log(this.object.nyckel);
+        console.log(data);
 
         return data;
     }
@@ -81,6 +193,10 @@ export class DialogAttributeEdit extends FormApplication {
         html
             .find('.item-create')
             .click(this._addBonus.bind(this));
+
+        html
+			.find(".item-active")
+			.click(this._onItemActive.bind(this));
         
         html
             .find('.item-delete')
@@ -96,8 +212,72 @@ export class DialogAttributeEdit extends FormApplication {
     } 
 
     async _updateObject(event, formData) {
-    
-    } 
+        const actorData = foundry.utils.duplicate(this.actor);
+        
+        if (formData.newbonus !== undefined && formData.newbonus !== "") {
+            const bonus = {
+                namn: "Ny bonus",
+                tvarde: parseInt(formData.newbonus)
+            };
+            
+            const path = this.isNumericBonus ? 
+                (this.attribute.source === "strid" ? 
+                    actorData.system.strid[this.attribute.key] :
+                    actorData.system.harleddegenskaper[this.attribute.key]) :
+                actorData.system[this.attribute.source][this.attribute.key];
+            
+            if (!path.bonuslista) {
+                path.bonuslista = [];
+            }
+            path.bonuslista.push(bonus);
+        }
+
+        const attributeKeys = Object.keys(formData).filter(k => k.startsWith("attribut."));
+
+        if (attributeKeys.length > 0) {
+            for (let key of attributeKeys) {
+                const i = (key.match(/\./g) || []).length;
+                const value = formData[key];                
+
+                if (i == 1) {
+                    if (value !== undefined) {
+                        const index = key.split(".")[1];
+                        actorData.system[this.object.typ][this.object.nyckel][index] = value;
+                    }
+                }    
+                if (i == 3) {      
+                    const egenskap = key.split(".")[1];
+                    const index = key.split(".")[2];
+                    const attribut = key.split(".")[3];
+                    
+                    if (value !== undefined) {
+                        actorData.system[this.object.typ][this.object.nyckel][egenskap][index][attribut] = value;
+                    } 
+                }
+            }
+        }
+
+        const bonusKeys = Object.keys(formData).filter(k => k.startsWith("bonus."));
+        if (bonusKeys.length > 0) {
+            for (let key of bonusKeys) {
+                const index = parseInt(key.split(".")[1]);
+                const value = formData[key];
+                
+                if (value !== undefined) {
+                    const path = this.isNumericBonus ? 
+                        (this.attribute.source === "strid" ? 
+                            actorData.system.strid[this.attribute.key] :
+                            actorData.system.harleddegenskaper[this.attribute.key]) :
+                        actorData.system[this.attribute.source][this.attribute.key];
+                    
+                    path.bonuslista[index].tvarde = parseInt(value);
+                }
+            }
+        }
+
+        await this.actor.update(actorData);
+        this.render();
+    }
 
     async _onsheetChange(event) {
 		event.preventDefault();
@@ -126,48 +306,79 @@ export class DialogAttributeEdit extends FormApplication {
 
 		const element = event.currentTarget;
 		const dataset = element.dataset;
+		const actorData = foundry.utils.duplicate(this.actor);
 
-        const actorData = foundry.utils.duplicate(this.actor);
+        if (this.object.typ === "strid" || 
+            (this.object.typ === "harleddegenskaper" && this.object.nyckel === "grundrustning")) {
+            if (dataset.key !== undefined) {
+                const key = parseInt(dataset.key);
+                const path = this.object.typ === "strid" ? 
+                    actorData.system.strid[this.object.nyckel] :
+                    actorData.system.harleddegenskaper[this.object.nyckel];
 
-        // om höja attribut på Actor
-        if (dataset.property != undefined) {
-            
-          	
+                if (!path.bonuslista[key]) {
+                    path.bonuslista[key] = { tvarde: 0 };
+                }
+                path.bonuslista[key].tvarde = (path.bonuslista[key].tvarde || 0) + 1;
+            }
 
+            const path = this.object.typ === "strid" ? 
+                actorData.system.strid[this.object.nyckel] :
+                actorData.system.harleddegenskaper[this.object.nyckel];
+
+            let total = parseInt(path.varde) || 0;
+            path.bonuslista.forEach(bonus => {
+                total += parseInt(bonus.tvarde) || 0;
+            });
+            path.totalt = total;
+
+            await this.actor.update(actorData);
+            this.render();
+            return;
+        }
+        else if (this.object.typ === "skada") {
             actorData.system[this.object.typ][this.object.nyckel].grund.bonus += 1;
 
-            if (actorData.system[this.object.typ][this.object.nyckel].grund.bonus > 3)  {
+            if (actorData.system[this.object.typ][this.object.nyckel].grund.bonus > 3) {
                 actorData.system[this.object.typ][this.object.nyckel].grund.tvarde += 1;
                 actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 0;
             }
 
-            actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
-            await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
-            await this.actor.update(actorData);           
-        }
-        // bonus på attribut
-        else if (dataset.key != undefined) {
-            const key = dataset.key;
-
-            let tvarde = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].tvarde;
-            let bonus = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].bonus;
-
-            bonus += 1;
-
-            if (bonus > 3)  {
-                tvarde += 1;
-                bonus = 0;
-            }
-
-            actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].tvarde = tvarde;
-            actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].bonus = bonus;
-            actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
-            await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
-
             await this.actor.update(actorData);
         }
+        else {
+			if (dataset.property != undefined) {
+				actorData.system[this.object.typ][this.object.nyckel].grund.bonus += 1;
 
-        this.render();
+				if ((actorData.system[this.object.typ][this.object.nyckel].grund.bonus > 3) && (actorData.system[this.object.typ][this.object.nyckel].grund.tvarde < 6)) {
+					actorData.system[this.object.typ][this.object.nyckel].grund.tvarde += 1;
+					actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 0;
+				}
+
+				actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
+				await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
+				await this.actor.update(actorData);
+			}
+			else if (dataset.key != undefined) {
+				const key = dataset.key;
+				let tvarde = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].tvarde;
+				let bonus = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].bonus;
+
+				bonus += 1;
+				if ((bonus > 3) && (actorData.system[this.object.typ][this.object.nyckel].grund.tvarde < 6)) {
+					tvarde += 1;
+					bonus = 0;
+				}
+
+				actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].tvarde = tvarde;
+				actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].bonus = bonus;
+				actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
+				await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
+				await this.actor.update(actorData);
+			}
+		}
+
+		this.render();
 	}
 
     async _ticValueDown(event) {
@@ -175,18 +386,33 @@ export class DialogAttributeEdit extends FormApplication {
 
 		const element = event.currentTarget;
 		const dataset = element.dataset;
+		const actorData = foundry.utils.duplicate(this.actor);
 
-        const actorData = foundry.utils.duplicate(this.actor);	
+        if (this.object.typ === "strid" || 
+            (this.object.typ === "harleddegenskaper" && this.object.nyckel === "grundrustning")) {
+            if (dataset.key !== undefined) {
+                const key = parseInt(dataset.key);
+                const path = this.object.typ === "strid" ? 
+                    actorData.system.strid[this.object.nyckel] :
+                    actorData.system.harleddegenskaper[this.object.nyckel];
 
-        // om sänka attribut på Actor
-        if (dataset.property != undefined) {
-            // om egenskap på Actor
+                if (path.bonuslista[key]) {
+                    path.bonuslista[key].tvarde = Math.max((path.bonuslista[key].tvarde || 0) - 1, 0);
+                }
 
-            if ((actorData.system[this.object.typ][this.object.nyckel].tvarde == 0) && (actorData.system[this.object.typ][this.object.nyckel].bonus == 0)) {
+                let total = parseInt(path.varde) || 0;
+                path.bonuslista.forEach(bonus => {
+                    total += parseInt(bonus.tvarde) || 0;
+                });
+                path.totalt = total;
+
+                await this.actor.update(actorData);
+                this.render();
                 return;
             }
-
-            actorData.system[this.object.typ][this.object.nyckel].grund.bonus -= 1;        
+        }
+        else if (this.object.typ === "skada") {
+            actorData.system[this.object.typ][this.object.nyckel].grund.bonus -= 1;
 
             if (actorData.system[this.object.typ][this.object.nyckel].grund.bonus < -1) {
                 actorData.system[this.object.typ][this.object.nyckel].grund.tvarde -= 1;
@@ -198,49 +424,101 @@ export class DialogAttributeEdit extends FormApplication {
                 actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 0;
             }
 
-            actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
-            await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
             await this.actor.update(actorData);
         }
-        // bonus på attribut
-        else if (dataset.key != undefined) {
-            const key = dataset.key;
+        else {
+            if (dataset.property != undefined) {
+                actorData.system[this.object.typ][this.object.nyckel].grund.bonus -= 1;        
 
-            let tvarde = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].tvarde;
-            let bonus = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].bonus;
+                if (actorData.system[this.object.typ][this.object.nyckel].grund.bonus < -1) {
+                    actorData.system[this.object.typ][this.object.nyckel].grund.tvarde -= 1;
+                    actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 3;
+                }
 
-            bonus -= 1;
+                if (actorData.system[this.object.typ][this.object.nyckel].grund.tvarde < 0) {
+                    actorData.system[this.object.typ][this.object.nyckel].grund.tvarde = 0;
+                    actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 0;
+                }
 
-            if (bonus < -3)  {
-                tvarde -= 1;
-                bonus = 0;
+                actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
+                await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
+                await this.actor.update(actorData);
             }
+            else if (dataset.key != undefined) {
+                const key = dataset.key;
 
-            actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].tvarde = tvarde;
-            actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].bonus = bonus;
-            actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
-            await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
+                let tvarde = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].tvarde;
+                let bonus = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].bonus;
 
-            await this.actor.update(actorData);
+                bonus -= 1;
+
+                if (bonus < -3)  {
+                    tvarde -= 1;
+                    bonus = 0;
+                }
+
+                actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].tvarde = tvarde;
+                actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].bonus = bonus;
+                actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
+                await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
+
+                await this.actor.update(actorData);
+            }
         }
 
-        this.render();
+		this.render();
 	}
 
     async _addBonus(event) {
         const bonus = {
             namn: "Ny bonus",
-            tvarde: 0,
-            bonus: 0
+            tvarde: 0
         }
 
         const actorData = foundry.utils.duplicate(this.actor);
-        actorData.system[this.object.typ][this.object.nyckel].bonuslista.push(bonus);
+
+        if (this.object.typ === "strid") {
+            if (!actorData.system.strid[this.object.nyckel].bonuslista) {
+                actorData.system.strid[this.object.nyckel].bonuslista = [];
+            }
+            actorData.system.strid[this.object.nyckel].bonuslista.push(bonus);
+        } else {
+            const diceBonus = {
+                namn: "Ny bonus",
+                tvarde: 0,
+                bonus: 0
+            }
+            actorData.system[this.object.typ][this.object.nyckel].bonuslista.push(diceBonus);
+        }
 
         await this.actor.update(actorData);
-
         this.render();
     }
+
+    /**
+        * Körs när något item blir aktiverat. 
+        * @param _event
+    */
+    async _onItemActive(event) {	
+        console.log("_onItemActive");
+        
+		event.preventDefault();
+        event.stopPropagation();
+
+		const element = event.currentTarget;
+		const dataset = element.dataset;
+        const actorData = foundry.utils.duplicate(this.actor);
+
+        if ((this.object.typ == "skada") && (this.object.nyckel == "vandning")) {
+            const key = dataset.key.split(".")[0];
+            const index = parseInt(dataset.key.split(".")[1]);
+
+            actorData.system[this.object.typ][this.object.nyckel][key][index].vandning = !actorData.system[this.object.typ][this.object.nyckel][key][index].vandning;
+        }
+
+        await this.actor.update(actorData);
+		this.render();
+	}
 
     async _deleteBonus(event) {
         event.preventDefault();
@@ -251,9 +529,20 @@ export class DialogAttributeEdit extends FormApplication {
         const key = parseInt(dataset.key);
 
         const actorData = foundry.utils.duplicate(this.actor);
-        actorData.system[this.object.typ][this.object.nyckel].bonuslista.splice(key, 1);
-        actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
-        await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
+
+        if (this.object.typ === "strid") {
+            actorData.system.strid[this.object.nyckel].bonuslista.splice(key, 1);
+            
+            let total = parseInt(actorData.system.strid[this.object.nyckel].varde) || 0;
+            actorData.system.strid[this.object.nyckel].bonuslista.forEach(bonus => {
+                total += parseInt(bonus.tvarde) || 0;
+            });
+            actorData.system.strid[this.object.nyckel].totalt = total;
+        } else {
+            actorData.system[this.object.typ][this.object.nyckel].bonuslista.splice(key, 1);
+            actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
+            await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
+        }
 
         await this.actor.update(actorData);
 
