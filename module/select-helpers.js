@@ -45,7 +45,9 @@ export default class SelectHelper {
             let id = variant.toLowerCase();
             let namn = game.EON.djur.variant[variant].namn;
 
-            djurVariant = Object.assign(djurVariant, {[id]: namn});
+            if (id != 'ingen') {
+                djurVariant = Object.assign(djurVariant, {[id]: namn});    
+            }            
         }
 
         listData.djurVariant = djurVariant;
