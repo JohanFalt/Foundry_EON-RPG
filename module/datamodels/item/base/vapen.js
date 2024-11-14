@@ -15,11 +15,6 @@ export default class vapen extends foremal {
 
         const schema = super.defineSchema();
 
-        schema.traffa = new fields.SchemaField({
-            tvarde: new fields.NumberField({...valueInteger}),
-            bonus: new fields.NumberField({...bonusInteger})
-        });
-
         schema.langd = new fields.NumberField({...valueInteger});
 
         schema.enhand = new fields.SchemaField({

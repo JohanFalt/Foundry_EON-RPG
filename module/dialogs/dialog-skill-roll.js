@@ -29,13 +29,13 @@ export class AttributeRoll {
         this.close = false;
 
         if ((type == "harleddegenskaper") && ((key == "forflyttning") || (key == "reaktion"))) {
-            if ((actor.system.berakning?.belastning?.totaltavdrag?.tvarde > 0) || (actor.system.berakning?.belastning?.totaltavdrag?.bonus > 0)) {
+            if ((actor.system.berakning.belastning.totaltavdrag.tvarde > 0) || (actor.system.berakning.belastning.totaltavdrag.bonus > 0)) {
                 this.#_harBelastning = true;
             }            
         }
         
         if ((type == "harleddegenskaper") && ((key == "forflyttning") || (key == "kroppsbyggnad") || (key == "reaktion") || (key == "vaksamhet"))) {
-            if (actor.system.berakning?.svarighet?.smarta > 0) {
+            if (actor.system.berakning.svarighet.smarta > 0) {
                 this.#_harSmarta = true;
             }            
         }
@@ -134,15 +134,11 @@ export class AttributeRoll {
     }
 
     get hamtaAntalSar() {
-        if (this.actor.type.toLowerCase().replace(" ", "") != "rollperson") {
-            return 0;
-        }
-
         if ((this.title == "Chockslag") || (this.title == "Dödsslag")) {
             return this.actor.system.berakning.svarighet.antalsar;
         }
 
-        return this.actor.system.skada?.sar?.hogerben + this.actor.system.skada.sar.vansterben;
+        return this.actor.system.skada.sar.hogerben + this.actor.system.skada.sar.vansterben;
     }
 
     addTicToTarning() {
@@ -403,15 +399,11 @@ export class SkillRoll {
         }
 
         if (item.type == "Färdighet") {
-            if (actor.system.skada.sar == undefined) {
-                this.#_harSar = false;
-                this.#_visaSar = false;
-            }
-            else if (((actor.system.skada.sar.hogerben > 0) || (actor.system.skada.sar.vansterben > 0)) && (item.system.grupp == "rorelse")) {
+            if (((actor.system.skada.sar.hogerben > 0) || (actor.system.skada.sar.vansterben > 0)) && (item.system.grupp == "rorelse")) {
                 this.#_harSar = true;
                 this.#_visaSar = true;
             }
-            else if (((actor.system.skada.sar.hogerarm > 0) || (actor.system.skada.sar.vansterarm > 0)) && (item.system.grupp == "strid")) {
+            if (((actor.system.skada.sar.hogerarm > 0) || (actor.system.skada.sar.vansterarm > 0)) && (item.system.grupp == "strid")) {
                 this.#_visaSar = true;
             }
         } 

@@ -1,8 +1,5 @@
 import CreateHelper from "../create-helper.js";
 import CalculateHelper from "../calculate-helper.js";
-import SelectHelper from "../select-helpers.js"
-import { DiceRollContainer } from "../dice-helper.js";
-import { RollDice } from "../dice-helper.js";
 
 export default class EonItemSheet extends ItemSheet {
 
@@ -22,13 +19,6 @@ export default class EonItemSheet extends ItemSheet {
 		super(item, options);
 
 		this.isCharacter = false;	
-		this.isPC = false;
-
-		if (this.actor != undefined)
-		{
-			this.isPC = this.actor.type.toLowerCase().replace(" ", "") == "rollperson";
-		}
-		
 		this.isGM = game.user.isGM;		
 		this.selectedRitual = -1;
 	}
@@ -51,13 +41,6 @@ export default class EonItemSheet extends ItemSheet {
 	/** @override */
 	async getData() {
 		const itemData = foundry.utils.duplicate(this.item);		
-
-		if (this.selectedRitual === -1 && itemData.system.ritual) {
-			const editedRitualIndex = itemData.system.ritual.findIndex(r => r.editera);
-			if (editedRitualIndex !== -1) {
-				this.selectedRitual = editedRitualIndex;
-			}
-		}
 
 		if (!itemData.system.installningar.skapad) {
 			const version = game.data.system.version;
@@ -120,7 +103,6 @@ export default class EonItemSheet extends ItemSheet {
 				}
 
 				const kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, game.data.system.version);
-				kroppsdelar.forEach(k => k.modifiera = false);
 				itemData.system.kroppsdel = kroppsdelar;
 				itemData.system.typ = "utrustning";
 			}
@@ -143,20 +125,8 @@ export default class EonItemSheet extends ItemSheet {
 		const data = await super.getData();
 
 		data.isCharacter = this.isCharacter;
-		data.isPC = this.isPC;
 		data.isGM = this.isGM;
-		data.hasExperience = false;
 		data.selectedRitual = parseInt(this.selectedRitual);
-
-		data.listData = SelectHelper.SetupItem(this.item);
-
-		data.enrichedBeskrivning = await TextEditor.enrichHTML(this.item.system.beskrivning);
-
-		if (this.item.type == 'Mysterie')
-		{
-			data.enrichedMirakel = await TextEditor.enrichHTML(this.item.system.mirakel);
-			data.enrichedCermoni = await TextEditor.enrichHTML(this.item.system.cermoni);
-		}
 
 		data.EON = game.EON;
 		data.EON.CONFIG = CONFIG.EON;
@@ -164,18 +134,9 @@ export default class EonItemSheet extends ItemSheet {
 		if (this.item.actor != null) {
 			data.hasActor = true;
 
-			if (this.item.type == "Färdighet") {
-				if (this.item.actor.type.toLowerCase().replace(" ", "") == "rollperson") {
-					data.hasExperience = this.item.actor.system.fardigheter[this.item.system.grupp].erf > 0;
-				}
-				else {
-					data.hasExperience = false;
-				}				
-
-				if ((this.item.system.grupp == "mystik") && (this.item.system.id == "teoretiskmagi")) {
-					data.item.system.installningar.kantabort = true;
-				}
-			}			
+			if ((this.item.type == "Färdighet") && (this.item.system.grupp == "mystik") && (this.item.system.id == "teoretiskmagi")) {
+				data.item.system.installningar.kantabort = true;
+			}
 		}
 		else {
 			data.hasActor = false;
@@ -183,7 +144,6 @@ export default class EonItemSheet extends ItemSheet {
 
 		console.log(data.item.type);
 		console.log(data.item);
-		console.log(data.EON);
 		
 		return data;
 	}
@@ -225,10 +185,6 @@ export default class EonItemSheet extends ItemSheet {
 			.click(this._onItemDelete.bind(this));
 
 		html
-			.find(".skill-improve")
-			.click(this._onSkillImprove.bind(this));
-
-		html
             .find('.svarighet')
             .click(this._setSvarighet.bind(this));
 			
@@ -247,22 +203,6 @@ export default class EonItemSheet extends ItemSheet {
 		html
             .find('.weapon-property')
             .click(this._setVapenEgenhet.bind(this));
-
-		html
-			.find('.currency-select')
-			.change(event => this._setCurrency(event));
-
-		html
-			.find('.ritual-fields')
-			.change(this._updateRitualFields.bind(this));
-
-		html
-			.find('.modifiera-checkbox')
-			.change(this._onModifieraChange.bind(this));
-
-		html.find('.fa-square-plus').click(ev => this._ticValueUp(ev, 'armor'));
-
-		html.find('.fa-square-minus').click(ev => this._ticValueDown(ev));
 	}
 
 	/** @override */
@@ -340,47 +280,38 @@ export default class EonItemSheet extends ItemSheet {
 
 	async _onItemEdit(event) {
 		event.preventDefault();
-		event.stopPropagation();
+        event.stopPropagation();
 
-		const element = event.currentTarget;
+        const element = event.currentTarget;
 		const dataset = element.dataset;
 
-		if (dataset.source == "ritual") {
+        if (dataset.source == "ritual") {
 			const key = parseInt(dataset.itemid);
 			const itemData = foundry.utils.duplicate(this.item);
-
-			if (this.selectedRitual !== -1) {
-				await this._setRitualData(event, this.selectedRitual);
-			}
 
 			for(const ritual of itemData.system.ritual) {
 				ritual.editera = false;
 			}
 
-			itemData.system.ritual[key].editera = true;
-			this.selectedRitual = key;
-			
+			itemData.system.ritual[key].editera = !itemData.system.ritual[key].editera;
 			await this.item.update(itemData);
-			await this.render(true);
-			return;
-		}
+
+			this.selectedRitual = key;
+        	this.render();
+            return;
+        }
 	}
 
 	async _onItemSave(event) {
 		event.preventDefault();
-		event.stopPropagation();
+        event.stopPropagation();
 
-		const element = event.currentTarget;
+        const element = event.currentTarget;
 		const dataset = element.dataset;
 
-		if (dataset.source == "ritual") {
+        if (dataset.source == "ritual") {
 			const itemData = foundry.utils.duplicate(this.item);
 
-			if (this.selectedRitual !== -1) {
-				await this._setRitualData(event, this.selectedRitual);
-			}
-
-			// Reset edit state for all rituals
 			for(const ritual of itemData.system.ritual) {
 				ritual.editera = false;
 			}
@@ -389,7 +320,7 @@ export default class EonItemSheet extends ItemSheet {
 			this.selectedRitual = -1;
 			this.render();
 			return;
-		}
+        }
 	}	
 
 	async _onItemActive(event) {		
@@ -447,10 +378,7 @@ export default class EonItemSheet extends ItemSheet {
 					itemData.system.ritual[this.selectedRitual].moment.splice(key, 1);
 				}
 				else {
-					itemData.system.ritual[this.selectedRitual].moment = [{
-						grupp: "mystik",
-						fardighet: "Cermoni"
-					}];
+					itemData.system.ritual[this.selectedRitual].moment = [{grupp: "mystik", fardighet: "cermoni"}];
 				}
 				
 				await this.item.update(itemData);
@@ -480,7 +408,7 @@ export default class EonItemSheet extends ItemSheet {
 		}    
 		
 		const itemid = dataset.itemid;
-		const item = await this.actor.getEmbeddedDocument("Item", itemid);
+		const item = this.actor.getEmbeddedDocument("Item", itemid);
 		const namn = item.name;
 
         if (!item) {
@@ -504,32 +432,21 @@ export default class EonItemSheet extends ItemSheet {
 		await this.actor.deleteEmbeddedDocuments("Item", [itemid]);        
 	}
 
-	async _ticValueUp(event, source) {
+	async _ticValueUp(event) {
 		event.preventDefault();
+
 		const element = event.currentTarget;
 		const dataset = element.dataset;
+
 		const itemData = foundry.utils.duplicate(this.item);
-
-		if (source === 'armor') {
-			const kroppsdel = dataset.kroppsdel;
-			const property = dataset.property;
-			
-			const kroppsdelIndex = itemData.system.kroppsdel.findIndex(k => k.kroppsdel === kroppsdel);
-			if (kroppsdelIndex !== -1) {
-				itemData.system.kroppsdel[kroppsdelIndex][property]++;
-			}
-			
-			await this.item.update(itemData);
-			return;
-		}
-
 		const property = dataset.property;
+
 		const fields = property.split(".");
 
 		// bonus
 		if (fields.length == 1) {
 			itemData.system[property].bonus += 1;
-
+	
 			if (itemData.system[property].bonus > 3)  {
 				itemData.system[property].tvarde += 1;
 				itemData.system[property].bonus = 0;
@@ -538,16 +455,17 @@ export default class EonItemSheet extends ItemSheet {
 		// grundegenskaper
 		else if (fields.length == 3) {
 			itemData.system[fields[0]][fields[1]][fields[2]].bonus += 1;
-
+	
 			if (itemData.system[fields[0]][fields[1]][fields[2]].bonus > 3)  {
 				itemData.system[fields[0]][fields[1]][fields[2]].tvarde += 1;
 				itemData.system[fields[0]][fields[1]][fields[2]].bonus = 0;
 			}
 
 			itemData.system[fields[0]][fields[1]].totalt = await CalculateHelper.BeraknaTotaltVarde(itemData.system[fields[0]][fields[1]]);
-		}       
+		}		
 
 		await this.item.update(itemData);
+
 		this.render();
 	}
 
@@ -556,24 +474,10 @@ export default class EonItemSheet extends ItemSheet {
 
 		const element = event.currentTarget;
 		const dataset = element.dataset;
+
 		const itemData = foundry.utils.duplicate(this.item);
-
-		if (dataset.source === 'armor') {
-			const kroppsdel = dataset.kroppsdel;
-			const property = dataset.property;
-			
-			const kroppsdelIndex = itemData.system.kroppsdel.findIndex(k => k.kroppsdel === kroppsdel);
-			if (kroppsdelIndex !== -1) {
-				// Ensure we don't go below 0
-				itemData.system.kroppsdel[kroppsdelIndex][property] = 
-					Math.max(0, itemData.system.kroppsdel[kroppsdelIndex][property] - 1);
-			}
-			
-			await this.item.update(itemData);
-			return;
-		}
-
 		const property = dataset.property;
+
 		const fields = property.split(".");
 
 		// bonus
@@ -792,74 +696,62 @@ export default class EonItemSheet extends ItemSheet {
 
 	async _setRitualData(event, key) {
 		const itemData = foundry.utils.duplicate(this.item);
-		
-		// Ensure ritual array exists
-		if (!itemData.system.ritual) {
-			itemData.system.ritual = [];
+
+		// for(const ritual of itemData.system.ritual) {
+		// 	ritual.editera = false;
+		// }
+
+		itemData.system.ritual[key].namn = document.getElementById("ritual.namn").value;
+
+		try {
+			itemData.system.ritual[key].bonus = parseInt(document.getElementById("ritual.bonus").value);
+		}
+		catch{
+			itemData.system.ritual[key].bonus = 0;
+			ui.notifications.warn("Fel läsa av ritual - bonus", {permanent: false});
 		}
 
-		// Get current ritual or create new one
-		const ritual = itemData.system.ritual[key] || {
-			namn: "",
-			bonus: 0,
-			overtag: 0,
-			kostnad: 0,
-			tid: "",
-			moment: []
-		};
-
-		if (ritual.editera) {
-			// Update basic fields
-			const fields = {
-				namn: "ritual.namn",
-				bonus: "ritual.bonus",
-				overtag: "ritual.overtag",
-				kostnad: "ritual.kostnad",
-				tid: "ritual.tid"
-			};
-
-			for (const [field, elementId] of Object.entries(fields)) {
-				const element = document.getElementById(elementId);
-				if (element) {
-					ritual[field] = element.type === "number" ? 
-						(parseInt(element.value) || 0) : 
-						element.value;
-				}
-			}
-
-			// Handle moments
-			if (!ritual.moment) {
-				ritual.moment = [{
-					grupp: "mystik",
-					fardighet: "Cermoni"
-				}];
-			}
-
-			for (let i = 0; i < ritual.moment.length; i++) {
-				const gruppElement = document.getElementById(`ritual.momentgrupp_${i}`);
-				const momentElement = document.getElementById(`ritual.moment_${i}`);
-				
-				if (gruppElement && momentElement) {
-					const grupp = gruppElement.value;
-					const fardighet = momentElement.value;
-
-					if (grupp && grupp !== "- Välj -") {
-						ritual.moment[i].grupp = grupp;
-						if (fardighet && fardighet !== "- Välj -") {
-							ritual.moment[i].fardighet = fardighet;
-						}
-					}
-				}
-			}
+		try {
+			itemData.system.ritual[key].overtag = parseInt(document.getElementById("ritual.overtag").value);
+		}
+		catch{
+			itemData.system.ritual[key].overtag = 0;
+			ui.notifications.warn("Fel läsa av ritual - övertag", {permanent: false});
 		}
 
-		// Update the specific ritual in the array
-		itemData.system.ritual[key] = ritual;
+		try {
+			itemData.system.ritual[key].kostnad = parseInt(document.getElementById("ritual.kostnad").value);
+		}
+		catch{
+			itemData.system.ritual[key].kostnad = 0;
+			ui.notifications.warn("Fel läsa av ritual - kostnad", {permanent: false});
+		}
 
-		// Create the update object with the correct path
-		const update = {
-			"system.ritual": itemData.system.ritual
-		};
+		try {
+			itemData.system.ritual[key].tid = document.getElementById("ritual.tid").value;
+		}
+		catch{
+			itemData.system.ritual[key].tid = "";
+			ui.notifications.warn("Fel läsa av ritual - tidsåtgång", {permanent: false});
+		}
+
+		try {
+			for (let value = 0; value < itemData.system.ritual[key].moment.length; value++) {
+				let grupp = document.getElementById("ritual.momentgrupp_" + value).value;
+
+				if (grupp == itemData.system.ritual[key].moment[value].grupp) {
+					itemData.system.ritual[key].moment[value].fardighet = document.getElementById("ritual.moment_" + value).value;
+				}
+				else {
+					itemData.system.ritual[key].moment[value].grupp = grupp;
+					itemData.system.ritual[key].moment[value].fardighet = "";
+				}			
+			}
+		}
+		catch {
+			itemData.system.ritual[key].moment = [{grupp: "mystik", fardighet: "cermoni"}];
+			ui.notifications.warn("Fel läsa av ritual - moment", {permanent: false});
+		}
 
 		await this.item.update(itemData);
 	}
@@ -871,29 +763,6 @@ export default class EonItemSheet extends ItemSheet {
 		const element = event.currentTarget;
 		const dataset = element.dataset;
 		const source = dataset.source;
-
-		if (source == "valuta") {
-			const selectedCurrencyName = element.value;
-			const currencyData = CONFIG.EON.datavaluta.valuta[selectedCurrencyName.toLowerCase()];
-			
-			if (!currencyData) {
-				ui.notifications.error("Valutan hittades inte");
-				return;
-			}
-			
-			const itemData = foundry.utils.duplicate(this.item);
-			itemData.name = currencyData.namn;
-			itemData.system.metall = currencyData.metall;
-			itemData.system.silver_varde = currencyData.silver_varde;
-			itemData.system.vikt = currencyData.vikt;
-			itemData.system.ursprung = currencyData.ursprung;
-			itemData.system.antal = this.item.system.antal || 0;
-			
-			await this.item.update(itemData);
-			this.render();
-			
-			return;
-		}
 
 		if (source == "weapon-close") {
 			const typ = this.item.system.grupp;
@@ -1074,7 +943,6 @@ export default class EonItemSheet extends ItemSheet {
 
 			const itemData = foundry.utils.duplicate(this.item);
 			itemData.name = game.EON.CONFIG.aspekter[value];
-			itemData.system.id = value;
 			await this.item.update(itemData);
 			this.render();
 
@@ -1091,214 +959,4 @@ export default class EonItemSheet extends ItemSheet {
 
 		ui.notifications.error("Saknar _onsheetChange source typ");
 	}
-
-	async _onSkillImprove(event) {
-		event.preventDefault();
-
-		const itemData = foundry.utils.duplicate(this.item);
-		const roll = new DiceRollContainer(this.actor, game.EON.CONFIG);
-		
-		const isEffectivelyLattlard = itemData.system.installningar.lattlard || 
-									 itemData.system.expertis || 
-									 itemData.system.kannetecken || 
-									 itemData.system.hantverk;
-
-		let improveThreshold;
-		if (isEffectivelyLattlard && !itemData.system.installningar.lattlard) {
-			const originalLattlard = itemData.system.installningar.lattlard;
-			itemData.system.installningar.lattlard = true;
-			improveThreshold = CalculateHelper.CalculateImproveDifficulty(this.actor, itemData);
-			itemData.system.installningar.lattlard = originalLattlard;
-		} else {
-			improveThreshold = CalculateHelper.CalculateImproveDifficulty(this.actor, itemData);
-		}
-
-		roll.typeroll = CONFIG.EON.slag.fardighet;
-		roll.action = `Förbättringsslag ${itemData.name}`;
-		roll.number = itemData.system.varde.tvarde;
-		roll.bonus = itemData.system.varde.bonus;
-		roll.svarighet = parseInt(improveThreshold);
-
-		const total = await RollDice(roll);
-
-		let improvementMessage = "";
-		if (this.actor.system.fardigheter[itemData.system.grupp].erf > 0) {
-			const tvarde = itemData.system.varde.tvarde;
-			const bonus = itemData.system.varde.bonus;
-			const gruppKey = itemData.system.grupp;
-			const currentErf = this.actor.system.fardigheter[gruppKey].erf;
-
-			if (tvarde === 0 && bonus === 0) {
-				// Special case for skills with value 0
-				if (currentErf >= 4) {
-					await this.actor.update({
-						[`system.fardigheter.${gruppKey}.erf`]: Math.max(currentErf - 4, 0)
-					});
-
-					const improvementResult = await this._improveSkillToRankTwo();
-
-					if (improvementResult) {
-						const { oldTvarde, oldBonus, newTvarde, newBonus } = improvementResult;
-						const oldValueStr = formatSkillValue(oldTvarde, oldBonus);
-						const newValueStr = formatSkillValue(newTvarde, newBonus);
-						
-						improvementMessage = `Färdigheten <b>${this.item.name}</b> har förbättrats från ${oldValueStr} till ${newValueStr}!<br>
-											 Fyra erfarenhetspoäng har förbrukats.`;
-					} else {
-						improvementMessage = `Ett fel uppstod när färdigheten skulle förbättras.`;
-					}
-				} else {
-					improvementMessage = `För att förbättra färdigheten <b>${this.item.name}</b> från 0 till 2T6 krävs 4 erfarenhetspoäng.`;
-				}
-			} else {
-				await this.actor.update({
-					[`system.fardigheter.${gruppKey}.erf`]: Math.max(currentErf - 1, 0)
-				});
-
-				if (total >= improveThreshold) {
-					const improvementResult = await this._improveSkill(itemData);
-
-					if (improvementResult) {
-						const { oldTvarde, oldBonus, newTvarde, newBonus } = improvementResult;
-						const oldValueStr = formatSkillValue(oldTvarde, oldBonus);
-						const newValueStr = formatSkillValue(newTvarde, newBonus);
-
-						improvementMessage = `Tärningsslaget (${total}) är <b>högre</b> än svårighetsgraden (${improveThreshold}).<br>
-											Färdigheten <b>${this.item.name}</b> ökade från ${oldValueStr} till ${newValueStr}.`;
-					} else {
-						improvementMessage = `Kunde inte hitta färdigheten <b>${this.item.name}</b> för att förbättra.`;
-					}
-				} else {
-					improvementMessage = `Tärningsslaget (${total}) är <b>lägre</b> än svårighetsgraden (${improveThreshold}).<br>
-										Färdigheten <b>${this.item.name}</b> förbättrades inte.`;
-				}
-				improvementMessage += `<br>En erfarenhetspoäng har förbrukats.`;
-			}
-
-			const chatContent = `${roll.description}${improvementMessage}`;
-
-			await ChatMessage.create({
-				content: chatContent,
-					speaker: ChatMessage.getSpeaker({ actor: this.actor })
-			});
-		}		
-
-		this.render();
-	}
-
-	async _improveSkill(item) {
-		let oldTvarde = item.system.varde.tvarde;
-		let oldBonus = item.system.varde.bonus;
-
-		let tvarde = oldTvarde;
-		let bonus = oldBonus;
-
-		bonus += 1;
-		if (bonus > 3) {
-			tvarde += 1;
-			bonus = bonus - 4; // Reset bonus and increase dice
-		}
-
-		await this.item.update({
-			"system.varde.tvarde": tvarde,
-			"system.varde.bonus": bonus
-		});
-
-		return {
-			oldTvarde,
-			oldBonus,
-			newTvarde: tvarde,
-			newBonus: bonus
-		};
-    }
-
-    async _improveSkillToRankTwo() {
-		const oldTvarde = this.item.system.varde.tvarde;
-		const oldBonus = this.item.system.varde.bonus;
-
-		await this.item.update({
-			"system.varde.tvarde": 2,
-			"system.varde.bonus": 0
-		});
-
-		return {
-			oldTvarde,
-			oldBonus,
-			newTvarde: 2,
-			newBonus: 0
-		};
-    }
-
-	async _setCurrency(event) {
-		event.preventDefault();
-		const currencyKey = event.currentTarget.value.toLowerCase();
-		const currencyData = CONFIG.EON.datavaluta.valuta[currencyKey];
-		
-		if (currencyData) {
-			const itemData = {
-				name: currencyData.namn,
-				system: {
-					ursprung: currencyData.ursprung,
-					metall: currencyData.metall,
-					silver_varde: currencyData.silver_varde,
-					vikt: currencyData.vikt,
-					antal: this.item.system.antal || 0
-				}
-			};
-			
-			await this.item.update(itemData);
-			this.render();
-		}
-	}
-
-	async _updateRitualFields(event) {
-		if (this.selectedRitual !== -1) {
-			const itemData = this.item.system.ritual[this.selectedRitual];
-			if (itemData) {
-				const fields = {
-					"ritual.namn": itemData.namn,
-					"ritual.bonus": itemData.bonus,
-					"ritual.overtag": itemData.overtag,
-					"ritual.kostnad": itemData.kostnad,
-					"ritual.tid": itemData.tid
-				};
-
-				for (const [id, value] of Object.entries(fields)) {
-					const element = document.getElementById(id);
-					if (element) {
-						element.value = value;
-					}
-				}
-			}
-		}
-	}
-
-	async _onModifieraChange(event) {
-		event.preventDefault();
-		
-		const element = event.currentTarget;
-		const kroppsdel = element.dataset.kroppsdel;
-		const isChecked = element.checked;
-		
-		const itemData = foundry.utils.duplicate(this.item);
-		
-		const kroppsdelIndex = itemData.system.kroppsdel.findIndex(k => k.kroppsdel === kroppsdel);
-		if (kroppsdelIndex !== -1) {
-			itemData.system.kroppsdel[kroppsdelIndex].modifiera = isChecked;
-		}
-		
-		await this.item.update(itemData);
-		this.render();
-	}
-}
-
-// Helper function to format skill values
-function formatSkillValue(tvarde, bonus) {
-    if (bonus === 0) {
-        return `${tvarde}T6`;
-    } else if (bonus > 0) {
-        return `${tvarde}T6+${bonus}`;
-    } else {
-        return `${tvarde}T6${bonus}`;
-    }
 }

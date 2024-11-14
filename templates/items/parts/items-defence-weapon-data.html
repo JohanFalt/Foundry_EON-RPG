@@ -42,17 +42,17 @@
     </div>     
 
     <div class="item-property-area number-value-text floating-label-group ">
-        <input class="attribute-value editable" name="system.vikt" type="text" value="{{item.system.vikt}}" data-dtype="Number" />
+        <input class="attribute-value editable" name="system.vikt" type="text" value="{{data.system.vikt}}" data-dtype="Number" />
         <span class="floating-label">Vikt (kg)</span>
     </div>
 
     <div class="item-property-area number-value-text floating-label-group ">
-        <input class="attribute-value editable" name="system.pris" type="text" value="{{item.system.pris}}" data-dtype="Number" />
+        <input class="attribute-value editable" name="system.pris" type="text" value="{{data.system.pris}}" data-dtype="Number" />
         <span class="floating-label">Pris (silver)</span>
     </div>
 
     <div class="item-property-area number-value-text floating-label-group ">
-        <input class="attribute-value editable" name="system.skydd" type="text" value="{{item.system.skydd}}" data-dtype="Number" />
+        <input class="attribute-value editable" name="system.skydd" type="text" value="{{data.system.skydd}}" data-dtype="Number" />
         <span class="floating-label">Skydd</span>
     </div>
     
@@ -88,13 +88,13 @@
 
     <div class="clear">
         <div class="pullLeft" style="width: 100px;">1H</div>
-        <div class="pullLeft"><input class="item-active" name="system.enhand.aktiv" type="checkbox" data-property="enhand" {{isChecked item.system.enhand.aktiv}} data-dtype="Boolean" /></div>
+        <div class="pullLeft"><input class="item-active" name="system.enhand.aktiv" type="checkbox" data-property="enhand" {{isChecked data.system.enhand.aktiv}} data-dtype="Boolean" /></div>
         <div class="pullLeft dice-value number-value-text tic pointer" data-property="enhand">{{getDiceValue item.system.enhand}}</div>
     </div>
 
     <div class="clear">
         <div class="pullLeft" style="width: 100px;">2H</div>
-        <div class="pullLeft"><input class="item-active" name="system.tvahand.aktiv" type="checkbox" data-property="tvahand" {{isChecked item.system.tvahand.aktiv}} data-dtype="Boolean" /></div>
+        <div class="pullLeft"><input class="item-active" name="system.tvahand.aktiv" type="checkbox" data-property="tvahand" {{isChecked data.system.tvahand.aktiv}} data-dtype="Boolean" /></div>
         <div class="pullLeft dice-value number-value-text tic pointer" data-property="tvahand">{{getDiceValue item.system.tvahand}}</div>
     </div>
       

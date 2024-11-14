@@ -58,17 +58,8 @@ export default class EonRollperson extends foundry.abstract.DataModel {
 
         schema.strid = new fields.SchemaField({
             vapenarm: new fields.StringField({required: true, nullable: false, initial: ""}),
-            lakningstakt: new fields.SchemaField({
-                varde: new fields.NumberField({...valueInteger}),
-                totalt: new fields.NumberField({...valueInteger}),
-                bonuslista: new fields.ArrayField(
-                    new fields.ObjectField({
-                        initial: {},
-                        nullable: false,
-                    })
-                )
-            })
-        });      
+            lakningstakt: new fields.NumberField({...valueInteger})
+        });        
 
         schema.skada = new fields.SchemaField({
             utmattning: new fields.SchemaField({

@@ -40,11 +40,10 @@
                 <div class="item-row headline">
                     <div style="width: 100px;">Delområde</div>
                     <div style="width: 150px;">Material</div>
-                    <div class="centerText" style="width: 50px;">Edit</div>
                     <div class="centerText" style="width: 50px;">Hugg</div>
                     <div class="centerText" style="width: 50px;">Kross</div>
                     <div class="centerText" style="width: 50px;">Stick</div>
-                    <div class="centerText" style="width: 50px;">Belastning</div>
+                    <div>Belastning</div>
                 </div>
 
                 {{#each item.system.kroppsdel as |rustning key|}}
@@ -52,58 +51,17 @@
                         <div style="width: 100px;">{{rustning.namn}}</div>
                         <div style="width: 150px;">
                             <select class="inputdata" data-source="armor" data-kroppsdel="{{rustning.kroppsdel}}" style="width: 125px;">                                
-                                <option value="">- Inget -</option>
-                                {{selectOptions ../EON.forsvar.rustningsmaterial selected=rustning.material labelAttr="namn" localize=false}}
+                                {{#select rustning.material}}
+                                    <option value="">- Inget -</option>
+                                    {{#each ../EON.forsvar.rustningsmaterial as |material key|}}     
+                                        <option value="{{key}}">{{material.namn}}</option>               
+                                    {{/each}}
+                                {{/select}}
                             </select>
                         </div>
-                        <div class="centerText" style="width: 50px;">
-                            <input type="checkbox" class="modifiera-checkbox" data-kroppsdel="{{rustning.kroppsdel}}" {{#if rustning.modifiera}}checked{{/if}} />
-                        </div>
-                        <div class="centerText number-value-text" style="width: 50px;">
-                            {{#if rustning.modifiera}}
-                                <i class="fa-solid fa-square-plus green" 
-                                   data-source="armor"
-                                   data-kroppsdel="{{rustning.kroppsdel}}"
-                                   data-property="hugg"></i>
-                            {{/if}} 
-                            {{rustning.hugg}} 
-                            {{#if rustning.modifiera}}
-                                <i class="fa-solid fa-square-minus red"
-                                   data-source="armor"
-                                   data-kroppsdel="{{rustning.kroppsdel}}"
-                                   data-property="hugg"></i>
-                            {{/if}}
-                        </div>
-                        <div class="centerText number-value-text" style="width: 50px;">
-                            {{#if rustning.modifiera}}
-                                <i class="fa-solid fa-square-plus green" 
-                                   data-source="armor"
-                                   data-kroppsdel="{{rustning.kroppsdel}}"
-                                   data-property="kross"></i>
-                            {{/if}} 
-                            {{rustning.kross}} 
-                            {{#if rustning.modifiera}}
-                                <i class="fa-solid fa-square-minus red"
-                                   data-source="armor"
-                                   data-kroppsdel="{{rustning.kroppsdel}}"
-                                   data-property="kross"></i>
-                            {{/if}}
-                        </div>
-                        <div class="centerText number-value-text" style="width: 50px;">
-                            {{#if rustning.modifiera}}
-                                <i class="fa-solid fa-square-plus green" 
-                                   data-source="armor"
-                                   data-kroppsdel="{{rustning.kroppsdel}}"
-                                   data-property="stick"></i>
-                            {{/if}} 
-                            {{rustning.stick}} 
-                            {{#if rustning.modifiera}}
-                                <i class="fa-solid fa-square-minus red"
-                                   data-source="armor"
-                                   data-kroppsdel="{{rustning.kroppsdel}}"
-                                   data-property="stick"></i>
-                            {{/if}}
-                        </div>
+                        <div class="centerText number-value-text" style="width: 50px;">{{rustning.hugg}}</div>
+                        <div class="centerText number-value-text" style="width: 50px;">{{rustning.kross}}</div>
+                        <div class="centerText number-value-text" style="width: 50px;">{{rustning.stick}}</div>
                         <div class="centerText number-value-text" style="width: 50px;">{{rustning.belastning}}</div>
                     </div>                    
                 {{/each}}

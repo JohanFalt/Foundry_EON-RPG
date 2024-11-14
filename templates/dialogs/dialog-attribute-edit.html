@@ -1,147 +1,73 @@
 <form class="{{cssClass}} {{object.dialogClass}}" autocomplete="off">
 
-    <div class="item-row">
+    {{#if (eq object.typ "bakgrund")}}
 
-        <div style="min-width: 110px;">
-            <img src="{{EON.CONFIG.ikoner.egenskap}}" class="item img-block" />
-        </div>
+        <div class="dialog-section-small clear">
 
-        {{#if (eq object.typ "bakgrund")}}
-
-            <div class="dialog-section-small clear">
-
-                <div class="floating-label-group">
-                    <input id="altvalue" type="text" value="{{object.varde}}" />
-                    <span class="floating-label">Namn</span>
-                </div>       
-
-                <div class="information-area information-box">Här anger du det Skräddarsydda namnet och trycker sedan på Spara.</div>
-
-            </div>
-
-            <div class="dice-row">
-                <button id="savebutton" class="dialog-button four-column savebutton">Spara</button>
-                <button id="closeButton" class="dialog-button four-column closebutton">Stäng</button>
+            <div class="floating-label-group">
+                <input id="altvalue" type="text" value="{{object.varde}}" />
+                <span class="floating-label">Namn</span>
             </div>       
 
-        {{else}}
+            <div class="information-area information-box">Här anger du det Skräddarsydda namnet och trycker sedan på Spara.</div>
 
-            <div class="item-column" style="min-width: 270px;">
-                <div>
-                    <div class="dialog-section-small item-column">
+        </div>
 
-                        {{#if this.hasName}}
-                            <div class="item-property-area floating-label-group" style="margin-bottom: 50px;">
-                                <input class="text-value editable" type="text" name="attribut.namn" value="{{attribut.namn}}" data-dtype="String" autocomplete="off" autofocus required />
-                                <span class="floating-label">Namn</span>
-                            </div>
-                        {{else}}
-                            <div class="large-main-headline">{{attribut.namn}}</div>
-                        {{/if}}
+        <div class="dice-row">
+            <button id="savebutton" class="dialog-button four-column savebutton">Spara</button>
+            <button id="closeButton" class="dialog-button four-column closebutton">Stäng</button>
+        </div>       
 
-                        {{#if (or (eq object.typ "grundegenskaper") (eq object.typ "harleddegenskaper"))}}
-                            {{#if (eq object.typ "grundegenskaper")}}
-                                <div>
-                                    <div class="dice-value tic pointer" data-property="grundegenskaper">{{getDiceValue attribut.grund}}</div>
-                                </div>
-                            {{/if}}
-                            {{#if (and (eq object.typ "harleddegenskaper") (eq isPC false))}}
-                                <div>
-                                    <div class="dice-value tic pointer" data-property="grundegenskaper">{{getDiceValue attribut.grund}}</div>
-                                </div>
-                            {{/if}}
-                            {{#if (and (eq object.typ "harleddegenskaper") (eq isPC true))}}
-                                <div>
-                                    <div class="dice-value disabled">{{getDiceValue attribut.grund}}</div>
-                                </div>
-                            {{/if}}
-                        {{else}}
-                            {{#if (and (eq object.typ "skada") (eq object.nyckel "vandning"))}}
-                                <div class="item-column">      
-                                    <div>
-                                        <select class="text-value editable" name="attribut.vandningid" style="width: 300px">
-                                            {{selectOptions this.vandningLista selected=attribut.vandningid localize=false}}  
-                                        </select>
-                                    </div>
-                                    
-                                    {{#each attribut.lista as | vandning key|}}
-                                        <div class="item-row" style="line-height: 25px; height: 32px;">
-                                            <div class="three-column centerText">{{vandning.skada}}</div>
-                                            <div class="three-column centerText"><input class="attribute-value editable skill-label skill-value" type="text" name="attribut.lista.{{key}}.utmattning" value="{{vandning.utmattning}}" /></div>
-                                            {{#if (ne key 9)}}
-                                                <div class="three-column centerText pointer"><a class="item-active" data-key="lista.{{key}}">{{#if vandning.vandning}}<i class="fa-solid fa-toggle-on green"></i>{{else}}<i class="fa-solid fa-toggle-off red"></i>{{/if}}</a></div>
-                                            {{else}}     
-                                                <div class="three-column centerText"></div>                                           
-                                            {{/if}}
-                                        </div>
-                                    {{/each}}
-                                </div>
-                            {{else}}
-                                {{#if (eq object.typ "skada")}}
-                                    <div>
-                                        <div class="large-main-headline">Värde</div>
-                                        <div class="dice-value tic pointer">{{getDiceValue attribut.grund}}</div>
-                                    </div>
-                                {{else}}
-                                    <div>
-                                        <div class="dice-value disabled">{{getDiceValue attribut.grund}}</div>
-                                    </div>
-                                {{/if}}
-                            {{/if}}
-                        {{/if}}
+    {{else}}
 
-                        {{#if this.hasDescription}}
-                            <div class="large-headline">Beskrivning</div>
-                            <div class="editor-box">
-                                {{editor enrichedBeskrivning target="attribut.beskrivning" button=true owner=owner editable=true}}
-                            </div>
-                        {{/if}}
+        <div class="item-row" style="margin-left:110px;">
+            <div>
+                <div class="dialog-section-small item-column">
+
+                    <div class="large-main-headline">{{attribut.namn}}</div>
+                    <!-- <div>
+                        Ob{{getDiceValue attribut.grund}}
+                    </div> -->
+                    {{#if (eq object.typ "grundegenskaper")}}
+                        <div>
+                            <div class="dice-value tic pointer" data-property="grundegenskaper">{{getDiceValue attribut.grund}}</div>
+                        </div>
+                    {{else}}
+                        <div>
+                            <div class="dice-value disabled">{{getDiceValue attribut.grund}}</div>
+                        </div>
+                    {{/if}}
+                </div>
+
+                <div class="item-column">      
+
+                    <div class="headline item-row" style="line-height: 25px; width:100%;">
+                        <div class="pointer item-create weapon-icon" title="Lägg till bonus" data-type="bonus"><i class="fa-solid fa-square-plus green"></i></div>       
+                        <div class="headline">Bonus</div>
                     </div>
 
-                    {{#if this.isNumericBonus}}
-                        <div class="item-column">
-
-                            <div class="headline item-row" style="line-height: 25px; width:100%;">
-                                <div class="pointer item-create weapon-icon" title="Lägg till bonus" data-type="bonus"><i class="fa-solid fa-square-plus green"></i></div>       
-                                <div class="headline">Bonus</div>
-                            </div>
-
-                            {{#if attribut.bonuslista}}
-                                <div class="bonus-list">
-                                    {{#each attribut.bonuslista as |bonus key|}}
-                                        <div class="item-row">
-                                            <div>
-                                                <div class="floating-label-group">
-                                                    <input class="inputdata" type="text" value="{{bonus.namn}}" id="object.name_{{key}}" data-key="{{key}}" />
-                                                    <span class="floating-label">Namn</span>
-                                                </div>
-                                            </div>
-
-                                            {{#if (or (eq ../object.typ "strid") (and (eq ../object.typ "harleddegenskaper") (eq ../object.nyckel "grundrustning")))}}
-                                                <div class="floating-label-group tic" data-key="{{key}}">
-                                                    <input class="attribute-value editable pointer" type="text" value="{{bonus.tvarde}}" />
-                                                </div>
-                                            {{else}}
-                                                <div class="dice-value tic pointer" data-key="{{key}}">{{getDiceValue bonus}}</div>
-                                            {{/if}}
-
-                                            <div class="pointer red item-delete" title="Ta bort bonus" data-key="{{key}}">
-                                                <i class="icon fa-solid fa-trash-can"></i>
-                                            </div>
-                                        </div>
-                                    {{/each}}
+                    {{#each attribut.bonuslista as |bonus key|}}
+                        <div class="item-row">
+                            <div>
+                                <div class="floating-label-group">
+                                    <input class="inputdata" type="text" value="{{bonus.namn}}" id="object.name_{{key}}" data-key="{{key}}" />
+                                    <span class="floating-label">Namn</span>
                                 </div>
-                            {{/if}}
-
+                            </div>
+                            <div class="dice-value tic pointer" data-key="{{key}}">{{getDiceValue bonus}}</div>
+                            <div class="pointer red item-delete" title="Ta bort bonus" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
                         </div>
-                    {{/if}}                    
+                    {{/each}}                    
+
                 </div>
-            </div> 
-            <div class="pullLeft" style="flex-grow: 1; text-align: right;">
-                <div class="information-area top-sidetext">{{this.headline}}</div>
+
+                
             </div>
+            
+            <div style="flex-grow: 1; text-align: right;">
+                <div class="information-area top-sidetext">{{#if (eq object.typ "grundegenskaper")}}GRUNDEGENSKAP{{else}}HÄRLETT ATTRIBUT{{/if}}</div>
+            </div>
+        </div>        
 
-        {{/if}}
-
-    </div>
+    {{/if}}
 </form>

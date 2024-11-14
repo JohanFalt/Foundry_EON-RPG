@@ -70,10 +70,10 @@
 }
 
 .EON.varelse:not(.minimized) {
-    min-width: 750px;
-    width: 750px;
-    min-height: 900px;
-    height: 900px;
+    min-width: 600px;
+    width: 600px;
+    min-height: 600px;
+    height: 600px;
 }
 
 .EON.itemsheet:not(.minimized) {
@@ -249,10 +249,6 @@
 
 .EON .item-column {
     display: flex; flex-wrap: wrap; flex-direction: column;
-}
-
-.EON .item-right {
-    margin-left: auto;
 }
 
 .EON .info-box {
@@ -544,8 +540,7 @@
     line-height: var(--eon-line-height-floattext);
 }
 
-.EON.itemsheet .tabButton,
-.EON.varelse .tabButton {
+.EON.itemsheet .tabButton {
     width: 33%;
 }
 
@@ -1040,18 +1035,12 @@ input.skill-value {
 }
 
 @media all and (max-height : 1200px) {
-    .EON.rollperson:not(.minimized) {
+    .EON.rollperson:not(.minimized),
+    .EON.varelse:not(.minimized) {
         min-height: 400px;
         min-width: 810px;
         width: 810px;
         height: 800px;
-    }
-
-    .EON.varelse:not(.minimized) {
-        min-width: 750px;
-        width: 750px;
-        min-height: 900px;
-        height: 900px;
     }
 
     .EON.itemsheet:not(.minimized) {
@@ -1065,13 +1054,7 @@ input.skill-value {
 }
 
 @media all and (max-height : 1080px) {
-    .EON.rollperson:not(.minimized) {
-        min-height: 400px;
-        min-width: 810px;
-        width: 810px;
-        height: 800px;
-    }
-    
+    .EON.rollperson:not(.minimized),
     .EON.varelse:not(.minimized) {
         min-height: 400px;
         min-width: 810px;
@@ -1090,10 +1073,7 @@ input.skill-value {
 }
 
 @media all and (max-width : 1280px) {
-    .EON.rollperson:not(.minimized) {
-        min-width: 400px;
-    }
-
+    .EON.rollperson:not(.minimized),
     .EON.varelse:not(.minimized) {
         min-width: 400px;
     }
