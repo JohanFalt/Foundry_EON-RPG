@@ -6,8 +6,7 @@
     },
     "Item": {
         "types": [
-            "Egenskap",
-            "Folkslag",            
+            "Folkslag",
             "Färdighet",
             "Språk",
             "Mysterie",
@@ -18,10 +17,8 @@
             "Sköld",
             "Rustning",
             "Utrustning",
-            "Skada",
-            "Valuta"
+            "Skada"
         ],
-        "Egenskap": {},
         "Folkslag": {},
         "Färdighet": {},
         "Språk": {},
@@ -33,7 +30,6 @@
         "Sköld": {},
         "Rustning": {},
         "Utrustning": {},
-        "Skada": {},
-        "Valuta": {}
+        "Skada": {}
     }
 }

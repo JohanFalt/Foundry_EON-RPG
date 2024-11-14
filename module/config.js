@@ -1,7 +1,6 @@
 export const eon = {};
 
 eon.ikoner = { 
-    egenskap: "systems/eon-rpg/assets/img/icons/skills.svg",
     fardighet: "systems/eon-rpg/assets/img/icons/archive-register.svg",
     sprak: "systems/eon-rpg/assets/img/icons/archive-register.svg",
     mysterie: "systems/eon-rpg/assets/img/icons/prayer.svg",
@@ -11,8 +10,6 @@ eon.ikoner = {
     slag_dod: "systems/eon-rpg/assets/img/icons/half-dead.svg",
     slag_initiative: "systems/eon-rpg/assets/img/icons/swords-emblem.svg",
     skada: "systems/eon-rpg/assets/img/icons/arrowed.svg",
-    skadetabell: "systems/eon-rpg/assets/img/icons/internal-injury.svg",
-    trafftabell: "systems/eon-rpg/assets/img/icons/on-sight.svg",
     initiative_distance: "systems/eon-rpg/assets/img/icons/bowman.svg",
     initiative_close: "systems/eon-rpg/assets/img/icons/swordman.svg",
     initiative_mystic: "systems/eon-rpg/assets/img/icons/magic-swirl.svg",
@@ -95,14 +92,7 @@ eon.harleddegenskaper = {
     },
     livskraft: {
         namn: "Livskraft"
-    },
-    grundskada: {
-        namn: "Grundskada",
-        rollable: false
-    },
-    grundrustning: {
-        namn: "Grundrustning",
-        rollable: false
+
     }
 }
 
@@ -304,20 +294,9 @@ eon.utrustningsgrupper = {
     proviant: "Proviant"
 }
 
-eon.valuta = {
-    "valuta": "Valuta"
-}
-
 eon.djurgrupper = {
     litenvarelse: "Liten varelse",
     meddelstorvarelse: "Medelstor varelse",
     storvarelse: "Stor varelse",
     mycketstorvarelse: "Mycket stor varelse"
-}
-
-eon.strid = {
-    lakningstakt: {
-        namn: "Läkningstakt",
-        rollable: false
-    }
 }

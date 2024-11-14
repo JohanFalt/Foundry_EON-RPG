@@ -5,7 +5,6 @@ import { datavapen } from "../packs/vapen.js";
 import { datastrid } from "../packs/strid.js";
 import { datautrustning } from "../packs/utrustning.js";
 import { datadjur } from "../packs/djur.js";
-import { datavaluta } from "../packs/valuta.js";
 
 /**
  * Define a set of template paths to pre-load
@@ -15,7 +14,7 @@ import { datavaluta } from "../packs/valuta.js";
 export const PreloadHandlebarsTemplates = async function () {
     const templatePaths = [
         // Actor Sheet Partials
-		"systems/eon-rpg/templates/actors/parts/rollperson-navigation.html",
+		"systems/eon-rpg/templates/actors/parts/navigation.html",
 
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-top.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-bio.html",
@@ -33,13 +32,7 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-setting.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-skill.html",
 
-		"systems/eon-rpg/templates/actors/parts/varelse-navigation.html",
-
 		"systems/eon-rpg/templates/actors/parts/varelse-sheet-top.html",
-		"systems/eon-rpg/templates/actors/parts/varelse-sheet-skill.html",
-		"systems/eon-rpg/templates/actors/parts/varelse-sheet-property.html",		
-		"systems/eon-rpg/templates/actors/parts/varelse-sheet-weapon.html",
-		"systems/eon-rpg/templates/actors/parts/varelse-sheet-bio.html",
 
 		"systems/eon-rpg/templates/items/parts/navigation-weapon.html",
 		"systems/eon-rpg/templates/items/parts/navigation-faith.html",
@@ -56,8 +49,7 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/items/parts/items-spell-data.html",
 		"systems/eon-rpg/templates/items/parts/items-spell-ritual.html",		
 
-		"systems/eon-rpg/templates/items/parts/items-description.html",
-		"systems/eon-rpg/templates/items/valuta-sheet.html",
+		"systems/eon-rpg/templates/items/parts/items-description.html"
     ];
 
     /* Load the template parts
@@ -67,7 +59,14 @@ export const PreloadHandlebarsTemplates = async function () {
 };
 
 export async function Setup() {
-    try {      
+    try {        
+        /* const {files} = await FilePicker.browse("data", 'systems/eon-rpg/packs');
+        let data = await FilePicker.browse("data", "systems/eon-rpg/packs", { bucket: null, extensions: [".json", ".JSON"], wildcard: false }); 
+		if (data.files.includes("systems/eon-rpg/packs/karaktarsdrag.json")) {
+			const fileData = await fetch(`systems/eon-rpg/packs/karaktarsdrag.json`).then((response) => response.json());
+			Object.assign(importData, fileData);
+        }*/
+
 		const harStrid = false;
 
 		let importData = {};
@@ -92,164 +91,10 @@ export async function Setup() {
 		fileData = datadjur;
 		Object.assign(importData, fileData);
 
-		fileData = datavaluta;
-		Object.assign(importData, fileData);
-
 		return importData;		
     } catch(err) {
         return
     }
-}
-
-export async function RegisterRollableTables() {
-	let stridfolderData = false;
-	let skadefolderData = false;
-	let vandningfolderData = false;
-
-	// skapa mapp-strukturen först strid
-	for (const folder of game.folders) {
-		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Strid")) {
-			stridfolderData = folder;
-			break;
-		}
-	}
-
-	if (!stridfolderData) {
-		// Create a new Folder
-		stridfolderData = await Folder.create({
-			name: "[EON] Strid",
-			type: "RollTable",
-			parent: null,
-			sorting: 'm',
-			"flags.eon.folderId": "Strid"
-		});
-	}
-
-	// skapa mapp-strukturen först skada
-	for (const folder of game.folders) {
-		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Skadetabell")) {
-			skadefolderData = folder;
-			break;
-		}
-	}
-
-	if (!skadefolderData) {
-		// Create a new Folder
-		skadefolderData = await Folder.create({
-			name: "[EON] Skadetabell",
-			type: "RollTable",
-			parent: null,
-			sorting: 'm',
-			"flags.eon.folderId": "Skadetabell"
-		});
-	}
-
-	// skapa mapp-strukturen först vändning
-	for (const folder of game.folders) {
-		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Vandningstabell")) {
-			vandningfolderData = folder;
-			break;
-		}
-	}
-
-	if (!vandningfolderData) {
-		// Create a new Folder
-		vandningfolderData = await Folder.create({
-			name: "[EON] Vändningstabell",
-			type: "RollTable",
-			parent: null,
-			sorting: 'm',
-			"flags.eon.folderId": "Vandningstabell"
-		});
-	}
-
-	// läs in alla tabellerna
-	let data = await FilePicker.browse("data", "systems/eon-rpg/packs/tabeller", { bucket: null, extensions: [".json", ".JSON"], wildcard: false }); 
-
-	for (const file of data.files) {
-		const fileData = await fetch(`${file}`).then((response) => response.json());
-
-		let id = "";
-
-		try {
-			id = game.settings.get('eon-rpg', fileData.id);
-		}
-		catch(err) {
-			// om tabellen inte har en inställning hoppa över denna (settings.js)
-			console.log(`${fileData.id} finns inte registrerad i systemet`);
-			continue;
-		}
-
-		let folderData = false;
-
-		// kontrollera om mappen redan finns
-		if (fileData.mapp != "") {
-			if (fileData.mapp == "Skadetabell") {
-				folderData = skadefolderData;
-			}
-			if (fileData.mapp == "Strid") {
-				folderData = stridfolderData;
-			}
-			if (fileData.mapp == "Vandningstabell") {
-				folderData = vandningfolderData;
-			}
-		}	
-
-		let range = 1;
-
-		try {
-			range = parseInt(fileData.tabell.results[fileData.tabell.results.length-1].range[1]);
-		}
-		catch(err) {
-			console.error(`Kunde inte läsa in antalet sidor tabellen ${fileData.id} skulle ha`);
-			continue;
-		}		
-
-		if (id == "") {
-			let formula = `1d${range}`;
-
-			if (fileData.tabell?.formula != undefined) {
-				formula = fileData.tabell?.formula;
-			}
-
-			let tabell = await RollTable.implementation.create({
-				name: fileData.tabell.name,
-				results: fileData.tabell.results,
-				img: fileData.tabell.img,
-				description: fileData.tabell.description,
-				folder: folderData._id,
-				replacement: true,
-				displayRoll: true,
-				formula: formula
-			});
-
-			console.log(`Tabell ${fileData.id} skapad ${tabell._id}`);
-			await game.settings.set('eon-rpg', fileData.id, tabell._id);
-		}
-		// kontrollera version på tabellen
-		// om tabellen är borttagen OM borttagen skall den läggas till igen?
-		else {
-			const table = game.tables.find(i => i._id === id);
-
-			if ((!table) || (table == undefined)) {
-				let tabell = await RollTable.implementation.create({
-					name: fileData.tabell.name,
-					results: fileData.tabell.results,
-					img: fileData.tabell.img,
-					description: fileData.tabell.description,
-					folder: folderData._id,
-					replacement: true,
-					displayRoll: true,
-					formula: `1d${range}`
-				});
-
-				console.log(`Tabell ${fileData.id} skapad ${tabell._id}`);		
-				await game.settings.set('eon-rpg', fileData.id, tabell._id);
-			}			
-		}		
-	}
-
-	//await Macro.implementation.create({});
 }
 
 export const RegisterHandlebarsHelpers = function () {
@@ -268,13 +113,8 @@ export const RegisterHandlebarsHelpers = function () {
 	Handlebars.registerHelper("getDiceValue", function(value) {
 		let dice = "0";
 
-		// rollperson
 		if (value?.tvarde != undefined) {
 			dice = value?.tvarde;
-		}
-		// varelse
-		else if (value?.grund != undefined) {
-			dice = value?.grund.tvarde;
 		}
 
 		dice = dice + "T6";
@@ -289,18 +129,6 @@ export const RegisterHandlebarsHelpers = function () {
 			}
 			if (value?.bonus < 0) {
 				return dice + value?.bonus;
-			}			
-		}
-		else if ((value?.grund?.bonus != undefined) && (value?.grund?.bonus != 0)) {
-			if (dice == "0T6") {
-				dice = "";
-			}
-
-			if (value?.bonus > 0) {
-				return dice + "+" + value?.grund.bonus;
-			}
-			if (value?.bonus < 0) {
-				return dice + value?.grund?.bonus;
 			}			
 		}
 
@@ -320,40 +148,18 @@ export const RegisterHandlebarsHelpers = function () {
 	Handlebars.registerHelper("getSkillnameRitualList", function(list) {
 		let oversatt = "";
 
-		if (!list || !Array.isArray(list)) {
-			console.warn("Invalid list in getSkillnameRitualList:", list);
-			return oversatt;
-		}
-
 		try {
 			for (const moment of list) {
-				if (!moment.grupp || !moment.fardighet) {
-					console.warn("Missing grupp or fardighet in moment:", moment);
-					continue;
-				}
-
-				// First try to get from game.EON.fardigheter
-				let skillName = game.EON.fardigheter?.[moment.grupp]?.[moment.fardighet]?.namn;
-				
-				// If not found, try CONFIG.EON.fardigheter
-				if (!skillName) {
-					skillName = CONFIG.EON.fardigheter?.[moment.grupp]?.[moment.fardighet]?.namn;
-				}
-
-				// If still not found, use the raw fardighet name
-				if (!skillName) {
-					skillName = moment.fardighet;
-				}
-
-				if (oversatt !== "") {
+				if (oversatt != "") {
 					oversatt += ", ";
 				}
-				oversatt += skillName;
+	
+				oversatt += game.EON.fardigheter[moment.grupp][moment.fardighet].namn;
 			}
 		}
-		catch (error) {
-			console.error("Error in getSkillnameRitualList:", error, list);
-		}       
+		catch {
+			ui.notifications.warn("Fel visa ritual - momentfärdigheter", {permanent: false});
+		}		
 
 		return oversatt;
 	});
@@ -447,19 +253,32 @@ export const RegisterHandlebarsHelpers = function () {
 
 	// hämtar värdet på en särskild färdighet som RP har.
 	Handlebars.registerHelper("getActorSkillGroupValue", function(actor, fardighet, grupp) {
-		if (actor.system.listdata.fardigheter[grupp] != undefined) {
-			for (const item of actor.system.listdata.fardigheter[grupp]) {
-				if (item.system.id == fardighet) {
-					return item.system.varde;
-				}
+		for (const item of actor.system.listdata.fardigheter[grupp]) {
+			if (item.system.id == fardighet) {
+				return item.system.varde;
 			}
-		}		
+		}
 
 		return {
 			"tvarde": 0,
 			"bonus": 0
 		}
 	});
+
+	Handlebars.registerHelper("getActorSkillValue", function(actor, fardighet, config) {
+		for (const grupp in config.fardighetgrupper) {
+			for (const item of actor.system.listdata.fardigheter[grupp]) {
+				if (item.system.id == fardighet) {
+					return item.system.varde;
+				}
+			}
+		}
+
+		return {
+			"tvarde": 0,
+			"bonus": 0
+		}
+	});	
 
 	Handlebars.registerHelper("getSkillAreaHeight", function(fardigheter) {
 		let style = "";
@@ -495,7 +314,7 @@ export const RegisterHandlebarsHelpers = function () {
 			return "";
 		}
 
-		return "("+CONFIG.EON.grundegenskaper[attribut].kort+")";
+		return CONFIG.EON.grundegenskaper[attribut].kort;
 	});
 
 	// Hämtar mysteriets färdigheter och listar dessa snyggt
@@ -733,6 +552,10 @@ export const RegisterHandlebarsHelpers = function () {
 	Handlebars.registerHelper("setVariable", function(varName, varValue, options) {
 		options.data.root[varName] = varValue;
 	});
+	
+	Handlebars.registerHelper("enrichText", function(text) {
+		return TextEditor.enrichHTML(text, {async: false});
+	});
 		
 	Handlebars.registerHelper("numLoop", function (num, options) {
 		let ret = "";
@@ -831,54 +654,5 @@ export const RegisterHandlebarsHelpers = function () {
 		else {
 			return;
 		}
-	});
-
-	Handlebars.registerHelper("getCurrencyData", function(valuta, property) {
-		if (!valuta || !property) {
-			return "";
-		}
-
-		if (CONFIG.EON.datavaluta?.valuta?.[valuta]?.[property] !== undefined) {
-			return CONFIG.EON.datavaluta.valuta[valuta][property];
-		}
-
-		return "";
-	});
-
-	Handlebars.registerHelper("getCurrencyList", function() {
-		if (!CONFIG.EON.datavaluta?.valuta) {
-			console.log("No currency data found");
-			return [];
-		}
-		
-		const currencyList = Object.entries(CONFIG.EON.datavaluta.valuta).map(([key, currency]) => {
-			const item = {
-				key: key,
-				namn: currency.namn,
-				ursprung: currency.ursprung,
-				displayNamn: `${currency.namn} (${currency.ursprung})`
-			};
-			return item;
-		});
-		
-		return currencyList;
-	});
-
-	Handlebars.registerHelper("formatDecimal", function(number) {
-		if (typeof number !== 'number') {
-			number = Number(number);
-		}
-		return number.toFixed(2);
-	});
-
-	Handlebars.registerHelper('sum', function(a, b) {
-		
-		// Convert inputs to numbers, defaulting to 0 if undefined/null/NaN
-		const numA = (a !== undefined && a !== null) ? parseInt(a) || 0 : 0;
-		const numB = (b !== undefined && b !== null) ? parseInt(b) || 0 : 0;
-		
-		const result = numA + numB;
-		
-		return result;
 	});
 }

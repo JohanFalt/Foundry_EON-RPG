@@ -6,7 +6,11 @@
             <input type="checkbox" name="{{this.scope}}.{{this.key}}" data-dtype="Boolean" {{isChecked this.value}} />
         {{else if this.isSelect}}
             <select name="{{this.scope}}.{{this.key}}">
-                {{selectOptions this.choices selected=this.value localize=false}}            
+            {{#select this.value}} 
+                {{#each this.choices as |name k|}}
+                    <option value="{{k}}">{{localize name}}</option>
+                {{/each}} 
+            {{/select}}
             </select>
         {{else}}
             <input type="text" name="{{this.scope}}.{{this.key}}" value="{{this.value}}" data-dtype="{{this.type}}" />

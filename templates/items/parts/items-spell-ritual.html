@@ -16,7 +16,7 @@
         <div>Moment</div>
     </div>
 
-    {{#each item.system.ritual as |item key|}}
+    {{#each data.system.ritual as |item key|}}
         <div class="item-row {{#if item.editera}}highlighted{{/if}}" style="line-height: 25px; width:100%;">
             {{#if item.editera}}
                 <div class="weapon-icon"><a class="item-save" title="Spara ritual" data-source="ritual" data-itemid="{{key}}"><i class="icon fa-solid fa-sd-card"></i></a></div>
@@ -35,10 +35,10 @@
 
 </div>
 
-{{#if (propertyTrueInList item.system.ritual "editera")}}
+{{#if (propertyTrueInList data.system.ritual "editera")}}
     <div class="item-box" style="width: 400px;">
         <div class="floating-label-group">
-            <input class="text-value editable skill-label inputdata ritual-fields" type="text" id="ritual.namn" value="{{getListProperty item.system.ritual this.selectedRitual 'namn'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
+            <input class="text-value editable skill-label inputdata" type="text" id="ritual.namn" value="{{getListProperty item.system.ritual this.selectedRitual 'namn'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
             <span class="floating-label">Namn</span>
         </div>
 
@@ -80,15 +80,21 @@
                 <div style="width: 150px;">
                     <select class="inputdata" id="ritual.momentgrupp_{{key}}" data-source="ritual" data-key="{{key}}" style="width: 140px;">
                         <option>- Välj -</option>
-                        {{selectOptions ../EON.CONFIG.fardighetgrupper selected=item.grupp}}
+                        {{#select item.grupp}}
+                            {{#each ../EON.CONFIG.fardighetgrupper as |grupp key|}}
+                                <option value="{{key}}">{{grupp}}</option>
+                            {{/each}}
+                        {{/select}}
                     </select>
                 </div>
                 <div style="width: 150px;">
                     <select class="inputdata" id="ritual.moment_{{key}}" data-source="ritual" data-key="{{key}}" style="width: 140px;">
                         <option>- Välj -</option>
-                        {{#if item.grupp}}
-                            {{selectOptions (getActorSkillGroup ../EON.fardigheter item.grupp) selected=item.fardighet valueAttr="namn" keyAttr="key"}}
-                        {{/if}}
+                        {{#select item.fardighet}}
+                            {{#each (getActorSkillGroup ../EON.fardigheter item.grupp) as |fardighet key|}}
+                                <option value="{{key}}">{{fardighet.namn}}</option>
+                            {{/each}}
+                        {{/select}}
                     </select>
                 </div> 
                 <div class="pointer red item-delete" title="Ta bort moment" data-source="ritual" data-type="moment" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
