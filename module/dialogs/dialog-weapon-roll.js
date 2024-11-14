@@ -712,6 +712,7 @@ export class DialogWeaponRoll extends FormApplication {
         roll.action = this.object.vapennamn;                       
 
         roll.info = this.object.vapen.system.egenskaper;
+        roll.actorName = this.actor.name;
 
         var grundvarde = "";
 
