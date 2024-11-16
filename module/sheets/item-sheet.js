@@ -189,6 +189,16 @@ export default class EonItemSheet extends ItemSheet {
 		console.log(data.item);
 		console.log(data.EON);
 		
+		if (this.item.type === "Rustning") {
+			const reduction = data.item.system.belastning_reduction || 0;
+			const baseWeight = data.item.system.kroppsdel.reduce((sum, del) => sum + (del.belastning || 0), 0);
+			data.item.system.belastning = Math.max(0, baseWeight - reduction);
+			
+			if (data.system) {
+				data.system.belastning = data.item.system.belastning;
+			}
+		}
+		
 		return data;
 	}
 
@@ -267,6 +277,9 @@ export default class EonItemSheet extends ItemSheet {
 		html.find('.fa-square-plus').click(ev => this._ticValueUp(ev, 'armor'));
 
 		html.find('.fa-square-minus').click(ev => this._ticValueDown(ev));
+
+		html.find('input[name="system.belastning_reduction"]')
+			.change(this._onReductionChange.bind(this));
 	}
 
 	  /** @inheritDoc */
@@ -1306,6 +1319,24 @@ export default class EonItemSheet extends ItemSheet {
 		
 		await this.item.update(itemData);
 		this.render();
+	}
+
+	async _onReductionChange(event) {
+		event.preventDefault();
+		
+		const newReduction = Math.max(0, Number(event.currentTarget.value) || 0);
+		const itemData = this.item.toObject();
+		
+		// Update the reduction value
+		itemData.system.belastning_reduction = newReduction;
+		
+		// Calculate total belastning
+		const baseWeight = this.item.system.kroppsdel.reduce((sum, del) => sum + (del.belastning || 0), 0);
+		itemData.system.belastning = Math.max(0, baseWeight - newReduction);
+		
+		// Update both the item and the display
+		await this.item.update(itemData);
+		this.render(true);
 	}
 }
 

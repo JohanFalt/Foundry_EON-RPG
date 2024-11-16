@@ -19,7 +19,17 @@
                         <div class="item-property-area number-value-text floating-label-group">
                             <input class="attribute-value" type="text" value="{{data.system.belastning}}" data-dtype="Number" disabled readonly />
                             <span class="floating-label">Belastning</span>
-                        </div>                                      
+                        </div>
+
+                        <div class="item-property-area number-value-text floating-label-group" style="margin-top: 5px;">
+                            <input type="number" name="system.belastning_reduction" 
+                                value="{{item.system.belastning_reduction}}" 
+                                class="attribute-value editable" 
+                                data-dtype="Number" 
+                                min="0" 
+                                style="width: 100px;" />
+                            <span class="floating-label">Belastningsreduktion</span>
+                        </div>
                     </div>     
                 </div>            
 
