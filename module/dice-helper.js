@@ -337,6 +337,7 @@ export async function RollDice(diceRoll) {
     const html = await renderTemplate(template, templateData);
 
     const chatData = {
+        rolls: allDices,
         user: game.user.id,
         speaker: {
             actor: diceRoll.actor?.id,
@@ -369,7 +370,6 @@ export async function SendMessage(actor, config, headline, message) {
     const html = await renderTemplate(template, templateData);
 
     const chatData = {
-        //type: CONST.CHAT_MESSAGE_TYPES.ROLL,
         content: html,
         speaker: ChatMessage.getSpeaker(),
         rollMode: game.settings.get("core", "rollMode")        

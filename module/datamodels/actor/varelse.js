@@ -42,7 +42,6 @@ export default class EonVarelse extends foundry.abstract.DataModel {
                 })
             }),
             skydd: new fields.SchemaField({
-                grund: new fields.NumberField({...valueInteger}),
                 hugg: new fields.NumberField({...valueInteger}),
                 kross: new fields.NumberField({...valueInteger}),
                 stick: new fields.NumberField({...valueInteger})
@@ -57,7 +56,7 @@ export default class EonVarelse extends foundry.abstract.DataModel {
                         initial: {},
                         nullable: false,
                 })),
-                vandningid: new fields.StringField({required: true, initial: ""})
+                listaid: new fields.StringField({required: true, initial: ""})
             }),
             
         });

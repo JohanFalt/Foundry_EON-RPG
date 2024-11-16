@@ -7,7 +7,7 @@ import { RollDice } from "../dice-helper.js";
 export default class EonItemSheet extends ItemSheet {
 
 	static get defaultOptions() {
-		return foundry.utils.mergeObject(super.defaultOptions, {
+		const options = foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ["EON itemsheet"],
 			tabs: [{
                 navSelector: ".item-tabs",
@@ -15,6 +15,10 @@ export default class EonItemSheet extends ItemSheet {
                 initial: "values",
             }]
 		});
+
+		options.dragDrop.push({ dragSelector: ".activity[data-activity-id]", dropSelector: "form" });
+
+		return options;
 	}
 
 	/** @override */
@@ -264,6 +268,19 @@ export default class EonItemSheet extends ItemSheet {
 
 		html.find('.fa-square-minus').click(ev => this._ticValueDown(ev));
 	}
+
+	  /** @inheritDoc */
+	  async _onDrop(event) {
+		// Try to extract the data
+		const data = TextEditor.getDragEventData(event);
+	
+		// // Handle re-ordering of list
+		// if ( data?.entryId && (data.uuid === this.document.uuid) ) return this._onSortEntry(event, data);
+	
+		// // Handle dropping linked items
+		if ( data?.type !== "Item" ) return;
+		const item = await Item.implementation.fromDropData(data);
+	  }
 
 	/** @override */
 	async close(...args) {
