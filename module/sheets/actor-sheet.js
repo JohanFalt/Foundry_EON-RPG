@@ -347,11 +347,11 @@ export default class EonActorSheet extends ActorSheet {
         * @param data - det släppta item
     */
     async _onDropActor(_event, _data) {
-        // if (!this.isEditable || !_data.uuid) {
-        //     return false;
-        // }
+        if (!this.isEditable || !_data.uuid) {
+            return false;
+        }
 
-        //const droppedItem = await Item.implementation.fromDropData(_data);          
+        const droppedItem = await Item.implementation.fromDropData(_data);          
         
         super._onDropActor(_event, _data)
     }
