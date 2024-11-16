@@ -42,8 +42,18 @@
             <div class="centerText number-value-text" style="width: 60px;">{{skold.system.skydd}}</div>
             <!-- <div class="centerText number-value-text" style="width: 50px;">{{#if (eq skold.system.skadetyp "")}}-{{else}}{{getWeaponDamageType ../EON.CONFIG.vapenskador skold.system.skadetyp}}{{/if}}</div> -->
             <div class="centerText number-value-text" style="width: 70px;">{{#if (eq skold.system.skada.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues skold.system.skada ../actor.system.harleddegenskaper.grundskada.totalt)}} {{{getWeaponDamageType ../EON.CONFIG.vapenskador skold.system.skadetyp}}}{{/if}}</div>
-            <div class="centerText number-value-text" style="width: 50px;"><i class="fa-solid fa-square-plus green"></i></a> {{skold.system.antal}} <i class="fa-solid fa-square-minus red"></i></a></div>
-            <div class="centerText number-value-text" style="width: 50px;">{{#if (eq skold.system.vikt 0)}}-{{else}}{{multiplicate skold.system.vikt skold.system.antal}}kg{{/if}}</div>
+            <div class="centerText number-value-text" style="width: 50px;">
+                <i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="{{skold._id}}"></i>
+                {{skold.system.antal}}
+                <i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="{{skold._id}}"></i>
+            </div>
+            <div class="centerText number-value-text" style="width: 50px;">
+                {{#if (eq skold.system.vikt 0)}}
+                    -
+                {{else}}
+                    {{round (multiplicate skold.system.vikt skold.system.antal) 2}}kg
+                {{/if}}
+            </div>
             <div class="number-value-text">{{shorten (getPropertyList skold.system.egenskaper) 50 false}}</div>
         </div>
         {{/each}}
