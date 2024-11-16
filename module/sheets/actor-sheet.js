@@ -344,6 +344,22 @@ export default class EonActorSheet extends ActorSheet {
         super._onDropItem(_event, _data)
     }
 
+    /** @override */
+    /**
+        * Aktiveras om Item släpps på rollformuläret.
+        * @param _event
+        * @param data - det släppta item
+    */
+    async _onDropActor(_event, _data) {
+        if (!this.isEditable || !_data.uuid) {
+            return false;
+        }
+
+        const droppedItem = await Item.implementation.fromDropData(_data);          
+        
+        super._onDropActor(_event, _data)
+    }
+
     /**
         * Denna funktion hanterar om man lägger till ett Item (Folkslag) på Actor och uppdaterar Actor enligt detta.
         * @param droppedItem - Det tillagda Folkslaget
