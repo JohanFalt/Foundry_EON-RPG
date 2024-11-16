@@ -37,8 +37,18 @@
             <div class="centerText number-value-text" style="width: 70px;">{{getDiceValue vapen.system.skada}} {{{getWeaponDamageType ../EON.CONFIG.vapenskador vapen.system.skadetyp}}}</div>
             <div class="centerText number-value-text" style="width: 90px;">{{{getRange ../EON.CONFIG.vapenavstand vapen.system.rackvidd}}}</div>
             <!-- <div class="centerText number-value-text" style="width: 60px;">{{#if (eq vapen.system.langd 0)}}-{{else}}{{vapen.system.langd}}cm{{/if}}</div> -->
-            <div class="centerText number-value-text" style="width: 50px;"><i class="fa-solid fa-square-plus green"></i></a> {{vapen.system.antal}} <i class="fa-solid fa-square-minus red"></i></a></div>
-            <div class="centerText number-value-text" style="width: 50px;">{{#if (eq vapen.system.vikt 0)}}-{{else}}{{multiplicate vapen.system.vikt vapen.system.antal}}kg{{/if}}</div>
+            <div class="centerText number-value-text" style="width: 50px;">
+                <i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="{{vapen._id}}"></i>
+                {{vapen.system.antal}}
+                <i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="{{vapen._id}}"></i>
+            </div>
+            <div class="centerText number-value-text" style="width: 50px;">
+                {{#if (eq vapen.system.vikt 0)}}
+                    -
+                {{else}}
+                    {{round (multiplicate vapen.system.vikt vapen.system.antal) 2}}kg
+                {{/if}}
+            </div>
             <div class="number-value-text" title="{{getPropertyList vapen.system.egenskaper}}">{{shorten (getPropertyList vapen.system.egenskaper) 50 false}}</div>
         </div>
     {{/each}}

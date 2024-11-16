@@ -314,6 +314,10 @@ export default class EonActorSheet extends ActorSheet {
         html
             .find(".item-send")
             .click(this._onItemSend.bind(this));
+
+        html
+            .find('.weapon-count')
+            .click(this._onWeaponCountChange.bind(this));
     }
  
     /** @override */
@@ -338,22 +342,6 @@ export default class EonActorSheet extends ActorSheet {
         }  
         
         super._onDropItem(_event, _data)
-    }
-
-        /** @override */
-    /**
-        * Aktiveras om Item släpps på rollformuläret.
-        * @param _event
-        * @param data - det släppta item
-    */
-    async _onDropActor(_event, _data) {
-        // if (!this.isEditable || !_data.uuid) {
-        //     return false;
-        // }
-
-        //const droppedItem = await Item.implementation.fromDropData(_data);          
-        
-        super._onDropActor(_event, _data)
     }
 
     /**
@@ -1198,5 +1186,31 @@ export default class EonActorSheet extends ActorSheet {
         
         this.actor.update(actorData);
     }
+
+    async _onWeaponCountChange(event) {
+        event.preventDefault();
+        
+        const element = event.currentTarget;
+        const dataset = element.dataset;
+        const itemId = dataset.itemid;
+        const action = dataset.action;
+        
+        const item = this.actor.items.get(itemId);
+        if (!item) return;
+
+        const itemData = item.toObject();
+        
+        if (action === "increase") {
+            itemData.system.antal += 1;
+        } else if (action === "decrease" && itemData.system.antal > 0) {
+            itemData.system.antal -= 1;
+        }
+
+        await item.update(itemData);
+    }
 }
+
+Handlebars.registerHelper('round', function(value, decimals) {
+    return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+});
 
