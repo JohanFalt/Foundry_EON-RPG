@@ -1,32 +1,179 @@
 import CalculateHelper from "../calculate-helper.js";
 
 export class DialogAttribute {
-    constructor(type, key) {
-        this.typ = type;
-        this.nyckel = key;
-        this.varde = "";
 
-        this.dialogClass = "dialog-" + this.typ.toLowerCase();
+    #_isPC = false;
+    #_isNumeric = false;                // Är attributet en siffra/tärningar
+    #_hasName = false;                  // Har attributet ett namn som går att ändra
+    #_hasBonusList = false;             // Har attributet en bonuslista
+    #_hasLista = false;                 // Har attributet en lista 
+    #_hasDescription = false;           // Har attributet en beskrivning
+    #_canTic = false;
+
+    #_attributeType = "";
+    #_attributeKey = "";
+    #_attributeName = "";
+    #_attributeBasicValue = 0;          
+    #_attributeBonusList = [];
+    #_attributeList = [];
+    #_attributeListId = "";
+    #_attributeDescription = "";
+
+    constructor(actor, type, key) {
+        if (actor != undefined) {
+            if (actor.type.toLowerCase().replace(" ", "") == "rollperson") {
+                this.#_isPC = true;
+            }
+        }        
+
+        this.#_attributeType = type;
+        this.#_attributeKey = key;
+
+        this.#_hasDescription = actor.system[type][key]?.beskrivning != undefined;
+        this.#_hasBonusList = actor.system[type][key]?.bonuslista != undefined;
+        this.#_isNumeric = actor.system[type][key]?.varde != undefined;
+        this.#_hasLista = actor.system[type][key]?.lista != undefined;
+        this.#_hasName = actor.system[type][key]?.namn != undefined;
+
+        if (this.#_isPC) {
+            if ((this.#_isPC) && (this.#_attributeType == 'grundegenskaper')) {
+                this.#_canTic = true;
+            }
+            if ((this.#_isPC) && (this.#_attributeType == 'harleddegenskaper')) {
+                this.#_canTic = false;
+            }
+        }
+        else {
+            if (this.#_attributeType == 'harleddegenskaper') {
+                this.#_canTic = true;
+            }
+            // undvika
+            if ((this.#_attributeType == 'skada') && (this.#_attributeKey == 'forsvar')) {
+                this.#_canTic = true;
+            }
+        }
+
+        // fastställa namnet
+        if (type == "bakgrund") {
+            this.#_attributeName = key;
+        }
+        else if (game.EON.CONFIG?.[type]?.[key] != undefined) {
+            this.#_attributeName = game.EON.CONFIG[type]?.[key].namn;   
+        }
+        else {
+            let headline = "";
+
+            if (key == 'forsvar') headline = 'Försvar';
+            if (key == 'vandning') {
+                headline = 'Vändning';
+            }
+
+            this.#_attributeName = headline;
+        }
+
+        // läs in datan från actor
+        this.reload(actor);
+
+        this.dialogClass = "dialog-" + this.#_attributeType.toLowerCase();
+    }
+
+    reload(actor) {
+        if (this.#_hasName) {
+            this.#_attributeName = actor.system[this.#_attributeType][this.#_attributeKey]?.namn;
+        }
+
+        if (this.#_hasLista) {
+            this.#_attributeList = actor.system[this.#_attributeType][this.#_attributeKey]?.lista;
+            this.#_attributeListId = actor.system[this.#_attributeType][this.#_attributeKey]?.listaid;
+        }
+
+        if (actor.system[this.#_attributeType][this.#_attributeKey].grund != undefined) {
+            this.#_attributeBasicValue = actor.system[this.#_attributeType][this.#_attributeKey].grund;                
+        }
+        else if (actor.system[this.#_attributeType][this.#_attributeKey].varde != undefined) {
+            this.#_attributeBasicValue = actor.system[this.#_attributeType][this.#_attributeKey].varde;
+        }
+        else {
+            if (this.#_attributeKey != 'vandning')
+                console.error('DialogAttribute saknade värde');
+        }
+
+        if (actor.system[this.#_attributeType][this.#_attributeKey]?.bonuslista) {
+            this.#_attributeBonusList = actor.system[this.#_attributeType][this.#_attributeKey].bonuslista;               
+        }
+
+        if (this.#_hasLista) {
+            this.#_attributeList = actor.system[this.#_attributeType][this.#_attributeKey]?.lista;
+            this.#_attributeListId = actor.system[this.#_attributeType][this.#_attributeKey]?.listaid;
+        }
+        
+        if (this.#_hasDescription) {
+            this.#_attributeDescription = actor.system[this.#_attributeType][this.#_attributeKey]?.beskrivning;
+        }
+
+        return this;
+    }
+
+    get isPC() {
+        return this.#_isPC;
+    }
+
+    get hasBonusList() {
+        return this.#_hasBonusList;
+    }
+
+    get hasDescription() {
+        return this.#_hasDescription;
+    }
+
+    get isNumeric() {
+        return this.#_isNumeric;
+    }
+
+    get hasName() {
+        return this.#_hasName;
+    }
+
+    get hasLista() {
+        return this.#_hasLista;
+    }
+
+    get canTic() {
+        return this.#_canTic;
+    }
+
+    get attributeName() {
+        return this.#_attributeName;
+    }
+
+    get attributeType() {
+        return this.#_attributeType;
+    }
+
+    get attributeKey() {
+        return this.#_attributeKey;
+    }
+
+    get attributeBasicValue() {
+        return this.#_attributeBasicValue;
+    }
+
+    get attributeBonusList() {
+        return this.#_attributeBonusList;
+    }
+
+    get attributeList() {
+        return this.#_attributeList;
+    }
+
+    get attributeListId() {
+        return this.#_attributeListId;
+    }
+
+    get attributeDescription() {
+        return this.#_attributeDescription;
     }
 }
-
-/* 
-
-- De olika typerna av attribut -
-
-bakgrund 
-ändra custom-egenskaper från fliken rollperson bakgrund.
-
-strid
-rollpersons läkningstakt
-
-skada
-varelse försvar och vändning
-
-attribute
-ändra rollperson och varelses grundegenskaper och härledda grundegenskaper
-
-*/
 
 export class DialogAttributeEdit extends FormApplication {
 
@@ -46,25 +193,12 @@ export class DialogAttributeEdit extends FormApplication {
         this.config = game.EON.CONFIG;      
         this.isDialog = true;  
 
-        if (attribute.typ == "bakgrund") {
-            this.options.title = `${actor.name} - ${attribute.nyckel}`;            
-        }
-        else if (game.EON.CONFIG[attribute.typ]?.[attribute.nyckel] != undefined) {
-            let headline = game.EON.CONFIG[attribute.typ][attribute.nyckel].namn.toLowerCase();
-
-            this.options.title = `Editera ${headline}`;        
+        if (attribute.attributeType == "bakgrund") {
+            this.options.title = `${actor.name} - ${attribute.attributeKey}`;            
         }
         else {
-            let headline = "";
-
-            if (attribute.nyckel == 'forsvar') headline = 'försvar';
-            if (attribute.nyckel == 'vandning') headline = 'vändning';
-
-            this.options.title = `Editera ${headline}`;
+            this.options.title = `Editera ${attribute.attributeName.toLowerCase()}`;
         }
-        
-        this.isNumericBonus = attribute.source === "strid" || 
-            (attribute.source === "harleddegenskaper" && attribute.key === "grundrustning");
     }
 
     /** @override */
@@ -74,94 +208,54 @@ export class DialogAttributeEdit extends FormApplication {
 
     async getData() {
         const data = super.getData();
-        data.hasName = false;
-        data.hasDescription = false;
-        data.isNumericBonus = true;
-        data.headline = "";
 
-        data.isPC = false;
-
-		if (this.actor != undefined)
-		{
-			data.isPC = this.actor.type.toLowerCase().replace(" ", "") == "rollperson";
-		}
+        data.headline = "";        
 
         data.EON = game.EON;
 		data.EON.CONFIG = CONFIG.EON;
 
-        if (this.object.typ == "bakgrund") {
-            this.object.varde = this.actor.system.altvarde[this.object.nyckel];
-            data.namn = this.object.nyckel;
+        this.object = this.object.reload(this.actor);      
+
+        if (this.object.attributeType == "bakgrund") {
+            this.object.varde = this.actor.system.altvarde[this.object.attributeKey];
+            data.namn = this.object.attributeKey;
             data.varde = this.object.varde;
             return data;
         }
-        else if (this.object.typ === "strid") {
-            const attribute = this.actor.system[this.object.typ]?.[this.object.nyckel];
-            let name = "";
-
-            if (this.config[this.object.typ]?.[this.object.nyckel]?.namn != undefined) {
-                name = this.config.strid[this.object.nyckel].namn;
-                data.isNumericBonus = true;
-            }
-
-            data.attribut = {
-                namn: name,
-                varde: attribute.varde || 0,
-                totalt: attribute.totalt || attribute.varde || 0,
-                bonuslista: attribute.bonuslista || []
+        if (this.object.attributeKey == "vandning") {
+            data.vandningLista = {};
+            data.valtid = "";
+            let lista = {
+                "": "- Välj -"
             };
-        }
-        else if (this.object.typ === "skada")  {
-            if (this.object.nyckel == "vandning") {
-                data.attribut = this.actor.system[this.object.typ][this.object.nyckel];
-                data.vandningLista = {};
-                data.valtid = "";
-                let lista = {
-                    "": "- Välj -"
-                };
 
-                // hämta alla vändningstabeller som finns registrerade i systemet.
-                game.settings.settings.forEach(setting => {
-                    if ((setting.namespace == 'eon-rpg') && (setting.key.indexOf('vd_') > -1)) {
-                        lista = Object.assign(lista, {[setting.key] : setting.name});
-                    }                    
-                }); 
+            // hämta alla vändningstabeller som finns registrerade i systemet.
+            game.settings.settings.forEach(setting => {
+                if ((setting.namespace == 'eon-rpg') && (setting.key.indexOf('vd_') > -1)) {
+                    lista = Object.assign(lista, {[setting.key] : setting.name});
+                }                    
+            }); 
                 
-                data.vandningLista = lista;
-            }
-            else if (this.actor.system[this.object.typ][this.object.nyckel].namn != undefined) {
-                data.attribut = this.actor.system[this.object.typ][this.object.nyckel];
-                data.hasName = true;    
-            }            
-
-            data.hasDescription = data.attribut.beskrivning != undefined
-            data.isNumericBonus = false;
-        }
-        else {
-            data.attribut = this.actor.system[this.object.typ][this.object.nyckel];
-
-            if (this.config[this.object.typ]?.[this.object.nyckel]?.namn != undefined) {
-                data.attribut.namn = this.config[this.object.typ][this.object.nyckel].namn;
-            }
-        }     
+            data.vandningLista = lista;
+        }    
 
         if (data.hasDescription) {
-            data.enrichedBeskrivning = await TextEditor.enrichHTML(data.attribut.beskrivning);
+            data.enrichedBeskrivning = await TextEditor.enrichHTML(this.object.attributeDescription);
         }
 
-        if (this.object.typ == "grundegenskaper") {
+        if (this.object.attributeType == "grundegenskaper") {
             data.headline = "GRUNDEGENSKAP";
         }
-        else if (this.object.typ == "strid") {
+        else if (this.object.attributeType == "strid") {
             data.headline = "STRID";
         }
-        else if (this.object.typ == "skada") {
-            data.headline = this.object.nyckel.toUpperCase();
+        else if (this.object.attributeType == "skada") {
+            data.headline = this.object.attributeKey.toUpperCase();
 
-            if (this.object.nyckel == "forsvar") {
+            if (this.object.attributeKey == "forsvar") {
                 data.headline = "FÖRSVAR";
             } 
-            if (this.object.nyckel == "vandning") {
+            if (this.object.attributeKey == "vandning") {
                 data.headline = "VÄNDNING";
             }
         }
@@ -169,7 +263,7 @@ export class DialogAttributeEdit extends FormApplication {
             data.headline = 'HÄRLETT ATTRIBUT';
         }
         
-        console.log(this.object.nyckel);
+        console.log(this.object.attributeKey);
         console.log(data);
 
         return data;
@@ -222,9 +316,9 @@ export class DialogAttributeEdit extends FormApplication {
             
             const path = this.isNumericBonus ? 
                 (this.attribute.source === "strid" ? 
-                    actorData.system.strid[this.attribute.key] :
-                    actorData.system.harleddegenskaper[this.attribute.key]) :
-                actorData.system[this.attribute.source][this.attribute.key];
+                    actorData.system.strid[this.object.attributeKey] :
+                    actorData.system.harleddegenskaper[this.object.attributeKey]) :
+                actorData.system[this.attribute.source][this.object.attributeKey];
             
             if (!path.bonuslista) {
                 path.bonuslista = [];
@@ -242,7 +336,7 @@ export class DialogAttributeEdit extends FormApplication {
                 if (i == 1) {
                     if (value !== undefined) {
                         const index = key.split(".")[1];
-                        actorData.system[this.object.typ][this.object.nyckel][index] = value;
+                        actorData.system[this.object.attributeType][this.object.attributeKey][index] = value;
                     }
                 }    
                 if (i == 3) {      
@@ -251,7 +345,7 @@ export class DialogAttributeEdit extends FormApplication {
                     const attribut = key.split(".")[3];
                     
                     if (value !== undefined) {
-                        actorData.system[this.object.typ][this.object.nyckel][egenskap][index][attribut] = value;
+                        actorData.system[this.object.attributeType][this.object.attributeKey][egenskap][index][attribut] = value;
                     } 
                 }
             }
@@ -266,9 +360,9 @@ export class DialogAttributeEdit extends FormApplication {
                 if (value !== undefined) {
                     const path = this.isNumericBonus ? 
                         (this.attribute.source === "strid" ? 
-                            actorData.system.strid[this.attribute.key] :
-                            actorData.system.harleddegenskaper[this.attribute.key]) :
-                        actorData.system[this.attribute.source][this.attribute.key];
+                            actorData.system.strid[this.object.attributeKey] :
+                            actorData.system.harleddegenskaper[this.object.attributeKey]) :
+                        actorData.system[this.attribute.source][this.object.attributeKey];
                     
                     path.bonuslista[index].tvarde = parseInt(value);
                 }
@@ -293,7 +387,7 @@ export class DialogAttributeEdit extends FormApplication {
             var e = document.getElementById(component);
             var newvalue = e.value;
 
-            actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].namn = newvalue;
+            actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista[key].namn = newvalue;
             await this.actor.update(actorData);
             this.render();
 
@@ -308,13 +402,13 @@ export class DialogAttributeEdit extends FormApplication {
 		const dataset = element.dataset;
 		const actorData = foundry.utils.duplicate(this.actor);
 
-        if (this.object.typ === "strid" || 
-            (this.object.typ === "harleddegenskaper" && this.object.nyckel === "grundrustning")) {
+        if (this.object.attributeType === "strid" || 
+            (this.object.attributeType === "harleddegenskaper" && this.object.attributeKey === "grundrustning")) {
             if (dataset.key !== undefined) {
                 const key = parseInt(dataset.key);
-                const path = this.object.typ === "strid" ? 
-                    actorData.system.strid[this.object.nyckel] :
-                    actorData.system.harleddegenskaper[this.object.nyckel];
+                const path = this.object.attributeType === "strid" ? 
+                    actorData.system.strid[this.object.attributeKey] :
+                    actorData.system.harleddegenskaper[this.object.attributeKey];
 
                 if (!path.bonuslista[key]) {
                     path.bonuslista[key] = { tvarde: 0 };
@@ -322,9 +416,9 @@ export class DialogAttributeEdit extends FormApplication {
                 path.bonuslista[key].tvarde = (path.bonuslista[key].tvarde || 0) + 1;
             }
 
-            const path = this.object.typ === "strid" ? 
-                actorData.system.strid[this.object.nyckel] :
-                actorData.system.harleddegenskaper[this.object.nyckel];
+            const path = this.object.attributeType === "strid" ? 
+                actorData.system.strid[this.object.attributeKey] :
+                actorData.system.harleddegenskaper[this.object.attributeKey];
 
             let total = parseInt(path.varde) || 0;
             path.bonuslista.forEach(bonus => {
@@ -333,46 +427,44 @@ export class DialogAttributeEdit extends FormApplication {
             path.totalt = total;
 
             await this.actor.update(actorData);
-            this.render();
-            return;
         }
-        else if (this.object.typ === "skada") {
-            actorData.system[this.object.typ][this.object.nyckel].grund.bonus += 1;
+        else if (this.object.attributeType === "skada") {
+            actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus += 1;
 
-            if (actorData.system[this.object.typ][this.object.nyckel].grund.bonus > 3) {
-                actorData.system[this.object.typ][this.object.nyckel].grund.tvarde += 1;
-                actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 0;
+            if (actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus > 3) {
+                actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde += 1;
+                actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus = 0;
             }
 
             await this.actor.update(actorData);
         }
         else {
 			if (dataset.property != undefined) {
-				actorData.system[this.object.typ][this.object.nyckel].grund.bonus += 1;
+				actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus += 1;
 
-				if ((actorData.system[this.object.typ][this.object.nyckel].grund.bonus > 3) && (actorData.system[this.object.typ][this.object.nyckel].grund.tvarde < 6)) {
-					actorData.system[this.object.typ][this.object.nyckel].grund.tvarde += 1;
-					actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 0;
+				if ((actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus > 3) && (actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde < 6)) {
+					actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde += 1;
+					actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus = 0;
 				}
 
-				actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
+				actorData.system[this.object.attributeType][this.object.attributeKey].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.attributeType][this.object.attributeKey]);
 				await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
 				await this.actor.update(actorData);
 			}
 			else if (dataset.key != undefined) {
 				const key = dataset.key;
-				let tvarde = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].tvarde;
-				let bonus = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].bonus;
+				let tvarde = actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista[key].tvarde;
+				let bonus = actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista[key].bonus;
 
 				bonus += 1;
-				if ((bonus > 3) && (actorData.system[this.object.typ][this.object.nyckel].grund.tvarde < 6)) {
+				if ((bonus > 3) && (actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde < 6)) {
 					tvarde += 1;
 					bonus = 0;
 				}
 
-				actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].tvarde = tvarde;
-				actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].bonus = bonus;
-				actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
+				actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista[key].tvarde = tvarde;
+				actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista[key].bonus = bonus;
+				actorData.system[this.object.attributeType][this.object.attributeKey].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.attributeType][this.object.attributeKey]);
 				await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
 				await this.actor.update(actorData);
 			}
@@ -388,13 +480,13 @@ export class DialogAttributeEdit extends FormApplication {
 		const dataset = element.dataset;
 		const actorData = foundry.utils.duplicate(this.actor);
 
-        if (this.object.typ === "strid" || 
-            (this.object.typ === "harleddegenskaper" && this.object.nyckel === "grundrustning")) {
+        if (this.object.attributeType === "strid" || 
+            (this.object.attributeType === "harleddegenskaper" && this.object.attributeKey === "grundrustning")) {
             if (dataset.key !== undefined) {
                 const key = parseInt(dataset.key);
-                const path = this.object.typ === "strid" ? 
-                    actorData.system.strid[this.object.nyckel] :
-                    actorData.system.harleddegenskaper[this.object.nyckel];
+                const path = this.object.attributeType === "strid" ? 
+                    actorData.system.strid[this.object.attributeKey] :
+                    actorData.system.harleddegenskaper[this.object.attributeKey];
 
                 if (path.bonuslista[key]) {
                     path.bonuslista[key].tvarde = Math.max((path.bonuslista[key].tvarde || 0) - 1, 0);
@@ -411,44 +503,44 @@ export class DialogAttributeEdit extends FormApplication {
                 return;
             }
         }
-        else if (this.object.typ === "skada") {
-            actorData.system[this.object.typ][this.object.nyckel].grund.bonus -= 1;
+        else if (this.object.attributeType === "skada") {
+            actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus -= 1;
 
-            if (actorData.system[this.object.typ][this.object.nyckel].grund.bonus < -1) {
-                actorData.system[this.object.typ][this.object.nyckel].grund.tvarde -= 1;
-                actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 3;
+            if (actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus < -1) {
+                actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde -= 1;
+                actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus = 3;
             }
 
-            if (actorData.system[this.object.typ][this.object.nyckel].grund.tvarde < 0) {
-                actorData.system[this.object.typ][this.object.nyckel].grund.tvarde = 0;
-                actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 0;
+            if (actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde < 0) {
+                actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde = 0;
+                actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus = 0;
             }
 
             await this.actor.update(actorData);
         }
         else {
             if (dataset.property != undefined) {
-                actorData.system[this.object.typ][this.object.nyckel].grund.bonus -= 1;        
+                actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus -= 1;        
 
-                if (actorData.system[this.object.typ][this.object.nyckel].grund.bonus < -1) {
-                    actorData.system[this.object.typ][this.object.nyckel].grund.tvarde -= 1;
-                    actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 3;
+                if (actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus < -1) {
+                    actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde -= 1;
+                    actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus = 3;
                 }
 
-                if (actorData.system[this.object.typ][this.object.nyckel].grund.tvarde < 0) {
-                    actorData.system[this.object.typ][this.object.nyckel].grund.tvarde = 0;
-                    actorData.system[this.object.typ][this.object.nyckel].grund.bonus = 0;
+                if (actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde < 0) {
+                    actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde = 0;
+                    actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus = 0;
                 }
 
-                actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
+                actorData.system[this.object.attributeType][this.object.attributeKey].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.attributeType][this.object.attributeKey]);
                 await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
                 await this.actor.update(actorData);
             }
             else if (dataset.key != undefined) {
                 const key = dataset.key;
 
-                let tvarde = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].tvarde;
-                let bonus = actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].bonus;
+                let tvarde = actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista[key].tvarde;
+                let bonus = actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista[key].bonus;
 
                 bonus -= 1;
 
@@ -457,9 +549,9 @@ export class DialogAttributeEdit extends FormApplication {
                     bonus = 0;
                 }
 
-                actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].tvarde = tvarde;
-                actorData.system[this.object.typ][this.object.nyckel].bonuslista[key].bonus = bonus;
-                actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
+                actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista[key].tvarde = tvarde;
+                actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista[key].bonus = bonus;
+                actorData.system[this.object.attributeType][this.object.attributeKey].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.attributeType][this.object.attributeKey]);
                 await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
 
                 await this.actor.update(actorData);
@@ -477,18 +569,18 @@ export class DialogAttributeEdit extends FormApplication {
 
         const actorData = foundry.utils.duplicate(this.actor);
 
-        if (this.object.typ === "strid") {
-            if (!actorData.system.strid[this.object.nyckel].bonuslista) {
-                actorData.system.strid[this.object.nyckel].bonuslista = [];
+        if (this.object.attributeType === "strid") {
+            if (!actorData.system.strid[this.object.attributeKey].bonuslista) {
+                actorData.system.strid[this.object.attributeKey].bonuslista = [];
             }
-            actorData.system.strid[this.object.nyckel].bonuslista.push(bonus);
+            actorData.system.strid[this.object.attributeKey].bonuslista.push(bonus);
         } else {
             const diceBonus = {
                 namn: "Ny bonus",
                 tvarde: 0,
                 bonus: 0
             }
-            actorData.system[this.object.typ][this.object.nyckel].bonuslista.push(diceBonus);
+            actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista.push(diceBonus);
         }
 
         await this.actor.update(actorData);
@@ -509,11 +601,11 @@ export class DialogAttributeEdit extends FormApplication {
 		const dataset = element.dataset;
         const actorData = foundry.utils.duplicate(this.actor);
 
-        if ((this.object.typ == "skada") && (this.object.nyckel == "vandning")) {
+        if ((this.object.attributeType == "skada") && (this.object.attributeKey == "vandning")) {
             const key = dataset.key.split(".")[0];
             const index = parseInt(dataset.key.split(".")[1]);
 
-            actorData.system[this.object.typ][this.object.nyckel][key][index].vandning = !actorData.system[this.object.typ][this.object.nyckel][key][index].vandning;
+            actorData.system[this.object.attributeType][this.object.attributeKey][key][index].vandning = !actorData.system[this.object.attributeType][this.object.attributeKey][key][index].vandning;
         }
 
         await this.actor.update(actorData);
@@ -530,17 +622,17 @@ export class DialogAttributeEdit extends FormApplication {
 
         const actorData = foundry.utils.duplicate(this.actor);
 
-        if (this.object.typ === "strid") {
-            actorData.system.strid[this.object.nyckel].bonuslista.splice(key, 1);
+        if (this.object.attributeType === "strid") {
+            actorData.system.strid[this.object.attributeKey].bonuslista.splice(key, 1);
             
-            let total = parseInt(actorData.system.strid[this.object.nyckel].varde) || 0;
-            actorData.system.strid[this.object.nyckel].bonuslista.forEach(bonus => {
+            let total = parseInt(actorData.system.strid[this.object.attributeKey].varde) || 0;
+            actorData.system.strid[this.object.attributeKey].bonuslista.forEach(bonus => {
                 total += parseInt(bonus.tvarde) || 0;
             });
-            actorData.system.strid[this.object.nyckel].totalt = total;
+            actorData.system.strid[this.object.attributeKey].totalt = total;
         } else {
-            actorData.system[this.object.typ][this.object.nyckel].bonuslista.splice(key, 1);
-            actorData.system[this.object.typ][this.object.nyckel].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.typ][this.object.nyckel]);
+            actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista.splice(key, 1);
+            actorData.system[this.object.attributeType][this.object.attributeKey].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.attributeType][this.object.attributeKey]);
             await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
         }
 
@@ -552,20 +644,20 @@ export class DialogAttributeEdit extends FormApplication {
     async _saveFormForm(event) {
         event.preventDefault();
 
-        if (this.object.typ == "bakgrund") {
+        if (this.object.attributeType == "bakgrund") {
             const actorData = foundry.utils.duplicate(this.actor);
             var alt = document.getElementById("altvalue");
 
             var newvalue = alt.value;
 
             if (newvalue != "") {
-                actorData.system[this.object.typ][this.object.nyckel] = "custom";
-                actorData.system.altvarde[this.object.nyckel] = newvalue;
+                actorData.system[this.object.attributeType][this.object.attributeKey] = "custom";
+                actorData.system.altvarde[this.object.attributeKey] = newvalue;
                 this.object.varde = newvalue;
             }
             else {
-                actorData.system[this.object.typ][this.object.nyckel] = "";
-                actorData.system.altvarde[this.object.nyckel] = "";
+                actorData.system[this.object.attributeType][this.object.attributeKey] = "";
+                actorData.system.altvarde[this.object.attributeKey] = "";
                 this.object.varde = "";
             }
 

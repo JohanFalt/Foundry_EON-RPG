@@ -80,20 +80,36 @@
             <div class="headline">Skydd</div>
             <div class="clear">
                 <div class="pullLeft number-value-text floating-label-group">
-                    <input class="attribute-value editable skill-label skill-value" type="text" name="system.skada.skydd.hugg" value="{{actor.system.skada.skydd.hugg}}" data-dtype="Number" />
+                    <input class="attribute-value skill-label skill-value" type="text" name="system.skada.skydd.hugg" value="{{actor.system.skada.skydd.hugg}}" data-dtype="Number" />
                     <span class="floating-label">Hugg</span>
                 </div>
                 <div class="pullLeft number-value-text floating-label-group">
-                    <input class="attribute-value editable skill-label skill-value" type="text" name="system.skada.skydd.kross" value="{{actor.system.skada.skydd.kross}}" data-dtype="Number" />
+                    <input class="attribute-value skill-label skill-value" type="text" name="system.skada.skydd.kross" value="{{actor.system.skada.skydd.kross}}" data-dtype="Number" />
                     <span class="floating-label">Kross</span>
                 </div>
                 <div class="pullLeft number-value-text floating-label-group">
-                    <input class="attribute-value editable skill-label skill-value" type="text" name="system.skada.skydd.stick" value="{{actor.system.skada.skydd.stick}}" data-dtype="Number" />
+                    <input class="attribute-value skill-label skill-value" type="text" name="system.skada.skydd.stick" value="{{actor.system.skada.skydd.stick}}" data-dtype="Number" />
                     <span class="floating-label">Stick</span>
+                </div>                
+            </div>
+            <div class="clear">
+                <div class="pullLeft number-value-text">
+                    {{sum 
+                        actor.system.skada.skydd.hugg 
+                        actor.system.harleddegenskaper.grundrustning.totalt
+                    }}
+                </div>
+                <div class="pullLeft number-value-text floating-label-group"> 
+                    {{sum 
+                        actor.system.skada.skydd.kross 
+                        actor.system.harleddegenskaper.grundrustning.totalt
+                    }}
                 </div>
                 <div class="pullLeft number-value-text floating-label-group">
-                    <input class="attribute-value editable skill-label skill-value" type="text" name="system.skada.skydd.grund" value="{{actor.system.skada.skydd.grund}}" data-dtype="Number" />
-                    <span class="floating-label">Grund</span>
+                    {{sum 
+                        actor.system.skada.skydd.stick
+                        actor.system.harleddegenskaper.grundrustning.totalt
+                    }}
                 </div>
             </div>
         </div>
@@ -125,7 +141,7 @@
                     <div class="three-column centerText number-value-text">{{vandning.skada}}</div>
                     <div class="three-column centerText number-value-text">{{vandning.utmattning}}</div>
                     {{#if vandning.vandning}}
-                        <div class="three-column centerText number-value-text vrollable" data-source="vandning" data-itemid="{{actor.system.skada.vandning.vandningid}}">1T10</div>
+                        <div class="three-column centerText number-value-text {{#if (ne ../actor.system.skada.vandning.listaid "")}}vrollable{{/if}}" data-source="vandning">1T10</div>
                     {{else}}
                         <div class="three-column centerText number-value-text">-</div>
                     {{/if}}

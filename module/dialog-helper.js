@@ -47,7 +47,7 @@ export default class classDialogHelper {
     }
 
     static AttributeEditDialog(actor, type, key) {
-        const attribute = new DialogAttribute(type, key);
+        const attribute = new DialogAttribute(actor, type, key);
 		let attributeRollUse = new DialogAttributeEdit(actor, attribute);
 		attributeRollUse.render(true);
     }
@@ -69,9 +69,9 @@ export default class classDialogHelper {
     }
 
     static async VandningDialog(actor) {
-        const vandningid = actor.system.skada?.vandning?.vandningid;
+        const vandningid = actor.system.skada?.vandning?.listaid;
 
-        if ((vandningid != undefined) || (vandningid != "")) {
+        if ((vandningid != undefined) && (vandningid != "")) {
             let vandning = game.settings.get("eon-rpg", vandningid);
 
             // Template for the dialog form

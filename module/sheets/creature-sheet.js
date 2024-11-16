@@ -125,6 +125,38 @@ export default class EonCreatureSheet extends ActorSheet {
 			.click(this._onItemEdit.bind(this));
     }
 
+    /** @override */
+    /**
+        * Aktiveras om Item släpps på rollformuläret.
+        * @param _event
+        * @param data - det släppta item
+    */
+    async _onDropItem(_event, _data) {
+        // if (!this.isEditable || !_data.uuid) {
+        //     return false;
+        // }
+
+        //const droppedItem = await Item.implementation.fromDropData(_data);          
+        
+        super._onDropItem(_event, _data)
+    }
+
+    /** @override */
+    /**
+        * Aktiveras om Item släpps på rollformuläret.
+        * @param _event
+        * @param data - det släppta item
+    */
+    async _onDropActor(_event, _data) {
+        // if (!this.isEditable || !_data.uuid) {
+        //     return false;
+        // }
+
+        //const droppedItem = await Item.implementation.fromDropData(_data);          
+        
+        super._onDropActor(_event, _data)
+    }
+
     /**
         * Aktiveras om man klickat på något för att slå ett tärningsslag. Saknas slaget man skickar in får man ett felmeddelande.
         * Finns flera olika typer av tärningsslag man kan slå (source):
@@ -206,7 +238,7 @@ export default class EonCreatureSheet extends ActorSheet {
                 mallData = game.EON.djur.variant[mall.value];
             }
 
-            if ((actorData.name != '') && (mallData.namn != '')) {
+            if ((actorData.name == '') && (mallData.namn != '')) {
                 actorData.name = mallData.namn;
             }
             
@@ -258,9 +290,13 @@ export default class EonCreatureSheet extends ActorSheet {
                     let mall = (!mallVarde) ? 0 : parseInt(mallVarde);
                     let grupp = (!gruppVarde) ? 0 : parseInt(gruppVarde);
 
-                    actorData.system.harleddegenskaper[egenskap] = mall + grupp;
+                    //actorData.system.harleddegenskaper[egenskap] = mall + grupp;
+                    actorData.system.harleddegenskaper[egenskap].varde = mall + grupp;
+                    actorData.system.harleddegenskaper[egenskap].totalt = mall + grupp;
                 }
             }
+
+            actorData.system.strid.aterhamtning = gruppData.strid.aterhamtning;
 
             await this.actor.update(actorData);
             this.render();
