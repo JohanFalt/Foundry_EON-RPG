@@ -29,7 +29,10 @@ eon.ikoner = {
     foremal_rustning: "systems/eon-rpg/assets/img/icons/chest-armor.svg",
     foremal_armborst: "systems/eon-rpg/assets/img/icons/crossbow.svg",
     foremal_bage: "systems/eon-rpg/assets/img/icons/high-shot.svg",
-    foremal_kastvapen: "systems/eon-rpg/assets/img/icons/thrown-spear.svg"    
+    foremal_kastvapen: "systems/eon-rpg/assets/img/icons/thrown-spear.svg",
+    skada_stick: "systems/eon-rpg/assets/img/icons/spear.svg",
+    skada_kross: "systems/eon-rpg/assets/img/icons/thor-hammer.svg",
+    skada_hugg: "systems/eon-rpg/assets/img/icons/battleaxe.svg"
 }
 
 eon.slag = {

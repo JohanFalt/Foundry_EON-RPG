@@ -387,12 +387,31 @@ export const RegisterHandlebarsHelpers = function () {
 	});
 
 	// hämtar en särskild vapenskada
-	Handlebars.registerHelper("getWeaponDamageType", function(vapenskador, skada) {
+	Handlebars.registerHelper("getWeaponDamageType", function(skada) {
 		if (isEmpty(skada)) {
 			return "&nbsp;";
 		}
 
-		return vapenskador[skada];
+		//return vapenskador[skada];
+
+		let icon = "";
+		let text = "";
+		if (skada == "stick") {
+			text = "Stick";
+			icon = "skada_stick";
+		}
+		if (skada == "kross") {
+			icon = "skada_kross";
+			text = "Kross";
+		}
+		if (skada == "hugg") {
+			text = "Hugg";
+			icon = "skada_hugg";
+		}
+
+		//return game.EON.CONFIG.ikoner[icon];
+		return '<img src="'+game.EON.CONFIG.ikoner[icon]+'" class="item img-text-icon" title="'+text+'" />';
+		//game.EON.CONFIG.ikoner[icon]
 	});
 
 	// hämtar en särskild räckvidd

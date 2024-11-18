@@ -6,9 +6,9 @@
                     <div style="width: 100px;">Delområde</div>
                     <div style="width: 50px;">Kod</div>
                     <div style="width: 125px;">Material</div>
-                    <div style="width: 50px;">Hugg</div>
-                    <div style="width: 50px;">Kross</div>
-                    <div style="width: 50px;">Stick</div>
+                    <div class="centerText" style="width: 50px;"><img src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-icon" title="Hugg" /></div>
+                    <div class="centerText" style="width: 50px;"><img src="{{EON.CONFIG.ikoner.skada_kross}}" class="item img-icon" title="Kross" /></div>
+                    <div class="centerText" style="width: 50px;"><img src="{{EON.CONFIG.ikoner.skada_stick}}" class="item img-icon" title="Stick" /></div>
                     <div>Egenskaper</div>
                 </div>
                 
@@ -27,16 +27,16 @@
                 <div class="item-row headline">
                     <div style="width: 100px;">Delområde</div>
                     <div style="width: 125px;">Material</div>
-                    <div class="centerText" style="width: 50px;">Hugg</div>
-                    <div class="centerText" style="width: 50px;">Kross</div>
-                    <div class="centerText" style="width: 50px;">Stick</div>
+                    <div class="centerText" style="width: 50px;"><img src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-icon" title="Hugg" /></div>
+                    <div class="centerText" style="width: 50px;"><img src="{{EON.CONFIG.ikoner.skada_kross}}" class="item img-icon" title="Kross" /></div>
+                    <div class="centerText" style="width: 50px;"><img src="{{EON.CONFIG.ikoner.skada_stick}}" class="item img-icon" title="Stick" /></div>
                 </div>
 
                 {{#each actor.system.listdata.kroppsdelar as |rustning key|}}
                     <div class="item-row" style="line-height: 25px; width:100%;">
                         <div style="width: 100px;">{{rustning.namn}}</div>
                         <div style="width: 125px;">{{#if (ne rustning.material "")}}{{getArmorType rustning.material}}{{else}}&nbsp;{{/if}}</div>
-                        <div class="centerText number-value-text" style="width: 50px;">
+                        <div class="centerText  " style="width: 50px;">
                             {{#with ../actor.system.harleddegenskaper.grundrustning}}
                             {{/with}}
                             {{sum 
@@ -44,13 +44,13 @@
                                 ../actor.system.harleddegenskaper.grundrustning.totalt
                             }}
                         </div>
-                        <div class="centerText number-value-text" style="width: 50px;">
+                        <div class="centerText  " style="width: 50px;">
                             {{sum 
                                 rustning.kross 
                                 ../actor.system.harleddegenskaper.grundrustning.totalt
                             }}
                         </div>
-                        <div class="centerText number-value-text" style="width: 50px;">
+                        <div class="centerText  " style="width: 50px;">
                             {{sum 
                                 rustning.stick 
                                 ../actor.system.harleddegenskaper.grundrustning.totalt
@@ -85,7 +85,7 @@
             {{/if}}
             <div class="active-icon"><input class="pointer item-active" name="rustning.system.installningar.buren" type="checkbox" data-itemid="{{rustning._id}}" data-property="buren" {{isChecked rustning.system.installningar.buren}} /></div>
             <div style="width: 125px;">{{rustning.name}}</div>
-            <div class="centerText number-value-text" style="width: 100px;">{{rustning.system.belastning}}</div>
+            <div class="centerText  " style="width: 100px;">{{rustning.system.belastning}}</div>
             <div>{{rustning.system.tacker}}</div>
         </div>                    
     {{/each}}

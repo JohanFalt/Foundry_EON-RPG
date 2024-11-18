@@ -93,6 +93,9 @@ export class DialogAttribute {
         else if (actor.system[this.#_attributeType][this.#_attributeKey].varde != undefined) {
             this.#_attributeBasicValue = actor.system[this.#_attributeType][this.#_attributeKey].varde;
         }
+        else if (actor.system[this.#_attributeType][this.#_attributeKey].totalt != undefined) {
+            this.#_attributeBasicValue = actor.system[this.#_attributeType][this.#_attributeKey].totalt;                
+        }
         else {
             if (this.#_attributeKey != 'vandning')
                 console.error('DialogAttribute saknade värde');
@@ -429,11 +432,11 @@ export class DialogAttributeEdit extends FormApplication {
             await this.actor.update(actorData);
         }
         else if (this.object.attributeType === "skada") {
-            actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus += 1;
+            actorData.system[this.object.attributeType][this.object.attributeKey].totalt.bonus += 1;
 
-            if (actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus > 3) {
-                actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde += 1;
-                actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus = 0;
+            if (actorData.system[this.object.attributeType][this.object.attributeKey].totalt.bonus > 3) {
+                actorData.system[this.object.attributeType][this.object.attributeKey].totalt.tvarde += 1;
+                actorData.system[this.object.attributeType][this.object.attributeKey].totalt.bonus = 0;
             }
 
             await this.actor.update(actorData);
@@ -504,16 +507,16 @@ export class DialogAttributeEdit extends FormApplication {
             }
         }
         else if (this.object.attributeType === "skada") {
-            actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus -= 1;
+            actorData.system[this.object.attributeType][this.object.attributeKey].totalt.bonus -= 1;
 
-            if (actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus < -1) {
-                actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde -= 1;
-                actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus = 3;
+            if (actorData.system[this.object.attributeType][this.object.attributeKey].totalt.bonus < -1) {
+                actorData.system[this.object.attributeType][this.object.attributeKey].totalt.tvarde -= 1;
+                actorData.system[this.object.attributeType][this.object.attributeKey].totalt.bonus = 3;
             }
 
-            if (actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde < 0) {
-                actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde = 0;
-                actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus = 0;
+            if (actorData.system[this.object.attributeType][this.object.attributeKey].totalt.tvarde < 0) {
+                actorData.system[this.object.attributeType][this.object.attributeKey].totalt.tvarde = 0;
+                actorData.system[this.object.attributeType][this.object.attributeKey].totalt.bonus = 0;
             }
 
             await this.actor.update(actorData);

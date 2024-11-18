@@ -345,9 +345,6 @@
     margin: 5px;
 }
 
-.EON .number-value-text {
-}
-
 .EON .highlighted {
     font-style: italic;
     font-weight: bold;
@@ -666,10 +663,6 @@
     width: 98%;
 }
 
-.EON .navigation {
-    
-}
-
 .EON .sheet-character .navigation {
     width: 100%;
     margin-top: 10px;
@@ -916,6 +909,18 @@ input.skill-value {
 
 .img-block {
     width: 100px;
+}
+
+.img-icon {
+    width: 25px;
+    height: 25px;
+    border: 0;
+}
+
+.img-text-icon {
+    width: 15px;
+    height: 15px;
+    border: 0;
 }
 
 .fardighetsvarde {

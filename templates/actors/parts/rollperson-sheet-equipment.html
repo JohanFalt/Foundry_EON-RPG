@@ -8,24 +8,24 @@
             </div>
             <div class="clear">
                 <div class="pullLeft" style="width: 125px;">Vapen</div>
-                <div class="pullLeft number-value-text">{{actor.system.berakning.belastning.vapen}} kg</div>
+                <div class="pullLeft  ">{{actor.system.berakning.belastning.vapen}} kg</div>
             </div>
             <div class="clear">
                 <div class="pullLeft" style="width: 125px;">Rustning</div>
-                <div class="pullLeft number-value-text">{{actor.system.berakning.belastning.rustning}}</div>
+                <div class="pullLeft  ">{{actor.system.berakning.belastning.rustning}}</div>
             </div>
             <div class="clear">
                 <div class="pullLeft" style="width: 125px;">Utrustning</div>
-                <div class="pullLeft number-value-text">{{actor.system.berakning.belastning.utrustning}} kg</div>
+                <div class="pullLeft  ">{{actor.system.berakning.belastning.utrustning}} kg</div>
             </div>
             <!-- <div class="clear">
                 <div class="pullLeft" style="width: 125px;">Riddjur</div>
-                <div class="pullLeft number-value-text">0 kg</div>
-                <div class="pullLeft number-value-text">{{actor.system.berakning.belastning.riddjur}}</div>
+                <div class="pullLeft  ">0 kg</div>
+                <div class="pullLeft  ">{{actor.system.berakning.belastning.riddjur}}</div>
             </div> -->
             <div class="clear">
                 <div class="pullLeft" style="width: 125px;">Totalt avdrag</div>
-                <div class="pullLeft number-value-text">{{#if (eq (getDiceValue actor.system.berakning.belastning.totaltavdrag) "0")}}0{{else}}{{getDiceValue actor.system.berakning.belastning.totaltavdrag}}{{/if}}</div>
+                <div class="pullLeft  ">{{#if (eq (getDiceValue actor.system.berakning.belastning.totaltavdrag) "0")}}0{{else}}{{getDiceValue actor.system.berakning.belastning.totaltavdrag}}{{/if}}</div>
             </div>
             <div class="information-area information-box">Alla totalvikter är avrundade till heltal.</div>
         </div>        

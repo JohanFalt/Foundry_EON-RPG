@@ -19,6 +19,16 @@
             </div>
         </div>
     {{/each}}
+
+    <div class="skill-row skill">
+        <div class="vrollable caption normalskill" data-source="attribute" data-type="skada" data-key="forsvar" title="{{{actor.system.skada.forsvar.beskrivning}}}">{{actor.system.skada.forsvar.namn}}</div>                     
+        <div class="dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue actor.system.skada.forsvar.totalt}}</div>
+        <div class="skill-icon">
+            <a class="item-edit" title="Editera försvar" data-type="skada" data-attribute="forsvar">
+                <i class="icon fa-solid fa-pen-to-square"></i>
+            </a>
+        </div>
+    </div>
 </div>
 
 

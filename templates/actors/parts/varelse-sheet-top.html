@@ -44,7 +44,12 @@
                 <div class="vrollable pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="livskraft">{{EON.CONFIG.harleddegenskaper.livskraft.namn}}</div>
                 <div class="pullLeft dice-value">{{getDiceValue (getActorAttribute data 'harleddegenskaper' 'livskraft')}}</div>
                 <div class="pullLeft skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.livskraft.namn}}" data-type="attribute" data-source="harleddegenskaper" data-attribute="livskraft"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
-            </div>            
+            </div>   
+            <div class="attribute clear">
+                <div class="pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="livskraft">Grundskada</div>
+                <div class="pullLeft dice-value">{{getDiceValue data.system.harleddegenskaper.grundskada.totalt}}</div>
+                <div class="pullLeft skill-icon"><a class="item-edit" title="Editera grundskada" data-type="attribute" data-source="harleddegenskaper" data-attribute="grundskada"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            </div>
         </div>  
 
         <div class="three-column pullLeft">    
@@ -66,30 +71,53 @@
                 <div class="attribute-area">Utmattning</div>
             </div>
             <div class="item-row">
-                <div class="number-value-text floating-label-group">
+                <div class="  floating-label-group">
                     <input class="attribute-value skill-label" type="text" value="{{actor.system.skada.utmattning.grund}}" disabled readonly />
                     <span class="floating-label">Grund</span>
                 </div>
-                <div class="number-value-text floating-label-group">
+                <div class="  floating-label-group">
                     <input class="attribute-value editable skill-label skill-value" name="system.skada.utmattning.varde" type="text" value="{{actor.system.skada.utmattning.varde}}" data-dtype="Number" />
                     <span class="floating-label">Värde</span>
                 </div>
             </div>  
 
-            <div class="headline">
-                <div class="attribute-area">Återhämtning</div>
-            </div>            
-            <div class="number-value-text">
+            <div class="headline attribute-area">Återhämtning</div>
+            <div class=" ">
                 <input class="attribute-value editable skill-label skill-value" type="text" name="system.strid.aterhamtning" value="{{actor.system.strid.aterhamtning}}" data-dtype="Number" />
             </div>
 
-            <div class="headline">
-                <div class="attribute-area">Grundrustning</div>
+            {{log this}}
+            
+            <div class="headline attribute-area" style="width: 150px;">Skydd totalt</div>
+            <div class="item-row">
+                <div class="item-row">
+                    <div class=" ">
+                        {{sum 
+                            actor.system.skada.skydd.hugg 
+                            actor.system.harleddegenskaper.grundrustning.totalt
+                        }}
+                    </div>
+                    <div>
+                        <img src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-text-icon" title="Hugg" />
+                    </div>
+                </div>
+                <div class="  centerText" style="width: 50px;"> 
+                    {{sum 
+                        actor.system.skada.skydd.kross 
+                        actor.system.harleddegenskaper.grundrustning.totalt
+                    }}
+
+                    <img src="{{EON.CONFIG.ikoner.skada_kross}}" class="item img-text-icon" title="Kross" />
+                </div>
+                <div class="  centerText" style="width: 50px;">
+                    {{sum 
+                        actor.system.skada.skydd.stick
+                        actor.system.harleddegenskaper.grundrustning.totalt
+                    }}
+
+                    <img src="{{EON.CONFIG.ikoner.skada_stick}}" class="item img-text-icon" title="Stick" />
+                </div>
             </div>
-            <div class="attribute item-row">
-                <div class="dice-value">{{actor.system.harleddegenskaper.grundrustning.totalt}}</div>
-                <div class="skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.grundrustning.namn}}" data-type="attribute" data-source="harleddegenskaper" data-attribute="grundrustning"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
-            </div>            
             
         </div>
     </div>
