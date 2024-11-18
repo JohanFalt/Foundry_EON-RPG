@@ -1,5 +1,4 @@
 <div class="item-box">
-
     <div class="large-headline">Vapen</div>
 
     <div class="headline headline-background item-row">    
@@ -12,9 +11,9 @@
 
         <div class="centerText" style="width: 60px;">Träffa</div>
 
-        <div class="centerText" style="width: 50px;">Hugg</div>
-        <div class="centerText" style="width: 50px;">Kross</div>
-        <div class="centerText" style="width: 50px;">Stick</div>
+        <div class="centerText" style="width: 50px;"><img src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-icon" title="Hugg" /></div>
+        <div class="centerText" style="width: 50px;"><img src="{{EON.CONFIG.ikoner.skada_kross}}" class="item img-icon" title="Kross" /></div>
+        <div class="centerText" style="width: 50px;"><img src="{{EON.CONFIG.ikoner.skada_stick}}" class="item img-icon" title="Stick" /></div>
         <div style="margin-left: 50px;">Egenskaper</div>
     </div>   
 
@@ -23,13 +22,13 @@
             <div class="weapon-icon"><a class="item-edit" title="Editera vapen" data-source="weapon" data-itemid="{{vapen._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             <div class="vrollable" style="width: 150px;" data-source="weapon" data-itemid="{{vapen._id}}">{{vapen.name}}</div>
 
-            <div class="centerText number-value-text" style="width: 60px;">{{getDiceValue vapen.system.traffa}}</div>        
+            <div class="centerText  " style="width: 60px;">{{getDiceValue vapen.system.traffa}}</div>        
 
-            <div class="centerText number-value-text" style="width: 50px;">{{#if (eq vapen.system.hugg.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.hugg ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
-            <div class="centerText number-value-text" style="width: 50px;">{{#if (eq vapen.system.kross.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.kross ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
-            <div class="centerText number-value-text" style="width: 50px;">{{#if (eq vapen.system.stick.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.stick ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
+            <div class="centerText  " style="width: 50px;">{{#if (eq vapen.system.hugg.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.hugg ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
+            <div class="centerText  " style="width: 50px;">{{#if (eq vapen.system.kross.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.kross ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
+            <div class="centerText  " style="width: 50px;">{{#if (eq vapen.system.stick.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.stick ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
             
-            <div class="number-value-text" title="{{getPropertyList vapen.system.egenskaper}}" style="margin-left: 50px;">{{shorten (getPropertyList vapen.system.egenskaper) 50 false}}</div>                        
+            <div class=" " title="{{getPropertyList vapen.system.egenskaper}}" style="margin-left: 50px;">{{shorten (getPropertyList vapen.system.egenskaper) 50 false}}</div>                        
         </div>
     {{/each}}
     
@@ -50,109 +49,76 @@
         <div class="item-row" style="line-height: 25px; width:100%;">
             <div class="weapon-icon"><a class="item-edit" title="Editera vapen" data-source="weapon" data-itemid="{{vapen._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             <div class="vrollable" style="width: 150px;" data-source="weapon" data-itemid="{{vapen._id}}">{{vapen.name}}</div>
-            <div class="centerText number-value-text" style="width: 60px;">{{getDiceValue vapen.system.traffa}}</div>        
-            <div class="centerText number-value-text" style="width: 100px;">{{getDiceValue vapen.system.skada}} {{{getWeaponDamageType ../EON.CONFIG.vapenskador vapen.system.skadetyp}}}</div>
-            <div class="centerText number-value-text" style="width: 100px;">{{{getRange ../EON.CONFIG.vapenavstand vapen.system.rackvidd}}}</div>
-            <div class="number-value-text" title="{{getPropertyList vapen.system.egenskaper}}">{{shorten (getPropertyList vapen.system.egenskaper) 50 false}}</div>                        
+            <div class="centerText  " style="width: 60px;">{{getDiceValue vapen.system.traffa}}</div>        
+            <div class="centerText  " style="width: 100px;">{{getDiceValue vapen.system.skada}} {{{getWeaponDamageType vapen.system.skadetyp}}}</div>
+            <div class="centerText  " style="width: 100px;">{{{getRange ../EON.CONFIG.vapenavstand vapen.system.rackvidd}}}</div>
+            <div class=" " title="{{getPropertyList vapen.system.egenskaper}}">{{shorten (getPropertyList vapen.system.egenskaper) 50 false}}</div>                        
         </div>
     {{/each}}
 </div>
 
-<div class="item-box item-row">    
-    <div class="three-column">
-        <div class="item-box item-column">
-            <div class="large-headline">Försvar</div>
-            <div class="attribute item-row">
-                <div class="headline" style="width: 150px;">{{actor.system.skada.forsvar.namn}}</div>
-                <div class="dice-value">{{getDiceValue actor.system.skada.forsvar.grund}}</div>
-                <div class="skill-icon">
-                    <a class="item-edit" title="Editera försvar" data-type="skada" data-attribute="forsvar">
-                        <i class="icon fa-solid fa-pen-to-square"></i>
-                    </a>
+<div class="item-box">   
+
+    
+
+    <div class="item-row">       
+
+        <div class="item-column">
+
+            <div class="item-row" style="min-height: 75px;">
+                <div class="headline" style="width:175px;">Grundrustning</div>
+                <div class="attribute item-row">
+                    <div class="dice-value">{{actor.system.harleddegenskaper.grundrustning.totalt}}</div>
+                    <div class="skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.grundrustning.namn}}" data-type="attribute" data-source="harleddegenskaper" data-attribute="grundrustning"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
                 </div>
-            </div>
-            {{#if (ne actor.system.skada.forsvar.beskrivning "")}}
-                <div class="information-area information-box">{{{actor.system.skada.forsvar.beskrivning}}}</div>
-            {{/if}}
-        </div>   
-        
-        <div class="item-box item-column">
-            <div class="headline">Skydd</div>
-            <div class="clear">
-                <div class="pullLeft number-value-text floating-label-group">
+            </div>    
+            
+            <div class="item-row">
+                <div class="headline" style="width:175px;">Skydd</div>
+                <div class="  floating-label-group">
                     <input class="attribute-value skill-label skill-value" type="text" name="system.skada.skydd.hugg" value="{{actor.system.skada.skydd.hugg}}" data-dtype="Number" />
                     <span class="floating-label">Hugg</span>
                 </div>
-                <div class="pullLeft number-value-text floating-label-group">
+                <div class="  floating-label-group">
                     <input class="attribute-value skill-label skill-value" type="text" name="system.skada.skydd.kross" value="{{actor.system.skada.skydd.kross}}" data-dtype="Number" />
                     <span class="floating-label">Kross</span>
                 </div>
-                <div class="pullLeft number-value-text floating-label-group">
+                <div class="  floating-label-group">
                     <input class="attribute-value skill-label skill-value" type="text" name="system.skada.skydd.stick" value="{{actor.system.skada.skydd.stick}}" data-dtype="Number" />
                     <span class="floating-label">Stick</span>
                 </div>                
             </div>
-            <div class="clear">
-                <div class="pullLeft number-value-text">
-                    {{sum 
-                        actor.system.skada.skydd.hugg 
-                        actor.system.harleddegenskaper.grundrustning.totalt
-                    }}
-                </div>
-                <div class="pullLeft number-value-text floating-label-group"> 
-                    {{sum 
-                        actor.system.skada.skydd.kross 
-                        actor.system.harleddegenskaper.grundrustning.totalt
-                    }}
-                </div>
-                <div class="pullLeft number-value-text floating-label-group">
-                    {{sum 
-                        actor.system.skada.skydd.stick
-                        actor.system.harleddegenskaper.grundrustning.totalt
-                    }}
-                </div>
-            </div>
+                       
+
+            
         </div>
 
-        <div class="three-column item-row">
-            <div class="headline">Grundskada</div>
-            <div class="dice-value">{{getDiceValue data.system.harleddegenskaper.grundskada.totalt}}</div>
-            <div class="pullLeft skill-icon">
-                <a class="item-edit" title="Editera grundskada" 
-                    data-type="attribute" 
-                    data-source="harleddegenskaper" 
-                    data-attribute="grundskada">
+        <div class="item-row item-right" style="width: 40%">
+            <div class="information-area information-box" style="max-width: 250px; width: 250px;">
+                <div class="headline skill-row skill">
+                    <div class="three-column centerText">Skada</div>
+                    <div class="three-column centerText">Utm.</div>
+                    <div class="three-column centerText">Vändning</div>                
+                </div>
+    
+                {{#each actor.system.skada.vandning.lista as | vandning key|}}
+                    <div class="skill-row skill">
+                        <div class="three-column centerText  ">{{vandning.skada}}</div>
+                        <div class="three-column centerText  ">{{vandning.utmattning}}</div>
+                        {{#if vandning.vandning}}
+                            <div class="three-column centerText   {{#if (ne ../actor.system.skada.vandning.listaid "")}}vrollable{{/if}}" data-source="vandning">1T10</div>
+                        {{else}}
+                            <div class="three-column centerText  ">-</div>
+                        {{/if}}
+                    </div>
+                {{/each}}
+    
+            </div>
+            <div class="skill-icon">
+                <a class="item-edit" title="Editera" data-type="skada" data-attribute="vandning">
                     <i class="icon fa-solid fa-pen-to-square"></i>
                 </a>
             </div>
-        </div>
-    </div>  
-
-    <div class="item-row item-right" style="width: 40%">
-        <div class="information-area information-box" style="max-width: 250px; width: 250px;">
-            <div class="headline skill-row skill">
-                <div class="three-column centerText">Skada</div>
-                <div class="three-column centerText">Utm.</div>
-                <div class="three-column centerText">Vändning</div>                
-            </div>
-
-            {{#each actor.system.skada.vandning.lista as | vandning key|}}
-                <div class="skill-row skill">
-                    <div class="three-column centerText number-value-text">{{vandning.skada}}</div>
-                    <div class="three-column centerText number-value-text">{{vandning.utmattning}}</div>
-                    {{#if vandning.vandning}}
-                        <div class="three-column centerText number-value-text {{#if (ne ../actor.system.skada.vandning.listaid "")}}vrollable{{/if}}" data-source="vandning">1T10</div>
-                    {{else}}
-                        <div class="three-column centerText number-value-text">-</div>
-                    {{/if}}
-                </div>
-            {{/each}}
-
-        </div>
-        <div class="skill-icon">
-            <a class="item-edit" title="Editera" data-type="skada" data-attribute="vandning">
-                <i class="icon fa-solid fa-pen-to-square"></i>
-            </a>
         </div>
     </div>
 </div>

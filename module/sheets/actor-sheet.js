@@ -346,9 +346,9 @@ export default class EonActorSheet extends ActorSheet {
 
     /** @override */
     /**
-        * Aktiveras om Item släpps på rollformuläret.
+        * Aktiveras om Actor släpps på rollformuläret.
         * @param _event
-        * @param data - det släppta item
+        * @param data - det släppta actor
     */
     async _onDropActor(_event, _data) {
         if (!this.isEditable || !_data.uuid) {

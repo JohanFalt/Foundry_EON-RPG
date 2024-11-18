@@ -16,12 +16,9 @@
         </div>
         <div style="width: 175px;">Närstridsvapen</div>
         <div class="centerText" style="width: 75px;">Träffa</div>
-        <!-- <div class="centerText" style="width: 45px;">1H</div>
-        <div class="centerText" style="width: 45px;">2H</div> -->
-        <div class="centerText" style="width: 50px;">Hugg</div>
-        <div class="centerText" style="width: 50px;">Kross</div>
-        <div class="centerText" style="width: 50px;">Stick</div>
-        <!-- <div class="centerText" style="width: 60px;">Längd</div> -->
+        <div class="centerText" style="width: 50px;"><img src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-icon" title="Hugg" /></div>
+        <div class="centerText" style="width: 50px;"><img src="{{EON.CONFIG.ikoner.skada_kross}}" class="item img-icon" title="Kross" /></div>
+        <div class="centerText" style="width: 50px;"><img src="{{EON.CONFIG.ikoner.skada_stick}}" class="item img-icon" title="Stick" /></div>
         <div class="centerText" style="width: 50px;">Antal</div>
         <div class="centerText" style="width: 50px;">Vikt</div>
         <div>Egenskaper</div>
@@ -37,26 +34,23 @@
             {{/if}}
             <div class="active-icon"><input class="pointer item-active" title="Bära vapen" name="vapen.system.installningar.buren" type="checkbox" data-itemid="{{vapen._id}}" data-property="buren" {{isChecked vapen.system.installningar.buren}} /></div>
             <div class="vrollable" style="width: 125px;" data-source="weapon" data-itemid="{{vapen._id}}">{{vapen.name}}</div>
-            <div class="centerText number-value-text" style="width: 75px;">{{getDiceValue (getActorSkillGroupValue ../actor vapen.system.grupp "strid")}}</div>
-            <!-- <div class="centerText number-value-text" style="width: 45px;">{{#if (eq vapen.system.enhand.aktiv false)}}-{{else}}{{getDiceValue vapen.system.enhand}}{{/if}}</div>
-            <div class="centerText number-value-text" style="width: 45px;">{{#if (eq vapen.system.tvahand.aktiv false)}}-{{else}}{{getDiceValue vapen.system.tvahand}}{{/if}}</div> -->
-            <div class="centerText number-value-text" style="width: 50px;">{{#if (eq vapen.system.hugg.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.hugg ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
-            <div class="centerText number-value-text" style="width: 50px;">{{#if (eq vapen.system.kross.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.kross ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
-            <div class="centerText number-value-text" style="width: 50px;">{{#if (eq vapen.system.stick.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.stick ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
-            <!-- <div class="centerText number-value-text" style="width: 60px;">{{#if (eq vapen.system.langd 0)}}-{{else}}{{vapen.system.langd}}cm{{/if}}</div> -->
-            <div class="centerText number-value-text" style="width: 50px;">
+            <div class="centerText  " style="width: 75px;">{{getDiceValue (getActorSkillGroupValue ../actor vapen.system.grupp "strid")}}</div>
+            <div class="centerText  " style="width: 50px;">{{#if (eq vapen.system.hugg.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.hugg ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
+            <div class="centerText  " style="width: 50px;">{{#if (eq vapen.system.kross.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.kross ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
+            <div class="centerText  " style="width: 50px;">{{#if (eq vapen.system.stick.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.stick ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
+            <div class="centerText  " style="width: 50px;">
                 <i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="{{vapen._id}}"></i>
                 {{vapen.system.antal}}
                 <i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="{{vapen._id}}"></i>
             </div>
-            <div class="centerText number-value-text" style="width: 50px;">
+            <div class="centerText  " style="width: 50px;">
                 {{#if (eq vapen.system.vikt 0)}}
                     -
                 {{else}}
                     {{round (multiplicate vapen.system.vikt vapen.system.antal) 2}}kg
                 {{/if}}
             </div>
-            <div class="number-value-text" title="{{getPropertyList vapen.system.egenskaper}}">{{shorten (getPropertyList vapen.system.egenskaper) 50 false}}</div>
+            <div class=" " title="{{getPropertyList vapen.system.egenskaper}}">{{shorten (getPropertyList vapen.system.egenskaper) 50 false}}</div>
         </div>
     {{/each}}    
 </div>

@@ -12,7 +12,7 @@
                                 <span class="resource-box resource-box-center resource-value" data-index="{{this}}" data-value="smarta"></span>
                             {{/numFromLoop}}
                         </div>
-                        <div class="number-value-text floating-label-group">
+                        <div class="  floating-label-group">
                             <input class="attribute-value editable" type="text" value="{{#if (gt actor.system.berakning.svarighet.smarta 0)}}-{{actor.system.berakning.svarighet.smarta}}T6{{else}}Inga{{/if}}" disabled readonly />
                             <span class="floating-label">Avdrag</span>
                         </div>
@@ -30,7 +30,7 @@
                                 <span class="resource-box resource-box-center resource-value" data-index="{{this}}" data-value="blodning"></span>
                             {{/numFromLoop}}
                         </div>
-                        <div class="number-value-text floating-label-group">
+                        <div class="  floating-label-group">
                             <input class="attribute-value editable skill-label skill-value" name="system.skada.blodningsvarighet" type="text" value="{{data.system.skada.blodningsvarighet}}" data-value="{{data.system.skada.blodningsvarighet}}" data-dtype="Number" autocomplete="off" autofocus required />
                             <span class="floating-label">Svårighet</span>
                         </div>
@@ -44,11 +44,11 @@
                 <div class="headline">Infektion</div>   
                 <div class="three-quarter-column">
                     <div class="item-row">
-                        <div class="resource-box number-value-text floating-label-group">
+                        <div class="resource-box   floating-label-group">
                             <input name="system.skada.infektion" class="attribute-value editable skill-label skill-value" type="text" value="{{data.system.skada.infektion}}" data-dtype="Number" autocomplete="off" autofocus required />
                             <span class="floating-label">Nivå</span>
                         </div>
-                        <div class="resource-box number-value-text floating-label-group">
+                        <div class="resource-box   floating-label-group">
                             <input name="system.skada.infektionsvarighet" class="attribute-value editable skill-label skill-value" type="text" value="{{data.system.skada.infektionsvarighet}}" data-dtype="Number" autocomplete="off" autofocus required />
                             <span class="floating-label">Svårighet</span>
                         </div>

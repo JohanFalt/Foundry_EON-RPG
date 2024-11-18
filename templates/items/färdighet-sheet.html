@@ -9,7 +9,7 @@
 				</div>
 
 				<div class="item-column" style="min-width: 270px;">
-					<div class="item-property-area number-value-text floating-label-group">
+					<div class="item-property-area   floating-label-group">
 						{{#if item.system.aspekt}}
 							<select class="text-value inputdata" name="system.id" data-source="aspekt">
 								<option value="">- Välj -</option>
@@ -23,7 +23,7 @@
 
 					{{#if this.isPC}}
 
-						<div class="item-property-area number-value-text floating-label-group">
+						<div class="item-property-area   floating-label-group">
 							<select class="text-value" name="system.attribut">
 								<option value="">- Välj -</option>
 								<option value="">- Inget attribut -</option>
@@ -34,7 +34,7 @@
 
 					{{/if}}
 					
-					<div class="item-property-area number-value-text floating-label-group">
+					<div class="item-property-area   floating-label-group">
 						<input class="text-value editable" name="system.referens" type="text" value="{{item.system.referens}}" data-dtype="String" />
 						<span class="floating-label">Referens</span>
 					</div>

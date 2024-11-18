@@ -11,17 +11,17 @@
                     </div>
 
                     <div class="item-column" style="min-width: 270px;">
-                        <div class="item-property-area number-value-text floating-label-group">
+                        <div class="item-property-area   floating-label-group">
                             <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
                             <span class="floating-label">Namn</span>
                         </div>
 
-                        <div class="item-property-area number-value-text floating-label-group">
+                        <div class="item-property-area   floating-label-group">
                             <input class="attribute-value" type="text" value="{{data.system.belastning}}" data-dtype="Number" disabled readonly />
                             <span class="floating-label">Belastning</span>
                         </div>
 
-                        <div class="item-property-area number-value-text floating-label-group" style="margin-top: 5px;">
+                        <div class="item-property-area   floating-label-group" style="margin-top: 5px;">
                             <input type="number" name="system.belastning_reduction" 
                                 value="{{item.system.belastning_reduction}}" 
                                 class="attribute-value editable" 
@@ -69,7 +69,7 @@
                         <div class="centerText" style="width: 50px;">
                             <input type="checkbox" class="modifiera-checkbox" data-kroppsdel="{{rustning.kroppsdel}}" {{#if rustning.modifiera}}checked{{/if}} />
                         </div>
-                        <div class="centerText number-value-text" style="width: 50px;">
+                        <div class="centerText  " style="width: 50px;">
                             {{#if rustning.modifiera}}
                                 <i class="fa-solid fa-square-plus green" 
                                    data-source="armor"
@@ -84,7 +84,7 @@
                                    data-property="hugg"></i>
                             {{/if}}
                         </div>
-                        <div class="centerText number-value-text" style="width: 50px;">
+                        <div class="centerText  " style="width: 50px;">
                             {{#if rustning.modifiera}}
                                 <i class="fa-solid fa-square-plus green" 
                                    data-source="armor"
@@ -99,7 +99,7 @@
                                    data-property="kross"></i>
                             {{/if}}
                         </div>
-                        <div class="centerText number-value-text" style="width: 50px;">
+                        <div class="centerText  " style="width: 50px;">
                             {{#if rustning.modifiera}}
                                 <i class="fa-solid fa-square-plus green" 
                                    data-source="armor"
@@ -114,7 +114,7 @@
                                    data-property="stick"></i>
                             {{/if}}
                         </div>
-                        <div class="centerText number-value-text" style="width: 50px;">{{rustning.belastning}}</div>
+                        <div class="centerText  " style="width: 50px;">{{rustning.belastning}}</div>
                     </div>                    
                 {{/each}}
             </div>

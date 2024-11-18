@@ -195,8 +195,15 @@ export class DialogAttributeRoll extends FormApplication {
         this.actor = actor;     
         this.config = game.EON.CONFIG;   
         this.isDialog = true;  
-
-        let headline = game.EON.CONFIG[roll.type][roll.key].namn.toLowerCase();
+        
+        let headline = "";
+        
+        if (roll.type != "skada") {
+            headline = game.EON.CONFIG[roll.type][roll.key].namn;
+        }
+        else {
+            headline = actor.system[roll.type][roll.key].namn;
+        }
 
         this.options.title = `Slå ${headline}`;
     }
@@ -210,7 +217,12 @@ export class DialogAttributeRoll extends FormApplication {
         const data = super.getData();
 
         if (data.object.title == "") {
-            data.object.namn = CONFIG.EON[data.object.type][data.object.key].namn;
+            if (data.object.type != "skada") {
+                data.object.namn = game.EON.CONFIG[data.object.type][data.object.key].namn.toLowerCase();
+            }
+            else {
+                data.object.namn = this.actor.system[data.object.type][data.object.key].namn.toLowerCase();
+            }
         }
         else {
             data.object.namn = this.object.title;
