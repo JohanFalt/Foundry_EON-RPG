@@ -988,8 +988,8 @@ input.skill-value {
 .floating-label-group input,
 .floating-label-group select {
   padding-left: 7px;
+  padding-top: 6px;
   height: var(--eon-line-height-floattext);
-  /*  padding: 4px 0 0 0;*/
 }
 .floating-label-group input.skill-label {
     height: var(--eon-line-height-default);

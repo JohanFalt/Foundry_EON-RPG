@@ -1,5 +1,6 @@
 import DialogHelper from "../dialog-helper.js";
 import CalculateHelper from "../calculate-helper.js";
+import ItemHelper from "../item-helper.js";
 import CreateHelper from "../create-helper.js";
 import SelectHelper from "../select-helpers.js"
 
@@ -310,186 +311,28 @@ export default class EonCreatureSheet extends ActorSheet {
         * @return Boolean - om typen skapades eller ej.
     */
     async _onItemCreate(event) {
-		event.preventDefault();
+		event.preventDefault();		
 
-		const header = event.currentTarget;
-		const type = header.dataset.type;
-        const version = game.data.system.version;
-        let found = false;
+        const itemid = await ItemHelper.CreateItem(this.actor, event);
 
-		let itemData;        
+		if (!itemid) {
+            ui.notifications.error("Typen som skall skapas saknar funktion");
+        }
+        else {
+            const item = await this.actor.getEmbeddedDocument("Item", itemid);
+            var _a;
 
-        if (type == "färdighet") {
-            const skilltype = header.dataset.subtype;
-            found = true;
+            if (item instanceof Item) {
+                _a = item.sheet;
 
-            if (skilltype == "sprak") {
-                itemData = {
-                    name: "Nytt språk",
-                    type: "Språk",                
-                    system: {
-                        installningar: {
-                            skapad: true,
-                            version: version,
-                            kantabort: true
-                        }
-                    }
-                };
+                if ((_a === null) || (_a === void 0)) {
+                    void 0;
+                }                
+                else {
+                    _a.render(true);  
+                }
             }
-            else {
-                itemData = {
-                    name: "Ny färdighet",
-                    type: "Färdighet",                
-                    system: {
-                        installningar: {
-                            skapad: true,
-                            version: version,
-                            kantabort: true
-                        },
-                        grupp: skilltype
-                    }
-                };
-            }			
-		}
-
-        if (type == "egenskap") {
-            found = true;
-
-            itemData = {
-                name: "Ny egenskap",
-                type: "Egenskap",                
-                system: {
-                    installningar: {
-                        skapad: true,
-                        version: version,
-                        kantabort: true
-                    }
-                }
-            };
         }
-
-        if (type == "karaktärsdrag") {
-            const actorData = foundry.utils.duplicate(this.actor);
-            await CreateHelper.SkapaKaraktarsdrag(actorData);
-            await this.actor.update(actorData);
-            return;
-        }
-
-		if (type == "närstridsvapen") {
-            found = true;
-
-			itemData = {
-                name: "Nytt närstridsvapen",
-                type: "Närstridsvapen",                
-                system: {
-                    installningar: {
-                        skapad: true,
-                        version: version
-                    },
-                    typ: "utrustning"                    
-                }
-            };
-		}
-
-        if (type == "avståndsvapen") {
-            found = true;
-
-			itemData = {
-                name: "Nytt avståndsvapen",
-                type: "Avståndsvapen",
-                
-                system: {
-                    installningar: {
-                        skapad: true,
-                        version: version
-                    },
-                    typ: "utrustning"
-                }
-            };
-		}        
-
-        if (type == "sköld") {
-            found = true;
-
-			itemData = {
-                name: "Ny sköld",
-                type: "Sköld",
-                
-                system: {
-                    installningar: {
-                        skapad: true,
-                        version: version
-                    },
-                    typ: "utrustning",
-                    grupp: "skold"
-                }
-            };
-		}
-
-        if (type == "rustning") {
-            found = true;
-            const kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, game.data.system.version);
-
-			itemData = {
-                name: "Ny rustning",
-                type: "Rustning",                
-                system: {
-                    installningar: {
-                        skapad: true,
-                        version: version
-                    },
-                    typ: "utrustning",
-                    kroppsdel: kroppsdelar
-                }
-            };
-		}
-
-        if (type == "utrustning") {
-            found = true;
-
-			itemData = {
-                name: "Nytt föremål",
-                type: "Utrustning",                
-                system: {
-                    installningar: {
-                        skapad: true,
-                        version: version
-                    },
-                    typ: "utrustning"
-                }
-            };
-		}
-
-        if (type == "mynt") {
-            found = true;
-
-			itemData = {
-                name: "Silvermynt",
-                type: "Utrustning",                
-                system: {
-                    installningar: {
-                        skapad: true,
-                        version: version,
-                        behallare: true
-                    },
-                    typ: "mynt",
-                    volym: {
-                        enhet: "st",
-                        antal: 0,
-                        max: 50
-                    }
-                }
-            };
-		}   
-
-        if (found) {
-            await this.actor.createEmbeddedDocuments("Item", [itemData]);
-            return true;
-        }
-
-        ui.notifications.error("Typen som skall skapas saknar funktion");
-
-        return false;
     }
 
     /**

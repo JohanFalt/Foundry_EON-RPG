@@ -11,7 +11,6 @@
             </div>
             <div style="width: 175px;">Sköld</div>
             <div class="centerText" style="width: 75px;">Träffa</div>
-            <div class="centerText" style="width: 40px;">2H</div> -->
             <div class="centerText" style="width: 55px;">Närs.</div>
             <div class="centerText" style="width: 55px;">Avs.</div>
             <div class="centerText" style="width: 60px;">Skydd</div>
@@ -49,7 +48,7 @@
                     {{round (multiplicate skold.system.vikt skold.system.antal) 2}}kg
                 {{/if}}
             </div>
-            <div class=" ">{{shorten (getPropertyList skold.system.egenskaper) 50 false}}</div>
+            <div>{{shorten (getPropertyList skold.system.egenskaper) 50 false}}</div>
         </div>
         {{/each}}
     </div>
