@@ -4,7 +4,7 @@
         {{#each EON.egenskaper as |egenhet key|}}                        
             <div class="item-row">
                 <div class="item-headline">{{egenhet.namn}}</div>
-                <div class="  item-row">
+                <div class="item-row">
                     <div>
                         <input class="weapon-property" type="checkbox" {{#if (checkProperty ../item.system.egenskaper key)}} checked {{/if}} value="{{key}}" />
                     </div>

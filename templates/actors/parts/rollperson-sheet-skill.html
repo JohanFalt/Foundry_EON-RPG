@@ -2,7 +2,7 @@
     {{#each EON.CONFIG.fardighetgrupper as |grupp key|}}
         <div class="skill-row skill">
             <div class="skill-headline headline">{{grupp}}</div>
-            <div class="  floating-label-group">
+            <div class="floating-label-group">
                 <input class="attribute-value editable skill-label skill-value" name="system.fardigheter.{{key}}.erf" type="text" value="{{getActorSkillGroupExp ../actor.system.fardigheter key}}" data-dtype="Number" />
                 <span class="floating-label skill-label">Erfarenhet</span>
             </div>

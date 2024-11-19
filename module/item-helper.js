@@ -1,40 +1,19 @@
-import CreateHelper from "create-helper.js";
+import CreateHelper from "./create-helper.js";
 
-export class ItemHelper {
+export default class ItemHelper {
 
-    get sprakItem() {
-        return {
-            name: "Nytt språk",
-            type: "Språk",                
-            system: {
-                installningar: {
-                    skapad: true,
-                    version: version,
-                    kantabort: true
-                }
-            
-            }
-        }
-    }
-
-    get fardighetItem() {
-        return {
-            name: "Ny färdighet",
-            type: "Färdighet",                
-            system: {
-                installningar: {
-                    skapad: true,
-                    version: version,
-                    kantabort: true
-                },
-                grupp: skilltype
-            }
-        }
-    } 
-
-    static async createItem(actor, type, version) {
+    /**
+        * Generell funktion för att skapa ett nytt item.
+        * @param actor
+        * @param type
+        * @param version
+        * @return Det skapade itemid om det lyckas, false om misslyckas.
+    */
+    static async CreateItem(actor, event) {
         let found = false;
-
+        const header = event.currentTarget;
+		const type = header.dataset.type;
+        const version = game.data.system.version;
 		let itemData;        
 
         if (type == "färdighet") {
@@ -42,12 +21,49 @@ export class ItemHelper {
             found = true;
 
             if (skilltype == "sprak") {
-                itemData = this.sprakItem;
+                itemData = {
+                    name: "Nytt språk",
+                    type: "Språk",                
+                    system: {
+                        installningar: {
+                            skapad: true,
+                            version: version,
+                            kantabort: true
+                        }
+                    }
+                };
             }
             else {
-                itemData = this.fardighetItem;
+                itemData = {
+                    name: "Ny färdighet",
+                    type: "Färdighet",                
+                    system: {
+                        installningar: {
+                            skapad: true,
+                            version: version,
+                            kantabort: true
+                        },
+                        grupp: skilltype
+                    }
+                };
             }			
 		}
+
+        if (type == "egenskap") {
+            found = true;
+
+            itemData = {
+                name: "Ny egenskap",
+                type: "Egenskap",                
+                system: {
+                    installningar: {
+                        skapad: true,
+                        version: version,
+                        kantabort: true
+                    }
+                }
+            };
+        }
 
         if (type == "mysterie") {
             found = true;
@@ -97,10 +113,10 @@ export class ItemHelper {
         }
 
         if (type == "karaktärsdrag") {
-            const actorData = foundry.utils.duplicate(this.actor);
+            const actorData = foundry.utils.duplicate(actor);
             await CreateHelper.SkapaKaraktarsdrag(actorData);
-            await this.actor.update(actorData);
-            return;
+            await actor.update(actorData);
+            return true;
         }
 
 		if (type == "närstridsvapen") {
@@ -193,12 +209,12 @@ export class ItemHelper {
 
             const getCurrencyData = (currencyName) => {
                 if (currencyName) {
-                    const currency = Object.values(this.datavaluta.valuta)
+                    const currency = Object.values(CONFIG.EON.datavaluta.valuta)
                         .find(currency => currency.namn === currencyName);
                     if (currency) return currency;
                 }
             
-                const firstCurrency = Object.values(this.datavaluta.valuta)[0];
+                const firstCurrency = Object.values(CONFIG.EON.datavaluta.valuta)[0];
                 return firstCurrency;
             };
 
@@ -283,11 +299,9 @@ export class ItemHelper {
 		}
 
         if (found) {
-            await this.actor.createEmbeddedDocuments("Item", [itemData]);
-            return true;
+            let item = await actor.createEmbeddedDocuments("Item", [itemData]);
+            return  item[0]._id;
         }
-
-        ui.notifications.error("Typen som skall skapas saknar funktion");
 
         return false;
     }

@@ -255,7 +255,7 @@ export default class EonItemSheet extends ItemSheet {
 			.click(this._setValue.bind(this));	
 
 		html
-			.find('.item-property')
+			.find('.item-property-shange')
 			.change(event => this._setValue(event));
 
 		html

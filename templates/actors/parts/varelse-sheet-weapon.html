@@ -28,7 +28,7 @@
             <div class="centerText  " style="width: 50px;">{{#if (eq vapen.system.kross.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.kross ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
             <div class="centerText  " style="width: 50px;">{{#if (eq vapen.system.stick.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.stick ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
             
-            <div class=" " title="{{getPropertyList vapen.system.egenskaper}}" style="margin-left: 50px;">{{shorten (getPropertyList vapen.system.egenskaper) 50 false}}</div>                        
+            <div title="{{getPropertyList vapen.system.egenskaper}}" style="margin-left: 50px;">{{shorten (getPropertyList vapen.system.egenskaper) 50 false}}</div>                        
         </div>
     {{/each}}
     
@@ -52,7 +52,7 @@
             <div class="centerText  " style="width: 60px;">{{getDiceValue vapen.system.traffa}}</div>        
             <div class="centerText  " style="width: 100px;">{{getDiceValue vapen.system.skada}} {{{getWeaponDamageType vapen.system.skadetyp}}}</div>
             <div class="centerText  " style="width: 100px;">{{{getRange ../EON.CONFIG.vapenavstand vapen.system.rackvidd}}}</div>
-            <div class=" " title="{{getPropertyList vapen.system.egenskaper}}">{{shorten (getPropertyList vapen.system.egenskaper) 50 false}}</div>                        
+            <div title="{{getPropertyList vapen.system.egenskaper}}">{{shorten (getPropertyList vapen.system.egenskaper) 50 false}}</div>                        
         </div>
     {{/each}}
 </div>
@@ -75,15 +75,15 @@
             
             <div class="item-row">
                 <div class="headline" style="width:175px;">Skydd</div>
-                <div class="  floating-label-group">
+                <div class="floating-label-group">
                     <input class="attribute-value skill-label skill-value" type="text" name="system.skada.skydd.hugg" value="{{actor.system.skada.skydd.hugg}}" data-dtype="Number" />
                     <span class="floating-label">Hugg</span>
                 </div>
-                <div class="  floating-label-group">
+                <div class="floating-label-group">
                     <input class="attribute-value skill-label skill-value" type="text" name="system.skada.skydd.kross" value="{{actor.system.skada.skydd.kross}}" data-dtype="Number" />
                     <span class="floating-label">Kross</span>
                 </div>
-                <div class="  floating-label-group">
+                <div class="floating-label-group">
                     <input class="attribute-value skill-label skill-value" type="text" name="system.skada.skydd.stick" value="{{actor.system.skada.skydd.stick}}" data-dtype="Number" />
                     <span class="floating-label">Stick</span>
                 </div>                
