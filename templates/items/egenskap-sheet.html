@@ -21,7 +21,27 @@
                             <span class="floating-label">Referens</span>
                         </div>
 
-                    </div>       
+                    </div>    
+                    
+                    {{#if (not this.hasActor)}}
+                        <div class="item-row">
+                            <div class="headline-checkbox">Vapenegenskap</div>
+                            <div><input class="modifiera-checkbox pointer" type="checkbox" data-type="installningar" data-key="vapen" {{isChecked item.system.installningar.vapen}} data-dtype="Boolean" /></div>
+                        </div>
+            
+                        <div class="item-row">
+                            <div class="headline-checkbox">Har nivå</div>
+                            <div><input class="modifiera-checkbox pointer" type="checkbox" data-type="installningar" data-key="harniva" {{isChecked item.system.installningar.harniva}} data-dtype="Boolean" /></div>
+                        </div>
+
+                    {{else if (and item.system.installningar.vapen item.system.installningar.harniva)}}
+
+                        <div class="item-property-area   floating-label-group">
+                            <input class="text-value editable" type="text" name="system.system.niva" value="{{item.system.niva}}" data-dtype="Number" autocomplete="off" autofocus required />
+                            <span class="floating-label">Nivå</span>
+                        </div>
+
+                    {{/if}}
                 </div>	
 
                 <div class="pullLeft" style="flex-grow: 1; text-align: right;">

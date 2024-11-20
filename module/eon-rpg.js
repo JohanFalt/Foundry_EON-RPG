@@ -29,7 +29,6 @@ Hooks.once("init", async function() {
     CONFIG.Item.dataModels.Utrustning = models.EonUtrustning;
     CONFIG.Item.dataModels.Skada = models.EonSkada;
     CONFIG.Item.dataModels.Valuta = models.EonValuta;
-
     CONFIG.Item.dataModels.Egenskap = models.EonEgenskap;
 
     // Register System Settings

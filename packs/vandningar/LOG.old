@@ -1,0 +1,8 @@
+2024/11/20-13:38:56.203 f4 Recovering log #20
+2024/11/20-13:38:56.208 f4 Delete type=0 #20
+2024/11/20-13:38:56.208 f4 Delete type=3 #18
+2024/11/20-14:19:41.986 2328 Level-0 table #25: started
+2024/11/20-14:19:41.986 2328 Level-0 table #25: 0 bytes OK
+2024/11/20-14:19:41.988 2328 Delete type=0 #23
+2024/11/20-14:19:41.993 2328 Manual compaction at level-0 from '!tables!1sFkSL51Zm6qrZF2' @ 72057594037927935 : 1 .. '!tables.results!xVjgat85hB4Wad60.sHimokqFqWsJyM29' @ 0 : 0; will stop at (end)
+2024/11/20-14:19:41.993 2328 Manual compaction at level-1 from '!tables!1sFkSL51Zm6qrZF2' @ 72057594037927935 : 1 .. '!tables.results!xVjgat85hB4Wad60.sHimokqFqWsJyM29' @ 0 : 0; will stop at (end)

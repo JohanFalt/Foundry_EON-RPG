@@ -305,4 +305,161 @@ export default class ItemHelper {
 
         return false;
     }
+
+    static async CreateWeaponProperty() {
+        const version = game.data.system.version;
+
+        for (const egenskap in game.EON.egenskaper) {
+            let itemData = {
+                name: game.EON.egenskaper[egenskap].namn,
+                type: "Egenskap",                
+                system: {
+                    id: egenskap,
+                    referens: "sid 241",
+                    beskrivning: game.EON.egenskaper[egenskap].beskrivning,
+                    installningar: {
+                        skapad: true,
+                        version: "3.1.0",
+                        kantabort: true,
+                        vapen: true,
+                        harniva: game.EON.egenskaper[egenskap].harniva
+                    }                    
+                }
+            };
+
+            Item.createDocuments([itemData], {pack: "eon-rpg.vapenegenskaper"});
+        }
+    }
+
+    static async CreateCloseWeapon() {
+        const version = game.data.system.version;
+        const typ = "";
+
+        for (const grupp in CONFIG.EON.vapengrupper) {
+            for (const vapenmall in game.EON.narstridsvapen[grupp]) {
+                const vapen = game.EON.narstridsvapen[grupp][vapenmall]
+                let image = "icons/svg/item-bag.svg";
+
+                if (grupp == "slagsmal") image = CONFIG.EON.ikoner.foremal_hand;
+                if (grupp == "dolk") image = CONFIG.EON.ikoner.foremal_dolk;
+                if (grupp == "kedjevapen") image = CONFIG.EON.ikoner.foremal_kedjevapen;
+                if (grupp == "klubba") image = CONFIG.EON.ikoner.foremal_klubba;
+                if (grupp == "spjut") image = CONFIG.EON.ikoner.foremal_spjut;
+                if (grupp == "stav") image = CONFIG.EON.ikoner.foremal_stav;
+                if (grupp == "svard") image = CONFIG.EON.ikoner.foremal_svard;
+                if (grupp == "yxa") image = CONFIG.EON.ikoner.foremal_yxa;
+
+                let itemData = {
+                    img: image,
+                    name: vapen.namn,
+                    type: "Närstridsvapen",                
+                    system: {
+                        installningar: {
+                            skapad: true,
+                            version: "3.1.0"
+                        },
+                        typ: "utrustning",
+                        mall: vapenmall,
+                        grupp: vapen.grupp,
+                        enhand: vapen.enhand,
+                        tvahand: vapen.tvahand,
+                        hugg: vapen.hugg,
+                        stick: vapen.stick,
+                        kross: vapen.kross,
+                        langd: vapen.langd,
+                        vikt: vapen.vikt,
+                        pris: vapen.pris,
+                        egenskaper: await this.GetWeaponProperty(vapen)                  
+                    }                    
+                };
+
+                Item.createDocuments([itemData], {pack: "eon-rpg.narstridsvapen"});
+            }
+        }
+    }
+
+    static async CreateRangeWeapon() {
+        const version = game.data.system.version;
+        const typ = "";
+
+        for (const grupp in CONFIG.EON.vapengrupper) {
+            for (const vapenmall in game.EON.avstandsvapen[grupp]) {
+                const vapen = game.EON.avstandsvapen[grupp][vapenmall]
+                let image = "icons/svg/item-bag.svg";
+
+                if (grupp == "armborst") image = CONFIG.EON.ikoner.foremal_armborst;
+                if (grupp == "bage") image = CONFIG.EON.ikoner.foremal_bage;
+                if (grupp == "kastvapen") image = CONFIG.EON.ikoner.foremal_kastvapen;
+
+                // if (type == "avståndsvapen") {
+                //     found = true;
+        
+                //     itemData = {
+                //         name: "Nytt avståndsvapen",
+                //         type: "Avståndsvapen",
+                        
+                //         system: {
+                //             installningar: {
+                //                 skapad: true,
+                //                 version: version
+                //             },
+                //             typ: "utrustning"
+                //         }
+                //     };
+                // }
+
+                let itemData = {
+                    img: image,
+                    name: vapen.namn,
+                    type: "Avståndsvapen",                
+                    system: {
+                        installningar: {
+                            skapad: true,
+                            version: "3.1.0"
+                        },
+                        typ: "utrustning",
+                        mall: vapenmall,
+                        grupp: vapen.grupp,
+                        enhand: vapen.enhand,
+                        tvahand: vapen.tvahand,
+                        
+                        skada: vapen.skada,
+                        skadetyp: vapen.skadetyp,
+                        rackvidd: vapen.rackvidd,
+
+                        langd: vapen.langd,
+                        vikt: vapen.vikt,
+                        pris: vapen.pris,
+                        egenskaper: await this.GetWeaponProperty(vapen)                  
+                    }                    
+                };
+
+                Item.createDocuments([itemData], {pack: "eon-rpg.avstandsvapen"});
+            }
+        }
+    }
+
+    static async GetWeaponProperty(vapen) {
+        const pack = game.packs.get("eon-rpg.vapenegenskaper");
+        const egenskaper = await pack.getDocuments({type: "Egenskap"});
+        let nylista = [];
+        
+        for (const vapenegenskap of vapen.egenskaper) {
+            const i = egenskaper.find(e => e.system.id === vapenegenskap.namn);
+
+            let egenskap = {
+                uuid: i.uuid,
+                _id: i._id,
+                label: i.name, 
+                namn: i.system.id, 
+                varde: vapenegenskap.varde, 
+                beskrivning: i.system.beskrivning,
+                harniva: i.system.installningar.harniva
+            };
+
+            nylista.push(egenskap);
+        }
+
+        return nylista;
+    }
 }

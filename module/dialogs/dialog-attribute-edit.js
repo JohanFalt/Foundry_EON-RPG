@@ -409,6 +409,7 @@ export class DialogAttributeEdit extends FormApplication {
             (this.object.attributeType === "harleddegenskaper" && this.object.attributeKey === "grundrustning")) {
             if (dataset.key !== undefined) {
                 const key = parseInt(dataset.key);
+
                 const path = this.object.attributeType === "strid" ? 
                     actorData.system.strid[this.object.attributeKey] :
                     actorData.system.harleddegenskaper[this.object.attributeKey];
@@ -417,6 +418,9 @@ export class DialogAttributeEdit extends FormApplication {
                     path.bonuslista[key] = { tvarde: 0 };
                 }
                 path.bonuslista[key].tvarde = (path.bonuslista[key].tvarde || 0) + 1;
+            }
+            else {
+                actorData.system[this.object.attributeType][this.object.attributeKey].varde += 1;
             }
 
             const path = this.object.attributeType === "strid" ? 
@@ -495,16 +499,35 @@ export class DialogAttributeEdit extends FormApplication {
                     path.bonuslista[key].tvarde = Math.max((path.bonuslista[key].tvarde || 0) - 1, 0);
                 }
 
-                let total = parseInt(path.varde) || 0;
-                path.bonuslista.forEach(bonus => {
-                    total += parseInt(bonus.tvarde) || 0;
-                });
-                path.totalt = total;
+                // let total = parseInt(path.varde) || 0;
+                // path.bonuslista.forEach(bonus => {
+                //     total += parseInt(bonus.tvarde) || 0;
+                // });
+                // path.totalt = total;
 
-                await this.actor.update(actorData);
-                this.render();
-                return;
+                // await this.actor.update(actorData);
+                // this.render();
+                // return;
             }
+            else {
+                if (actorData.system[this.object.attributeType][this.object.attributeKey].varde > 0) {
+                    actorData.system[this.object.attributeType][this.object.attributeKey].varde -= 1;
+                }               
+            }
+
+            const path = this.object.attributeType === "strid" ? 
+                actorData.system.strid[this.object.attributeKey] :
+                actorData.system.harleddegenskaper[this.object.attributeKey];
+
+            let total = parseInt(path.varde) || 0;
+            path.bonuslista.forEach(bonus => {
+                total += parseInt(bonus.tvarde) || 0;
+            });
+            path.totalt = total;
+
+            await this.actor.update(actorData);
+            this.render();
+            return;
         }
         else if (this.object.attributeType === "skada") {
             actorData.system[this.object.attributeType][this.object.attributeKey].totalt.bonus -= 1;

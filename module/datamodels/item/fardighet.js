@@ -28,7 +28,6 @@ export default class EonFardighet extends basforemal {
         schema.kannetecken = new fields.BooleanField({initial: false});
         schema.hantverk = new fields.BooleanField({initial: false});
         schema.aspekt = new fields.BooleanField({initial: false});
-        //schema.aspekttyp = new fields.StringField({required: true, initial: ""});
 
         schema.varde = new fields.SchemaField({
             tvarde: new fields.NumberField({...valueInteger}),
