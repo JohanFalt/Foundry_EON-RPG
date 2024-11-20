@@ -106,7 +106,7 @@
                         <div class="three-column centerText  ">{{vandning.skada}}</div>
                         <div class="three-column centerText  ">{{vandning.utmattning}}</div>
                         {{#if vandning.vandning}}
-                            <div class="three-column centerText   {{#if (ne ../actor.system.skada.vandning.listaid "")}}vrollable{{/if}}" data-source="vandning">1T10</div>
+                            <div class="three-column centerText {{#if (ne ../actor.system.skada.vandning.listaid "")}}vrollable{{/if}}" data-source="vandning">1T10</div>
                         {{else}}
                             <div class="three-column centerText  ">-</div>
                         {{/if}}

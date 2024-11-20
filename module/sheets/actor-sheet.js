@@ -68,6 +68,9 @@ export default class EonActorSheet extends ActorSheet {
             await CalculateHelper.hanteraBerakningar(actorData);            
             await this.actor.update(actorData);
         }
+
+        //ItemHelper.CreateCloseWeapon();
+        //ItemHelper.CreateRangeWeapon();
         
         const data = await super.getData();	
 
@@ -462,7 +465,7 @@ export default class EonActorSheet extends ActorSheet {
     async _onItemCreate(event) {
 		event.preventDefault();		
 
-        const itemid = await ItemHelper.CreateItem(this.actor, event)
+        const itemid = await ItemHelper.CreateItem(this.actor, event);
 
 		if (!itemid) {
             ui.notifications.error("Typen som skall skapas saknar funktion");

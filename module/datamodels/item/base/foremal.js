@@ -31,6 +31,14 @@ export default class foremal extends basforemal {
 
         schema.egenskaper = new fields.ArrayField(
             new fields.SchemaField({
+                uuid: new fields.StringField({
+                    initial: '',
+                    nullable: false,
+                }),
+                _id: new fields.StringField({
+                    initial: '',
+                    nullable: false,
+                }),
                 label: new fields.StringField({
                     initial: '',
                     nullable: false,
@@ -44,7 +52,9 @@ export default class foremal extends basforemal {
                     nullable: false,
                     required: false,
                     min: 0
-                })
+                }),
+                beskrivning: new fields.HTMLField(),
+                harniva: new fields.NumberField({...valueInteger}) 
             }),
             {
                 initial: [],
@@ -59,3 +69,14 @@ export default class foremal extends basforemal {
         return schema;
     }
 }
+
+
+// let egenskap = {
+//     uuid: i.uuid,
+//     _id: i._id,
+//     label: i.name, 
+//     namn: i.system.id, 
+//     varde: vapenegenskap.varde, 
+//     beskrivning: i.system.beskrivning,
+//     harniva: i.system.installningar.harniva
+// };

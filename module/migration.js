@@ -6,15 +6,11 @@ import CreateHelper from "./create-helper.js";
  * @param newVersion   The new version no: e.g. 1.5.10
  */
 export async function CompareVersion(oldVersion, newVersion) {
-    if (newVersion == "") {
+    if ((newVersion == "") || (newVersion == undefined)) {
         return false;
     }
 
-    if (newVersion == undefined) {
-        return false;
-    }
-
-    if (oldVersion == "") {
+    if ((oldVersion == "") || (oldVersion == undefined)) {
         return true;
     }
 
@@ -99,18 +95,19 @@ export const updateActor = async function(actor, config, systemVersion) {
     try {
         const updateData = foundry.utils.duplicate(actor);
         let update = false;
+        let version210 = await CompareVersion(actor.system.installningar.version, "2.1.0");
 
         if (updateData.system.installningar.version == "") {
             updateData.system.installningar.version = "1.0.0";
         } 
 
-        if (CompareVersion(actor.system.installningar.version, "2.1.0")) {
+        if (version210) {
             updateData.system.installningar.version = "2.1.0";
 
             let addSkill = true;
 
             for (const item of actor.items) {
-                if ((item.type == "Färdighet") && (item.system.grupp == "mystik") && (item.system.id == "harmonisera")) {
+                if ((item.type.toLowerCase() == "färdighet") && (item.system.grupp == "mystik") && (item.system.id == "harmonisera")) {
                     addSkill = false;
                     break;
                 }
@@ -165,32 +162,66 @@ export const updateItem = async function(item, config, actor) {
             update = true;
         }
 
-        if (CompareVersion(item.system.installningar.version, "2.1.0")) {
+        let version210 = await CompareVersion(updateData.system.installningar.version, "2.1.0");
+        let version310 = await CompareVersion(updateData.system.installningar.version, "3.1.0");        
+
+        if (version210) {
             updateData.system.installningar.version = "2.1.0";
 
-            if (item.type == "Färdighet") {
+            if (item.type.toLowerCase() == "färdighet") {
                 if ((!item.system.installningar.lattlard) && (!item.system.installningar.svarlard)) {
                     updateData.system.installningar.normal = true;
                     update = true;
                 }
             }
-            if ((item.type == "Skada") && (item.system.typ == "")) {
+            if ((item.type.toLowerCase() == "skada") && (item.system.typ == "")) {
                 updateData.system.typ = "skada";
                 update = true;
             }
         }
 
+        if (version310) {
+            //updateData.system.installningar.version = "3.1.0";
+
+            if (((item.type.toLowerCase() == "närstridsvapen") || (item.type.toLowerCase() == "avståndsvapen") || (item.type.toLowerCase() == "sköld")) && (item.system.egenskaper.length > 0)) {
+                update = true;
+
+                const pack = game.packs.get("eon-rpg.vapenegenskaper");
+                const egenskaper = await pack.getDocuments({type: "Egenskap"});
+                let nylista = [];
+                
+                for (const vapenegenskap of item.system.egenskaper) {
+                    const i = egenskaper.find(e => e.system.id === vapenegenskap.namn);
+
+                    let egenskap = {
+                    	uuid: i.uuid,
+                    	_id: i._id,
+                    	label: i.name, 
+                    	namn: i.system.id, 
+                    	varde: vapenegenskap.varde, 
+                    	beskrivning: i.system.beskrivning,
+                    	harniva: i.system.installningar.harniva
+                    };
+
+                    nylista.push(egenskap);
+                }
+
+                updateData.system.egenskaper = nylista;
+            }
+        }
+
         if (update) {
+            console.log("Uppdaterar " + item.name + " " + item.system.installningar.version);
             await item.update(updateData);
             update = false;
         }
     } 
     catch (e) {
         if (actor == undefined) {
-            e.message = `Failed migration for Item ${item.name}: ${err.message}`;
+            e.message = `Failed migration for Item ${item.name}: ${e.message}`;
         }
         else {
-            e.message = `Failed migration for Item ${item.name} on Actor ${actor.name}: ${err.message}`;
+            e.message = `Failed migration for Item ${item.name} on Actor ${actor.name}: ${e.message}`;
         }
         
         console.error(e.message);

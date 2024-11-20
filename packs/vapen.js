@@ -2,115 +2,143 @@ export const datavapen = {
     "egenskaper": {
         "avvapnande": {
             "namn": "Avväpnande",
-            "harniva": true
+            "harniva": true,
+            "beskrivning": "Vapnet går att använda för att slita vapen ur motståndarens hand. [Fördelen Avväpna kräver X färre Övertag.]"
         },
         "begransad": {
             "namn": "Begränsad",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet har dålig räckvidd och man måste komma farligt nära ett monster för att skada det. [När man slår vändning för varelser slås 2T10 där det lägsta resultatet används. Se mer om vändningar på sida 277.]"
         },
         "brutal": {
             "namn": "Brutal",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet har en tendens att aldrig orsaka lindriga skador. [Vapnet orsakar 1 mer i Utmattning givet att man åstadkommer minst 1 skada.]"        
         },
         "bracklig": { 
             "namn": "Bräcklig",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet eller skölden är bräckligt, mest troligt är stora delar av det gjort av trä och kan lätt förstöras. [Föremålet kan göras obrukbart genom fördelen Slå sönder.]"
         },
         "bagpil": {
             "namn": "Bågpil",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Med ett lättillgängligt koger kan vapnet laddas snabbare. [Innan sidohandling väljs kan man för 1 Utmattning dra en pil. Ökningen orsakar inget Chockslag. Sidohandlingen kan användas normalt.]"
         },
         "bojlig": {
             "namn": "Böjlig",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet är böjligt och slår runt motståndarens vapen eller sköld, det är därför svårt att skydda sig mot attacker genom att parera eller blockera. [De som försvarar sig med vapen eller sköld mot detta vapen får ett avdrag på –1T6.]"
         },    
         "dubbelfattning": {
             "namn": "Dubbelfattning",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet har särskilda grepp som gör det effektivt att bära med två händer. [Om man bär vapnet i två händer så ökar skadan med +2.]" 
         },
         "genomslag_hugg": {
             "namn": "Genomslag hugg",
-            "harniva": true
+            "harniva": true,
+            "beskrivning": "Vapnet är speciellt konstruerat för att slå igenom rustning. [Motståndarens rustning mot Huggskada räknas som X lägre. Påverkar även Grundrustning och rustningen kan som lägst bli 0.]"
         },
         "genomslag_stick": {
             "namn": "Genomslag stick",
-            "harniva": true
+            "harniva": true,
+            "beskrivning": "Vapnet är speciellt konstruerat för att slå igenom rustning. [Motståndarens rustning mot Stickskada räknas som X lägre. Påverkar även Grundrustning och rustningen kan som lägst bli 0.]"
         },
         "giftranna": {
             "namn": "Giftränna",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet har särskilda giftrännor. [Vapnet kan förses med ytterligare en dos gift.]"
         },
         "kraftfull": {
             "namn": "Kraftfull",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet blir särskilt farligt när man tar i med hela sin styrka. [När man använder anfallstaktiken Kraftfullt anfall så ökar skadan med +3T6 istället för +2T6.]"
         },
         "lattsiktad": {
             "namn": "Lättsiktad",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet är mycket lätthanterligt även för en otränad. [Den sekundära handlingen Sikta under avståndsfasen ger +1T6 i bonus istället för +2 i bonus.]"
         },
         "magasin": {
             "namn": "Magasin",
-            "harniva": true
+            "harniva": true,
+            "beskrivning": "Avståndsvapnet har någon form av magasin eller förberedda projektiler. [Om man klarar kravet på Kroppsbyggnad kan man skjuta upp till X gånger med vapnet innan man behöver ladda om det.]"
         },
         "mattande": {
             "namn": "Måttande",
-            "harniva": true
+            "harniva": true,
+            "beskrivning": "Vapnet är lätthanterat och gör det enkelt att komma innanför motståndarens gard och träffa den kroppsdel man önskar. [Fördelen Precision kräver X färre Övertag.]"
         },
         "obevapand": {
             "namn": "Obeväpnad",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet är ett naturligt vapen och orsakar inte samma typer av skador som andra krossvapen. [När man slår på skadetabellen för folkslag används alltid skadetabellen för Slagsmålsskada.]"
         },
         "omladdning": {
             "namn": "Omladdning",
-            "harniva": true
+            "harniva": true,
+            "beskrivning": "Vapnet har ett krävande tillvägagångssätt för att laddas om. [För att ladda om vapnet måste man spendera en hel stridsrunda (både sido- och huvudhandling) på försöket. Man slår med vapenfärdigheten och svårigheten är X. Om slaget lyckas är vapnet laddat och kan användas nästa runda.]"
         },
         "otymplig": {
             "namn": "Otymplig",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet är mycket svårt att utföra snabba manövrer med i strid. [Anfallstaktiken Snabbt anfall kan ej väljas.]"
         },
         "precis": {
             "namn": "Precis",
-            "harniva": true
+            "harniva": true,
+            "beskrivning": "Vapnet är lätthanterligt och precist. [Fördelen Finna blotta kräver X färre Övertag.]"
         },
         "rackvidd": {
             "namn": "Räckvidd",
-            "harniva": true
+            "harniva": true,
+            "beskrivning": "Vapnet har en god räckvidd. [+XT6 på Reaktionsslaget då striden öppnas.]"
         },
         "sargande": {               
             "namn": "Sargande",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet tenderar att orsaka de värsta och mest dödliga skadorna när det väl får in en bra träff. [När man slår på skadetabellen för folkslag eller vändning för varelser får man +1 på slaget.]"
         },
         "snabbdragen": {
             "namn": "Snabbdragen",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet går mycket snabbt att dra. [Man behöver inte använda någon sidohandling för att dra vapnet. Man får heller inte något avdrag på sina handlingar när man drar vapnet.]"
         },
         "snabb": {
             "namn": "Snabb",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet är snabbt och välbalanserat vilket gör att man kan utföra snabba och dödliga attacker som motståndaren har mycket svårt att skydda sig emot. [Man minskar inte skadan på sitt anfall då man väljer anfallstaktiken Snabbt anfall utan gör samma skada som vid ett Standardanfall.]" 
         },       
         "snarjande": {            
             "namn": "Snärjande",
-            "harniva": true
+            "harniva": true,
+            "beskrivning": "Vapnet har lätt att komma åt ben och armar och används med fördel för att fälla motståndare. [Fördelen Fälla kräver X färre Övertag.]" 
         },
         "splittrande": {
             "namn": "Splittrande",
-            "harniva": true
+            "harniva": true,
+            "beskrivning": "Vapnet är tungt och kraftfullt och slår lätt sönder sköldar och bräckliga vapen. [Fördelen Slå sönder kräver X färre Övertag.]"
         },        
         "utmanovrerande": {
             "namn": "Utmanövrerande",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet lämpar sig väl när man möter flera motståndare. [När man använder anfallstaktiken Gruppanfall får man inget avdrag på färdighetsslaget.]"
         },
         "versatil": {
             "namn": "Versatil",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet är gjort för att användas både som närstridsvapen och som kastvapen. [Vapnet kan användas som närstridsvapen och kastvapen utan avdrag. Vapendata kan dock skilja sig.]"
         },
         "vadlig": {
             "namn": "Vådlig",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet är mycket dödligt i rätt persons händer. [Fördelen Öka skada ökar skadan med +1T6 istället för +2.]"
         },
         "ytlig": {
             "namn": "Ytlig",
-            "harniva": false
+            "harniva": false,
+            "beskrivning": "Vapnet har svårt att tränga långt in i kroppen och orsaka allvarliga skador. [Mot folkslag orsakar vapnet inte några Allvarliga skador utan endast Utmattning.]"
         }
     },
     "narstridsvapen": {

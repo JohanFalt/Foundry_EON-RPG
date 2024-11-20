@@ -3,6 +3,7 @@ import CalculateHelper from "../calculate-helper.js";
 import SelectHelper from "../select-helpers.js"
 import { DiceRollContainer } from "../dice-helper.js";
 import { RollDice } from "../dice-helper.js";
+import ItemHelper from "../item-helper.js";
 
 export default class EonItemSheet extends ItemSheet {
 
@@ -156,7 +157,7 @@ export default class EonItemSheet extends ItemSheet {
 
 		data.enrichedBeskrivning = await TextEditor.enrichHTML(this.item.system.beskrivning);
 
-		if (this.item.type == 'Mysterie')
+		if (this.item.type.toLowerCase() == 'mysterie')
 		{
 			data.enrichedMirakel = await TextEditor.enrichHTML(this.item.system.mirakel);
 			data.enrichedCermoni = await TextEditor.enrichHTML(this.item.system.cermoni);
@@ -168,7 +169,7 @@ export default class EonItemSheet extends ItemSheet {
 		if (this.item.actor != null) {
 			data.hasActor = true;
 
-			if (this.item.type == "Färdighet") {
+			if (this.item.type.toLowerCase() == "färdighet") {
 				if (this.item.actor.type.toLowerCase().replace(" ", "") == "rollperson") {
 					data.hasExperience = this.item.actor.system.fardigheter[this.item.system.grupp].erf > 0;
 				}
@@ -189,7 +190,7 @@ export default class EonItemSheet extends ItemSheet {
 		console.log(data.item);
 		console.log(data.EON);
 		
-		if (this.item.type === "Rustning") {
+		if (this.item.type.toLowerCase() === "rustning") {
 			const reduction = data.item.system.belastning_reduction || 0;
 			const baseWeight = data.item.system.kroppsdel.reduce((sum, del) => sum + (del.belastning || 0), 0);
 			data.item.system.belastning = Math.max(0, baseWeight - reduction);
@@ -258,9 +259,9 @@ export default class EonItemSheet extends ItemSheet {
 			.find('.item-property-shange')
 			.change(event => this._setValue(event));
 
-		html
-            .find('.weapon-property')
-            .click(this._setVapenEgenhet.bind(this));
+		// html
+        //     .find('.weapon-property')
+        //     .click(this._setVapenEgenhet.bind(this));
 
 		html
 			.find('.currency-select')
@@ -274,8 +275,8 @@ export default class EonItemSheet extends ItemSheet {
 			.find('.modifiera-checkbox')
 			.change(this._onModifieraChange.bind(this));
 
-		html.find('.fa-square-plus').click(ev => this._ticValueUp(ev, 'armor'));
-
+		//html.find('.fa-square-plus').click(ev => this._ticValueUp(ev, 'armor'));
+		html.find('.fa-square-plus').click(ev => this._ticValueUp(ev));
 		html.find('.fa-square-minus').click(ev => this._ticValueDown(ev));
 
 		html.find('input[name="system.belastning_reduction"]')
@@ -286,20 +287,42 @@ export default class EonItemSheet extends ItemSheet {
 	  async _onDrop(event) {
 		// Try to extract the data
 		const data = TextEditor.getDragEventData(event);
-	
-		// // Handle re-ordering of list
-		// if ( data?.entryId && (data.uuid === this.document.uuid) ) return this._onSortEntry(event, data);
-	
-		// // Handle dropping linked items
+
+		// Handle dropping linked items
 		if ( data?.type !== "Item" ) return;
-		const item = await Item.implementation.fromDropData(data);
+
+		if ((this.item.type.toLowerCase() == "närstridsvapen") || (this.item.type.toLowerCase() == "avståndsvapen") || (this.item.type.toLowerCase() == "sköld")) {
+			const item = await Item.implementation.fromDropData(data);
+
+			if ((item.type.toLowerCase() == "egenskap") && (item.system.installningar.vapen)) {
+				let index = this.item.system.egenskaper.findIndex(e => e.uuid === item.uuid);
+
+				if (index > -1) return;
+
+				let egenskap = {
+					uuid: item.uuid,
+					_id: item._id,
+					label: item.name, 
+					namn: item.system.id, 
+					varde: item.system.niva, 
+					beskrivning: item.system.beskrivning,
+					harniva: item.system.installningar.harniva
+				};
+
+				const itemData = foundry.utils.duplicate(this.item);
+				itemData.system.egenskaper.push(egenskap);
+				
+				await this.item.update(itemData);
+				this.render();
+			}
+		}
 	  }
 
 	/** @override */
 	async close(...args) {
 		await super.close(...args);
 
-		if (this.item.type == "Besvärjelse") {
+		if (this.item.type.toLowerCase() == "besvärjelse") {
 			const itemData = foundry.utils.duplicate(this.item);	
 
 			for(const ritual of itemData.system.ritual) {
@@ -488,7 +511,7 @@ export default class EonItemSheet extends ItemSheet {
 				this.render();
 				return;
 			}
-			if (type == "moment") {
+			if ((type == "moment") || (type == "ritual") || (type == "egenskaper")) {
 				const itemData = foundry.utils.duplicate(this.item);
 				itemData.system[type].splice(key, 1);
 				await this.item.update(itemData);
@@ -496,16 +519,16 @@ export default class EonItemSheet extends ItemSheet {
 				this.render();
 				return;
 			}
-			if (type == "ritual") {
-				const itemData = foundry.utils.duplicate(this.item);
-				itemData.system[type].splice(key, 1);
+			// if (type == "ritual") {
+			// 	const itemData = foundry.utils.duplicate(this.item);
+			// 	itemData.system[type].splice(key, 1);
 
-				await this.item.update(itemData);
+			// 	await this.item.update(itemData);
 	
-				this.render();
-				return;
-			}
-			
+			// 	this.render();
+			// 	return;
+			// }
+						
 			return;
 		}    
 		
@@ -534,10 +557,11 @@ export default class EonItemSheet extends ItemSheet {
 		await this.actor.deleteEmbeddedDocuments("Item", [itemid]);        
 	}
 
-	async _ticValueUp(event, source) {
+	async _ticValueUp(event) {
 		event.preventDefault();
 		const element = event.currentTarget;
 		const dataset = element.dataset;
+		const source = dataset.source;
 		const itemData = foundry.utils.duplicate(this.item);
 
 		if (source === 'armor') {
@@ -549,6 +573,15 @@ export default class EonItemSheet extends ItemSheet {
 				itemData.system.kroppsdel[kroppsdelIndex][property]++;
 			}
 			
+			await this.item.update(itemData);
+			return;
+		}
+		if (source === 'egenskaper') {
+			const key = dataset.key;
+			const property = dataset.property;
+
+			itemData.system[source][key][property]++;
+
 			await this.item.update(itemData);
 			return;
 		}
@@ -741,54 +774,54 @@ export default class EonItemSheet extends ItemSheet {
 		this.render();
 	}
 
-	async _setVapenEgenhet(event) {
-		event.preventDefault();
-		const element = event.currentTarget;
-		const parent = $(element.parentNode);
-		const el = parent.closest(".property-area"); 
+	// async _setVapenEgenhet(event) {
+	// 	event.preventDefault();
+	// 	const element = event.currentTarget;
+	// 	const parent = $(element.parentNode);
+	// 	const el = parent.closest(".property-area"); 
 
-		const properties = [];
+	// 	const properties = [];
 
-		el.find(".weapon-property").each(function () {
-			if ($(this).is(':checked')) {
-				const sibling = $(this).parent().siblings();
-				let newPropery;
+	// 	el.find(".weapon-property").each(function () {
+	// 		if ($(this).is(':checked')) {
+	// 			const sibling = $(this).parent().siblings();
+	// 			let newPropery;
 
-				// Om ruta för nivå av egenskap finns
-				if (sibling.length > 0) {
-					let value = 0;
+	// 			// Om ruta för nivå av egenskap finns
+	// 			if (sibling.length > 0) {
+	// 				let value = 0;
 
-					if (sibling[0].children.length > 0) {
-						if (Number.isInteger(parseInt(sibling[0].children[0].value))) {
-							value = parseInt(sibling[0].children[0].value);
-						}
-						else {
-							ui.notifications.warn("Egenskapsvärdet måste vara ett heltal.");
-						}
-					}
+	// 				if (sibling[0].children.length > 0) {
+	// 					if (Number.isInteger(parseInt(sibling[0].children[0].value))) {
+	// 						value = parseInt(sibling[0].children[0].value);
+	// 					}
+	// 					else {
+	// 						ui.notifications.warn("Egenskapsvärdet måste vara ett heltal.");
+	// 					}
+	// 				}
 
-					newPropery = {
-						namn: this.value,
-						varde: value
-					}				
-				}
-				else {
-					newPropery = {
-						namn: this.value,
-						varde: 0
-					}
-				}
+	// 				newPropery = {
+	// 					namn: this.value,
+	// 					varde: value
+	// 				}				
+	// 			}
+	// 			else {
+	// 				newPropery = {
+	// 					namn: this.value,
+	// 					varde: 0
+	// 				}
+	// 			}
 
-				properties.push(newPropery);
-			}
-		});
+	// 			properties.push(newPropery);
+	// 		}
+	// 	});
 
-		const itemData = foundry.utils.duplicate(this.item);
-		itemData.system.egenskaper = properties;
-		await this.item.update(itemData);
+	// 	const itemData = foundry.utils.duplicate(this.item);
+	// 	itemData.system.egenskaper = properties;
+	// 	await this.item.update(itemData);
 
-		this.render();
-	}
+	// 	this.render();
+	// }
 
 	async _setMysterieMoment(event) {
 		event.preventDefault();
@@ -947,7 +980,7 @@ export default class EonItemSheet extends ItemSheet {
 			itemData.system.langd = vapen.langd;
 			itemData.system.vikt = vapen.vikt;
 			itemData.system.pris = vapen.pris;
-			itemData.system.egenskaper = vapen.egenskaper;
+			itemData.system.egenskaper = await ItemHelper.GetWeaponProperty(vapen);
 			await this.item.update(itemData);
 			this.render();
 
@@ -976,7 +1009,7 @@ export default class EonItemSheet extends ItemSheet {
 			itemData.system.langd = vapen.langd;
 			itemData.system.vikt = vapen.vikt;
 			itemData.system.pris = vapen.pris;
-			itemData.system.egenskaper = vapen.egenskaper;
+			itemData.system.egenskaper = await ItemHelper.GetWeaponProperty(vapen);
 			await this.item.update(itemData);
 			this.render();
 
@@ -1007,7 +1040,7 @@ export default class EonItemSheet extends ItemSheet {
 			itemData.system.langd = vapen.langd;
 			itemData.system.vikt = vapen.vikt;
 			itemData.system.pris = vapen.pris;
-			itemData.system.egenskaper = vapen.egenskaper;
+			itemData.system.egenskaper = await ItemHelper.GetWeaponProperty(vapen);
 			await this.item.update(itemData);
 			this.render();
 
@@ -1087,11 +1120,11 @@ export default class EonItemSheet extends ItemSheet {
 			return;
 		}
 
-		if (source == "weapon-property") {
-			await this._setVapenEgenhet(event);
+		// if (source == "weapon-property") {
+		//  	await this._setVapenEgenhet(event);
 
-			return;
-		}
+		//  	return;
+		// }
 
 		if (source == "moment") {
 			await this._setMysterieMoment(event);
@@ -1306,18 +1339,31 @@ export default class EonItemSheet extends ItemSheet {
 	async _onModifieraChange(event) {
 		event.preventDefault();
 		
-		const element = event.currentTarget;
-		const kroppsdel = element.dataset.kroppsdel;
-		const isChecked = element.checked;
-		
-		const itemData = foundry.utils.duplicate(this.item);
-		
-		const kroppsdelIndex = itemData.system.kroppsdel.findIndex(k => k.kroppsdel === kroppsdel);
-		if (kroppsdelIndex !== -1) {
-			itemData.system.kroppsdel[kroppsdelIndex].modifiera = isChecked;
+		const element = event.currentTarget;	
+
+		if (element.dataset.kroppsdel != undefined) {
+			const isChecked = element.checked;
+			const kroppsdel = element.dataset.kroppsdel;
+			const itemData = foundry.utils.duplicate(this.item);
+			
+			const kroppsdelIndex = itemData.system.kroppsdel.findIndex(k => k.kroppsdel === kroppsdel);
+			if (kroppsdelIndex !== -1) {
+				itemData.system.kroppsdel[kroppsdelIndex].modifiera = isChecked;
+			}
+
+			await this.item.update(itemData);
 		}
+		else {
+			const itemData = foundry.utils.duplicate(this.item);
+			let varde = itemData.system[element.dataset.type][element.dataset.key];
+
+			if (element.dataset.dtype == "Boolean") {
+				itemData.system[element.dataset.type][element.dataset.key] = !varde;
+			}
+
+			await this.item.update(itemData);
+		}		
 		
-		await this.item.update(itemData);
 		this.render();
 	}
 

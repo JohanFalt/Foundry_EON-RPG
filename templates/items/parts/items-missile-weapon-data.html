@@ -61,7 +61,7 @@
         <span class="floating-label">Pris (silver)</span>
     </div>
 
-    {{#if (not this.isPC)}}
+    {{#if (and this.hasActor (not this.isPC))}}
         <div class="item-row">
             <div class="headline-checkbox headline">Träffa</div>
             <div class="dice-value   tic pointer" data-property="traffa">{{getDiceValue item.system.traffa}}</div>
