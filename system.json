@@ -43,7 +43,8 @@
                 "eon": {
                     "types": [
                         "grundbok",
-                        "vapenegenskaper"
+                        "vapen",
+                        "egenskaper"
                     ]
                 }
             }
@@ -85,6 +86,24 @@
             }
         },
         {
+            "name": "skoldar",
+            "label": "Sköldar",
+            "system": "eon-rpg",
+            "path": "packs/skoldar",
+            "type": "Item",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "grundbok",
+                        "foremal",
+                        "vapen",
+                        "skoldar"
+                    ]
+                }
+            }
+        },
+        {
             "name": "vandningar",
             "label": "Vändningar",
             "system": "eon-rpg",
@@ -95,8 +114,24 @@
                 "eon": {
                     "types": [
                         "grundbok",
-                        "vandningar",
+                        "tabeller",
                         "varelser"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "tabeller",
+            "label": "Tabeller",
+            "system": "eon-rpg",
+            "path": "packs/tabeller",
+            "type": "RollTable",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "grundbok",
+                        "tabeller"
                     ]
                 }
             }
@@ -135,36 +170,39 @@
         }
     ],
     "packFolders": [{
-        "name": "Eon IV",
+        "name": "Eon IV - Grundbok",
         "sorting": "m",
         "color": "#cd2c1e",
-        "packs": [
-            "djur",
-            "varelser",
-            "vandningar"
-        ],
+        "packs": [],
         "folders": [
             {
-                "name": "Grundbok",
+                "name": "Föremål",
                 "sorting": "m",
                 "color": "#b72c1f",
                 "packs": [
                     "narstridsvapen",
                     "avstandsvapen",
+                    "skoldar",
                     "vapenegenskaper"
                 ]
             },
             {
-                "name": "Strid",
+                "name": "Tabeller",
                 "sorting": "m",
-                "color": "#941919",
-                "packs": []
+                "color": "#b72c1f",
+                "packs": [
+                    "tabeller",
+                    "vandningar"
+                ]
             },
             {
-                "name": "Magi",
+                "name": "Varelser",
                 "sorting": "m",
-                "color": "#7d160c",
-                "packs": []
+                "color": "#b72c1f",
+                "packs": [
+                    "djur",
+                    "varelser"
+                ]
             }
         ]
     }],

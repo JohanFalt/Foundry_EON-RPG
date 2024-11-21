@@ -69,14 +69,3 @@ export default class foremal extends basforemal {
         return schema;
     }
 }
-
-
-// let egenskap = {
-//     uuid: i.uuid,
-//     _id: i._id,
-//     label: i.name, 
-//     namn: i.system.id, 
-//     varde: vapenegenskap.varde, 
-//     beskrivning: i.system.beskrivning,
-//     harniva: i.system.installningar.harniva
-// };

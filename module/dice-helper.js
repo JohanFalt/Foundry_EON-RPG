@@ -211,12 +211,13 @@ export async function RollDice(diceRoll) {
                 rollInfo += ", ";
             }
             if(egenskap.varde > 0) {
-                rollInfo += game.EON.egenskaper[egenskap.namn].namn + " " + egenskap.varde;
+                //rollInfo += game.EON.egenskaper[egenskap.namn].namn + " " + egenskap.varde;
+                rollInfo += egenskap.label + " " + egenskap.varde;
             }
             else {
-                rollInfo += game.EON.egenskaper[egenskap.namn].namn;
-            }
-            
+                //rollInfo += game.EON.egenskaper[egenskap.namn].namn;
+                rollInfo += egenskap.label;
+            }            
         }
     }
     if ((typeRoll == CONFIG.EON.slag.grundegenskap) && (diceRoll.info.length > 0)) {
@@ -376,10 +377,4 @@ export async function SendMessage(actor, config, headline, message) {
     };
     ChatMessage.applyRollMode(chatData, "roll");
     ChatMessage.create(chatData);
-
-    // ChatMessage.create({
-    //     user: game.user.id,
-    //     content: message,
-    //     type: CONST.CHAT_MESSAGE_TYPES.OTHER
-    // });
 }

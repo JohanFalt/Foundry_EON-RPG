@@ -6,6 +6,7 @@ import { datastrid } from "../packs/strid.js";
 import { datautrustning } from "../packs/utrustning.js";
 import { datadjur } from "../packs/djur.js";
 import { datavaluta } from "../packs/valuta.js";
+import ItemHelper from "./item-helper.js";
 
 /**
  * Define a set of template paths to pre-load
@@ -102,6 +103,8 @@ export async function Setup() {
 }
 
 export async function RegisterRollableTables() {
+	console.warn("RegisterRollableTables() är depricated och skall inte användas.");
+	
 	let stridfolderData = false;
 	let skadefolderData = false;
 	let vandningfolderData = false;
@@ -176,7 +179,7 @@ export async function RegisterRollableTables() {
 		}
 		catch(err) {
 			// om tabellen inte har en inställning hoppa över denna (settings.js)
-			console.log(`${fileData.id} finns inte registrerad i systemet`);
+			console.warn(`${fileData.id} finns inte registrerad i systemet`);
 			continue;
 		}
 
@@ -607,28 +610,17 @@ export const RegisterHandlebarsHelpers = function () {
 		let text = "";
 
 		for (const item of lista) {
-			let name = item.namn;
 			let value = item.varde;
-
-			/* if (item.length > 1) {				
-				value = item[1];
-			} */
 
 			if (text != "") {
 				text += ", ";
 			}
+			
+			text += item.label;
 
-			for (const egenskap in game.EON.egenskaper) {
-				if (egenskap == name) {
-					text += game.EON.egenskaper[egenskap].namn;
-
-					if (value > 0) {
-						text += " " + value;
-					}
-
-					break;
-				}
-			}			
+			if (value > 0) {
+				text += " " + value;
+			}		
 		}
 
 		return text;
@@ -866,7 +858,7 @@ export const RegisterHandlebarsHelpers = function () {
 
 	Handlebars.registerHelper("getCurrencyList", function() {
 		if (!CONFIG.EON.datavaluta?.valuta) {
-			console.log("No currency data found");
+			console.warn("No currency data found");
 			return [];
 		}
 		

@@ -141,6 +141,9 @@ export default class EonItemSheet extends ItemSheet {
 					itemData.name = "Ny skada";
 				}
 			}
+			if (itemData.type == "Egenskap") {
+				itemData.system.installningar.kantabort = true;
+			}
 
 			await this.item.update(itemData);
 		}
@@ -180,7 +183,24 @@ export default class EonItemSheet extends ItemSheet {
 				if ((this.item.system.grupp == "mystik") && (this.item.system.id == "teoretiskmagi")) {
 					data.item.system.installningar.kantabort = true;
 				}
-			}			
+			}
+			if ((this.item.type.toLowerCase() == "närstridsvapen") || (this.item.type.toLowerCase() == "avståndsvapen")) {
+				let egenskaper = this.actor.items.filter((i) => (i.type.toLowerCase() === "egenskap") && (i.system.installningar?.vapen));
+				let lista = [];
+				
+				for (const i in egenskaper) {
+					let found = this.item.system.egenskaper.filter((egenskap) => (egenskap._id == egenskaper[i]._id));
+
+					if (found.length == 0) {
+						lista.push(egenskaper[i]);
+					} 
+				}
+				
+				data.listData.vapenegenskaper = lista;
+			}
+			else {
+				data.listData.vapenegenskaper = [];
+			}
 		}
 		else {
 			data.hasActor = false;
@@ -564,6 +584,7 @@ export default class EonItemSheet extends ItemSheet {
 		const source = dataset.source;
 		const itemData = foundry.utils.duplicate(this.item);
 
+		// rustning
 		if (source === 'armor') {
 			const kroppsdel = dataset.kroppsdel;
 			const property = dataset.property;
@@ -576,7 +597,32 @@ export default class EonItemSheet extends ItemSheet {
 			await this.item.update(itemData);
 			return;
 		}
+		// egenskaper
 		if (source === 'egenskaper') {
+			if (dataset.action != undefined) {
+				// lägga till en varelseegenskap till ett vapen
+				if ((dataset.action == "add") && (this.actor.type.toLowerCase() == "varelse")) {
+					const itemid = dataset.itemid;
+					const item = await this.actor.getEmbeddedDocument("Item", itemid);
+
+					let egenskap = {
+						uuid: "",
+						_id: item._id,
+						label: item.name, 
+						namn: item.system.id, 
+						varde: item.system.niva, 
+						beskrivning: item.system.beskrivning,
+						harniva: item.system.installningar.harniva
+					};
+	
+					itemData.system.egenskaper.push(egenskap);		
+					await this.item.update(itemData);
+					this.render();
+				}				
+
+				return;
+			}
+
 			const key = dataset.key;
 			const property = dataset.property;
 
@@ -641,17 +687,27 @@ export default class EonItemSheet extends ItemSheet {
 
 		// bonus
 		if (fields.length == 1) {
+
+			// bonus -= 1;
+			//                 if (bonus < -3)  {
+            //         tvarde -= 1;
+            //         bonus = 0;
+            //     }
+
 			itemData.system[property].bonus -= 1;
-
-			if (itemData.system[property].bonus < -1) {
-				itemData.system[property].tvarde -= 1;
-				itemData.system[property].bonus = 3;
-			}
-
-			if (itemData.system[property].tvarde < 0) {
-				itemData.system[property].tvarde = 0;
+			if (itemData.system[property].bonus < -3) {
+			 	itemData.system[property].tvarde -= 1;
 				itemData.system[property].bonus = 0;
 			}
+
+			// if ((itemData.system[property].bonus < -1) && (itemData.system[property].tvarde >= 0)) {
+			// 	itemData.system[property].tvarde -= 1;
+			// 	itemData.system[property].bonus = 3;
+			// }
+			// if (itemData.system[property].tvarde < 0) {
+			// 	itemData.system[property].tvarde = 0;
+			// 	itemData.system[property].bonus = 0;
+			// }
 		}
 		// grundegenskaper
 		else if (fields.length == 3) {

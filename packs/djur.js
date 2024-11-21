@@ -371,6 +371,25 @@ export const datadjur = {
                     }
                 }
             },
+            "gravarg": {
+                "namn": "Grtåvarg",
+                "typ": "meddelstorvarelse",
+                "referens": "s278",
+                "harleddegenskaper": {
+                    "livskraft": {
+                        "tvarde": 1,
+                        "bonus": 0
+                    },
+                    "vaksamhet": {
+                        "tvarde": 1,
+                        "bonus": 0
+                    },
+                    "grundskada": {
+                        "tvarde": 2,
+                        "bonus": 0
+                    }
+                }
+            },
             "radjur": {
                 "namn": "Rådjur",
                 "typ": "meddelstorvarelse",

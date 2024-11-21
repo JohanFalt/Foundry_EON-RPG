@@ -71,6 +71,7 @@ export default class EonActorSheet extends ActorSheet {
 
         //ItemHelper.CreateCloseWeapon();
         //ItemHelper.CreateRangeWeapon();
+        //ItemHelper.CreateShield();
         
         const data = await super.getData();	
 
@@ -495,8 +496,6 @@ export default class EonActorSheet extends ActorSheet {
         * @param _event
     */
     async _onItemEdit(event) {
-        console.log("_onItemEdit");
-
 		var _a;
 
 		event.preventDefault();
@@ -538,8 +537,6 @@ export default class EonActorSheet extends ActorSheet {
         * @param _event
     */
     async _onItemAlter(event) {
-        console.log("_onItemAlter");
-
 		event.preventDefault();
         event.stopPropagation();
 
@@ -583,8 +580,6 @@ export default class EonActorSheet extends ActorSheet {
         * @param _event
     */
     async _onItemActive(event) {	
-        console.log("_onItemActive");
-        
 		event.preventDefault();
         event.stopPropagation();
 
@@ -673,8 +668,6 @@ export default class EonActorSheet extends ActorSheet {
         * @param _event
     */
     async _onsheetChange(event) {
-        console.log("_onsheetChange");
-
 		event.preventDefault();
 
 		const element = event.currentTarget;
@@ -851,8 +844,6 @@ export default class EonActorSheet extends ActorSheet {
         * @param _event
     */
     async _clickedCircle(event) {
-        console.log("_clickedCircle");
-
         event.preventDefault();
 		const element = event.currentTarget;
 		const dataset = element.dataset;

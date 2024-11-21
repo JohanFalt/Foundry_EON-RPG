@@ -173,8 +173,6 @@
     background-color: var(--eon-back-color-inputs);
     color: var(--eon-text-normal-color);    
     width: 98%;
-    /* height: var(--eon-line-height-default);
-    line-height: var(--eon-line-height-default); */
 }
 
 .EON input[type="text"]:disabled,
@@ -279,7 +277,6 @@
 .EON .headline {        
     font-weight: normal;
     margin-bottom: 5px;    
-    /* border-bottom: 1px solid var(--eon-border-color); */
 }
 
 .EON.normal-headline .headline {
@@ -304,7 +301,6 @@
     border-bottom-width: 1px; 
     border-top-style: solid; 
     border-top-width: 1px; 
-    /* background: rgba(156, 132, 109, 1); */
 }
 
 .EON .large-headline {
