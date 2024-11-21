@@ -38,12 +38,17 @@
                     {{/if}}
 
                     {{#if object.hasLista}}
-                        {{log "hasLista"}}
                         <div class="item-column">      
                             <div>
                                 <select class="text-value editable" name="attribut.listaid" style="width: 300px">
                                     {{selectOptions this.vandningLista selected=object.attributeListId localize=false}}  
                                 </select>
+                            </div>
+
+                            <div class="item-row headline" style="margin-top: 10px;">
+                                <div class="three-column centerText">Skada</div>
+                                <div class="three-column centerText">Utm.</div>
+                                <div class="three-column centerText">Vänd. (Ja/Nej)</div>
                             </div>
                             
                             {{#each object.attributeList as | vandning key|}}
@@ -59,10 +64,8 @@
                             {{/each}}
                         </div>
                     {{else if object.isNumeric}}
-                        {{log "no lista but is numeric"}}
                         <div class="dice-value {{#if object.canTic}}tic pointer{{else}}disabled{{/if}}" data-property="{{object.attributeType}}">{{object.attributeBasicValue}}</div>
                     {{else}}
-                        {{log "no lista but dice"}}
                         <div class="dice-value {{#if object.canTic}}tic pointer{{else}}disabled{{/if}}" data-property="{{object.attributeType}}">{{getDiceValue object.attributeBasicValue}}</div>
                     {{/if}}
 
@@ -75,7 +78,6 @@
                 </div>                 
 
                 {{#if object.hasBonusList}}
-                    {{log "has bonuslist"}}
                     <div class="item-column">
 
                         <div class="headline item-row" style="line-height: 25px; width:100%;">
@@ -94,12 +96,10 @@
                                     </div>
 
                                     {{#if ../object.isNumeric}}
-                                        {{log "is numeric"}}
                                         <div class="floating-label-group tic" data-key="{{key}}">
                                             <input class="attribute-value editable pointer" type="text" value="{{bonus.tvarde}}" />
                                         </div>
                                     {{else}}
-                                        {{log "is dice"}}
                                         <div class="dice-value tic pointer" data-key="{{key}}">{{getDiceValue bonus}}</div>                                        
                                     {{/if}}
 

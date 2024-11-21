@@ -68,20 +68,15 @@
                 <input class="attribute-value editable skill-label skill-value" type="text" name="system.strid.aterhamtning" value="{{actor.system.strid.aterhamtning}}" data-dtype="Number" />
             </div>
 
-            {{log this}}
-            
             <div class="headline attribute-area" style="width: 150px;">Skydd totalt</div>
             <div class="item-row">
-                <div class="item-row">
-                    <div>
-                        {{sum 
-                            actor.system.skada.skydd.hugg 
-                            actor.system.harleddegenskaper.grundrustning.totalt
-                        }}
-                    </div>
-                    <div>
-                        <img src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-text-icon" title="Hugg" />
-                    </div>
+                <div class="centerText" style="width: 50px;"> 
+                    {{sum 
+                        actor.system.skada.skydd.hugg 
+                        actor.system.harleddegenskaper.grundrustning.totalt
+                    }}
+                    
+                    <img src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-text-icon" title="Hugg" />
                 </div>
                 <div class="centerText" style="width: 50px;"> 
                     {{sum 

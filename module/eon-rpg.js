@@ -84,7 +84,7 @@ Hooks.once("ready", async () => {
             }
         }
 
-        await Templates.RegisterRollableTables();
+        //await Templates.RegisterRollableTables();
     } 
 });
 
@@ -183,9 +183,6 @@ Hooks.on("renderFormApplication", (sheet) => {
 
 Hooks.on("renderDialog", (sheet) => { 
     clearHTML(sheet);
-
-    // sheet.element[0].classList.remove("EON");
-    // sheet.element[0].classList.add("EON");
 
     if (CONFIG.EON.settings.textfont == "eon1") {
         sheet.element[0].classList.add("eon-text");

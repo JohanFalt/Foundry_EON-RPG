@@ -2,13 +2,13 @@
 <div class="item-section">
     <div class="property-area">        
         <div class="item-row headline">
-            <div style="width: 100px;">Namn</div> 
+            <div style="width: 150px;">Namn</div> 
             <div style="width: 50px;">Nivå</div>
         </div>        
 
         {{#each item.system.egenskaper as |egenskap key|}}    
             <div class="item-row">
-                <div style="width: 100px;">{{egenskap.label}}</div>
+                <div style="width: 150px;">{{egenskap.label}}</div>
                 <div style="width: 50px;">
                     {{#if egenskap.harniva}}
                         <i class="fa-solid fa-square-plus green pointer" data-source="egenskaper" data-key="{{key}}" data-property="varde"></i>
@@ -24,4 +24,21 @@
     </div>
     
 </div>
+
 <div class="information-area information-box">För att lägga till en egenhet, dra den som skall användas från kompendiet (Vapenegenskaper) eller skapa en egen.</div>
+
+{{#if (gt listData.vapenegenskaper.length 0)}}
+    <div class="item-section" style="margin-top: 20px;">
+        <div class="property-area item-column"> 
+
+            {{#each listData.vapenegenskaper as | egenskap key|}}
+                <div class="item-row">
+                    <div style="width: 20px;"><i class="fa-solid fa-square-plus green pointer" data-source="egenskaper" data-action="add" data-itemid="{{egenskap._id}}"></i></div> 
+                    <div>{{egenskap.name}}</div>            
+                </div>
+            {{/each}}
+
+        </div>    
+    </div>
+{{/if}}
+

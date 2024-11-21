@@ -306,6 +306,7 @@ export default class ItemHelper {
         return false;
     }
 
+    // Användes för att skapa upp vapenegenskaperna i kompendiet
     static async CreateWeaponProperty() {
         const version = game.data.system.version;
 
@@ -332,9 +333,6 @@ export default class ItemHelper {
     }
 
     static async CreateCloseWeapon() {
-        const version = game.data.system.version;
-        const typ = "";
-
         for (const grupp in CONFIG.EON.vapengrupper) {
             for (const vapenmall in game.EON.narstridsvapen[grupp]) {
                 const vapen = game.EON.narstridsvapen[grupp][vapenmall]
@@ -379,9 +377,6 @@ export default class ItemHelper {
     }
 
     static async CreateRangeWeapon() {
-        const version = game.data.system.version;
-        const typ = "";
-
         for (const grupp in CONFIG.EON.vapengrupper) {
             for (const vapenmall in game.EON.avstandsvapen[grupp]) {
                 const vapen = game.EON.avstandsvapen[grupp][vapenmall]
@@ -390,23 +385,6 @@ export default class ItemHelper {
                 if (grupp == "armborst") image = CONFIG.EON.ikoner.foremal_armborst;
                 if (grupp == "bage") image = CONFIG.EON.ikoner.foremal_bage;
                 if (grupp == "kastvapen") image = CONFIG.EON.ikoner.foremal_kastvapen;
-
-                // if (type == "avståndsvapen") {
-                //     found = true;
-        
-                //     itemData = {
-                //         name: "Nytt avståndsvapen",
-                //         type: "Avståndsvapen",
-                        
-                //         system: {
-                //             installningar: {
-                //                 skapad: true,
-                //                 version: version
-                //             },
-                //             typ: "utrustning"
-                //         }
-                //     };
-                // }
 
                 let itemData = {
                     img: image,
@@ -439,6 +417,47 @@ export default class ItemHelper {
         }
     }
 
+    static async CreateShield() {
+        for (const grupp in CONFIG.EON.vapengrupper) {
+            for (const vapenmall in game.EON.forsvar[grupp]) {
+                const vapen = game.EON.forsvar[grupp][vapenmall]
+                let image = "icons/svg/item-bag.svg";
+
+                if (grupp == "skold") image = CONFIG.EON.ikoner.foremal_skold;
+
+                let itemData = {
+                    img: image,
+                    name: vapen.namn,
+                    type: "Sköld",                
+                    system: {
+                        installningar: {
+                            skapad: true,
+                            version: "3.1.0"
+                        },
+                        typ: "utrustning",
+                        mall: vapenmall,
+                        grupp: vapen.grupp,
+                        enhand: vapen.enhand,
+                        tvahand: vapen.tvahand,
+
+                        narstrid: vapen.narstrid,
+                        avstand: vapen.avstand,
+                        skydd: vapen.skydd,
+                        skada: vapen.skada,
+                        skadetyp: vapen.skadetyp,
+
+                        langd: vapen.langd,
+                        vikt: vapen.vikt,
+                        pris: vapen.pris,
+                        egenskaper: await this.GetWeaponProperty(vapen)                  
+                    }                    
+                };
+
+                Item.createDocuments([itemData], {pack: "eon-rpg.skoldar"});
+            }
+        }
+    }
+
     static async GetWeaponProperty(vapen) {
         const pack = game.packs.get("eon-rpg.vapenegenskaper");
         const egenskaper = await pack.getDocuments({type: "Egenskap"});
@@ -461,5 +480,16 @@ export default class ItemHelper {
         }
 
         return nylista;
+    }
+
+    static async GetCreatureCombatTurn(id) {
+        const pack = game.packs.get("eon-rpg.vandningar");
+        const vandningar = await pack.getDocuments();
+
+        if (id == undefined) {
+            return vandningar;
+        }        
+
+        return vandningar.find(e => e._id === id);
     }
 }

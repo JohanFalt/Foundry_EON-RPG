@@ -580,8 +580,6 @@ export class DialogWeaponRoll extends FormApplication {
     activateListeners(html) {
         super.activateListeners(html);
 
-        console.log("Activating listeners for weapon roll dialog");
-
         html
             .find('.mode')
             .click(this._setMode.bind(this));
@@ -650,7 +648,6 @@ export class DialogWeaponRoll extends FormApplication {
 		const dataset = element.dataset;
 
         if (dataset?.type && element.classList.contains('attacktype')) {
-            console.log("Attack type clicked:", dataset.type);
             this.object.attacktype = dataset.type;
         }
 

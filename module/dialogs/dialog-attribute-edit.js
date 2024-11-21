@@ -1,4 +1,5 @@
 import CalculateHelper from "../calculate-helper.js";
+import ItemHelper from "../item-helper.js";
 
 export class DialogAttribute {
 
@@ -232,12 +233,12 @@ export class DialogAttributeEdit extends FormApplication {
                 "": "- Välj -"
             };
 
-            // hämta alla vändningstabeller som finns registrerade i systemet.
-            game.settings.settings.forEach(setting => {
-                if ((setting.namespace == 'eon-rpg') && (setting.key.indexOf('vd_') > -1)) {
-                    lista = Object.assign(lista, {[setting.key] : setting.name});
-                }                    
-            }); 
+            // hämta alla vändningstabeller som finns i kompendiet.
+            // #243
+            const vandningar = await ItemHelper.GetCreatureCombatTurn();
+            for (const i in vandningar) {
+                lista = Object.assign(lista, {[vandningar[i]._id] : vandningar[i].name});
+            } 
                 
             data.vandningLista = lista;
         }    
@@ -266,8 +267,8 @@ export class DialogAttributeEdit extends FormApplication {
             data.headline = 'HÄRLETT ATTRIBUT';
         }
         
-        console.log(this.object.attributeKey);
-        console.log(data);
+        //console.log(this.object.attributeKey);
+        //console.log(data);
 
         return data;
     }
@@ -372,6 +373,18 @@ export class DialogAttributeEdit extends FormApplication {
             }
         }
 
+        const objectKeys = Object.keys(formData).filter(k => k.startsWith("object."));
+        if (objectKeys.length > 0) {
+            for (let key of objectKeys) {
+                const index = key.split(".")[1];
+                const value = formData[key];
+
+                if (index == "namn") {
+                    actorData.system[this.object.attributeType][this.object.attributeKey].namn = value;
+                }
+            }
+        }
+
         await this.actor.update(actorData);
         this.render();
     }
@@ -449,9 +462,15 @@ export class DialogAttributeEdit extends FormApplication {
 			if (dataset.property != undefined) {
 				actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus += 1;
 
-				if ((actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus > 3) && (actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde < 6)) {
-					actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde += 1;
-					actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus = 0;
+				if (actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus > 3) {
+                    if (this.object.attributeKey == "grundskada") {
+                        actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde += 1;
+					    actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus = 0;
+                    }
+                    else if (actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde < 6) {
+					    actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde += 1;
+					    actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus = 0;
+                    }
 				}
 
 				actorData.system[this.object.attributeType][this.object.attributeKey].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.attributeType][this.object.attributeKey]);
@@ -498,16 +517,6 @@ export class DialogAttributeEdit extends FormApplication {
                 if (path.bonuslista[key]) {
                     path.bonuslista[key].tvarde = Math.max((path.bonuslista[key].tvarde || 0) - 1, 0);
                 }
-
-                // let total = parseInt(path.varde) || 0;
-                // path.bonuslista.forEach(bonus => {
-                //     total += parseInt(bonus.tvarde) || 0;
-                // });
-                // path.totalt = total;
-
-                // await this.actor.update(actorData);
-                // this.render();
-                // return;
             }
             else {
                 if (actorData.system[this.object.attributeType][this.object.attributeKey].varde > 0) {

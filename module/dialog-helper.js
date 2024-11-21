@@ -7,6 +7,8 @@ import { CombatRoll, DialogCombat } from "./dialogs/dialog-combat-roll.js";
 
 import { DialogAttribute, DialogAttributeEdit } from "./dialogs/dialog-attribute-edit.js";
 
+import ItemHelper from "./item-helper.js";
+
 export default class classDialogHelper {
     static async SkillDialog(event, actor) {
         event.preventDefault();
@@ -72,7 +74,7 @@ export default class classDialogHelper {
         const vandningid = actor.system.skada?.vandning?.listaid;
 
         if ((vandningid != undefined) && (vandningid != "")) {
-            let vandning = game.settings.get("eon-rpg", vandningid);
+            let table = await ItemHelper.GetCreatureCombatTurn(vandningid);
 
             // Template for the dialog form
             const template = `
@@ -97,7 +99,8 @@ export default class classDialogHelper {
                         }
 
                         const roll = await new Roll(formula);
-                        const table = game.tables.find(i => i._id === vandning);
+                        // #243
+                        //const table = game.tables.find(i => i._id === vandning);
                         await table.draw({roll});
                     }
                 }

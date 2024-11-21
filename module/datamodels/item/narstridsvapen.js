@@ -17,19 +17,19 @@ export default class EonNarstridsvapen extends vapen {
 
         schema.hugg = new fields.SchemaField({
             aktiv: new fields.BooleanField({initial: false}),
-            tvarde: new fields.NumberField({...valueInteger}),
+            tvarde: new fields.NumberField({...bonusInteger}),
             bonus: new fields.NumberField({...bonusInteger})
         });
 
         schema.kross = new fields.SchemaField({
             aktiv: new fields.BooleanField({initial: false}),
-            tvarde: new fields.NumberField({...valueInteger}),
+            tvarde: new fields.NumberField({...bonusInteger}),
             bonus: new fields.NumberField({...bonusInteger})
         });
 
         schema.stick = new fields.SchemaField({
             aktiv: new fields.BooleanField({initial: false}),
-            tvarde: new fields.NumberField({...valueInteger}),
+            tvarde: new fields.NumberField({...bonusInteger}),
             bonus: new fields.NumberField({...bonusInteger})
         });
         
