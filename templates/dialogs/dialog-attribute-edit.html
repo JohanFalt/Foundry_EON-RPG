@@ -54,9 +54,16 @@
                             {{#each object.attributeList as | vandning key|}}
                                 <div class="item-row" style="line-height: 25px; height: 32px;">
                                     <div class="three-column centerText">{{vandning.skada}}</div>
-                                    <div class="three-column centerText"><input class="attribute-value editable skill-label skill-value" type="text" name="attribut.lista.{{key}}.utmattning" value="{{vandning.utmattning}}" /></div>
+                                    <div class="three-column centerText"><input class="attribute-value editable skill-label skill-value" type="text" name="attribut.lista.{{key}}.utmattning" value="{{vandning.utmattning}}" style="width: 40px;" /></div>
                                     {{#if (ne key 9)}}
-                                        <div class="three-column centerText pointer"><a class="item-active" data-key="lista.{{key}}">{{#if vandning.vandning}}<i class="fa-solid fa-toggle-on green"></i>{{else}}<i class="fa-solid fa-toggle-off red"></i>{{/if}}</a></div>
+                                        <div class="three-column centerText item-row">
+                                            <div class="two-column pointer">
+                                                <a class="item-active" data-key="lista.{{key}}">{{#if vandning.vandning}}<i class="fa-solid fa-toggle-on green"></i>{{else}}<i class="fa-solid fa-toggle-off red"></i>{{/if}}</a>
+                                            </div>
+                                            <div class="two-column">
+                                                <input class="attribute-value editable skill-label skill-value" type="text" name="attribut.lista.{{key}}.bonus" value="{{vandning.bonus}}" style="width: 40px;" />
+                                            </div>                                        
+                                        </div>
                                     {{else}}     
                                         <div class="three-column centerText"></div>                                           
                                     {{/if}}

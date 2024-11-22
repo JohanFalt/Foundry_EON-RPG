@@ -20,6 +20,12 @@
         </div>
     {{/each}}
 
+    <div>
+        <div class="item-row headline" style="line-height: 25px; width:100%;">
+            <div>Försvar</div>
+        </div>
+    </div>
+
     <div class="skill-row skill">
         <div class="vrollable caption normalskill" data-source="attribute" data-type="skada" data-key="forsvar" title="{{{actor.system.skada.forsvar.beskrivning}}}">{{actor.system.skada.forsvar.namn}}</div>                     
         <div class="dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue actor.system.skada.forsvar.totalt}}</div>

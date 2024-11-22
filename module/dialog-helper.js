@@ -70,7 +70,7 @@ export default class classDialogHelper {
 		combatRollUse.render(true);
     }
 
-    static async VandningDialog(actor) {
+    static async VandningDialog(actor, bonus) {
         const vandningid = actor.system.skada?.vandning?.listaid;
 
         if ((vandningid != undefined) && (vandningid != "")) {
@@ -81,7 +81,7 @@ export default class classDialogHelper {
                 <form>
                     <div class="form-group">
                         <label>Modifiering</label>
-                        <input id="numberValue" value="" />
+                        <input id="numberValue" value="${bonus}" />
                     </div>
                 </form>`;
 

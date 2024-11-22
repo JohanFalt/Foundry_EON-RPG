@@ -487,7 +487,31 @@ export default class ItemHelper {
         const vandningar = await pack.getDocuments();
 
         if (id == undefined) {
+            vandningar.sort((a, b) => a.name.localeCompare(b.name));
             return vandningar;
+        }        
+
+        return vandningar.find(e => e._id === id);
+    }
+
+    static async GetWeapon(vapentyp, id) {
+        let kompendie = "";
+
+        if (vapentyp == "narstridsvapen") {
+            kompendie = "eon-rpg.narstridsvapen";
+        }
+        else if (vapentyp == "avstandsvapen") {
+            kompendie = "eon-rpg.avstandsvapen";
+        }
+        else {
+            return [];
+        }
+        const pack = game.packs.get(kompendie);
+        const vapen = await pack.getDocuments();
+
+        if (id == undefined) {
+            vapen.sort((a, b) => a.name.localeCompare(b.name));
+            return vapen;
         }        
 
         return vandningar.find(e => e._id === id);

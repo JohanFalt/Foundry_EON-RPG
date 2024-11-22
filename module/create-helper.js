@@ -49,7 +49,8 @@ export default class CreateHelper {
         vandning = {
             skada: "1-4",
             utmattning: "0",
-            vandning: false
+            vandning: false,
+            bonus: "0"
         };    
         vandningar.push(vandning);  
 
@@ -62,7 +63,8 @@ export default class CreateHelper {
             vandning = {
                 skada: value,
                 utmattning: "0",
-                vandning: false
+                vandning: false,
+                bonus: "0"
             };
             vandningar.push(vandning);
         }
@@ -70,7 +72,8 @@ export default class CreateHelper {
         vandning = {
             skada: "(+5)",
             utmattning: "(0)",
-            vandning: false
+            vandning: false,
+            bonus: "0"
         };    
         vandningar.push(vandning);
 
@@ -126,20 +129,30 @@ export default class CreateHelper {
         return kroppsdelar;
     }
 
-    static async SkapaNarstridsvapen(actor, config, vapengrupp, vapennamn, version, buren = false) {
+    //static async SkapaNarstridsvapen(actor, config, vapengrupp, vapennamn, version, buren = false) {
+    static async SkapaNarstridsvapen(actor, vapennamn, vapenlista, version, buren = false) {
+        // for (const grupp in config.vapengrupper) {
+        //     if (grupp == vapengrupp) {
+        //         for (const vapen in game.EON.narstridsvapen[grupp]) {
+        //             if (vapen == vapennamn) {
+        //                 let itemData = await this._SkapaNarstridsvapenItem(game.EON.narstridsvapen[grupp][vapen], vapen, version, buren);
+        //                 await actor.createEmbeddedDocuments("Item", [itemData]);
+        //                 break;
+        //             }
+        //         }
+        //         break;
+        //     }
+        // }   
+        //const vapenlista = ItemHelper.GetWeapon(typ);
 
-        for (const grupp in config.vapengrupper) {
-            if (grupp == vapengrupp) {
-                for (const vapen in game.EON.narstridsvapen[grupp]) {
-                    if (vapen == vapennamn) {
-                        let itemData = await this._SkapaNarstridsvapenItem(game.EON.narstridsvapen[grupp][vapen], vapen, version, buren);
-                        await actor.createEmbeddedDocuments("Item", [itemData]);
-                        break;
-                    }
-                }
+        for (const vapen in vapenlista) {
+            if (vapenlista[vapen].system.mall == vapennamn) {
+                //let itemData = await this._SkapaNarstridsvapenItem(vapenlista[vapen], vapenlista[vapen].system.mall, version, buren);
+                const itemData = foundry.utils.duplicate(vapenlista[vapen]);
+                await actor.createEmbeddedDocuments("Item", [itemData]);
                 break;
             }
-        }       
+        }
     }
 
     static async SkapaFardighetItem(grupp, fardighet, nyckel, worldVersion, baschans = true, tabort = false) {
