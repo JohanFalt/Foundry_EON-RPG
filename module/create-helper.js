@@ -49,7 +49,8 @@ export default class CreateHelper {
         vandning = {
             skada: "1-4",
             utmattning: "0",
-            vandning: false
+            vandning: false,
+            bonus: "0"
         };    
         vandningar.push(vandning);  
 
@@ -62,7 +63,8 @@ export default class CreateHelper {
             vandning = {
                 skada: value,
                 utmattning: "0",
-                vandning: false
+                vandning: false,
+                bonus: "0"
             };
             vandningar.push(vandning);
         }
@@ -70,7 +72,8 @@ export default class CreateHelper {
         vandning = {
             skada: "(+5)",
             utmattning: "(0)",
-            vandning: false
+            vandning: false,
+            bonus: "0"
         };    
         vandningar.push(vandning);
 

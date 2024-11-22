@@ -185,7 +185,13 @@ export default class EonCreatureSheet extends ActorSheet {
         }   
 
         if (dataset.source == "vandning") {
-            DialogHelper.VandningDialog(this.actor);
+            let bonus = 0;
+            
+            if (CalculateHelper.isNumeric(dataset.bonus)) {
+                bonus = parseInt(dataset.bonus);
+            }
+             
+            DialogHelper.VandningDialog(this.actor, bonus);
 			return;
         }        
 
