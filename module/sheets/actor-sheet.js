@@ -58,7 +58,9 @@ export default class EonActorSheet extends ActorSheet {
             await CreateHelper.SkapaFardigheter(this.actor, CONFIG.EON, version);
             await CreateHelper.SkapaKaraktarsdrag(actorData);
             await CreateHelper.SkapaKaraktarsdrag(actorData);
-            await CreateHelper.SkapaNarstridsvapen(this.actor, CONFIG.EON, "slagsmal", "obevapnad", version, true);
+            //await CreateHelper.SkapaNarstridsvapen(this.actor, CONFIG.EON, "slagsmal", "obevapnad", version, true);
+            const vapenlista = await ItemHelper.GetWeapon("narstridsvapen");
+            await CreateHelper.SkapaNarstridsvapen(this.actor, "obevapnad", vapenlista, version, true);
 
             actorData.system.installningar.skapad = true;
             actorData.system.installningar.version = version;

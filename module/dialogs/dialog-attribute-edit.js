@@ -82,12 +82,7 @@ export class DialogAttribute {
         if (this.#_hasName) {
             this.#_attributeName = actor.system[this.#_attributeType][this.#_attributeKey]?.namn;
         }
-
-        if (this.#_hasLista) {
-            this.#_attributeList = actor.system[this.#_attributeType][this.#_attributeKey]?.lista;
-            this.#_attributeListId = actor.system[this.#_attributeType][this.#_attributeKey]?.listaid;
-        }
-
+        
         if (actor.system[this.#_attributeType][this.#_attributeKey].grund != undefined) {
             this.#_attributeBasicValue = actor.system[this.#_attributeType][this.#_attributeKey].grund;                
         }
