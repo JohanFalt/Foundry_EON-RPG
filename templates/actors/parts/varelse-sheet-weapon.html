@@ -22,7 +22,13 @@
             <div class="weapon-icon"><a class="item-edit" title="Editera vapen" data-source="weapon" data-itemid="{{vapen._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             <div class="vrollable" style="width: 150px;" data-source="weapon" data-itemid="{{vapen._id}}">{{vapen.name}}</div>
 
-            <div class="centerText  " style="width: 60px;">{{getDiceValue vapen.system.traffa}}</div>        
+            <div class="centerText  " style="width: 60px;">
+                {{#if (ne vapen.system.grupp "")}}
+                    {{getDiceValue (getActorSkillGroupValue ../actor vapen.system.grupp "")}}
+                {{else}}
+                    {{getDiceValue vapen.system.traffa}}
+                {{/if}}
+            </div>        
 
             <div class="centerText  " style="width: 50px;">{{#if (eq vapen.system.hugg.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.hugg ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
             <div class="centerText  " style="width: 50px;">{{#if (eq vapen.system.kross.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.kross ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>

@@ -22,15 +22,6 @@ export default class EonRustning extends foremal {
 
         schema.belastning = new fields.NumberField({...valueInteger}); 
         schema.tacker = new fields.StringField({initial: '', nullable: false});
-        
-        schema.installningar = new fields.SchemaField({
-            skapad: new fields.BooleanField({initial: false, required: true}),
-            version: new fields.StringField({initial: "", required: true}),
-            kantabort: new fields.BooleanField({initial: false, required: true}),
-            exceptionell: new fields.BooleanField({initial: false, required: true}),
-            buren: new fields.BooleanField({initial: false, required: true})
-        });
-        
         schema.belastning_reduction = new fields.NumberField({...valueInteger});
         
         return schema;

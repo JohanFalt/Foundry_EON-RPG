@@ -156,6 +156,8 @@ export default class EonItemSheet extends ItemSheet {
 		data.hasExperience = false;
 		data.selectedRitual = parseInt(this.selectedRitual);
 
+		
+
 		data.listData = SelectHelper.SetupItem(this.item);
 
 		data.enrichedBeskrivning = await TextEditor.enrichHTML(this.item.system.beskrivning);
@@ -204,6 +206,13 @@ export default class EonItemSheet extends ItemSheet {
 		}
 		else {
 			data.hasActor = false;
+		}
+
+		if ((!data.isPC) && (data.hasActor) && this.item.system.grupp != "") {
+			data.showTraffa = false;
+		}
+		else {
+			data.showTraffa = true;
 		}
 
 		console.log(data.item.type);

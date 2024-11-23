@@ -1,6 +1,8 @@
 import installningar from "./installningar.js";
 import basforemal from "./_basforemal.js";
 
+import {CompareVersion} from "../../../migration.js";
+
 /**
  * Data schema, attributes, and methods specific to Actor.
  */
@@ -20,7 +22,8 @@ export default class foremal extends basforemal {
             ...installningar(),
             behallare: new fields.BooleanField({initial: false}),
             buren: new fields.BooleanField({initial: false}),
-            aktiv: new fields.BooleanField({initial: false})
+            aktiv: new fields.BooleanField({initial: false}),
+            exceptionell: new fields.BooleanField({initial: false, required: true}),
         });
 
         schema.volym = new fields.SchemaField({

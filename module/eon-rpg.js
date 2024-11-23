@@ -73,7 +73,7 @@ Hooks.once("ready", async () => {
     // Do anything once the system is ready
 	const installedVersion = game.settings.get("eon-rpg", "systemVersion");
     const systemVersion = game.data.system.version;
-    const isDemo = false;
+    const isDemo = true;
 
     if (game.user.isGM) {
         if (((installedVersion !== systemVersion || installedVersion === null)) || (isDemo)) {

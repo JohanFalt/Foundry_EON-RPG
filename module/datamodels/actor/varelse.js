@@ -94,4 +94,11 @@ export default class EonVarelse extends foundry.abstract.DataModel {
         
         return schema;
     }
+
+    static async initialize() {
+    }
+
+    static migrateData(source) {
+        return super.migrateData(source);
+    }
 }
