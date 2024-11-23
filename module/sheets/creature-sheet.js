@@ -137,9 +137,29 @@ export default class EonCreatureSheet extends ActorSheet {
         //     return false;
         // }
 
-        //const droppedItem = await Item.implementation.fromDropData(_data);          
+        const droppedItem = await Item.implementation.fromDropData(_data);          
+
+        if (((droppedItem.type.toLowerCase() == "närstridsvapen") || (droppedItem.type.toLowerCase() == "avståndsvapen") || (droppedItem.type.toLowerCase() == "sköld")) && 
+                (droppedItem.system.grupp != "")) {
+
+            const version = game.data.system.version;
+            const fardighet = droppedItem.system.grupp;
+            let found = false;
+
+            for (const item of this.actor.items) {
+                if ((item.type.toLowerCase() == "färdighet") && (item.system.id == fardighet)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                let itemData = await CreateHelper.SkapaFardighetItem('allman', game.EON.fardigheter['strid'][fardighet], fardighet, version, false, true);
+                await this.actor.createEmbeddedDocuments("Item", [itemData]);
+            }            
+        }
         
-        super._onDropItem(_event, _data)
+        super._onDropItem(_event, _data);
     }
 
     /** @override */

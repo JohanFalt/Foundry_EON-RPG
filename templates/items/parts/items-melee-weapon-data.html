@@ -34,11 +34,10 @@
         <span class="floating-label">Namn</span>
     </div>       
     
-    <!--
     <div class="item-property-area   floating-label-group">
         <select class="text-value" name="system.grupp">                                
             {{#select item.system.grupp}}
-                <option value="">- Välj -</option>
+                <option value="">- Ingen färdighet -</option>
                 {{#each EON.CONFIG.vapengrupper as |vapengrupp key|}}
                     {{#if (eq vapengrupp.grupp "narstridsvapen")}}
                         <option value="{{key}}">{{vapengrupp.namn}}</option>
@@ -49,6 +48,7 @@
         <span class="floating-label">Färdighet</span>
     </div>
 
+    <!--
     <div class="item-property-area   floating-label-group">
         <select class="text-value inputdata" name="system.mall" data-source="weapon-close">
             <option value="">- Välj -</option>                                       
@@ -78,7 +78,7 @@
         <span class="floating-label">Pris (silver)</span>
     </div>
 
-    {{#if (and this.hasActor (not this.isPC))}}
+    {{#if this.showTraffa}}    
         <div class="item-row">
             <div class="headline-checkbox headline">Träffa</div>
             <div class="dice-value   tic pointer" data-property="traffa">{{getDiceValue item.system.traffa}}</div>
