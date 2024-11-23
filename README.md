@@ -10,10 +10,6 @@ Delar av detta material är tillhör Helmgast AB som äger copyright och tradema
 Detta material är inte en officiell Eon produkt.
 
 
-# Changelog
-Release CHANGELOG can be found [HERE](https://github.com/JohanFalt/Foundry_WoD20/wiki/Changelog).
-
-
 ## Icons
 https://fontawesome.com/
 
