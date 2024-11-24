@@ -90,7 +90,11 @@ export default class DiceHelper {
             varde = totalTarning - 4;
         }
 
-        return varde;
+        return {
+            varde: varde,
+            totalt: varde,
+            bonuslista: []
+        };
     }
 
     static async BeraknaInitiativ(actorData) {
@@ -106,6 +110,25 @@ export default class DiceHelper {
     }
 
     static AdderaVarden(tarning1, tarning2) {
+        if ((tarning1 == undefined) && (tarning2 == undefined)) {
+            return {
+                tvarde: 0,
+                bonus: 0
+            };
+        }
+        else if (tarning1 == undefined) {
+            return {
+                tvarde: parseInt(tarning2.tvarde),
+                bonus: parseInt(tarning2.bonus)
+            };
+        }
+        else if (tarning2 == undefined) {
+            return {
+                tvarde: parseInt(tarning1.tvarde),
+                bonus: parseInt(tarning1.bonus)
+            };
+        }
+
         let totalTarning = parseInt(tarning1.tvarde) + parseInt(tarning2.tvarde);
         let totalBonus = parseInt(tarning1.bonus) + parseInt(tarning2.bonus);
 
@@ -158,6 +181,7 @@ export class DiceRollContainer {
         this.svarighet = 0;
 		this.dicetype = "d6";
 		this.obRoll = true;
+        this.actorName = actor.name;
     }
 }
 
@@ -187,12 +211,13 @@ export async function RollDice(diceRoll) {
                 rollInfo += ", ";
             }
             if(egenskap.varde > 0) {
-                rollInfo += game.EON.egenskaper[egenskap.namn].namn + " " + egenskap.varde;
+                //rollInfo += game.EON.egenskaper[egenskap.namn].namn + " " + egenskap.varde;
+                rollInfo += egenskap.label + " " + egenskap.varde;
             }
             else {
-                rollInfo += game.EON.egenskaper[egenskap.namn].namn;
-            }
-            
+                //rollInfo += game.EON.egenskaper[egenskap.namn].namn;
+                rollInfo += egenskap.label;
+            }            
         }
     }
     if ((typeRoll == CONFIG.EON.slag.grundegenskap) && (diceRoll.info.length > 0)) {
@@ -225,7 +250,7 @@ export async function RollDice(diceRoll) {
 
     while (numDices > rolledDices) {
         let roll = await new Roll("1" + dicetype);
-        await roll.evaluate();	
+        await roll.evaluate();
         allDices.push(roll);
         
         roll.terms[0].results.forEach((dice) => {
@@ -314,8 +339,13 @@ export async function RollDice(diceRoll) {
 
     const chatData = {
         rolls: allDices,
+        user: game.user.id,
+        speaker: {
+            actor: diceRoll.actor?.id,
+            token: diceRoll.actor?.token?.id,
+            alias: diceRoll.actorName
+        },
         content: html,
-        speaker: ChatMessage.getSpeaker(),
         rollMode: game.settings.get("core", "rollMode")        
     };
     ChatMessage.applyRollMode(chatData, "roll");
@@ -347,10 +377,4 @@ export async function SendMessage(actor, config, headline, message) {
     };
     ChatMessage.applyRollMode(chatData, "roll");
     ChatMessage.create(chatData);
-
-    // ChatMessage.create({
-    //     user: game.user.id,
-    //     content: message,
-    //     type: CONST.CHAT_MESSAGE_TYPES.OTHER
-    // });
 }

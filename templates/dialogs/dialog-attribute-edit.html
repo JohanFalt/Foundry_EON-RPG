@@ -1,73 +1,130 @@
 <form class="{{cssClass}} {{object.dialogClass}}" autocomplete="off">
 
-    {{#if (eq object.typ "bakgrund")}}
+    <div class="item-row">
 
-        <div class="dialog-section-small clear">
-
-            <div class="floating-label-group">
-                <input id="altvalue" type="text" value="{{object.varde}}" />
-                <span class="floating-label">Namn</span>
-            </div>       
-
-            <div class="information-area information-box">Här anger du det Skräddarsydda namnet och trycker sedan på Spara.</div>
-
+        <div style="min-width: 110px;">
+            <img src="{{EON.CONFIG.ikoner.egenskap}}" class="item img-block" />
         </div>
 
-        <div class="dice-row">
-            <button id="savebutton" class="dialog-button four-column savebutton">Spara</button>
-            <button id="closeButton" class="dialog-button four-column closebutton">Stäng</button>
-        </div>       
+        {{#if (eq object.attributeType "bakgrund")}}
 
-    {{else}}
+            <div class="dialog-section-small clear">
 
-        <div class="item-row" style="margin-left:110px;">
-            <div>
+                <div class="floating-label-group">
+                    <input id="altvalue" type="text" value="{{object.varde}}" />
+                    <span class="floating-label">Namn</span>
+                </div>       
+
+                <div class="information-area information-box">Här anger du det Skräddarsydda namnet och trycker sedan på Spara.</div>
+
+            </div>
+
+            <div class="dice-row">
+                <button id="savebutton" class="dialog-button four-column savebutton">Spara</button>
+                <button id="closeButton" class="dialog-button four-column closebutton">Stäng</button>
+            </div>       
+
+        {{else}}
+
+            <div class="item-column" style="min-width: 270px;">
                 <div class="dialog-section-small item-column">
-
-                    <div class="large-main-headline">{{attribut.namn}}</div>
-                    <!-- <div>
-                        Ob{{getDiceValue attribut.grund}}
-                    </div> -->
-                    {{#if (eq object.typ "grundegenskaper")}}
-                        <div>
-                            <div class="dice-value tic pointer" data-property="grundegenskaper">{{getDiceValue attribut.grund}}</div>
+                    {{#if object.hasName}}
+                        <div class="item-property-area floating-label-group" style="margin-bottom: 50px;">
+                            <input class="text-value editable" type="text" name="object.namn" value="{{object.attributeName}}" data-dtype="String" autocomplete="off" autofocus required />
+                            <span class="floating-label">Namn</span>
                         </div>
                     {{else}}
-                        <div>
-                            <div class="dice-value disabled">{{getDiceValue attribut.grund}}</div>
-                        </div>
+                        <div class="large-main-headline">{{object.attributeName}}</div>
                     {{/if}}
-                </div>
 
-                <div class="item-column">      
-
-                    <div class="headline item-row" style="line-height: 25px; width:100%;">
-                        <div class="pointer item-create weapon-icon" title="Lägg till bonus" data-type="bonus"><i class="fa-solid fa-square-plus green"></i></div>       
-                        <div class="headline">Bonus</div>
-                    </div>
-
-                    {{#each attribut.bonuslista as |bonus key|}}
-                        <div class="item-row">
+                    {{#if object.hasLista}}
+                        <div class="item-column">      
                             <div>
-                                <div class="floating-label-group">
-                                    <input class="inputdata" type="text" value="{{bonus.namn}}" id="object.name_{{key}}" data-key="{{key}}" />
-                                    <span class="floating-label">Namn</span>
-                                </div>
+                                <select class="text-value editable" name="attribut.listaid" style="width: 300px">
+                                    {{selectOptions this.vandningLista selected=object.attributeListId localize=false}}  
+                                </select>
                             </div>
-                            <div class="dice-value tic pointer" data-key="{{key}}">{{getDiceValue bonus}}</div>
-                            <div class="pointer red item-delete" title="Ta bort bonus" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
+
+                            <div class="item-row headline" style="margin-top: 10px;">
+                                <div class="three-column centerText">Skada</div>
+                                <div class="three-column centerText">Utm.</div>
+                                <div class="three-column centerText">Vänd. (Ja/Nej)</div>
+                            </div>
+                            
+                            {{#each object.attributeList as | vandning key|}}
+                                <div class="item-row" style="line-height: 25px; height: 32px;">
+                                    <div class="three-column centerText">{{vandning.skada}}</div>
+                                    <div class="three-column centerText"><input class="attribute-value editable skill-label skill-value" type="text" name="attribut.lista.{{key}}.utmattning" value="{{vandning.utmattning}}" style="width: 40px;" /></div>
+                                    {{#if (ne key 9)}}
+                                        <div class="three-column centerText item-row">
+                                            <div class="two-column pointer">
+                                                <a class="item-active" data-key="lista.{{key}}">{{#if vandning.vandning}}<i class="fa-solid fa-toggle-on green"></i>{{else}}<i class="fa-solid fa-toggle-off red"></i>{{/if}}</a>
+                                            </div>
+                                            <div class="two-column">
+                                                <input class="attribute-value editable skill-label skill-value" type="text" name="attribut.lista.{{key}}.bonus" value="{{vandning.bonus}}" style="width: 40px;" />
+                                            </div>                                        
+                                        </div>
+                                    {{else}}     
+                                        <div class="three-column centerText"></div>                                           
+                                    {{/if}}
+                                </div>
+                            {{/each}}
                         </div>
-                    {{/each}}                    
+                    {{else if object.isNumeric}}
+                        <div class="dice-value {{#if object.canTic}}tic pointer{{else}}disabled{{/if}}" data-property="{{object.attributeType}}">{{object.attributeBasicValue}}</div>
+                    {{else}}
+                        <div class="dice-value {{#if object.canTic}}tic pointer{{else}}disabled{{/if}}" data-property="{{object.attributeType}}">{{getDiceValue object.attributeBasicValue}}</div>
+                    {{/if}}
 
-                </div>
+                    {{#if object.hasDescription}}
+                        <div class="large-headline">Beskrivning</div>
+                        <div class="editor-box">
+                            {{editor object.attributeDescription target="attribut.beskrivning" button=true owner=owner editable=true}}
+                        </div>
+                    {{/if}}                        
+                </div>                 
 
+                {{#if object.hasBonusList}}
+                    <div class="item-column">
+
+                        <div class="headline item-row" style="line-height: 25px; width:100%;">
+                            <div class="pointer item-create weapon-icon" title="Lägg till bonus" data-type="bonus"><i class="fa-solid fa-square-plus green"></i></div>       
+                            <div class="headline">Bonus</div>
+                        </div>
+
+                        <div class="bonus-list">
+                            {{#each object.attributeBonusList as |bonus key|}}
+                                <div class="item-row">
+                                    <div>
+                                        <div class="floating-label-group">
+                                            <input class="inputdata" type="text" value="{{bonus.namn}}" id="object.name_{{key}}" data-key="{{key}}" />
+                                            <span class="floating-label">Namn</span>
+                                        </div>
+                                    </div>
+
+                                    {{#if ../object.isNumeric}}
+                                        <div class="floating-label-group tic" data-key="{{key}}">
+                                            <input class="attribute-value editable pointer" type="text" value="{{bonus.tvarde}}" />
+                                        </div>
+                                    {{else}}
+                                        <div class="dice-value tic pointer" data-key="{{key}}">{{getDiceValue bonus}}</div>                                        
+                                    {{/if}}
+
+                                    <div class="pointer red item-delete" title="Ta bort bonus" data-key="{{key}}">
+                                        <i class="icon fa-solid fa-trash-can"></i>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                {{/if}}                
                 
+            </div> 
+            <div class="pullLeft" style="flex-grow: 1; text-align: right;">
+                <div class="information-area top-sidetext">{{this.headline}}</div>
             </div>
-            
-            <div style="flex-grow: 1; text-align: right;">
-                <div class="information-area top-sidetext">{{#if (eq object.typ "grundegenskaper")}}GRUNDEGENSKAP{{else}}HÄRLETT ATTRIBUT{{/if}}</div>
-            </div>
-        </div>        
 
-    {{/if}}
+        {{/if}}
+
+    </div>
 </form>

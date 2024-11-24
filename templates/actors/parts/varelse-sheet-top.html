@@ -1,66 +1,101 @@
 <div class="remaining-width pullLeft">
     <div>
-        <div class="headline">
-            <div class="clear attribute-area">
-                <div class="pullLeft large-main-headline">{{actor.name}}</div>
-            </div>
-        </div>
-
         <div class="two-column pullLeft">
             <div class="headline">
                 <div class="attribute-area">Härledda attribut</div>
             </div>
             <div class="attribute clear">
                 <div class="vrollable pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="forflyttning">{{EON.CONFIG.harleddegenskaper.forflyttning.namn}}</div>
-                <div class="pullLeft number-value-text"><input class="attribute-value skill-label" type="text" value="{{getDiceValue data.system.harleddegenskaper.forflyttning}}" disabled readonly /></div>
-                <div class="pullLeft skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.forflyttning.namn}}" data-source="harleddegenskaper" data-type="forflyttning"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+                <div class="pullLeft dice-value">{{getDiceValue (getActorAttribute data 'harleddegenskaper' 'forflyttning')}}</div>
+                <div class="pullLeft skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.forflyttning.namn}}" data-type="attribute" data-source="harleddegenskaper" data-attribute="forflyttning"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             </div>
             <div class="attribute clear">
                 <div class="vrollable pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="intryck">{{EON.CONFIG.harleddegenskaper.intryck.namn}}</div>
-                <div class="pullLeft number-value-text"><input class="attribute-value skill-label" type="text" value="{{getDiceValue data.system.harleddegenskaper.intryck}}" disabled readonly /></div>
-                <div class="pullLeft skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.intryck.namn}}" data-source="harleddegenskaper" data-type="intryck"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+                <div class="pullLeft dice-value">{{getDiceValue (getActorAttribute data 'harleddegenskaper' 'intryck')}}</div>
+                <div class="pullLeft skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.intryck.namn}}" data-type="attribute" data-source="harleddegenskaper" data-attribute="intryck"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             </div>
             <div class="attribute clear">
                 <div class="vrollable pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="kroppsbyggnad">{{EON.CONFIG.harleddegenskaper.kroppsbyggnad.namn}}</div>
-                <div class="pullLeft number-value-text"><input class="attribute-value skill-label" type="text" value="{{getDiceValue data.system.harleddegenskaper.kroppsbyggnad}}" disabled readonly /></div>
-                <div class="pullLeft skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.kroppsbyggnad.namn}}" data-source="harleddegenskaper" data-type="kroppsbyggnad"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+                <div class="pullLeft dice-value">{{getDiceValue (getActorAttribute data 'harleddegenskaper' 'kroppsbyggnad')}}</div>
+                <div class="pullLeft skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.kroppsbyggnad.namn}}" data-type="attribute" data-source="harleddegenskaper" data-attribute="kroppsbyggnad"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             </div>
             <div class="attribute clear">
                 <div class="vrollable pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="reaktion">{{EON.CONFIG.harleddegenskaper.reaktion.namn}}</div>
-                <div class="pullLeft number-value-text"><input class="attribute-value skill-label" type="text" value="{{getDiceValue data.system.harleddegenskaper.reaktion}}" disabled readonly /></div>
-                <div class="pullLeft skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.reaktion.namn}}" data-source="harleddegenskaper" data-type="reaktion"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+                <div class="pullLeft dice-value">{{getDiceValue (getActorAttribute data 'harleddegenskaper' 'reaktion')}}</div>
+                <div class="pullLeft skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.reaktion.namn}}" data-type="attribute" data-source="harleddegenskaper" data-attribute="reaktion"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             </div>
             <div class="attribute clear">
                 <div class="vrollable pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="sjalvkontroll">{{EON.CONFIG.harleddegenskaper.sjalvkontroll.namn}}</div>
-                <div class="pullLeft number-value-text"><input class="attribute-value skill-label" type="text" value="{{getDiceValue data.system.harleddegenskaper.sjalvkontroll}}" disabled readonly /></div>
-                <div class="pullLeft skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.sjalvkontroll.namn}}" data-source="harleddegenskaper" data-type="sjalvkontroll"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+                <div class="pullLeft dice-value">{{getDiceValue (getActorAttribute data 'harleddegenskaper' 'sjalvkontroll')}}</div>
+                <div class="pullLeft skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.sjalvkontroll.namn}}" data-type="attribute" data-source="harleddegenskaper" data-attribute="sjalvkontroll"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             </div>
             <div class="attribute clear">
                 <div class="vrollable pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="vaksamhet">{{EON.CONFIG.harleddegenskaper.vaksamhet.namn}}</div>
-                <div class="pullLeft number-value-text"><input class="attribute-value skill-label" type="text" value="{{getDiceValue data.system.harleddegenskaper.vaksamhet}}" disabled readonly /></div>
-                <div class="pullLeft skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.vaksamhet.namn}}" data-source="harleddegenskaper" data-type="vaksamhet"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+                <div class="pullLeft dice-value">{{getDiceValue (getActorAttribute data 'harleddegenskaper' 'vaksamhet')}}</div>
+                <div class="pullLeft skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.vaksamhet.namn}}" data-type="attribute" data-source="harleddegenskaper" data-attribute="vaksamhet"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             </div>
             <div class="attribute clear">
                 <div class="vrollable pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="livskraft">{{EON.CONFIG.harleddegenskaper.livskraft.namn}}</div>
-                <div class="pullLeft number-value-text"><input class="attribute-value skill-label" type="text" value="{{getDiceValue data.system.harleddegenskaper.livskraft}}" disabled readonly /></div>
-                <div class="pullLeft skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.livskraft.namn}}" data-source="harleddegenskaper" data-type="livskraft"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
-            </div>            
+                <div class="pullLeft dice-value">{{getDiceValue (getActorAttribute data 'harleddegenskaper' 'livskraft')}}</div>
+                <div class="pullLeft skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.livskraft.namn}}" data-type="attribute" data-source="harleddegenskaper" data-attribute="livskraft"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            </div>   
+            <div class="attribute clear">
+                <div class="pullLeft caption" data-source="attribute" data-type="harleddegenskaper" data-key="livskraft">Grundskada</div>
+                <div class="pullLeft dice-value">{{getDiceValue data.system.harleddegenskaper.grundskada.totalt}}</div>
+                <div class="pullLeft skill-icon"><a class="item-edit" title="Editera grundskada" data-type="attribute" data-source="harleddegenskaper" data-attribute="grundskada"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            </div>
         </div>  
 
-        <div class="three-column pullLeft">            
+        <div class="three-column pullLeft">    
+            
+            
             <div class="headline">
                 <div class="attribute-area">Utmattning</div>
             </div>
-            <div class="clear">
-                <div class="pullLeft number-value-text floating-label-group">
-                    <input class="attribute-value skill-label" type="text" value="{{data.system.skada.utmattning.grund}}" disabled readonly />
+            <div class="item-row">
+                <div class="floating-label-group">
+                    <input class="attribute-value skill-label" type="text" value="{{actor.system.skada.utmattning.grund}}" disabled readonly />
                     <span class="floating-label">Grund</span>
                 </div>
-                <div class="pullLeft number-value-text floating-label-group">
-                    <input class="attribute-value editable skill-label" name="system.skada.utmattning.varde" type="text" value="{{data.system.skada.utmattning.varde}}" data-dtype="Number" />
+                <div class="floating-label-group">
+                    <input class="attribute-value editable skill-label skill-value" name="system.skada.utmattning.varde" type="text" value="{{actor.system.skada.utmattning.varde}}" data-dtype="Number" />
                     <span class="floating-label">Värde</span>
                 </div>
-            </div> 
+            </div>  
+
+            <div class="headline attribute-area">Återhämtning</div>
+            <div>
+                <input class="attribute-value editable skill-label skill-value" type="text" name="system.strid.aterhamtning" value="{{actor.system.strid.aterhamtning}}" data-dtype="Number" />
+            </div>
+
+            <div class="headline attribute-area" style="width: 150px;">Skydd totalt</div>
+            <div class="item-row">
+                <div class="centerText" style="width: 50px;"> 
+                    {{sum 
+                        actor.system.skada.skydd.hugg 
+                        actor.system.harleddegenskaper.grundrustning.totalt
+                    }}
+                    
+                    <img src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-text-icon" title="Hugg" />
+                </div>
+                <div class="centerText" style="width: 50px;"> 
+                    {{sum 
+                        actor.system.skada.skydd.kross 
+                        actor.system.harleddegenskaper.grundrustning.totalt
+                    }}
+
+                    <img src="{{EON.CONFIG.ikoner.skada_kross}}" class="item img-text-icon" title="Kross" />
+                </div>
+                <div class="centerText" style="width: 50px;">
+                    {{sum 
+                        actor.system.skada.skydd.stick
+                        actor.system.harleddegenskaper.grundrustning.totalt
+                    }}
+
+                    <img src="{{EON.CONFIG.ikoner.skada_stick}}" class="item img-text-icon" title="Stick" />
+                </div>
+            </div>
+            
         </div>
     </div>
 </div>

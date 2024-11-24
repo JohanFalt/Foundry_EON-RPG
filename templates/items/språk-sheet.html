@@ -9,27 +9,27 @@
 				</div>
 
 				<div class="item-column" style="min-width: 270px;">
-					<div class="item-property-area number-value-text floating-label-group">
+					<div class="item-property-area   floating-label-group">
 						<input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
 						<span class="floating-label">Namn</span>
 					</div>
 
-					<div class="item-property-area number-value-text floating-label-group">
-						<input class="text-value editable" type="text" name="system.referens" value="{{data.system.referens}}" data-dtype="String" autocomplete="off" autofocus required />
+					<div class="item-property-area   floating-label-group">
+						<input class="text-value editable" type="text" name="system.referens" value="{{item.system.referens}}" data-dtype="String" autocomplete="off" autofocus required />
 						<span class="floating-label">Referens</span>
 					</div>
 
 					<div class="item-row">
 						<div class="headline-checkbox">Talar med brytning</div>
-						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="talabrytning" {{isChecked data.system.talabrytning}} data-dtype="Boolean" /></div>
+						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="talabrytning" {{isChecked item.system.talabrytning}} data-dtype="Boolean" /></div>
 					</div>
 					<div class="item-row">
 						<div class="headline-checkbox">Talar flytande</div>
-						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="talaflytande" {{isChecked data.system.talaflytande}} data-dtype="Boolean" /></div>
+						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="talaflytande" {{isChecked item.system.talaflytande}} data-dtype="Boolean" /></div>
 					</div>   
 					<div class="item-row">
 						<div class="headline-checkbox">Kan läsa och skriva</div>
-						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="lasaskriva" {{isChecked data.system.lasaskriva}} data-dtype="Boolean" /></div>
+						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="lasaskriva" {{isChecked item.system.lasaskriva}} data-dtype="Boolean" /></div>
 					</div>
      
 				</div>

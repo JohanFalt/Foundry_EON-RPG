@@ -9,18 +9,18 @@
 				</div>
 
 				<div class="pullLeft" style="min-width: 270px;">
-					<div class="item-property-area number-value-text floating-label-group">
+					<div class="item-property-area floating-label-group">
 						<input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
 						<span class="floating-label">Namn</span>
 					</div>
 
-					<div class="item-property-area number-value-text floating-label-group">
-						<input class="attribute-value editable" name="system.magnitud" type="text" value="{{data.system.magnitud}}" data-dtype="Number" />
+					<div class="item-property-area floating-label-group">
+						<input class="text-value editable" name="system.magnitud" type="text" value="{{item.system.magnitud}}" data-dtype="Number" autofocus required />
 						<span class="floating-label">Magnitud</span>
 					</div>
 					
-					<div class="item-property-area number-value-text floating-label-group">
-						<input class="text-value editable" name="system.referens" type="text" value="{{data.system.referens}}" data-dtype="String" />
+					<div class="item-property-area floating-label-group">
+						<input class="text-value editable" name="system.referens" type="text" value="{{item.system.referens}}" data-dtype="String" autofocus required />
 						<span class="floating-label">Referens</span>
 					</div>
 				</div>
@@ -39,7 +39,7 @@
 			<div>
 				<div class="large-headline">Beskrivning</div>
 				<div class="small-editor-box">
-					{{editor (enrichText item.system.beskrivning) target="system.beskrivning" button=true owner=owner editable=true}}
+					{{editor enrichedBeskrivning target="system.beskrivning" button=true owner=owner editable=true}}
 				</div>
 			</div>
 		</section>

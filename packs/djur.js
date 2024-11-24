@@ -1,6 +1,11 @@
 export const datadjur = {
     "djur": {
         "varelsemall": {
+            "ingen": {
+                "namn": "",
+                "beskrivning": "",
+                "referens": ""
+            },
             "litenvarelse": {
                 "namn": "Liten varelse",
                 "beskrivning": "",
@@ -43,10 +48,10 @@ export const datadjur = {
                         "tvarde": 0,
                         "bonus": 0
                     },
-                    "grundrustning": 0,
-                    "aterhamtning": 4
+                    "grundrustning": 0
                 },
                 "strid": {
+                    "aterhamtning": 4,
                     "narstrid": {
                         "namn": "Anfall",
                         "traffa": {
@@ -118,10 +123,10 @@ export const datadjur = {
                         "tvarde": 0,
                         "bonus": 0
                     },
-                    "grundrustning": 4,
-                    "aterhamtning": 6
+                    "grundrustning": 4
                 },
                 "strid": {
+                    "aterhamtning": 6,
                     "narstrid": {
                         "namn": "Anfall",
                         "traffa": {
@@ -193,10 +198,10 @@ export const datadjur = {
                         "tvarde": 0,
                         "bonus": 0
                     },
-                    "grundrustning": 6,
-                    "aterhamtning": 8
+                    "grundrustning": 6
                 },
                 "strid": {
+                    "aterhamtning": 8,
                     "narstrid": {
                         "namn": "Anfall",
                         "traffa": {
@@ -269,9 +274,9 @@ export const datadjur = {
                         "bonus": 0
                     },
                     "grundrustning": 8,
-                    "aterhamtning": 10
                 },
                 "strid": {
+                    "aterhamtning": 10,
                     "narstrid": {
                         "namn": "Anfall",
                         "traffa": {
@@ -303,13 +308,18 @@ export const datadjur = {
             }
         },
         "variant": {
+            "ingen": {
+                "namn": "",
+                "typ": "",
+                "referens": ""
+            },
             "giftorm": {
                 "namn": "Giftorm",
                 "typ": "litenvarelse",
                 "referens": "s278",
                 "strid": {
                     "narstrid": {
-                        "egenskaper": ["Bettet från giftormen fungerar som ett Nervgift (se sida 257) – förutsatt att bettet går igenom huden."]
+                        "egenskaper": ["Bettet från giftormen fungerar som ett Nervgift (se sida 257) - förutsatt att bettet går igenom huden."]
                     }                    
                 }
             },
@@ -357,6 +367,25 @@ export const datadjur = {
                 "harleddegenskaper": {
                     "grundskada": {
                         "tvarde": 1,
+                        "bonus": 0
+                    }
+                }
+            },
+            "gravarg": {
+                "namn": "Grtåvarg",
+                "typ": "meddelstorvarelse",
+                "referens": "s278",
+                "harleddegenskaper": {
+                    "livskraft": {
+                        "tvarde": 1,
+                        "bonus": 0
+                    },
+                    "vaksamhet": {
+                        "tvarde": 1,
+                        "bonus": 0
+                    },
+                    "grundskada": {
+                        "tvarde": 2,
                         "bonus": 0
                     }
                 }

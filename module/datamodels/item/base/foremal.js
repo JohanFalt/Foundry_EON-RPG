@@ -20,7 +20,8 @@ export default class foremal extends basforemal {
             ...installningar(),
             behallare: new fields.BooleanField({initial: false}),
             buren: new fields.BooleanField({initial: false}),
-            aktiv: new fields.BooleanField({initial: false})
+            aktiv: new fields.BooleanField({initial: false}),
+            exceptionell: new fields.BooleanField({initial: false, required: true}),
         });
 
         schema.volym = new fields.SchemaField({
@@ -31,6 +32,14 @@ export default class foremal extends basforemal {
 
         schema.egenskaper = new fields.ArrayField(
             new fields.SchemaField({
+                uuid: new fields.StringField({
+                    initial: '',
+                    nullable: false,
+                }),
+                _id: new fields.StringField({
+                    initial: '',
+                    nullable: false,
+                }),
                 label: new fields.StringField({
                     initial: '',
                     nullable: false,
@@ -44,7 +53,9 @@ export default class foremal extends basforemal {
                     nullable: false,
                     required: false,
                     min: 0
-                })
+                }),
+                beskrivning: new fields.HTMLField(),
+                harniva: new fields.NumberField({...valueInteger}) 
             }),
             {
                 initial: [],

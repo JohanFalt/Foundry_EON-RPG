@@ -7,13 +7,32 @@
             <div class="sheet-top clear">
                 {{> "systems/eon-rpg/templates/actors/parts/varelse-sheet-top.html"}}                
             </div>
+
+            <div class="navigation clear">
+                {{> "systems/eon-rpg/templates/actors/parts/varelse-navigation.html"}}
+            </div>
             
         </header>
 
-        <section class="sheet-body">            
+        <section class="sheet-body">                 
+            <div class="tab skill" data-group="primary" data-tab="skill">
+                <div class="clear">
+                    <div class="two-column pullLeft">
+                        {{> "systems/eon-rpg/templates/actors/parts/varelse-sheet-skill.html"}}
+                    </div>
+                    <div class="two-column pullLeft">
+                        {{> "systems/eon-rpg/templates/actors/parts/varelse-sheet-property.html"}}
+                    </div>
+                </div>
+            </div>
 
+            <div class="tab strid" data-group="primary" data-tab="strid">
+                {{> "systems/eon-rpg/templates/actors/parts/varelse-sheet-weapon.html"}}
+            </div>            
+
+            <div class="tab bio" data-group="primary" data-tab="bio">
+                {{> "systems/eon-rpg/templates/actors/parts/varelse-sheet-bio.html"}}
+            </div>
         </section>
-
     </div>
-
 </form>

@@ -1,0 +1,72 @@
+<div>
+
+    <div class="item-column info-box" style="max-height: 160px; width: 100%;">
+
+               
+        <div class="item-column">            
+
+            <div class="two-column bio">
+                <div class="bio">
+                    <div class="floating-label-group">
+                        <input class="text-value editable skill-label" type="text" name="name" value="{{actor.name}}" data-dtype="String" style="width: 300px" />
+                        <span class="floating-label skill-label">Namn</span>
+                    </div>
+                </div>                
+            </div>
+            <div class="two-column bio item-row">
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 138px" name="system.bakgrund.kon" value="{{data.system.bakgrund.kon}}" />
+                        <span class="floating-label skill-label">Kön</span>
+                    </div>
+                </div>
+
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="attribute-value editable skill-label" type="text" data-dtype="String" style="width: 50px" name="system.bakgrund.alder" value="{{data.system.bakgrund.alder}}" />
+                        <span class="floating-label skill-label">Ålder</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="attribute-value editable skill-label" type="text" data-dtype="String" style="width: 50px" name="system.bakgrund.langd" value="{{data.system.bakgrund.langd}}" />
+                        <span class="floating-label skill-label">Längd</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="attribute-value editable skill-label" type="text" data-dtype="String" style="width: 50px" name="system.bakgrund.vikt" value="{{data.system.bakgrund.vikt}}" />
+                        <span class="floating-label skill-label">Vikt</span>
+                    </div>
+                </div>
+            </div>             
+        </div>
+
+        <!--
+            <div class="two-column item-column">
+                <div class="bio floating-label-group">
+                    <select id="varelsegrupp" class="text-value editable inputdata" name="system.installningar.varelsegrupp" style="width: 300px" data-source="varelsegrupp">
+                        {{selectOptions listData.djurGrupper selected=actor.system.installningar.varelsegrupp localize=false}}     
+                    </select>
+                    <span class="floating-label skill-label">Varelsegrupp</span>
+                </div>
+        
+                <div class="bio floating-label-group">
+                    <select id="varelsemall" class="text-value editable inputdata" name="system.installningar.varelsemall" style="width: 300px" data-source="varelsemall">
+                        {{selectOptions listData.djurVariant selected=actor.system.installningar.varelsemall localize=false}}                    
+                    </select>
+                    <span class="floating-label skill-label">Varelsemall</span>
+                </div>
+            </div>-->
+        
+    </div>
+</div>
+
+<div class="large-headline">Beskrivning</div>
+<div class="editor-box">
+    {{editor enrichedBeskrivning target="system.bakgrund.beskrivning" button=true owner=owner editable=true}}
+</div>

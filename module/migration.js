@@ -5,12 +5,12 @@ import CreateHelper from "./create-helper.js";
  * @param oldVersion   The existing version no: e.g. 1.5.9
  * @param newVersion   The new version no: e.g. 1.5.10
  */
-export async function CompareVersion(oldVersion, newVersion) {
-    if (newVersion == "") {
+export function CompareVersion(oldVersion, newVersion) {
+    if ((newVersion == undefined) || (oldVersion == undefined)) {
         return false;
     }
 
-    if (newVersion == undefined) {
+    if (newVersion == "") {
         return false;
     }
 
@@ -99,18 +99,19 @@ export const updateActor = async function(actor, config, systemVersion) {
     try {
         const updateData = foundry.utils.duplicate(actor);
         let update = false;
+        let version210 = await CompareVersion(actor.system.installningar.version, "2.1.0");
 
         if (updateData.system.installningar.version == "") {
             updateData.system.installningar.version = "1.0.0";
         } 
 
-        if (CompareVersion(actor.system.installningar.version, "2.1.0")) {
+        if (version210) {
             updateData.system.installningar.version = "2.1.0";
 
             let addSkill = true;
 
             for (const item of actor.items) {
-                if ((item.type == "Färdighet") && (item.system.grupp == "mystik") && (item.system.id == "harmonisera")) {
+                if ((item.type.toLowerCase() == "färdighet") && (item.system.grupp == "mystik") && (item.system.id == "harmonisera")) {
                     addSkill = false;
                     break;
                 }
@@ -165,32 +166,66 @@ export const updateItem = async function(item, config, actor) {
             update = true;
         }
 
-        if (CompareVersion(item.system.installningar.version, "2.1.0")) {
+        let version210 = await CompareVersion(updateData.system.installningar.version, "2.1.0");
+        let version310 = await CompareVersion(updateData.system.installningar.version, "3.1.0");        
+
+        if (version210) {
             updateData.system.installningar.version = "2.1.0";
 
-            if (item.type == "Färdighet") {
+            if (item.type.toLowerCase() == "färdighet") {
                 if ((!item.system.installningar.lattlard) && (!item.system.installningar.svarlard)) {
                     updateData.system.installningar.normal = true;
                     update = true;
                 }
             }
-            if ((item.type == "Skada") && (item.system.typ == "")) {
+            if ((item.type.toLowerCase() == "skada") && (item.system.typ == "")) {
                 updateData.system.typ = "skada";
                 update = true;
             }
         }
 
+        if (version310) {
+            updateData.system.installningar.version = "3.1.0";
+
+            if (((item.type.toLowerCase() == "närstridsvapen") || (item.type.toLowerCase() == "avståndsvapen") || (item.type.toLowerCase() == "sköld")) && (item.system.egenskaper.length > 0)) {
+                update = true;
+
+                const pack = game.packs.get("eon-rpg.vapenegenskaper");
+                const egenskaper = await pack.getDocuments({type: "Egenskap"});
+                let nylista = [];
+                
+                for (const vapenegenskap of item.system.egenskaper) {
+                    const i = egenskaper.find(e => e.system.id === vapenegenskap.namn);
+
+                    let egenskap = {
+                    	uuid: i.uuid,
+                    	_id: i._id,
+                    	label: i.name, 
+                    	namn: i.system.id, 
+                    	varde: vapenegenskap.varde, 
+                    	beskrivning: i.system.beskrivning,
+                    	harniva: i.system.installningar.harniva
+                    };
+
+                    nylista.push(egenskap);
+                }
+
+                updateData.system.egenskaper = nylista;
+            }
+        }
+
         if (update) {
+            console.log("Uppdaterar " + item.name + " " + item.system.installningar.version);
             await item.update(updateData);
             update = false;
         }
     } 
     catch (e) {
         if (actor == undefined) {
-            e.message = `Failed migration for Item ${item.name}: ${err.message}`;
+            e.message = `Failed migration for Item ${item.name}: ${e.message}`;
         }
         else {
-            e.message = `Failed migration for Item ${item.name} on Actor ${actor.name}: ${err.message}`;
+            e.message = `Failed migration for Item ${item.name} on Actor ${actor.name}: ${e.message}`;
         }
         
         console.error(e.message);
@@ -231,26 +266,52 @@ export async function DoNotice(systemVersion, installedVersion) {
     let partMessage = "";
     let futureMessage = "";
 
-    if (await CompareVersion(installedVersion, '2.2.0')) {
+    
+
+    if (await CompareVersion(installedVersion, '3.1.0')) {
         partMessage += `
-            <li>[INSTÄLLNING] Vilka fonter man vill använda till brödtext och rubriker.</li>
-            <li>[DESIGN] Fixat och trixat i designen av alla formulärer i systemet.</li>            
-            <li>[SYSTEM] Lagt till automatisk beräkning för avdrag på färdighetsslag enligt grundboken när det gäller sår, smärta och belastning.</li>
-            <li>[SYSTEM] Man kan nu skicka beskrivningar till chatten.</li>
-            <li>[SYSTEM] Flyttat att höja/sänka grundegenskaperna/färdigheterna inne i EDITERA.</li>
-            <li>[SYSTEM] Alla beskrivningsrutor stödjer nu Foundrys inre länkning samt HTML.</li>
-            <li>[MAGI] Lagt till så man kan registrera ritualversioner till besvärjelser.</li>
-            <li>I lite mer detalj: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/1?closed=1">v2.2</a></li>
+            <li><h3>Eon IV kompendium</h3>
+                <b>Föremål</b> - Från grundboken alla vapen, sköldar och vapenegenskaper.<br />
+                <b>Tabeller</b> - skada, träfftabell och varelse vändningar<br />
+                <b>Varelser</b> - alla djur och början till varelserna (fick hoppas vissa då systemet har inte riktigt support för alla varianter upptäcktes det på slutet, de som saknas kommer i v3.2).</li>
+            <li>Rollformulär till varelser med stöd för vändningar.</li>
+            <li>Funktionen för vapenegenskaper har gjorts om så nu drar man de egenskaper man vill att ett vapen skall ha till vapnet.</li>
+            <li>Fler val vid vapenanfall - försvarstekniker, attacktypsalternativ.</li>
+            <li>Vapenutrustning har nu också "antal".</li>
+            <li>Man kan editera en rustnings skydd och belastning.</li>
+            <li>Olika valutor</li>
+            <li>Förbättringsslag direkt i editeringsfönstret för färdigheten.</li>
+            <li>I lite mer detalj: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/5?closed=1">v3.1</a></li>
         `;
 
         futureMessage += `
-            <li>Boken Strid</li>
-            <li>Varelser</li>            
-            <li>Utrustningslistan</li>
-            <li>Folkslag</li>
-            <li>Vad som ligger planerat: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/5">v2.3</a></li>
+            <li>Utrustningslistan, väskor och behållare</li>
+            <li>Initiativ</li>            
+            <li>Mer varelser</li>
+            <li>Strid</li>
         `;
     }
+
+    // if (await CompareVersion(installedVersion, '2.2.0')) {
+    //     partMessage += `
+    //         <li>[INSTÄLLNING] Vilka fonter man vill använda till brödtext och rubriker.</li>
+    //         <li>[DESIGN] Fixat och trixat i designen av alla formulärer i systemet.</li>            
+    //         <li>[SYSTEM] Lagt till automatisk beräkning för avdrag på färdighetsslag enligt grundboken när det gäller sår, smärta och belastning.</li>
+    //         <li>[SYSTEM] Man kan nu skicka beskrivningar till chatten.</li>
+    //         <li>[SYSTEM] Flyttat att höja/sänka grundegenskaperna/färdigheterna inne i EDITERA.</li>
+    //         <li>[SYSTEM] Alla beskrivningsrutor stödjer nu Foundrys inre länkning samt HTML.</li>
+    //         <li>[MAGI] Lagt till så man kan registrera ritualversioner till besvärjelser.</li>
+    //         <li>I lite mer detalj: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/1?closed=1">v2.2</a></li>
+    //     `;
+
+    //     futureMessage += `
+    //         <li>Boken Strid</li>
+    //         <li>Varelser</li>            
+    //         <li>Utrustningslistan</li>
+    //         <li>Folkslag</li>
+    //         <li>Vad som ligger planerat: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/5">v2.3</a></li>
+    //     `;
+    // }
 
     /* if (await CompareVersion(installedVersion, '2.1.0')) {
         partMessage += `
@@ -289,14 +350,14 @@ export async function DoNotice(systemVersion, installedVersion) {
             <li>[VAPEN] Vapenskadan räknar inte alltid ihop grundskada och vapenskada. <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/106">#106</a></li>`;
     }    */     
 
-    if (message == "") {
+    if (partMessage == "") {
         return;
     }
 
     let introduction = `
         <div class="tray-title-area">Version ${systemVersion} installerat</div>
         <div class="tray-action-area">
-            Systemet är nu uppdaterat till en ny version. Ny funktion kan läsas nedan.
+            Systemet är nu uppdaterat till en ny version.
             <p>Delar av detta system innehåller material som tillhör <a href="https://helmgast.se/">Helmgast AB</a> som äger copyright och trademark. Allt material används med tillåtelse.</p>
             Detta system är inte en officiell Eon produkt.
         </div>`;
@@ -310,9 +371,8 @@ export async function DoNotice(systemVersion, installedVersion) {
         </div>`;
 
     message += `
-        <div class="tray-title-area">Planerat för framtiden</div>
+        <div class="tray-title-area">Planerat för nästa version</div>
         <div class="tray-action-area">
-            För nästa version är det lite svårare att egentligen säga vad som kommer. Jag har vissa punkter som behöver göras och kommer koncentrera på dessa men om alla verkligen görs till nästa version eller om vissa flyttas fram får vi se.
         </div>
         <div class="tray-action-area">
             <ul style="margin-top: 0">
@@ -338,7 +398,6 @@ export async function DoNotice(systemVersion, installedVersion) {
     const enrichedMessage = await TextEditor.enrichHTML(`${message}`, { async: true });
     await ChatMessage.create({
       user: game.user.id,
-      content: enrichedMessage,
-      type: CONST.CHAT_MESSAGE_TYPES.OTHER
+      content: enrichedMessage
     });
 }

@@ -2,6 +2,9 @@ import harleddegenskaper from "./base/harleddegenskaper.js";
 import installningar from "./base/installningar.js";
 import grundegenskaper from "./base/grundegenskaper.js";
 
+import {CompareVersion} from "../../migration.js";
+import CalculateHelper from "../../calculate-helper.js";
+
 /**
  * Data schema, attributes, and methods specific to Rollperson type Actors.
  */
@@ -58,8 +61,17 @@ export default class EonRollperson extends foundry.abstract.DataModel {
 
         schema.strid = new fields.SchemaField({
             vapenarm: new fields.StringField({required: true, nullable: false, initial: ""}),
-            lakningstakt: new fields.NumberField({...valueInteger})
-        });        
+            lakningstakt: new fields.SchemaField({
+                varde: new fields.NumberField({...valueInteger}),
+                totalt: new fields.NumberField({...valueInteger}),
+                bonuslista: new fields.ArrayField(
+                    new fields.ObjectField({
+                        initial: {},
+                        nullable: false,
+                    })
+                )
+            })
+        });      
 
         schema.skada = new fields.SchemaField({
             utmattning: new fields.SchemaField({
@@ -122,5 +134,34 @@ export default class EonRollperson extends foundry.abstract.DataModel {
     }
 
     static async initialize() {
+    }
+
+    static migrateData(source) {
+        //const systemVersion = game.settings.get("eon-rpg", "systemVersion");
+        let version310 = CompareVersion(source.installningar?.version, "3.1.0");
+
+        if (version310) {
+            source.installningar.version = "3.1.0";
+
+            // strid.lakningstakt
+            if (CalculateHelper.isNumeric(source.strid.lakningstakt)) {
+                const varde = source.strid.lakningstakt;
+
+                source.strid.lakningstakt = {
+                    varde: varde,
+                    totalt: varde
+                };
+            }
+            if (CalculateHelper.isNumeric(source.harleddegenskaper.grundrustning)) {
+                const varde = source.harleddegenskaper.grundrustning;
+
+                source.harleddegenskaper.grundrustning = {
+                    varde: varde,
+                    totalt: varde
+                };
+            }
+        }
+
+        return super.migrateData(source);
     }
 }

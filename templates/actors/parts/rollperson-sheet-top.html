@@ -59,14 +59,14 @@
             <div class="headline">
                 <div class="attribute-area">Focus</div>
             </div>
-            <div id="fokus_dots" class="resource-circle" data-value="{{data.system.egenskap.fokus.varde}}" data-name="egenskap">
+            <div id="fokus_dots" class="resource-circle" data-value="{{actor.system.egenskap.fokus.varde}}" data-name="egenskap">
                 {{#numFromLoop 1 10}}
                     <span class="resource-value" data-index="{{this}}" data-type="fokus" data-value="varde"></span>
                 {{/numFromLoop}}
             </div>
             <div class="clear">
-                <div class="pullLeft number-value-text floating-label-group">
-                    <input id="fokus_varde" name="system.egenskap.fokus.max" class="attribute-value editable inputdata skill-label" type="text" value="{{data.system.egenskap.fokus.max}}" data-dtype="Number" data-source="valmaende" data-value="{{data.system.egenskap.fokus.varde}}" />
+                <div class="pullLeft   floating-label-group">
+                    <input id="fokus_varde" name="system.egenskap.fokus.max" class="attribute-value editable inputdata skill-label skill-value" type="text" value="{{actor.system.egenskap.fokus.max}}" data-dtype="Number" data-source="valmaende" data-value="{{actor.system.egenskap.fokus.varde}}" />
                     <span class="floating-label">Välmående</span>
                 </div>
             </div>
@@ -76,7 +76,7 @@
             <div class="avtrubbning-column">
                 <div class="clear">
                     <div class="pullLeft caption">Utsatthet</div>
-                    <div class="resource-box pullLeft" data-value="{{data.system.egenskap.avtrubbning.utsatthet}}" data-name="egenskap">
+                    <div class="resource-box pullLeft" data-value="{{actor.system.egenskap.avtrubbning.utsatthet}}" data-name="egenskap">
                         {{#numFromLoop 1 5}}
                             <span class="resource-value" data-index="{{this}}" data-type="avtrubbning" data-value="utsatthet"></span>
                         {{/numFromLoop}}
@@ -84,7 +84,7 @@
                 </div>
                 <div class="clear">
                     <div class="pullLeft caption">Våld</div>
-                    <div class="resource-box pullLeft" data-value="{{data.system.egenskap.avtrubbning.vald}}" data-name="egenskap">
+                    <div class="resource-box pullLeft" data-value="{{actor.system.egenskap.avtrubbning.vald}}" data-name="egenskap">
                         {{#numFromLoop 1 5}}
                             <span class="resource-value" data-index="{{this}}" data-type="avtrubbning" data-value="vald"></span>
                         {{/numFromLoop}}
@@ -92,7 +92,7 @@
                 </div>
                 <div class="clear">
                     <div class="pullLeft caption">Övernaturligt</div>
-                    <div class="resource-box pullLeft" data-value="{{data.system.egenskap.avtrubbning.overnaturligt}}" data-name="egenskap">
+                    <div class="resource-box pullLeft" data-value="{{actor.system.egenskap.avtrubbning.overnaturligt}}" data-name="egenskap">
                         {{#numFromLoop 1 5}}
                             <span class="resource-value" data-index="{{this}}" data-type="avtrubbning" data-value="overnaturligt"></span>
                         {{/numFromLoop}}
@@ -100,7 +100,7 @@
                 </div>
                 <div class="clear sheet-box">
                     <div class="pullLeft caption">&nbsp;</div>
-                    <div class="smalltext pullLeft number-value-text">
+                    <div class="smalltext pullLeft  ">
                         <div class="pullLeft resource-box-text">+5</div>
                         <div class="pullLeft resource-box-text">+10</div>
                         <div class="pullLeft resource-box-text">+15</div>
@@ -113,12 +113,12 @@
                 <div class="attribute-area">Utmattning</div>
             </div>
             <div class="clear">
-                <div class="pullLeft number-value-text floating-label-group">
-                    <input class="attribute-value skill-label" type="text" value="{{data.system.skada.utmattning.grund}}" disabled readonly />
+                <div class="pullLeft   floating-label-group">
+                    <input class="attribute-value skill-label" type="text" value="{{actor.system.skada.utmattning.grund}}" disabled readonly />
                     <span class="floating-label">Grund</span>
                 </div>
-                <div class="pullLeft number-value-text floating-label-group">
-                    <input class="attribute-value editable skill-label skill-value" name="system.skada.utmattning.varde" type="text" value="{{data.system.skada.utmattning.varde}}" data-dtype="Number" />
+                <div class="pullLeft   floating-label-group">
+                    <input class="attribute-value editable skill-label skill-value" name="system.skada.utmattning.varde" type="text" value="{{actor.system.skada.utmattning.varde}}" data-dtype="Number" />
                     <span class="floating-label">Värde</span>
                 </div>
             </div> 
@@ -130,9 +130,9 @@
     <img class="profile-img pointer" src="{{actor.img}}" title="{{actor.name}}" data-edit="img" />
     <div class="centerText">ROLLPERSON</div>
     <!-- <div><i id="unlockSheet" class="lock-icon fa fa-unlock"></i></div> -->
-    <div>
-        <img class="pullLeft macroBtn pointer" src="{{EON.CONFIG.ikoner.slag_chock}}" data-source="attribute" data-type="harleddegenskaper" data-key="livskraft" data-title="Chockslag" title="Chockslag">
-        <img class="pullLeft macroBtn pointer" src="{{EON.CONFIG.ikoner.slag_dod}}" data-source="attribute" data-type="harleddegenskaper" data-key="livskraft" data-title="Dödsslag" title="Dödsslag">
+    <div class="item-row">
+        <img class="macroBtn pointer" src="{{EON.CONFIG.ikoner.slag_chock}}" data-source="attribute" data-type="harleddegenskaper" data-key="livskraft" data-title="Chockslag" title="Chockslag">
+        <img class="macroBtn pointer" src="{{EON.CONFIG.ikoner.slag_dod}}" data-source="attribute" data-type="harleddegenskaper" data-key="livskraft" data-title="Dödsslag" title="Dödsslag">
     </div>
 </div>
 <!-- 

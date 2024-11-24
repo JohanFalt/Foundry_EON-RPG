@@ -21,7 +21,8 @@ export default class EonRustning extends foremal {
         }));
 
         schema.belastning = new fields.NumberField({...valueInteger}); 
-        schema.tacker = new fields.StringField({initial: '', nullable: false}) 
+        schema.tacker = new fields.StringField({initial: '', nullable: false});
+        schema.belastning_reduction = new fields.NumberField({...valueInteger});
         
         return schema;
     }

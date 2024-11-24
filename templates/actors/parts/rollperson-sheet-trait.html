@@ -13,14 +13,6 @@
             <div class="clear">
                 <div class="pullLeft attribute-value" style="margin-left: 16px; width: 170px; margin-bottom: 3px;">
                     <input class="inputdata editable" type="text" data-dtype="String" id="karaktarsdrag_namn_{{id}}" value="{{drag.namn}}" data-source="karaktarsdrag" data-index="{{id}}" data-name="namn" />
-                    <!-- <select id="karaktarsdrag_namn_{{id}}" class="inputdata editable" data-source="karaktarsdrag" data-index="{{id}}" data-name="namn">
-                        {{#select drag.namn}}
-                            <option value="">- Välj -</option>
-                            {{#each ../EON.karaktarsdrag as |karaktarsdrag key|}}
-                                <option value="{{key}}">{{karaktarsdrag.namn}}</option>
-                            {{/each}}
-                        {{/select}}
-                    </select> -->
                 </div>
                 {{#if (gt id 1)}}
                     <div class="pullRight pointer red item-delete" data-source="karaktärsdrag" data-index="{{id}}"><i class="icon fa-solid fa-trash-can"></i></div>

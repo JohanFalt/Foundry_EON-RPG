@@ -9,13 +9,10 @@
             <a class="item-create" title="Lägg till vapen" data-type="avståndsvapen"><i class="fa-solid fa-square-plus green"></i></a>
         </div>
         <div style="width: 175px;">Avståndsvapen</div>
-        <div class="centerText" style="width: 75px;">Färdighet</div>
-        <div class="centerText" style="width: 40px;">1H</div>
-        <div class="centerText" style="width: 40px;">2H</div>
-        <div class="centerText" style="width: 90px;">Räckvidd</div>
-        <!-- <div style="width: 50px;">Typ</div> -->
-        <div class="centerText" style="width: 60px;">Skada</div>
-        <div class="centerText" style="width: 60px;">Längd</div>
+        <div class="centerText" style="width: 75px;">Träffa</div>
+        <div class="centerText" style="width: 70px;">Skada</div>
+        <div class="centerText" style="width: 90px;">Räckvidd</div>        
+        <div class="centerText" style="width: 50px;">Antal</div>
         <div class="centerText" style="width: 50px;">Vikt</div>
         <div>Egenskaper</div>
     </div>
@@ -30,15 +27,22 @@
             {{/if}}
             <div class="active-icon"><input class="pointer item-active" title="Bära vapen" name="vapen.system.installningar.buren" type="checkbox" data-itemid="{{vapen._id}}" data-property="buren" {{isChecked vapen.system.installningar.buren}} /></div>
             <div class="vrollable" style="width: 125px;" data-source="weapon" data-itemid="{{vapen._id}}">{{vapen.name}}</div>
-            <div class="centerText number-value-text" style="width: 75px;">{{getDiceValue (getActorSkillGroupValue ../actor vapen.system.grupp "strid")}}</div>
-            <div class="centerText number-value-text" style="width: 40px;">{{#if (eq vapen.system.enhand.aktiv false)}}-{{else}}{{getDiceValue vapen.system.enhand}}{{/if}}</div>
-            <div class="centerText number-value-text" style="width: 40px;">{{#if (eq vapen.system.tvahand.aktiv false)}}-{{else}}{{getDiceValue vapen.system.tvahand}}{{/if}}</div>
-            <div class="centerText number-value-text" style="width: 90px;">{{{getRange ../EON.CONFIG.vapenavstand vapen.system.rackvidd}}}</div>
-            <!-- <div class="number-value-text" style="width: 50px;">{{{getWeaponDamageType ../EON.CONFIG.vapenskador vapen.system.skadetyp}}}</div> -->
-            <div class="centerText number-value-text" style="width: 60px;">{{getDiceValue vapen.system.skada}}</div>
-            <div class="centerText number-value-text" style="width: 60px;">{{#if (eq vapen.system.langd 0)}}-{{else}}{{vapen.system.langd}}cm{{/if}}</div>
-            <div class="centerText number-value-text" style="width: 50px;">{{#if (eq vapen.system.vikt 0)}}-{{else}}{{vapen.system.vikt}}kg{{/if}}</div>
-            <div class="number-value-text" title="{{getPropertyList vapen.system.egenskaper}}">{{shorten (getPropertyList vapen.system.egenskaper) 25 false}}</div>
+            <div class="centerText  " style="width: 75px;">{{getDiceValue (getActorSkillGroupValue ../actor vapen.system.grupp "strid")}}</div>
+            <div class="centerText  " style="width: 70px;">{{getDiceValue vapen.system.skada}} {{{getWeaponDamageType vapen.system.skadetyp}}}</div>
+            <div class="centerText  " style="width: 90px;">{{{getRange ../EON.CONFIG.vapenavstand vapen.system.rackvidd}}}</div>
+            <div class="centerText  " style="width: 50px;">
+                <i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="{{vapen._id}}"></i>
+                {{vapen.system.antal}}
+                <i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="{{vapen._id}}"></i>
+            </div>
+            <div class="centerText  " style="width: 50px;">
+                {{#if (eq vapen.system.vikt 0)}}
+                    -
+                {{else}}
+                    {{round (multiplicate vapen.system.vikt vapen.system.antal) 2}}kg
+                {{/if}}
+            </div>
+            <div title="{{getPropertyList vapen.system.egenskaper}}">{{shorten (getPropertyList vapen.system.egenskaper) 50 false}}</div>
         </div>
     {{/each}}
 </div>

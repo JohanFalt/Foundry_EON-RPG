@@ -70,10 +70,10 @@
 }
 
 .EON.varelse:not(.minimized) {
-    min-width: 600px;
-    width: 600px;
-    min-height: 600px;
-    height: 600px;
+    min-width: 750px;
+    width: 750px;
+    min-height: 900px;
+    height: 900px;
 }
 
 .EON.itemsheet:not(.minimized) {
@@ -173,8 +173,6 @@
     background-color: var(--eon-back-color-inputs);
     color: var(--eon-text-normal-color);    
     width: 98%;
-    /* height: var(--eon-line-height-default);
-    line-height: var(--eon-line-height-default); */
 }
 
 .EON input[type="text"]:disabled,
@@ -251,6 +249,10 @@
     display: flex; flex-wrap: wrap; flex-direction: column;
 }
 
+.EON .item-right {
+    margin-left: auto;
+}
+
 .EON .info-box {
     padding: 5px;
 }
@@ -275,7 +277,6 @@
 .EON .headline {        
     font-weight: normal;
     margin-bottom: 5px;    
-    /* border-bottom: 1px solid var(--eon-border-color); */
 }
 
 .EON.normal-headline .headline {
@@ -300,7 +301,6 @@
     border-bottom-width: 1px; 
     border-top-style: solid; 
     border-top-width: 1px; 
-    /* background: rgba(156, 132, 109, 1); */
 }
 
 .EON .large-headline {
@@ -339,9 +339,6 @@
 
 .EON .tab .large-headline {
     margin: 5px;
-}
-
-.EON .number-value-text {
 }
 
 .EON .highlighted {
@@ -540,7 +537,8 @@
     line-height: var(--eon-line-height-floattext);
 }
 
-.EON.itemsheet .tabButton {
+.EON.itemsheet .tabButton,
+.EON.varelse .tabButton {
     width: 33%;
 }
 
@@ -659,10 +657,6 @@
 
 .EON .attribute-area {
     width: 98%;
-}
-
-.EON .navigation {
-    
 }
 
 .EON .sheet-character .navigation {
@@ -913,6 +907,18 @@ input.skill-value {
     width: 100px;
 }
 
+.img-icon {
+    width: 25px;
+    height: 25px;
+    border: 0;
+}
+
+.img-text-icon {
+    width: 15px;
+    height: 15px;
+    border: 0;
+}
+
 .fardighetsvarde {
     font-size: 40px;
     position: absolute;
@@ -978,8 +984,8 @@ input.skill-value {
 .floating-label-group input,
 .floating-label-group select {
   padding-left: 7px;
+  padding-top: 6px;
   height: var(--eon-line-height-floattext);
-  /*  padding: 4px 0 0 0;*/
 }
 .floating-label-group input.skill-label {
     height: var(--eon-line-height-default);
@@ -1035,12 +1041,18 @@ input.skill-value {
 }
 
 @media all and (max-height : 1200px) {
-    .EON.rollperson:not(.minimized),
-    .EON.varelse:not(.minimized) {
+    .EON.rollperson:not(.minimized) {
         min-height: 400px;
         min-width: 810px;
         width: 810px;
         height: 800px;
+    }
+
+    .EON.varelse:not(.minimized) {
+        min-width: 750px;
+        width: 750px;
+        min-height: 900px;
+        height: 900px;
     }
 
     .EON.itemsheet:not(.minimized) {
@@ -1054,7 +1066,13 @@ input.skill-value {
 }
 
 @media all and (max-height : 1080px) {
-    .EON.rollperson:not(.minimized),
+    .EON.rollperson:not(.minimized) {
+        min-height: 400px;
+        min-width: 810px;
+        width: 810px;
+        height: 800px;
+    }
+    
     .EON.varelse:not(.minimized) {
         min-height: 400px;
         min-width: 810px;
@@ -1073,7 +1091,10 @@ input.skill-value {
 }
 
 @media all and (max-width : 1280px) {
-    .EON.rollperson:not(.minimized),
+    .EON.rollperson:not(.minimized) {
+        min-width: 400px;
+    }
+
     .EON.varelse:not(.minimized) {
         min-width: 400px;
     }

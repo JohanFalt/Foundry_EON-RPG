@@ -15,7 +15,7 @@
 
                 <div class="item-area pullLeft">
                     <div class="item-top">
-                        <div class="item-property-area number-value-text floating-label-group">
+                        <div class="item-property-area   floating-label-group">
                             {{#if (eq data.system.typ "faltstorning")}}
                                 <select class="text-value inputdata" name="system.id" data-source="aspekt">
                                     <option value="">- Välj -</option>
@@ -32,7 +32,7 @@
                         </div>
 
                         {{#if (eq data.system.typ "faltstorning")}}
-                            <div class="item-property-area number-value-text floating-label-group">
+                            <div class="item-property-area   floating-label-group">
                                 <select class="text-value" name="system.niva">
                                     <option value="">- Välj -</option>
                                     {{#select item.system.niva}}										
@@ -46,7 +46,7 @@
                             </div>
                         {{/if}}
 
-                        <div class="item-property-area number-value-text floating-label-group">
+                        <div class="item-property-area   floating-label-group">
                             <input class="text-value editable" type="text" name="system.referens" value="{{data.system.referens}}" data-dtype="String" autocomplete="off" autofocus required />
                             <span class="floating-label">Referens</span>
                         </div>

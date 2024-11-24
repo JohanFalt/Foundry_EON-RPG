@@ -20,9 +20,6 @@ export class SpellRoll {
         this.improvisation = 0;
         this.aspekt = item.system.aspekt;
 
-        // this.grundTarning = 0;
-        // this.grundBonus = 0;
-
         if (actor.system.berakning.svarighet.smarta > 0) {
             this.#_harSmarta = true;
         }
@@ -37,9 +34,6 @@ export class SpellRoll {
                 break;
             }
         }
-
-        // this.totalTarning = this.grundTarning;
-        // this.totalBonus = this.grundBonus;
 
         if (item.system.forsvar != "") {
             this.forsvar = item.system.forsvar;
@@ -428,40 +422,6 @@ export class DialogSpellRoll extends FormApplication {
 
         if (dataset?.source == "bonus") {
             let value = dataset.value;
- 
-            // if (dataset?.action == "add") {
-            //     if (value == "1T6") {
-            //         this.object.totalTarning += 1;
-            //     }
-            //     else {
-            //         if (this.object.totalBonus == 3) {
-            //             this.object.totalTarning += 1;
-            //             this.object.totalBonus = 0;
-            //         }
-            //         else {
-            //             this.object.totalBonus += 1;
-            //         }                    
-            //     }
-            // }
-            // if (dataset?.action == "remove") {
-            //     if (value == "1T6") {
-            //         if (this.object.totalTarning > 0) {
-            //             this.object.totalTarning -= 1;
-            //         }
-            //     }
-            //     else {
-            //         if ((this.object.totalBonus == -1) && (this.object.totalTarning > 0)) {
-            //             this.object.totalTarning -= 1;
-            //             this.object.totalBonus = 3;
-            //         }
-            //         else if ((this.object.totalTarning == 0) && (this.object.totalBonus == 0)) {
-            //             // gör inget alls
-            //         }
-            //         else {
-            //             this.object.totalBonus -= 1;
-            //         }                   
-            //     }
-            // }
 
             if (dataset?.action == "add") {
                 if (value == "1T6") {
@@ -518,18 +478,6 @@ export class DialogSpellRoll extends FormApplication {
             description += `${this.actor.system.berakning.svarighet.smarta}T6 smärta<br />`;
         }
 
-        // if ((this.object.totalTarning != this.object.grundTarning) || (this.object.totalBonus != this.object.grundBonus)) {
-        //     if (this.object.grundBonus == 0) {
-        //         grundvarde = `${this.object.grundTarning}T6`;
-        //     }
-        //     else if (this.object.grundBonus > 0) {
-        //         grundvarde = `${this.object.grundTarning}T6+${this.object.grundBonus}`;
-        //     }
-        //     else {
-        //         grundvarde = `${this.object.grundTarning}T6-${this.object.grundBonus}`;
-        //     }            
-        // }
-
         if ((visadeTarningar.tvarde != this.object.grundTarning) || (visadeTarningar.bonus != this.object.grundBonus)) {
             if (this.object.grundBonus == 0) {
                 grundvarde = `${this.object.grundTarning}T6`;
@@ -545,8 +493,6 @@ export class DialogSpellRoll extends FormApplication {
         const roll = new DiceRollContainer(this.actor, this.config);
         roll.typeroll = CONFIG.EON.slag.fardighet;
         roll.action = this.object.namn;
-        // roll.number = parseInt(this.object.totalTarning);
-        // roll.bonus = parseInt(this.object.totalBonus);
         roll.number = this.object.visaTarning.tvarde;
         roll.bonus = this.object.visaTarning.bonus;
 

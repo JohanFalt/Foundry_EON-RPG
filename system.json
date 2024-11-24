@@ -1,48 +1,219 @@
 {
-  "id": "eon-rpg",
-  "title": "Eon IV RPG",
-  "version": "3.0.0",
-  "compatibility": {
-    "minimum": "12",
-    "verified": "12",
-    "maximum": "12"
-  },
-  "authors": [
-    {
-      "name": "Johan Fält",
-      "discord": "johanfk#0054",
-      "flags": {}
-    }
-  ],
-  "esmodules": [
-    "module/eon-rpg.js"
-  ],
-  "styles": [
-    "styles/eon-main.css",
-    "styles/editor/editor.css"
-  ],
-  "relationships": {
-    "requires": [
-      {
-        "id": "eon-dice-roller",
-        "type": "module",
-        "manifest": "https://raw.githubusercontent.com/JohanFalt/Foundry_EonDiceRoller/main/module.json",
-        "compatibility": {
-          "minimum": "2",
-          "verified": "2",
-          "maximum": "3"
+    "id": "eon-rpg",
+    "title": "Eon IV RPG",
+    "version": "3.1.0",
+    "compatibility": {
+        "minimum": "12",
+        "verified": "12",
+        "maximum": "12"
+    },
+    "authors": [{
+        "name": "Johan Fält",
+        "discord": "johanfk#0054",
+        "flags": {}
+    }],
+    "esmodules": [
+        "module/eon-rpg.js"
+    ],
+    "styles": [
+        "styles/eon-main.css",
+        "styles/editor/editor.css"
+    ],
+    "relationships": {
+        "requires": [{
+            "id": "eon-dice-roller",
+            "type": "module",
+            "manifest": "https://raw.githubusercontent.com/JohanFalt/Foundry_EonDiceRoller/main/module.json",
+            "compatibility": {
+                "minimum": "2",
+                "verified": "2",
+                "maximum": "3"
+            }
+        }]
+    },
+    "packs": [
+        {
+            "name": "vapenegenskaper",
+            "label": "Vapenegenskaper",
+            "system": "eon-rpg",
+            "path": "packs/vapenegenskaper",
+            "type": "Item",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "grundbok",
+                        "vapen",
+                        "egenskaper"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "narstridsvapen",
+            "label": "Närstridsvapen",
+            "system": "eon-rpg",
+            "path": "packs/narstridsvapen",
+            "type": "Item",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "grundbok",
+                        "foremal",
+                        "vapen",
+                        "narstridsvapen"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "avstandsvapen",
+            "label": "Avståndsvapen",
+            "system": "eon-rpg",
+            "path": "packs/avstandsvapen",
+            "type": "Item",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "grundbok",
+                        "foremal",
+                        "vapen",
+                        "avstandsvapen"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "skoldar",
+            "label": "Sköldar",
+            "system": "eon-rpg",
+            "path": "packs/skoldar",
+            "type": "Item",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "grundbok",
+                        "foremal",
+                        "vapen",
+                        "skoldar"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "vandningar",
+            "label": "Vändningar",
+            "system": "eon-rpg",
+            "path": "packs/vandningar",
+            "type": "RollTable",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "grundbok",
+                        "tabeller",
+                        "varelser"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "tabeller",
+            "label": "Tabeller",
+            "system": "eon-rpg",
+            "path": "packs/tabeller",
+            "type": "RollTable",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "grundbok",
+                        "tabeller"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "djur",
+            "label": "Djur",
+            "system": "eon-rpg",
+            "path": "packs/djur",
+            "type": "Actor",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "grundbok",
+                        "varelser"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "varelser",
+            "label": "Varelser",
+            "system": "eon-rpg",
+            "path": "packs/varelser",
+            "type": "Actor",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "grundbok",
+                        "varelser"
+                    ]
+                }
+            }
         }
-      }
-    ]
-  },
-  "initiative": "@harleddegenskaper.initiativ.tarning + @harleddegenskaper.initiativ.bonus",
-  "grid": {
-    "distance": 2,
-    "units": "m"
-  },
-  "url": "https://github.com/JohanFalt/Foundry_EON-RPG",
-  "manifest": "https://raw.githubusercontent.com/JohanFalt/Foundry_EON-RPG/main/system.json",
-  "download": "https://github.com/JohanFalt/Foundry_EON-RPG/archive/refs/tags/3.0.0.zip",
-  "bugs": "https://github.com/JohanFalt/Foundry_EON-RPG/issues",
-  "license": "LICENSE.txt"
+    ],
+    "packFolders": [{
+        "name": "Eon IV - Grundbok",
+        "sorting": "m",
+        "color": "#cd2c1e",
+        "packs": [],
+        "folders": [
+            {
+                "name": "Föremål",
+                "sorting": "m",
+                "color": "#b72c1f",
+                "packs": [
+                    "narstridsvapen",
+                    "avstandsvapen",
+                    "skoldar",
+                    "vapenegenskaper"
+                ]
+            },
+            {
+                "name": "Tabeller",
+                "sorting": "m",
+                "color": "#b72c1f",
+                "packs": [
+                    "tabeller",
+                    "vandningar"
+                ]
+            },
+            {
+                "name": "Varelser",
+                "sorting": "m",
+                "color": "#b72c1f",
+                "packs": [
+                    "djur",
+                    "varelser"
+                ]
+            }
+        ]
+    }],
+    "initiative": "@harleddegenskaper.initiativ.tarning + @harleddegenskaper.initiativ.bonus",
+    "grid": {
+        "gridDistance": 2,
+        "gridUnits": "m"
+    },  
+    "url": "https://github.com/JohanFalt/Foundry_EON-RPG",
+    "manifest": "https://raw.githubusercontent.com/JohanFalt/Foundry_EON-RPG/main/system.json",
+    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/archive/refs/tags/3.1.0.zip",
+    "bugs": "https://github.com/JohanFalt/Foundry_EON-RPG/issues",
+    "license": "LICENSE.txt"
 }
