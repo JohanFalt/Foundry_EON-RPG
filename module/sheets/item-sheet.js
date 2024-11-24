@@ -154,9 +154,7 @@ export default class EonItemSheet extends ItemSheet {
 		data.isPC = this.isPC;
 		data.isGM = this.isGM;
 		data.hasExperience = false;
-		data.selectedRitual = parseInt(this.selectedRitual);
-
-		
+		data.selectedRitual = parseInt(this.selectedRitual);		
 
 		data.listData = SelectHelper.SetupItem(this.item);
 
@@ -215,10 +213,6 @@ export default class EonItemSheet extends ItemSheet {
 			data.showTraffa = true;
 		}
 
-		console.log(data.item.type);
-		console.log(data.item);
-		console.log(data.EON);
-		
 		if (this.item.type.toLowerCase() === "rustning") {
 			const reduction = data.item.system.belastning_reduction || 0;
 			const baseWeight = data.item.system.kroppsdel.reduce((sum, del) => sum + (del.belastning || 0), 0);
@@ -228,6 +222,10 @@ export default class EonItemSheet extends ItemSheet {
 				data.system.belastning = data.item.system.belastning;
 			}
 		}
+
+		console.log(data.item.type);
+		console.log(data.item);
+		console.log(data.EON);
 		
 		return data;
 	}

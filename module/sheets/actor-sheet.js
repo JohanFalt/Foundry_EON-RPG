@@ -208,12 +208,6 @@ export default class EonActorSheet extends ActorSheet {
             .filter(item => item.type === "Valuta")
             .sort((a, b) => a.name.localeCompare(b.name));
 
-        for (const del of data.actor.system.listdata.kroppsdelar) {
-            del.stick += data.actor.system.harleddegenskaper.grundrustning.totalt; 
-            del.kross += data.actor.system.harleddegenskaper.grundrustning.totalt; 
-            del.hugg += data.actor.system.harleddegenskaper.grundrustning.totalt; 
-        } 
-
         // Beräkna utmattning och belastning
         data.actor.system.berakning = [];
         data.actor.system.berakning.utmattning = [];

@@ -138,7 +138,7 @@ export default class EonRollperson extends foundry.abstract.DataModel {
 
     static migrateData(source) {
         //const systemVersion = game.settings.get("eon-rpg", "systemVersion");
-        let version310 = CompareVersion(source.installningar.version, "3.1.0");
+        let version310 = CompareVersion(source.installningar?.version, "3.1.0");
 
         if (version310) {
             source.installningar.version = "3.1.0";

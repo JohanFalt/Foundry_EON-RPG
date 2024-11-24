@@ -5,12 +5,16 @@ import CreateHelper from "./create-helper.js";
  * @param oldVersion   The existing version no: e.g. 1.5.9
  * @param newVersion   The new version no: e.g. 1.5.10
  */
-export async function CompareVersion(oldVersion, newVersion) {
-    if ((newVersion == "") || (newVersion == undefined)) {
+export function CompareVersion(oldVersion, newVersion) {
+    if ((newVersion == undefined) || (oldVersion == undefined)) {
         return false;
     }
 
-    if ((oldVersion == "") || (oldVersion == undefined)) {
+    if (newVersion == "") {
+        return false;
+    }
+
+    if (oldVersion == "") {
         return true;
     }
 

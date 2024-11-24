@@ -1,8 +1,6 @@
 import installningar from "./installningar.js";
 import basforemal from "./_basforemal.js";
 
-import {CompareVersion} from "../../../migration.js";
-
 /**
  * Data schema, attributes, and methods specific to Actor.
  */

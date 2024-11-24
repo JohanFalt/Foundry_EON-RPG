@@ -36,9 +36,7 @@
                     <div class="item-row" style="line-height: 25px; width:100%;">
                         <div style="width: 100px;">{{rustning.namn}}</div>
                         <div style="width: 125px;">{{#if (ne rustning.material "")}}{{getArmorType rustning.material}}{{else}}&nbsp;{{/if}}</div>
-                        <div class="centerText  " style="width: 50px;">
-                            {{#with ../actor.system.harleddegenskaper.grundrustning}}
-                            {{/with}}
+                        <div class="centerText  " style="width: 50px;">           
                             {{sum 
                                 rustning.hugg 
                                 ../actor.system.harleddegenskaper.grundrustning.totalt
