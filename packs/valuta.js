@@ -56,7 +56,7 @@ export const datavaluta = {
             "silver_varde": 1,
             "vikt": 0.0019
         },
-        "Koppar": {
+        "koppar": {
             "namn": "Koppar",
             "enhet": "st",
             "ursprung": "Asharien, Soldarn",
@@ -232,7 +232,7 @@ export const datavaluta = {
             "silver_varde": 4,
             "vikt": 0.0076
         },
-        "Silver": {
+        "silver": {
             "namn": "Silver",
             "enhet": "st",
             "ursprung": "Consaber",
