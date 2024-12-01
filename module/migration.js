@@ -100,6 +100,7 @@ export const updateActor = async function(actor, config, systemVersion) {
         const updateData = foundry.utils.duplicate(actor);
         let update = false;
         let version210 = await CompareVersion(actor.system.installningar.version, "2.1.0");
+        let version311 = await CompareVersion(actor.system.installningar.version, "3.1.1");
 
         if (updateData.system.installningar.version == "") {
             updateData.system.installningar.version = "1.0.0";
@@ -134,6 +135,15 @@ export const updateActor = async function(actor, config, systemVersion) {
             }
 
             update = true;
+        }
+
+        if (version311) {
+            updateData.system.installningar.version = "3.1.1";
+            update = true;
+
+            if ((actor.prototypeToken.bar1.attribute == "") || (actor.prototypeToken.bar1.attribute == undefined)) {
+                updateData.prototypeToken.bar1.attribute = "skada.utmattning.varde";
+            }
         }
 
         if (update) {
@@ -233,6 +243,51 @@ export const updateItem = async function(item, config, actor) {
 }
 
  /**
+ * patch an compendium to the latest version
+ * @param {Pack} pack   The pack to Update
+ * @param systemVersion   The version that is being pushed at the world
+ * 
+ */
+ export const updateCompendium = async function(pack, config, systemVersion) {
+    const entity = pack.documentName;
+    if ( !["Actor", "Item", "Scene"].includes(entity) ) return;
+
+    // Unlock the pack for editing
+    const wasLocked = pack.locked;
+    await pack.configure({locked: false});
+
+    // Begin by requesting server-side data model migration and get the migrated content
+    await pack.migrate();
+    const content = await pack.getDocuments();
+
+    // Iterate over compendium entries - applying fine-tuned migration functions
+    for ( let ent of content ) {
+        try {
+            switch (entity) {
+                case "Actor":
+                    await updateActor(ent, config, systemVersion);
+                    break;
+                case "Item":
+                    //await updateItem(ent, config, undefined);
+                    break;
+                case "Scene":
+                    break;
+            }
+        }
+
+        // Handle migration failures
+        catch(err) {
+            err.message = `Failed migration for entity ${ent.name} in pack ${pack.collection}: ${err.message}`;
+            console.error(err);
+        }
+    }
+
+    // Apply the original locked status for the pack
+    await pack.configure({locked: wasLocked});
+    console.log(`Migrated all ${entity} entities from Compendium ${pack.collection}`);
+ };
+
+ /**
  * Sends version text to chat
  * @param systemVersion The new system version
  * @param installedVersion The installed system version
@@ -250,6 +305,18 @@ export async function patchWorld(systemVersion, installedVersion, config) {
             await updateItem(item, config, undefined);
         }
 
+        // for ( let pack of game.packs ) {
+        //     try {
+        //         if ( pack.metadata.packageType !== "world" ) continue;
+        //         if ( pack.metadata.packageType !== "system" ) continue;
+        //         if ( !["Actor", "Item", "Scene"].includes(pack.documentName) ) continue;
+        //         await updateCompendium(pack, config, systemVersion);
+        //     } catch(err) {
+        //         console.error(err);
+        //         isError = true;
+        //     }
+        // }
+
         ui.notifications.info("Klar!", {permanent: true});
     }
 }
@@ -264,9 +331,7 @@ export async function DoNotice(systemVersion, installedVersion) {
     }
 
     let partMessage = "";
-    let futureMessage = "";
-
-    
+    let futureMessage = "";    
 
     if (await CompareVersion(installedVersion, '3.1.0')) {
         partMessage += `
@@ -289,6 +354,14 @@ export async function DoNotice(systemVersion, installedVersion) {
             <li>Initiativ</li>            
             <li>Mer varelser</li>
             <li>Strid</li>
+        `;
+    }
+
+    if (await CompareVersion(installedVersion, '3.1.1')) {
+        partMessage += `
+            <li>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/286">#286</a>, <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/287">#287</a>] - Utmattning är nu kopplade till Tokens. Se <a href="https://github.com/JohanFalt/Foundry_EON-RPG/wiki/Token">Wiki</a></td>.
+            <li>[BUGG][<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/288">#288</a>] - Föremålens formulär öppnades inte som de skulle efter att man skapade dem till en Rollperson.</td>
+            <li>[BUGG][<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/285">#285</a>] - Man kunde inte skapa myntsorten Koppar och Silverdaler.</td>
         `;
     }
 
@@ -370,7 +443,8 @@ export async function DoNotice(systemVersion, installedVersion) {
             </ul>
         </div>`;
 
-    message += `
+    if (futureMessage != '') {
+        message += `
         <div class="tray-title-area">Planerat för nästa version</div>
         <div class="tray-action-area">
         </div>
@@ -379,6 +453,7 @@ export async function DoNotice(systemVersion, installedVersion) {
             ${futureMessage}
             </ul>
         </div>`;
+    }    
 
     let support =  `
         <div class="tray-title-area">Länkar</div>
