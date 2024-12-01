@@ -467,9 +467,6 @@ export default class EonActorSheet extends ActorSheet {
 		if (!itemid) {
             ui.notifications.error("Typen som skall skapas saknar funktion");
         }
-        else if (itemid) {
-            // allt gått bra men skall inte öppna något
-        }
         else {
             const item = await this.actor.getEmbeddedDocument("Item", itemid);
             var _a;

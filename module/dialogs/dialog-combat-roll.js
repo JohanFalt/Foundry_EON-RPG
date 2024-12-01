@@ -59,7 +59,7 @@ export class DialogCombat extends FormApplication {
 
     async _updateObject(event, formData) {
         if (this.object.canclose) {
-            let token = await canvas.tokens.placeables.find(t => t.data.actorId === this.object.actorid);
+            let token = await canvas.tokens.placeables.find(t => t.actor?._id === this.object.actorid);
 
             if(token) {
                 await this._clearIcon(token);
@@ -102,7 +102,7 @@ export class DialogCombat extends FormApplication {
             this.object.canroll = true;       
         }
 
-        let token = await canvas.tokens.placeables.find(t => t.data.actorId === this.object.actorid);
+        let token = await canvas.tokens.placeables.find(t => t.actor?._id === this.object.actorid);
 
         if(token) {
             await this._clearIcon(token);
@@ -169,7 +169,7 @@ export class DialogCombat extends FormApplication {
 
 		let foundToken = false;
 		let foundEncounter = true;
-		let token = await canvas.tokens.placeables.find(t => t.data.actorId === this.object.actorid);
+		let token = await canvas.tokens.placeables.find(t => t.actor?._id === this.object.actorid);
 
 		if(token) {
             foundToken = true;
