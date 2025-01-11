@@ -411,6 +411,10 @@ export const RegisterHandlebarsHelpers = function () {
 			text = "Hugg";
 			icon = "skada_hugg";
 		}
+		if (skada == "eld") {
+			text = "Eld";
+			icon = "skada_eld";
+		}
 
 		//return game.EON.CONFIG.ikoner[icon];
 		return '<img src="'+game.EON.CONFIG.ikoner[icon]+'" class="item img-text-icon" title="'+text+'" />';

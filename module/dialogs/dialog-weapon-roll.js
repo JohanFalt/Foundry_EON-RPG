@@ -18,6 +18,7 @@ export class WeaponRoll {
     #_usehugg = false;
     #_usekross = false;
     #_usestick = false;
+    #_useeld = false;
 
     #_vapenskada = {
         "tvarde": 0,
@@ -367,12 +368,14 @@ export class WeaponRoll {
         this.#_usehugg = false;
         this.#_usekross = false;
         this.#_usestick = false;
+        this.#_useeld = false;
 
         // If a specific type is selected, use that
         if (type) {
             if (type === "hugg") this.#_usehugg = true;
             else if (type === "kross") this.#_usekross = true;
             else if (type === "stick") this.#_usestick = true;
+            else if (type === "eld") this.#_useeld = true;
             return;
         }
 
@@ -384,6 +387,8 @@ export class WeaponRoll {
                 this.#_usekross = true;
             } else if (this.vapen.system.skadetyp == "stick") {
                 this.#_usestick = true;
+            } else if (this.vapen.system.skadetyp == "eld") {
+                this.#_useeld = true;
             }
             return;
         }
@@ -414,11 +419,20 @@ export class WeaponRoll {
                     bestDamageType = "stick";
                 }
             }
+            // Only check eld if it exists in the weapon system
+            if (this.vapen.system.eld?.aktiv) {
+                const damage = this.vapen.system.eld.tvarde + (this.vapen.system.eld.bonus / 3);
+                if (damage > highestDamage) {
+                    highestDamage = damage;
+                    bestDamageType = "eld";
+                }
+            }
 
             // Set only the highest damage type as active
             if (bestDamageType === "hugg") this.#_usehugg = true;
             else if (bestDamageType === "kross") this.#_usekross = true;
             else if (bestDamageType === "stick") this.#_usestick = true;
+            else if (bestDamageType === "eld") this.#_useeld = true;
         }
 
         if (this.#_isdamage) {
@@ -540,6 +554,10 @@ export class WeaponRoll {
 
     get lastAttackType() {
         return this.#_lastAttackType;
+    }
+
+    get useeld() {
+        return this.#_useeld;
     }
 }
 
