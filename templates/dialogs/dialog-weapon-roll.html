@@ -71,6 +71,9 @@
                         {{#if object.vapen.system.stick.aktiv}}
                             <button class="attacktype three-button pullLeft {{#if object.usestick}}active{{/if}}" data-type="stick">Stick</button>
                         {{/if}}
+                        {{#if object.vapen.system.eld.aktiv}}
+                            <button class="attacktype three-button pullLeft {{#if object.useeld}}active{{/if}}" data-type="eld">Eld</button>
+                        {{/if}}
                     {{else}}  
                         {{#if object.isattack}}
                             {{#unless object.vapen.isRangedWeapon}}
