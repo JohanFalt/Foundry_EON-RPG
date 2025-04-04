@@ -359,9 +359,15 @@ export async function DoNotice(systemVersion, installedVersion) {
 
     if (await CompareVersion(installedVersion, '3.1.1')) {
         partMessage += `
-            <li>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/286">#286</a>, <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/287">#287</a>] - Utmattning är nu kopplade till Tokens. Se <a href="https://github.com/JohanFalt/Foundry_EON-RPG/wiki/Token">Wiki</a></td>.
-            <li>[BUGG][<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/288">#288</a>] - Föremålens formulär öppnades inte som de skulle efter att man skapade dem till en Rollperson.</td>
-            <li>[BUGG][<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/285">#285</a>] - Man kunde inte skapa myntsorten Koppar och Silverdaler.</td>
+            <li>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/286">#286</a>, <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/287">#287</a>] - Utmattning är nu kopplade till Tokens. Se <a href="https://github.com/JohanFalt/Foundry_EON-RPG/wiki/Token">Wiki</a></li>.
+            <li>[BUGG][<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/288">#288</a>] - Föremålens formulär öppnades inte som de skulle efter att man skapade dem till en Rollperson.</li>
+            <li>[BUGG][<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/285">#285</a>] - Man kunde inte skapa myntsorten Koppar och Silverdaler.</li>
+        `;
+    }
+
+    if (await CompareVersion(installedVersion, '3.1.2')) {
+        partMessage += `
+            <li>Förberedande för Foundry v13.</li>
         `;
     }
 

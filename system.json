@@ -1,7 +1,7 @@
 {
     "id": "eon-rpg",
     "title": "Eon IV RPG",
-    "version": "3.1.1",
+    "version": "3.1.2",
     "compatibility": {
         "minimum": "12",
         "verified": "12",
@@ -214,7 +214,7 @@
     },  
     "url": "https://github.com/JohanFalt/Foundry_EON-RPG",
     "manifest": "https://raw.githubusercontent.com/JohanFalt/Foundry_EON-RPG/main/system.json",
-    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/archive/refs/tags/3.1.1.zip",
+    "manifest": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/3.1.2/system.json",  
     "bugs": "https://github.com/JohanFalt/Foundry_EON-RPG/issues",
     "license": "LICENSE.txt"
 }
