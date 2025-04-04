@@ -213,8 +213,8 @@
         "gridUnits": "m"
     },  
     "url": "https://github.com/JohanFalt/Foundry_EON-RPG",
-    "manifest": "https://raw.githubusercontent.com/JohanFalt/Foundry_EON-RPG/main/system.json",
     "manifest": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/3.1.2/system.json",  
+    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/archive/refs/tags/3.1.2.zip",
     "bugs": "https://github.com/JohanFalt/Foundry_EON-RPG/issues",
     "license": "LICENSE.txt"
 }
