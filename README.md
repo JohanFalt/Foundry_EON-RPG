@@ -1,4 +1,4 @@
-![Latest Release Download Count](https://img.shields.io/github/downloads/p4535992/Foundry_EON-RPG/latest/v4.0.0.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge)
+![Antalet nedladdningar v4](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v4.0.0/v4.0.0.zip)
 
 ![](https://img.shields.io/badge/Foundry-v13-informational)
 
