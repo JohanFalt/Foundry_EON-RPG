@@ -107,19 +107,19 @@
     </div>
     <div>
         {{#if (eq actor.system.listdata.skador.length 0)}}
-        <div class="item-row" style="line-height: 25px; width:100%;">
+        <div class="item-row item-listrow">
             Inga allvarliga skador
         </div>
         {{/if}}
         {{#each actor.system.listdata.skador as |skada key|}}
-            <div class="item-row" style="line-height: 25px; width:100%;">
-                <div class="weapon-icon"><a class="item-edit" title="Editera skada" data-source="wound" data-itemid="{{skada._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="item-row item-listrow">
+                <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera skada" data-source="wound" data-itemid="{{skada._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
                 {{#if (eq skada.system.beskrivning "")}}
-                    <div class="weapon-icon"><i class="icon fa-regular fa-share"></i></div>
+                    <div class="item-listbox weapon-icon"><i class="icon fa-regular fa-share"></i></div>
                 {{else}}
-                    <div class="weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{skada._id}}"><i class="icon fa-solid fa-share"></i></a></div>
+                    <div class="item-listbox weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{skada._id}}"><i class="icon fa-solid fa-share"></i></a></div>
                 {{/if}}
-                <div style="width: 125px;" data-source="wound" data-itemid="{{skada._id}}">{{skada.name}}</div>
+                <div class="item-listbox" style="width: 125px;" data-source="wound" data-itemid="{{skada._id}}">{{skada.name}}</div>
             </div>
         {{/each}}
     </div>

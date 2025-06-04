@@ -1,5 +1,16 @@
-<nav class="item-tabs tab-area headlineTabs" data-group="primary">    
-    <a class="tabButton" data-tab="values">Värde</a>
-    <a class="tabButton tabboxleft" data-tab="property">Ritual</a>
-    <a class="tabButton tabboxleft" data-tab="description">Beskrivning</a>
-</nav>
+{{#if (eq item.system.installningar.eon "eon4")}}
+
+    <nav class="item-tabs tab-area headlineTabs" data-group="primary">    
+        <a class="tabButton" data-tab="values">Värde</a>
+        <a class="tabButton tabboxleft" data-tab="property">Ritual</a>
+        <a class="tabButton tabboxleft" data-tab="description">Beskrivning</a>
+    </nav>
+
+{{else if (eq item.system.installningar.eon "eon5")}}
+
+    <nav class="item-tabs tab-area headlineTabs" data-group="primary">    
+        <a class="tabButton" data-tab="values" style="width: 50%;">Värde</a>
+        <a class="tabButton tabboxleft" data-tab="description" style="width: 50%;">Beskrivning</a>
+    </nav>
+
+{{/if}}

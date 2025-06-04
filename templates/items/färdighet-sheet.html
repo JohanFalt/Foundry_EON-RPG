@@ -21,7 +21,7 @@
 						<span class="floating-label">Namn</span>
 					</div>	
 
-					{{#if this.isPC}}
+					{{#if (and (this.isPC) (eq this.system.installningar.eon "eon4"))}}
 
 						<div class="item-property-area   floating-label-group">
 							<select class="text-value" name="system.attribut">

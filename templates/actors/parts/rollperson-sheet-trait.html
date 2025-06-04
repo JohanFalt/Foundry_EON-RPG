@@ -1,3 +1,23 @@
+{{#if (eq actor.system.installningar.eon "eon4")}}
+    <div class="large-headline">
+        <div>Egenskaper</div>     
+    </div>
+
+    {{#if (eq actor.system.bakgrund.folkslag "")}}
+        <div class="information-area information-box">Välj ett Folkslag från kompendiet eller skapa en egen och dra denna till rollformuläret.</div>
+    {{/if}}
+
+    <div class="info-box item-column">
+        {{#each (getAncestryProperties actor) as |property id|}}
+            <div class="clear">
+                <div class="pullLeft item-listbox weapon-icon"><a class="item-edit" title="Editera egenskap" data-itemid="{{property._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+                <div class="pullLeft headline">{{property.name}}</div>
+            </div>
+            <div class="description-row">{{{property.system.beskrivning}}}</div>
+        {{/each}}
+    </div>
+{{/if}}
+
 <div class="headline headline-background item-row">
     <div class="weapon-icon pointer">
         <a class="item-create" title="Lägg till karaktärsdrag" data-type="karaktärsdrag">
@@ -55,28 +75,59 @@
                 </div>
             </div>
 
-            <div class="bio">
-                <div class="item-row">
-                    <div class="item-row three-column">                        
-                        <div class="resource-box" data-value="{{drag.last}}">
-                            <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="last" data-value="{{drag.last}}"></span>
+            {{#if (eq ../actor.system.installningar.eon "eon4")}}
+                <div class="bio">
+                    <div class="item-row">
+                        <div class="item-row three-inner-column">                        
+                            <div class="resource-box" data-value="{{drag.last}}">
+                                <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="last" data-value="{{drag.last}}"></span>
+                            </div>
+                            <div class="pullLeft">Låst</div>
                         </div>
-                        <div class="pullLeft">Låst</div>
-                    </div>
-                    <div class="item-row three-column">                        
-                        <div class="resource-box" data-value="{{drag.svarighet}}">
-                            <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="svarighet" data-value="{{drag.svarighet}}"></span>
+                        <div class="item-row three-inner-column">                        
+                            <div class="resource-box" data-value="{{drag.svarighet}}">
+                                <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="svarighet" data-value="{{drag.svarighet}}"></span>
+                            </div>
+                            <div class="pullLeft">Svaghet</div>
                         </div>
-                        <div class="pullLeft">Svaghet</div>
-                    </div>
-                    <div class="item-row three-column">                        
-                        <div class="resource-box" data-value="{{drag.tvivel}}">
-                            <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="tvivel" data-value="{{drag.tvivel}}"></span>
+                        <div class="item-row three-inner-column">                        
+                            <div class="resource-box" data-value="{{drag.tvivel}}">
+                                <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="tvivel" data-value="{{drag.tvivel}}"></span>
+                            </div>
+                            <div class="pullLeft">Tvivel</div>
                         </div>
-                        <div class="pullLeft">Tvivel</div>
                     </div>
                 </div>
-            </div>
+            {{else if (eq ../actor.system.installningar.eon "eon5")}}
+                <div class="bio">
+                    <div class="item-row">
+                        <div class="item-row four-column">                        
+                            <div class="resource-box" data-value="{{drag.last}}">
+                                <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="last" data-value="{{drag.last}}"></span>
+                            </div>
+                            <div class="pullLeft">Låst</div>
+                        </div>
+                        <div class="item-row four-column">                        
+                            <div class="resource-box" data-value="{{drag.svarighet}}">
+                                <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="svarighet" data-value="{{drag.svarighet}}"></span>
+                            </div>
+                            <div class="pullLeft">Svaghet</div>
+                        </div>
+                        <div class="item-row four-column">                        
+                            <div class="resource-box" data-value="{{drag.tvivel}}">
+                                <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="tvivel" data-value="{{drag.tvivel}}"></span>
+                            </div>
+                            <div class="pullLeft">Tvivel</div>
+                        </div>
+                        <div class="item-row four-column">                        
+                            <div class="resource-box" data-value="{{drag.storning}}">
+                                <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="storning" data-value="{{drag.storning}}"></span>
+                            </div>
+                            <div class="pullLeft">Störning</div>
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
 
         </div>
     {{/each}}

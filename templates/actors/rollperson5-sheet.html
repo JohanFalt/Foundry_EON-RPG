@@ -1,0 +1,56 @@
+<form class="{{cssClass}} flexcol {{#if locked}}locked{{/if}}" autocomplete="off">
+
+    <div class="sheet-character">
+
+        <header class="sheet-header">
+
+            <div class="sheet-top clear">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson5-sheet-top.html"}}                
+            </div>
+
+            <div class="navigation clear">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-navigation.html"}}
+            </div>
+        </header>
+
+        <section class="sheet-body">            
+
+            <div class="tab skill" data-group="primary" data-tab="skill">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-skill.html"}}
+            </div>
+
+            <div class="tab weapon" data-group="primary" data-tab="weapon">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon.html"}}
+
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-health.html"}}
+            </div>
+
+            <div class="tab armor" data-group="primary" data-tab="armor">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-armor.html"}}
+            </div>
+
+            <div class="tab magic" data-group="primary" data-tab="magic">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-magic.html"}}
+            </div>
+
+            <div class="tab religion" data-group="primary" data-tab="religion">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-religion.html"}}
+            </div>
+
+            <div class="tab equipment" data-group="primary" data-tab="equipment">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-equipment.html"}}
+            </div>
+
+            <div class="tab bio" data-group="primary" data-tab="bio">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-bio.html"}}
+            </div>
+
+            <div class="tab settings" data-group="primary" data-tab="settings">
+                {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-setting.html"}}
+            </div>
+
+        </section>
+
+    </div>
+
+</form>

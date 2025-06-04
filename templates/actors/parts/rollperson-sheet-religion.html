@@ -3,7 +3,7 @@
     <div class="skill-headline headline">Mystikfärdigheter</div>
 
     {{#each (getActorSkillGroup actor.system.listdata.fardigheter "mystik") as |fardighet key|}}
-        <div class="skill clear">
+        <div class="item-listrow skill clear">
             <div class="pullLeft" >
                 {{#if fardighet.system.installningar.lattlard}}
                     <div style="width: 8px;"><i class="fa-solid fa-sort-up green"></i></div>
@@ -15,7 +15,7 @@
             <div class="vrollable pullLeft caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div> 
                     
             <div class="pullLeft dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
-            <div class="pullLeft skill-short">{{getAttributeShortName fardighet.system.attribut}}</div>
+            {{{getAttributeShortName fardighet.system.attribut}}}
         </div>
     {{/each}}
 
@@ -25,35 +25,35 @@
 
     <div class="large-headline">Mysterie</div>
 
-    <div class="headline headline-background item-row" style="line-height: 25px; width:100%;">
-        <div class="weapon-icon">
+    <div class="headline headline-background item-row item-listrow">
+        <div class="item-listbox weapon-icon">
             <a class="item-create" title="Lägg till mysterie" data-type="mysterie">
                 <i class="fa-solid fa-square-plus green"></i>
             </a>
         </div>
-        <div style="width: 220px;">Namn</div>
-        <div class="centerText" style="width: 100px;">Magnitud</div>
-        <div style="width: 90px;">Omfång</div>
-        <div style="width: 90px;">Räckvidd</div>
-        <div style="width: 100px;">Varaktighet</div>
-        <div>Moment</div>
+        <div class="item-listbox" style="width: 220px;">Namn</div>
+        <div class="item-listbox centerText" style="width: 100px;">Magnitud</div>
+        <div class="item-listbox" style="width: 90px;">Omfång</div>
+        <div class="item-listbox" style="width: 90px;">Räckvidd</div>
+        <div class="item-listbox" style="width: 100px;">Varaktighet</div>
+        <div class="item-listbox">Moment</div>
     </div>
 
     {{#each actor.system.listdata.religion.mysterie as |kraft key|}}
-        <div class="item-row" style="line-height: 25px; width:100%;">
-            <div class="weapon-icon"><a class="item-edit" title="Editera mysterie" data-source="mysterie" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+        <div class="item-row item-listrow">
+            <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera mysterie" data-source="mysterie" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             {{#if (eq kraft.system.beskrivning "")}}
-                <div class="weapon-icon"><i class="icon fa-regular fa-share"></i></div>
+                <div class="item-listbox weapon-icon"><i class="icon fa-regular fa-share"></i></div>
             {{else}}
-                <div class="weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-share"></i></a></div>
+                <div class="item-listbox weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-share"></i></a></div>
             {{/if}}
-            <div class="active-icon"><input class="pointer item-active" name="kraft.system.installningar.aktiv" type="checkbox" data-itemid="{{kraft._id}}" data-property="aktiv" {{isChecked kraft.system.installningar.aktiv}} /></div>
-            <div class="vrollable" style="width: 170px;" data-source="mystery" data-itemid="{{kraft._id}}">{{kraft.name}}</div>
-            <div class="centerText" style="width: 100px;">{{kraft.system.magnitud}}</div>
-            <div style="width: 90px;">{{kraft.system.omfang}}</div>
-            <div style="width: 90px;">{{kraft.system.rackvidd}}</div>
-            <div style="width: 100px;">{{kraft.system.varaktighet}}</div>
-            <div title="{{getMysterySkills kraft.system.moment}}">{{shorten (getMysterySkills kraft.system.moment) 25 false}}</div>
+            <div class="item-listbox active-icon"><input class="pointer item-active" name="kraft.system.installningar.aktiv" type="checkbox" data-itemid="{{kraft._id}}" data-property="aktiv" {{isChecked kraft.system.installningar.aktiv}} /></div>
+            <div class="item-listbox vrollable" style="width: 170px;" data-source="mystery" data-itemid="{{kraft._id}}">{{kraft.name}}</div>
+            <div class="item-listbox centerText" style="width: 100px;">{{kraft.system.magnitud}}</div>
+            <div class="item-listbox" style="width: 90px;">{{kraft.system.omfang}}</div>
+            <div class="item-listbox" style="width: 90px;">{{kraft.system.rackvidd}}</div>
+            <div class="item-listbox" style="width: 100px;">{{kraft.system.varaktighet}}</div>
+            <div class="item-listbox" title="{{getMysterySkills ../actor kraft.system.moment}}">{{shorten (getMysterySkills ../actor kraft.system.moment) 25 false}}</div>
         </div>
     {{/each}}
 
@@ -63,26 +63,26 @@
 
     <div class="large-headline">Avvisning</div>
 
-    <div class="headline headline-background item-row" style="line-height: 25px; width:100%;">
-        <div class="weapon-icon">
+    <div class="headline headline-background item-row item-listrow">
+        <div class="item-listbox weapon-icon">
             <a class="item-create" title="Lägg till avvisning" data-type="avvisning">
                 <i class="fa-solid fa-square-plus green"></i>
             </a>
         </div>
-        <div style="width: 190px;">Namn</div>
-        <div class="centerText" style="width: 75px;">Magnitud</div>
+        <div class="item-listbox" style="width: 190px;">Namn</div>
+        <div class="item-listbox centerText" style="width: 75px;">Magnitud</div>
     </div>
 
     {{#each actor.system.listdata.religion.avvisning as |kraft key|}}
-        <div class="item-row" style="line-height: 25px; width:100%;">
-            <div class="weapon-icon"><a class="item-edit" title="Editera mysterie" data-source="mysterie" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+        <div class="item-row item-listrow">
+            <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera mysterie" data-source="mysterie" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             {{#if (eq kraft.system.beskrivning "")}}
-                <div class="weapon-icon"><i class="icon fa-regular fa-share"></i></div>
+                <div class="item-listbox weapon-icon"><i class="icon fa-regular fa-share"></i></div>
             {{else}}
-                <div class="weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-share"></i></a></div>
+                <div class="item-listbox weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-share"></i></a></div>
             {{/if}}
-            <div style="width: 170px;">{{kraft.name}}</div>
-            <div class="centerText" style="width: 75px;">{{kraft.system.magnitud}}</div>
+            <div class="item-listbox" style="width: 170px;">{{kraft.name}}</div>
+            <div class="item-listbox centerText" style="width: 75px;">{{kraft.system.magnitud}}</div>
         </div>
     {{/each}}
 

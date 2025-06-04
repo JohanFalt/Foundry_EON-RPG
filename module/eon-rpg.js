@@ -1,4 +1,6 @@
 // Import Modules
+import { EonActor } from "./datamodels/actor/data/eonactor.js";
+
 import * as models from "./datamodels/_module.js";
 import * as sheets from "./sheets/_module.js";
 
@@ -13,7 +15,10 @@ import { datavaluta } from '../packs/valuta.js';
 /* 1. Init system						*/
 /* ------------------------------------ */
 Hooks.once("init", async function() {
+    CONFIG.Actor.documentClass = EonActor;
+
     CONFIG.Actor.dataModels.Rollperson = models.EonRollperson;
+    CONFIG.Actor.dataModels.Rollperson5 = models.Eon5Rollperson;
     CONFIG.Actor.dataModels.Varelse = models.EonVarelse;
 
     CONFIG.Item.dataModels.Folkslag = models.EonFolkslag;
@@ -36,26 +41,37 @@ Hooks.once("init", async function() {
 
     CONFIG.EON = eon;
     CONFIG.EON.settings = [];
+    CONFIG.EON.settings.bookEon = game.settings.get("eon-rpg", "bookEon");
     CONFIG.EON.settings.bookCombat = game.settings.get("eon-rpg", "bookCombat") == "strid";
     CONFIG.EON.settings.bookMagic = game.settings.get("eon-rpg", "bookMagic");
     CONFIG.EON.settings.weightRules = game.settings.get("eon-rpg", "weightRules");
     CONFIG.EON.settings.hinderenceSkillGroupMovement = game.settings.get("eon-rpg", "hinderenceSkillGroupMovement");
-    CONFIG.EON.settings.hinderenceSkillGroupMovement = game.settings.get("eon-rpg", "hinderenceAttributeMovement");
+    CONFIG.EON.settings.hinderenceAttributeMovement = game.settings.get("eon-rpg", "hinderenceAttributeMovement");
     CONFIG.EON.settings.textfont = game.settings.get("eon-rpg", "textfont");
     CONFIG.EON.settings.headlinefont = game.settings.get("eon-rpg", "headlinefont");
 
     CONFIG.EON.datavaluta = datavaluta;
 
-    Actors.unregisterSheet("core", ActorSheet);
-    Actors.registerSheet("EON", sheets.EonActorSheet, { types: ["Rollperson"], makeDefault: true });
-    Actors.registerSheet("EON", sheets.EonCreatureSheet, { types: ["Varelse"], makeDefault: true });
+    foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
+    foundry.documents.collections.Actors.registerSheet("EON", sheets.EonActorSheet, { 
+        types: ["Rollperson"],         
+        makeDefault: true 
+    });
+    foundry.documents.collections.Actors.registerSheet("EON", sheets.Eon5ActorSheet, { 
+        types: ["Rollperson5"],         
+        makeDefault: true 
+    });
+    foundry.documents.collections.Actors.registerSheet("EON", sheets.EonCreatureSheet, { 
+        types: ["Varelse"],         
+        makeDefault: true
+    });
 
-    Items.unregisterSheet("core", ItemSheet);
-    Items.registerSheet("EON", sheets.EonItemSheet, { makeDefault: true });
+    foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
+    foundry.documents.collections.Items.registerSheet("EON", sheets.EonItemSheet, { makeDefault: true });
 
     Templates.PreloadHandlebarsTemplates();
     Templates.RegisterHandlebarsHelpers();
-    game.EON = await Templates.Setup();
+    game.EON = await Templates.Setup();    
 });
 
 /* ------------------------------------ */
@@ -79,12 +95,10 @@ Hooks.once("ready", async () => {
         if (((installedVersion !== systemVersion || installedVersion === null)) || (isDemo)) {
             if ((Migration.CompareVersion(installedVersion, systemVersion)) || (isDemo)) {     
                 await Migration.patchWorld(systemVersion, installedVersion, game.EON); 
-                await Migration.DoNotice(systemVersion, installedVersion);
+                await Migration.DoNotice(systemVersion, installedVersion, isDemo);
                 game.settings.set("eon-rpg", "systemVersion", systemVersion);
             }
-        }
-
-        //await Templates.RegisterRollableTables();
+        }        
     } 
 });
 
@@ -141,6 +155,9 @@ Hooks.on("renderItemSheet", (sheet) => {
         (sheet.object.type.toLowerCase().replace(" ", "") == "mysterie")) {
         sheet.element[0].classList.add("besvarjelse");
     }
+    if (sheet.object.type.toLowerCase().replace(" ", "") == "folkslag") {
+        sheet.element[0].classList.add("folkslag");
+    }
 });
 
 /* ------------------------------------ */
@@ -178,6 +195,10 @@ Hooks.on("renderFormApplication", (sheet) => {
         if (sheet.object.typ.toLowerCase().replace(" ", "") == "spell") {
             sheet.element[0].classList.add("besvarjelse");
         }
+
+        if (sheet.object.typ.toLowerCase().replace(" ", "") == "folkslag") {
+            sheet.element[0].classList.add("folkslag");
+        }
     }    
 });
 
@@ -206,6 +227,7 @@ function clearHTML(sheet) {
 	sheet.element[0].classList.remove("vapen");
     sheet.element[0].classList.remove("rustning");
     sheet.element[0].classList.remove("besvarjelse");
+    sheet.element[0].classList.remove("folkslag");
     sheet.element[0].classList.remove("normal-text");
     sheet.element[0].classList.remove("eon-text");
     sheet.element[0].classList.remove("normal-headline");

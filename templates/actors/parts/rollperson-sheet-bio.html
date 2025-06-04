@@ -51,9 +51,7 @@
 
         <div class="bio">
             <div class="floating-label-group">
-                <select class="text-value editable inputdata" id="folkslag" name="system.bakgrund.folkslag" data-source="folkslag" style="width: 300px">    
-                    {{selectOptions listData.folkslag selected=actor.system.bakgrund.folkslag localize=false}}     
-                </select>
+                <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.folkslag" value="{{data.system.bakgrund.folkslag}}" />
                 <span class="floating-label skill-label">Folkslag</span>
             </div>
         </div>
@@ -99,6 +97,8 @@
                 <span class="floating-label skill-label">Sysselsättning</span>
             </div>
         </div>
+
+        
 
         
     </div>

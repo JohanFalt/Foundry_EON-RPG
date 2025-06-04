@@ -22,6 +22,11 @@
                         </div>
 
                     </div>    
+
+                    <div class="item-row">
+                        <div class="headline-checkbox">Folkslagsegenskap</div>
+                        <div><input class="modifiera-checkbox pointer" type="checkbox" data-type="installningar" data-key="folkslag" {{isChecked item.system.installningar.folkslag}} data-dtype="Boolean" /></div>
+                    </div>
                     
                     <div class="item-row">
                         <div class="headline-checkbox">Vapenegenskap</div>
@@ -58,7 +63,7 @@
 		<section class="item-body">   
             <div style="width: 450px;">
                 {{> "systems/eon-rpg/templates/items/parts/items-description.html"}}
-            </div>         
+            </div> 
 		</section>
 	</div>
 </form>

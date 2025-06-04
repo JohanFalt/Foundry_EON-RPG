@@ -1,0 +1,31 @@
+<div class="item-headline headline">Egenskaper</div>
+<div class="item-section" style="overflow-y: auto;">
+    <div style="max-height: 300px;">
+        <div class="item-row headline">
+            <div style="width: 150px;">Namn</div> 
+            <!-- <div class="centerText" style="width: 50px;">Nivå</div> -->
+            <div style="width: 200px;">Beskrivning</div>
+        </div>        
+
+        {{#each item.system.egenskaper as |egenskap key|}}    
+            <div class="item-row">
+                <div style="width: 150px;">{{egenskap.label}}</div>
+         <!--        <div class="centerText" style="width: 50px;">
+                    {{#if egenskap.harniva}}
+                        <i class="fa-solid fa-square-plus green pointer" data-source="egenskaper" data-key="{{key}}" data-property="varde"></i>
+                        {{egenskap.varde}}
+                        <i class="fa-solid fa-square-minus red pointer" data-source="egenskaper" data-key="{{key}}" data-property="varde"></i>                        
+                    {{else}}
+                        -
+                    {{/if}}
+                </div> -->
+                <div style="width: 200px;">{{{egenskap.beskrivning}}}</div>
+                <div class="pointer red item-delete" data-type="egenskaper" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
+            </div>  
+            
+        {{/each}}
+    </div>
+    
+</div>
+
+<div class="information-area information-box">För att lägga till en egenhet, dra den som skall användas från kompendiet (Folkslag/Folkslagsegenskaper) eller skapa en egen.</div>

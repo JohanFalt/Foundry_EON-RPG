@@ -13,7 +13,7 @@ export default class harleddegenskaper extends foundry.abstract.DataModel {
       const bonusInteger = {required: true, nullable: false, integer: true, initial: 0};      
 
       return {
-        forflyttning: new fields.SchemaField({
+        forflyttning: new fields.SchemaField({    
             grund: new fields.SchemaField({
                 tvarde: new fields.NumberField({...valueInteger}),
                 bonus: new fields.NumberField({...bonusInteger})
@@ -28,7 +28,7 @@ export default class harleddegenskaper extends foundry.abstract.DataModel {
                     nullable: false,
             }))
         }),
-        intryck: new fields.SchemaField({
+        intryck: new fields.SchemaField({       
             grund: new fields.SchemaField({
                 tvarde: new fields.NumberField({...valueInteger}),
                 bonus: new fields.NumberField({...bonusInteger})
@@ -43,7 +43,7 @@ export default class harleddegenskaper extends foundry.abstract.DataModel {
                     nullable: false,
             }))
         }),
-        kroppsbyggnad: new fields.SchemaField({
+        kroppsbyggnad: new fields.SchemaField({   
             grund: new fields.SchemaField({
                 tvarde: new fields.NumberField({...valueInteger}),
                 bonus: new fields.NumberField({...bonusInteger})
@@ -58,7 +58,7 @@ export default class harleddegenskaper extends foundry.abstract.DataModel {
                     nullable: false,
             }))
         }),
-        reaktion: new fields.SchemaField({
+        reaktion: new fields.SchemaField({     
             grund: new fields.SchemaField({
                 tvarde: new fields.NumberField({...valueInteger}),
                 bonus: new fields.NumberField({...bonusInteger})
@@ -73,7 +73,7 @@ export default class harleddegenskaper extends foundry.abstract.DataModel {
                     nullable: false,
             }))
         }),
-        sjalvkontroll: new fields.SchemaField({
+        sjalvkontroll: new fields.SchemaField({   
             grund: new fields.SchemaField({
                 tvarde: new fields.NumberField({...valueInteger}),
                 bonus: new fields.NumberField({...bonusInteger})
@@ -88,7 +88,7 @@ export default class harleddegenskaper extends foundry.abstract.DataModel {
                     nullable: false,
             }))
         }),
-        vaksamhet: new fields.SchemaField({
+        vaksamhet: new fields.SchemaField({      
             grund: new fields.SchemaField({
                 tvarde: new fields.NumberField({...valueInteger}),
                 bonus: new fields.NumberField({...bonusInteger})
@@ -103,7 +103,7 @@ export default class harleddegenskaper extends foundry.abstract.DataModel {
                     nullable: false,
             }))
         }),
-        livskraft: new fields.SchemaField({
+        livskraft: new fields.SchemaField({   
             grund: new fields.SchemaField({
                 tvarde: new fields.NumberField({...valueInteger}),
                 bonus: new fields.NumberField({...bonusInteger})

@@ -32,72 +32,115 @@
     {{/if}}
 
     <div class="item-box">
-        <div class="large-headline">Utrustning</div>
-
-        <div class="headline headline-background item-row" style="line-height: 25px; width:100%;">
-            <div class="weapon-icon">
+        <div class="large-headline">Förvaring</div>
+        <div class="headline headline-background item-row item-listrow">
+            <div class="weapon-icon item-listbox">
                 <a class="item-create" title="Lägg till utrustning" data-type="utrustning">
                     <i class="fa-solid fa-square-plus green"></i>
                 </a>
             </div>
-            <div style="width: 220px;">Namn</div>
-            <div style="width: 50px;">Antal</div>
-            <div style="width: 50px;">Vikt</div>
-            <div>Behållare</div>
+            <div class="item-listbox" style="width: 230px;">Namn</div>
+            <div class="item-listbox" style="width: 50px;">Antal</div>
+            <div class="item-listbox" style="width: 50px;">Vikt</div>
+            <div class="item-listbox">Total vikt</div>
+        </div>    
+
+        {{{getEquipmentContainers actor}}}
+
+        <div class="information-area information-box">Utrustning kan dra/släpp till förvaring för snabb omstrukturering.</div>
+
+    </div>
+
+    <div class="item-box">
+        <div class="large-headline">Utrustning</div>
+        <div class="headline headline-background item-row item-listrow item-header">
+            <div class="item-listbox weapon-icon">
+                <a class="item-create" title="Lägg till utrustning" data-type="utrustning">
+                    <i class="fa-solid fa-square-plus green"></i>
+                </a>
+            </div>
+            <div class="item-listbox sortable" style="width: 230px;" data-sort="name" data-list="utrustning_foremal">
+                Namn 
+                {{#if (isSortedAsc 'utrustning_foremal' 'name')}}
+                    <i class="fa-solid fa-arrow-up"></i>
+                {{else if (isSortedDesc 'utrustning_foremal' 'name')}}
+                    <i class="fa-solid fa-arrow-down"></i>
+                {{else}}
+                    <i class="fa-solid fa-arrows-up-down"></i>
+                {{/if}}
+            </div>
+            <div class="item-listbox sortable" style="width: 150px;" data-sort="system.grupp" data-list="utrustning_foremal">
+                Grupp 
+                {{#if (isSortedAsc 'utrustning_foremal' 'system.grupp')}}
+                    <i class="fa-solid fa-arrow-up"></i>
+                {{else if (isSortedDesc 'utrustning_foremal' 'system.grupp')}}
+                    <i class="fa-solid fa-arrow-down"></i>
+                {{else}}
+                    <i class="fa-solid fa-arrows-up-down"></i>
+                {{/if}}
+            </div>
+            <div class="item-listbox" style="width: 50px;">Antal</div>
+            <div class="item-listbox" style="width: 50px;">Vikt</div>
+            <div class="item-listbox">Antal per enhet</div>
         </div>
 
         {{#each actor.system.listdata.utrustning.foremal as |foremal key|}}
-            <div class="item-row" style="line-height: 25px; width:100%;">
-                <div class="weapon-icon"><a class="item-edit" title="Editera utrustning" data-source="utrustning" data-itemid="{{foremal._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
-                {{#if (eq foremal.system.beskrivning "")}}
-                    <div class="weapon-icon"><i class="icon fa-regular fa-share"></i></div>
-                {{else}}
-                    <div class="weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{foremal._id}}"><i class="icon fa-solid fa-share"></i></a></div>
-                {{/if}}
-                <div class="active-icon"><input class="pointer item-active" name="foremal.system.installningar.buren" type="checkbox" data-itemid="{{foremal._id}}" data-property="buren" {{isChecked foremal.system.installningar.buren}} /></div>
-                <div style="width: 180px;" data-source="utrustning data-itemid="{{foremal._id}}">{{foremal.name}}</div>
-                <div style="width: 50px;">
-                    <i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="{{foremal._id}}"></i>
-                    {{foremal.system.antal}}
-                    <i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="{{foremal._id}}"></i>
-                </div>
-                <div style="width: 50px;">
-                    {{#if (eq foremal.system.vikt 0)}}
-                        -
+
+            {{#if (and (not foremal.system.installningar.forvaring) (eq foremal.system.installningar.forvaringid ""))}}
+                <div class="item-row item-listrow">
+                    <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera utrustning" data-source="utrustning" data-itemid="{{foremal._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+                    {{#if (eq foremal.system.beskrivning "")}}
+                        <div class="item-listbox weapon-icon"><i class="icon fa-regular fa-share" title="Beskrivning saknas"></i></div>
                     {{else}}
-                        {{round (multiplicate foremal.system.vikt foremal.system.antal) 2}}kg
+                        <div class="item-listbox weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{foremal._id}}"><i class="icon fa-solid fa-share"></i></a></div>
+                    {{/if}}
+                    <div class="item-listbox active-icon"><input class="pointer item-active" name="foremal.system.installningar.buren" type="checkbox" data-itemid="{{foremal._id}}" data-property="buren" {{isChecked foremal.system.installningar.buren}} title="Buren utrustning" /></div>
+                    <div class="item-listbox draggable" style="width: 180px;" data-source="utrustning" data-itemid="{{foremal._id}}">{{foremal.name}}</div>
+                    <div class="item-listbox" style="width: 150px;">{{getEquipmentGroupName foremal.system.grupp}}</div>
+                    <div class="item-listbox" style="width: 50px;">
+                        <i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="{{foremal._id}}"></i>
+                        <span class="number-of-text">{{foremal.system.antal}}</span>
+                        <i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="{{foremal._id}}"></i>
+                    </div>
+                    <div class="item-listbox" style="width: 50px;">
+                        {{#if (eq foremal.system.vikt 0)}}
+                            -
+                        {{else}}
+                            {{round (multiplicate foremal.system.vikt foremal.system.antal) 2}}kg
+                        {{/if}}
+                    </div>
+                    {{#if foremal.system.installningar.behallare}}
+                        <!-- <div class="item-listbox">{{foremal.system.volym.antal}} {{foremal.system.volym.enhet}} av {{foremal.system.volym.max}} {{foremal.system.volym.enhet}}</div> -->
+                        <div class="item-listbox">{{foremal.system.volym.antal}} {{foremal.system.volym.enhet}}</div>
                     {{/if}}
                 </div>
-                {{#if foremal.system.installningar.behallare}}
-                    <div>{{foremal.system.volym.antal}} {{foremal.system.volym.enhet}} av {{foremal.system.volym.max}} {{foremal.system.volym.enhet}}</div>
-                {{/if}}
-            </div>
+            {{/if}}
         {{/each}}
     </div>
 
     <div class="item-box">
-        <div class="headline headline-background item-row" style="line-height: 25px; width:100%;">
-            <div class="weapon-icon">
+        <div class="headline headline-background item-row item-listrow">
+            <div class="item-listbox weapon-icon">
                 <a class="item-create" title="Lägg till valuta" data-type="valuta">
                     <i class="fa-solid fa-square-plus green"></i>
                 </a>
             </div>
-            <div style="width: 25px;">&nbsp;</div>
-            <div style="width: 125px;">Valuta</div>
-            <div style="width: 100px; padding-left: 25px;">Antal</div>
-            <div style="width: 75px; padding-left: 20px;">Värde</div>
-            <div style="width: 50px; padding-left: 20px;">Vikt</div>            
+            <div class="item-listbox" style="width: 230px;">Valuta</div>
+            <div class="item-listbox" style="width: 100px; padding-left: 10px;">Antal</div>
+            
+            <div class="item-listbox" style="width: 75px;">Värde</div>
+            <div class="item-listbox" style="width: 50px;">Vikt</div>            
         </div>
 
         {{#each actor.system.listdata.valuta as |valuta key|}}
-            <div class="item-row" style="line-height: 25px; width:100%;">
-                <div class="weapon-icon"><a class="item-edit" title="Editera valuta" data-source="valuta" data-itemid="{{valuta._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="item-row item-listrow">
+                <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera valuta" data-source="valuta" data-itemid="{{valuta._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
                 {{#if (eq valuta.system.beskrivning "")}}
-                    <div class="weapon-icon"><i class="icon fa-regular fa-share"></i></div>
+                    <div class="item-listbox weapon-icon"><i class="icon fa-regular fa-share"></i></div>
                 {{else}}
-                    <div class="weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{valuta._id}}"><i class="icon fa-solid fa-share"></i></a></div>
+                    <div class="item-listbox weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{valuta._id}}"><i class="icon fa-solid fa-share"></i></a></div>
                 {{/if}}
-                <div class="active-icon">
+                <div class="item-listbox active-icon">
                     <input class="pointer item-active" 
                            name="valuta.system.installningar.buren" 
                            type="checkbox" 
@@ -105,10 +148,10 @@
                            data-property="buren" 
                            {{isChecked valuta.system.installningar.buren}} />
                 </div>
-                <div style="width: 125px;" data-source="valuta" data-itemid="{{valuta._id}}">{{valuta.name}}</div>
-                <div style="width: 100px;"><input class="attribute-value editable item-alter" type="text" value="{{valuta.system.antal}}" data-itemid="{{valuta._id}}" data-property="antal" data-datatype="Number" /> st</div>
-                <div style="width: 75px;">{{formatDecimal (multiplicate valuta.system.silver_varde valuta.system.antal)}} sm</div>
-                <div style="width: 50px;">{{formatDecimal (multiplicate valuta.system.vikt valuta.system.antal)}} kg</div>
+                <div class="item-listbox" style="width: 180px;" data-source="valuta" data-itemid="{{valuta._id}}">{{valuta.name}}</div>
+                <div class="item-listbox" style="width: 100px;"><input class="attribute-value editable item-alter" type="text" value="{{valuta.system.antal}}" data-itemid="{{valuta._id}}" data-property="antal" data-datatype="Number" /> st</div>
+                <div class="item-listbox" style="width: 75px;">{{formatDecimal (multiplicate valuta.system.silver_varde valuta.system.antal)}} sm</div>
+                <div class="item-listbox" style="width: 50px;">{{formatDecimal (multiplicate valuta.system.vikt valuta.system.antal)}} kg</div>
             </div>
         {{/each}}
     </div>

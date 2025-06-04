@@ -1,11 +1,11 @@
 {
     "id": "eon-rpg",
-    "title": "Eon IV RPG",
-    "version": "3.1.2",
+    "title": "Eon RPG",
+    "version": "4.0.0",
     "compatibility": {
-        "minimum": "12",
-        "verified": "12",
-        "maximum": "12"
+        "minimum": "13",
+        "verified": "13",
+        "maximum": "13"
     },
     "authors": [{
         "name": "Johan Fält",
@@ -104,6 +104,23 @@
             }
         },
         {
+            "name": "utrustning",
+            "label": "Utrustning",
+            "system": "eon-rpg",
+            "path": "packs/utrustning",
+            "type": "Item",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "grundbok",
+                        "foremal",
+                        "utrustning"
+                    ]
+                }
+            }
+        },
+        {
             "name": "vandningar",
             "label": "Vändningar",
             "system": "eon-rpg",
@@ -167,6 +184,56 @@
                     ]
                 }
             }
+        },
+        {
+            "name": "folkslag",
+            "label": "Folkslag",
+            "system": "eon-rpg",
+            "path": "packs/folkslag",
+            "type": "Item",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "grundbok",
+                        "folkslag"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "folkslagegenskaper",
+            "label": "Folkslagsegenskaper",
+            "system": "eon-rpg",
+            "path": "packs/folkslagegenskaper",
+            "type": "Item",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "grundbok",
+                        "egenskaper",
+                        "folkslag"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "sprak",
+            "label": "Språk",
+            "system": "eon-rpg",
+            "path": "packs/sprak",
+            "type": "Item",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "grundbok",
+                        "språk",
+                        "folkslag"
+                    ]
+                }
+            }
         }
     ],
     "packFolders": [{
@@ -176,6 +243,16 @@
         "packs": [],
         "folders": [
             {
+                "name": "Folkslag",
+                "sorting": "m",
+                "color": "#b72c1f",
+                "packs": [
+                    "folkslag",
+                    "folkslagegenskaper",
+                    "sprak"
+                ]
+            },
+            {
                 "name": "Föremål",
                 "sorting": "m",
                 "color": "#b72c1f",
@@ -183,7 +260,8 @@
                     "narstridsvapen",
                     "avstandsvapen",
                     "skoldar",
-                    "vapenegenskaper"
+                    "vapenegenskaper",
+                    "utrustning"
                 ]
             },
             {
@@ -206,6 +284,14 @@
             }
         ]
     }],
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "lang/en.json",
+            "flags": {}
+        }
+    ],
     "initiative": "@harleddegenskaper.initiativ.tarning + @harleddegenskaper.initiativ.bonus",
     "primaryTokenAttribute": "skada.utmattning.varde",
     "grid": {
@@ -213,8 +299,8 @@
         "gridUnits": "m"
     },  
     "url": "https://github.com/JohanFalt/Foundry_EON-RPG",
-    "manifest": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/3.1.2/system.json",  
-    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/archive/refs/tags/3.1.2.zip",
+    "manifest": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v4.0.0/system.json",  
+    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v4.0.0/v4.0.0.zip",
     "bugs": "https://github.com/JohanFalt/Foundry_EON-RPG/issues",
     "license": "LICENSE.txt"
 }

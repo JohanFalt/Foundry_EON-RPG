@@ -1,0 +1,39 @@
+<div style="min-width: 110px;">
+    <img src="{{item.img}}" class="item img-block" />
+</div>
+
+<div class="item-column">
+    <div class="item-column" style="min-width: 270px;">
+        <div class="item-property-area floating-label-group">
+            <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
+            <span class="floating-label">Namn</span>
+        </div> 
+
+        <div class="headline">
+            <div class="attribute-area">Grundattribut</div>
+        </div>
+
+        {{#each EON.CONFIG.grundegenskaper as |attribute key|}}    
+            <div>
+                <div class="attribute clear">
+                    <div class="vrollable pullLeft caption">{{attribute.namn}}</div>
+                    <div class="pullLeft dice-value tic pointer" data-property="grundegenskaper.{{key}}.grund">{{getDiceValue (getActorAttribute ../item "grundegenskaper" key)}}</div>
+                </div>
+            </div>        
+        {{/each}}
+    </div>
+
+    <div class="item-column">
+        <div class="item-headline headline">Språk</div>
+
+        {{#each item.system.sprak as |sprak key|}}    
+            <div class="item-row">
+                <div style="width: 200px;">{{sprak.name}}</div>
+                <div class="pointer red item-delete" data-type="sprak" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
+            </div>  
+            
+        {{/each}}
+
+        <div class="information-area information-box">För att lägga till ett språk, dra den som skall användas från kompendiet (Folkslag/Språk) eller skapa en egen.</div>
+    </div>
+</div>

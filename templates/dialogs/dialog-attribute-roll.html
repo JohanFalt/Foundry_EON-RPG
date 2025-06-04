@@ -37,13 +37,15 @@
                         <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1">-1</button>
                     </div>
                 </div>
-                <div class="centerText">
-                    {{#if (lt object.grundBonus 0)}}
-                        Ob<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.tvarde}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.bonus}}" disabled readonly />
+                <div class="centerText">Totalt: 
+                    {{#if (lt object.visaTarning.bonus 0)}}
+                        Ob{{object.visaTarning.tvarde}}T6{{object.visaTarning.bonus}}
+
+                    {{else if (gt object.visaTarning.bonus 0)}}
+                        Ob{{object.visaTarning.tvarde}}T6+{{object.visaTarning.bonus}}
                     {{else}}
-                        Ob<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.tvarde}}" disabled readonly />T6+<input class="attribute-value skill-label" type="text" value="{{object.visaTarning.bonus}}" disabled readonly />
-                    {{/if}}
-                    
+                        Ob{{object.visaTarning.tvarde}}T6
+                    {{/if}}                    
                 </div>
                 
             </div>

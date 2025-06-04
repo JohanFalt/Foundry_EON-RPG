@@ -25,6 +25,9 @@ export class DialogAttribute {
             if (actor.type.toLowerCase().replace(" ", "") == "rollperson") {
                 this.#_isPC = true;
             }
+            else if (actor.type.toLowerCase().replace(" ", "") == "rollperson5") {
+                this.#_isPC = true;
+            }
         }        
 
         this.#_attributeType = type;
@@ -42,6 +45,9 @@ export class DialogAttribute {
             }
             if ((this.#_isPC) && (this.#_attributeType == 'harleddegenskaper')) {
                 this.#_canTic = false;
+            }
+            if ((this.#_isPC) && (this.#_attributeType == 'harleddegenskaper') && (actor.system.installningar.eon === "eon5")) {
+                this.#_canTic = true;
             }
         }
         else {
@@ -239,7 +245,7 @@ export class DialogAttributeEdit extends FormApplication {
         }    
 
         if (data.hasDescription) {
-            data.enrichedBeskrivning = await TextEditor.enrichHTML(this.object.attributeDescription);
+            data.enrichedBeskrivning = await foundry.applications.ux.TextEditor.implementation.enrichHTML(this.object.attributeDescription);
         }
 
         if (this.object.attributeType == "grundegenskaper") {

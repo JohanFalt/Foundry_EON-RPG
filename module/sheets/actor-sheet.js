@@ -1,3 +1,4 @@
+import ActorHelper from "../actor-helper.js";
 import DialogHelper from "../dialog-helper.js";
 import CreateHelper from "../create-helper.js";
 import ItemHelper from "../item-helper.js";
@@ -6,12 +7,13 @@ import SelectHelper from "../select-helpers.js"
 import { SendMessage } from "../dice-helper.js";
 import { datavaluta } from '../../packs/valuta.js';
 
-export default class EonActorSheet extends ActorSheet {
+
+export default class EonActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     /** @override */
     static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
-            classes: ["EON rollperson"],
+            classes: ["EON EON4 rollperson"],
             tabs: [{
                 navSelector: ".sheet-tabs",
                 contentSelector: ".sheet-body",
@@ -29,6 +31,13 @@ export default class EonActorSheet extends ActorSheet {
         this.isPC = true;
 		this.isGM = game.user.isGM;	
         this.datavaluta = datavaluta;	
+
+        // sortering
+        this.sortState = {
+            utrustning_foremal: { key: 'name', asc: true },
+            abilities: { key: 'type', asc: false },
+            spells: { key: 'level', asc: true }
+        };
     }
 
     /** @override */
@@ -55,15 +64,18 @@ export default class EonActorSheet extends ActorSheet {
         const version = game.data.system.version;	
 
 		if (!actorData.system.installningar.skapad) {
+            if (actorData.system.installningar.eon != "eon4") {
+                actorData.system.installningar.eon = "eon4";
+            }            
+
             await CreateHelper.SkapaFardigheter(this.actor, CONFIG.EON, version);
             await CreateHelper.SkapaKaraktarsdrag(actorData);
             await CreateHelper.SkapaKaraktarsdrag(actorData);
-            //await CreateHelper.SkapaNarstridsvapen(this.actor, CONFIG.EON, "slagsmal", "obevapnad", version, true);
             const vapenlista = await ItemHelper.GetWeapon("narstridsvapen");
             await CreateHelper.SkapaNarstridsvapen(this.actor, "obevapnad", vapenlista, version, true);
 
             actorData.system.installningar.skapad = true;
-            actorData.system.installningar.version = version;
+            actorData.system.installningar.version = version;            
             await this.actor.update(actorData);
 		}	
         else {
@@ -71,11 +83,25 @@ export default class EonActorSheet extends ActorSheet {
             await this.actor.update(actorData);
         }
 
-        //ItemHelper.CreateCloseWeapon();
-        //ItemHelper.CreateRangeWeapon();
-        //ItemHelper.CreateShield();
-        
         const data = await super.getData();	
+
+        // sortering
+        const sortList = (items, state) => {
+            const { key, asc } = state || {};
+            if (!key) return items;
+
+            return items.sort((a, b) => {
+                let valA = getProperty(a, key) ?? '';
+                let valB = getProperty(b, key) ?? '';
+
+                if (typeof valA === 'string') valA = valA.toLowerCase();
+                if (typeof valB === 'string') valB = valB.toLowerCase();
+
+                if (valA < valB) return asc ? -1 : 1;
+                if (valA > valB) return asc ? 1 : -1;
+                return 0;
+            });
+        };
 
         data.EON = game.EON;
         data.EON.CONFIG = CONFIG.EON;
@@ -190,9 +216,9 @@ export default class EonActorSheet extends ActorSheet {
                     data.actor.system.listdata.magi.faltstorning.push(item);
                 }
             }
-            if ((item.type == "Folkslag") && (data.actor.system.bakgrund.folkslag == "custom")) {
-                data.actor.system.altvarde.folkslag = item.name;
-            }            
+            // if ((item.type == "Folkslag") && (data.actor.system.bakgrund.folkslag == "custom")) {
+            //     data.actor.system.altvarde.folkslag = item.name;
+            // }            
         }
 
         for (const grupp in CONFIG.EON.fardighetgrupper) {
@@ -203,6 +229,10 @@ export default class EonActorSheet extends ActorSheet {
         data.actor.system.listdata.utrustning.vapen.avstand = data.actor.system.listdata.utrustning.vapen.avstand.sort((a, b) => a.name.localeCompare(b.name));
         data.actor.system.listdata.utrustning.vapen.skold = data.actor.system.listdata.utrustning.vapen.skold.sort((a, b) => a.name.localeCompare(b.name));
         data.actor.system.listdata.utrustning.rustning = data.actor.system.listdata.utrustning.rustning.sort((a, b) => a.name.localeCompare(b.name));
+        data.actor.system.listdata.utrustning.foremal = sortList(
+            data.actor.system.listdata.utrustning.foremal,
+            this.sortState.utrustning_foremal
+        );
 
         data.actor.system.listdata.valuta = data.actor.items
             .filter(item => item.type === "Valuta")
@@ -254,7 +284,10 @@ export default class EonActorSheet extends ActorSheet {
         }
 
         data.listData = SelectHelper.SetupActor(data.actor);
-        data.enrichedBeskrivning = await TextEditor.enrichHTML(this.actor.system.bakgrund.beskrivning);
+        data.enrichedBeskrivning = await foundry.applications.ux.TextEditor.implementation.enrichHTML(this.actor.system.bakgrund.beskrivning);
+
+        // sortering
+        data.sheet = this;
 
         console.log(data.actor.name);
         console.log(data.actor);
@@ -287,9 +320,14 @@ export default class EonActorSheet extends ActorSheet {
             .click(this._clickedCircle.bind(this));
 
         // Rollable stuff
-		html
-            .find(".vrollable")
-            .click(this._onRollDialog.bind(this));
+		// html
+        //     .find(".vrollable")
+        //     .click(this._onRollDialog.bind(this));
+        html.find(".vrollable").click((event) => {
+            if (event.currentTarget.dataset.wasDragged) return;
+            this._onRollDialog(event);
+        });
+
 
         // item handling
         html
@@ -319,6 +357,26 @@ export default class EonActorSheet extends ActorSheet {
         html
             .find('.weapon-count')
             .click(this._onWeaponCountChange.bind(this));
+
+        html.find('.draggable').each((i, element) => {
+            ActorHelper.HandleDragDrop(this, this.actor, html, element);
+        }); 
+
+        html.find('.sortable').click(ev => {
+            const header = event.currentTarget;
+            const key = header.dataset.sort;
+            const listName = header.dataset.list;
+
+            if (!key || !listName) return;
+
+            const currentState = this.sortState[listName] || {};
+            const isSameKey = currentState.key === key;
+            const asc = isSameKey ? !currentState.asc : true;
+
+            this.sortState[listName] = { key, asc };
+
+            this.render(false);
+        });
     }
  
     /** @override */
@@ -332,17 +390,35 @@ export default class EonActorSheet extends ActorSheet {
             return false;
         }
 
-        const droppedItem = await Item.implementation.fromDropData(_data);
+        let update = false;
+        let itemData = undefined;
 
+        const droppedItem = await Item.implementation.fromDropData(_data);
+        
         if ((droppedItem.type == "Folkslag") && (this.actor.type.toLowerCase().replace(" ", "") == "rollperson")) {
             await this.LaggtillFolkslag(droppedItem);
+        }
+        else if ((droppedItem.type == "Utrustning") && (droppedItem.system.installningar.behallare) && (this.actor.type.toLowerCase().replace(" ", "") == "rollperson")) {
+            itemData = foundry.utils.duplicate(droppedItem);            
+            itemData.system.antal = parseInt(droppedItem.system.volym.antal);     
+            update = true;       
         }
         else if (droppedItem.type == "Folkslag") {
             ui.notifications.warn(`Folkslag kan inte läggas till denna typ av Actor '${this.actor.type}'.`);
             return false;
         }  
         
-        super._onDropItem(_event, _data)
+        if (droppedItem.system.installningar.eon !== "eon4") {           
+            update = true;
+        }
+
+        if (update) {
+            if (itemData == undefined) {
+                itemData = foundry.utils.duplicate(droppedItem);            
+            }
+            itemData.system.installningar.eon = "eon4";
+            await this.actor.createEmbeddedDocuments('Item', [itemData])
+        }
     }
 
     /** @override */
@@ -356,7 +432,7 @@ export default class EonActorSheet extends ActorSheet {
             return false;
         }
 
-        const droppedItem = await Item.implementation.fromDropData(_data);          
+        const droppedItem = await Actor.implementation.fromDropData(_data);          
         
         super._onDropActor(_event, _data)
     }
@@ -372,15 +448,24 @@ export default class EonActorSheet extends ActorSheet {
                 title: "Varning!",
                 yes: () => resolve(true),
                 no: () => resolve(false),
-                content: "Om du byter folkslag kommer alla ändringar du gjort på dina grundegenskaper att nollställas enligt det nya folkslaget"
+                content: "Om du byter folkslag kommer alla ändringar du gjort på dina grundegenskaper, språk och egenskaper att nollställas enligt det nya folkslaget"
             });
         });
 
         if (!performDelete) 
             return false;
 
-        // we only allow one species and one career, find any other species and remove them.
-        const itemToDelete = this.actor.items.filter((i) => (i.type === droppedItem.type) && (i.id !== droppedItem.id));
+        // ta bort alla typer av folkslag som redan finns
+        let itemToDelete = this.actor.items.filter((i) => (i.type === droppedItem.type) && (i.id !== droppedItem.id));
+        itemToDelete.forEach((i) => {
+            this.actor.items.get(i.id).delete();
+        });
+        // rensa bort alla gamla egenskaper som folkslaget lagt till
+        itemToDelete = this.actor.items.filter((i) => (i.type === "Egenskap") && (i.system.installningar.folkslag === true));
+        itemToDelete.forEach((i) => {
+            this.actor.items.get(i.id).delete();
+        });
+        itemToDelete = this.actor.items.filter((i) => (i.type === "Språk"));
         itemToDelete.forEach((i) => {
             this.actor.items.get(i.id).delete();
         });
@@ -393,15 +478,18 @@ export default class EonActorSheet extends ActorSheet {
             actorData.system.grundegenskaper[grundegenskap].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.grundegenskaper[grundegenskap]);
         }
 
-        actorData.system.bakgrund.folkslag = "custom";
+        actorData.system.bakgrund.folkslag = droppedItem.name;
 
         await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
         await this.actor.update(actorData);
+        await ItemHelper.AddAncestryProperty(this.actor, droppedItem);
+        await ItemHelper.AddAncestryLanguage(this.actor, droppedItem);
 
         ui.notifications.info(`Folkslag '${droppedItem.name}' tillagt på '${this.actor.name}'.`);
 
         return true;
     }
+    
 
     /**
         * Aktiveras om man klickat på något för att slå ett tärningsslag. Saknas slaget man skickar in får man ett felmeddelande.
@@ -651,7 +739,7 @@ export default class EonActorSheet extends ActorSheet {
         const headline = `${item.name} (${item.type.toLowerCase()})`;
         const message = item.system.beskrivning;
         
-        const enrichedMessage = TextEditor.enrichHTML(`${message}`, { async: false });
+        const enrichedMessage = await foundry.applications.ux.TextEditor.implementation.enrichHTML(`${message}`, { async: true });
 
         SendMessage(this.actor, CONFIG.EON, headline, enrichedMessage);        
     }
@@ -669,63 +757,6 @@ export default class EonActorSheet extends ActorSheet {
 		const source = dataset.source;
 		const actorData = foundry.utils.duplicate(this.actor);
 
-        if (source == "folkslag") {
-            var e = document.getElementById("folkslag");
-
-            if (e.value == "custom") {
-                DialogHelper.AttributeEditDialog(this.actor, "bakgrund", source);
-                return;
-            }
-            else {
-                let data = game.EON.folkslag[e.value];
-
-                if (data?.lakningstakt) {
-                    actorData.system.strid.lakningstakt = {
-                        varde: data.lakningstakt,
-                        totalt: data.lakningstakt,
-                        bonuslista: []
-                    };
-                }
-
-                if ((data == undefined) || (data?.namn == undefined)) {
-                    return;
-                }
-    
-                if (this.actor.system.bakgrund.folkslag != "") {
-                    const performDelete = await new Promise((resolve) => {
-                        Dialog.confirm({
-                            title: "Varning!",
-                            yes: () => resolve(true),
-                            no: () => resolve(false),
-                            content: "Om du byter folkslag kommer alla ändringar du gjort på dina grundegenskaper att nollställas enligt det nya folkslaget"
-                        });
-                    });
-    
-                    if (!performDelete)
-                        return;
-                }
-
-                const itemToDelete = this.actor.items.filter((i) => (i.type === "Folkslag"));
-                itemToDelete.forEach((i) => {
-                    this.actor.items.get(i.id).delete();
-                });
-    
-                for (const egenskap in data.grundegenskaper) {
-                    actorData.system.grundegenskaper[egenskap].grund.tvarde = data.grundegenskaper[egenskap].tvarde;
-                    actorData.system.grundegenskaper[egenskap].grund.bonus = data.grundegenskaper[egenskap].bonus;
-                    actorData.system.grundegenskaper[egenskap].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.grundegenskaper[egenskap]);
-                }
-
-                await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
-
-                actorData.system.strid.lakningstakt.varde = data.lakningstakt;
-                actorData.system.bakgrund.folkslag = e.value;            
-
-                await this.actor.update(actorData);
-                this.render();
-                return;
-            }   
-        }		
         if (source == "miljo") {
             var e = document.getElementById("miljo");
 
@@ -882,7 +913,6 @@ export default class EonActorSheet extends ActorSheet {
 
         if (type != undefined) {
             if (type == "karaktarsdrag") {
-                //let karaktarsdrag = actorData.system.egenskap.karaktärsdrag[index];
                 let fields = dataset.name.split(".");
                 let newvalue = Number(dataset.value);
 
@@ -955,8 +985,3 @@ export default class EonActorSheet extends ActorSheet {
         await item.update(itemData);
     }
 }
-
-Handlebars.registerHelper('round', function(value, decimals) {
-    return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
-});
-

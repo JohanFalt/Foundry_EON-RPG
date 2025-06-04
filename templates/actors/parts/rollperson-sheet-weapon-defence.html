@@ -22,34 +22,34 @@
     </div>
     <div>
         {{#each actor.system.listdata.utrustning.vapen.skold as |skold key|}}
-        <div class="item-row" style="line-height: 25px; width:100%;">
-            <div class="weapon-icon"><a class="item-edit" title="Editera sköld" data-source="defence" data-itemid="{{skold._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
-            {{#if (eq skold.system.beskrivning "")}}
-                <div class="weapon-icon"><i class="icon fa-regular fa-share"></i></div>
-            {{else}}
-                <div class="weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{skold._id}}"><i class="icon fa-solid fa-share"></i></a></div>
-            {{/if}}
-            <div class="active-icon"><input class="pointer item-active" title="Bära sköld" name="skold.system.installningar.buren" type="checkbox" data-itemid="{{skold._id}}" data-property="buren" {{isChecked skold.system.installningar.buren}} /></div>
-            <div class="vrollable" style="width: 125px;" data-source="weapon" data-itemid="{{skold._id}}">{{skold.name}}</div>
-            <div class="centerText  " style="width: 75px;">{{getDiceValue (getActorSkillGroupValue ../actor skold.system.grupp "strid")}}</div>
-            <div class="centerText  " style="width: 55px;">{{getDiceValue skold.system.narstrid}}</div>
-            <div class="centerText  " style="width: 55px;">{{getDiceValue skold.system.avstand}}</div>
-            <div class="centerText  " style="width: 60px;">{{skold.system.skydd}}</div>
-            <div class="centerText  " style="width: 70px;">{{#if (eq skold.system.skada.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues skold.system.skada ../actor.system.harleddegenskaper.grundskada.totalt)}} {{{getWeaponDamageType skold.system.skadetyp}}}{{/if}}</div>
-            <div class="centerText  " style="width: 50px;">
-                <i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="{{skold._id}}"></i>
-                {{skold.system.antal}}
-                <i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="{{skold._id}}"></i>
-            </div>
-            <div class="centerText  " style="width: 50px;">
-                {{#if (eq skold.system.vikt 0)}}
-                    -
+            <div class="item-row item-listrow">
+                <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera sköld" data-source="defence" data-itemid="{{skold._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+                {{#if (eq skold.system.beskrivning "")}}
+                    <div class="item-listbox weapon-icon"><i class="icon fa-regular fa-share"></i></div>
                 {{else}}
-                    {{round (multiplicate skold.system.vikt skold.system.antal) 2}}kg
+                    <div class="item-listbox weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{skold._id}}"><i class="icon fa-solid fa-share"></i></a></div>
                 {{/if}}
+                <div class="item-listbox active-icon"><input class="pointer item-active" title="Bära sköld" name="skold.system.installningar.buren" type="checkbox" data-itemid="{{skold._id}}" data-property="buren" {{isChecked skold.system.installningar.buren}} /></div>
+                <div class="item-listbox vrollable draggable" style="width: 125px;" data-source="weapon" data-itemid="{{skold._id}}">{{skold.name}}</div>
+                <div class="item-listbox centerText" style="width: 75px;">{{getDiceValue (getActorSkillGroupValue ../actor skold.system.grupp "strid")}}</div>
+                <div class="item-listbox centerText" style="width: 55px;">{{getDiceValue skold.system.narstrid}}</div>
+                <div class="item-listbox centerText" style="width: 55px;">{{getDiceValue skold.system.avstand}}</div>
+                <div class="item-listbox centerText" style="width: 60px;">{{skold.system.skydd}}</div>
+                <div class="item-listbox centerText" style="width: 70px;">{{#if (eq skold.system.skada.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues skold.system.skada ../actor.system.harleddegenskaper.grundskada.totalt)}} {{{getWeaponDamageType skold.system.skadetyp}}}{{/if}}</div>
+                <div class="item-listbox centerText" style="width: 50px;">
+                    <i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="{{skold._id}}"></i>
+                    <span class="number-of-text">{{skold.system.antal}}</span>
+                    <i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="{{skold._id}}"></i>
+                </div>
+                <div class="item-listbox centerText" style="width: 50px;">
+                    {{#if (eq skold.system.vikt 0)}}
+                        -
+                    {{else}}
+                        {{round (multiplicate skold.system.vikt skold.system.antal) 2}}kg
+                    {{/if}}
+                </div>
+                <div class="item-listbox">{{shorten (getPropertyList skold.system.egenskaper) 40 false}}</div>
             </div>
-            <div>{{shorten (getPropertyList skold.system.egenskaper) 50 false}}</div>
-        </div>
         {{/each}}
     </div>
 </div>

@@ -1,5 +1,3 @@
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
-
 /* Imported Fonts */
 @font-face {
     font-family: "stor-rubrik";
@@ -37,6 +35,7 @@
     --eon-font-tabsize: 14px;
 
     --eon-line-height-default: 23px;
+    --eon-row-height-default: 25px;
     --eon-line-height-floattext: 25px;
 
     --eon-sheet-background-color: url('../assets/img/graphics/background.jpg');
@@ -57,6 +56,10 @@
 }
 
 /* Sheet */
+
+.EON5 .vrollable.caption.normalskill {
+    width: 55%;
+}
 
 .EON:not(.general-dialog) .window-content {
     padding: 0px;
@@ -83,7 +86,8 @@
     height: 600px;
 }
 
-.EON.itemsheet.vapen:not(.minimized) {
+.EON.itemsheet.vapen:not(.minimized),
+.EON.itemsheet.folkslag:not(.minimized) {
     min-width: 700px;
     max-width: 700px;
     width: 700px;
@@ -232,6 +236,26 @@
 
 .EON .sheet-box {
     width: 100%;
+}
+
+/* Drag n drop */
+
+.EON .hover-target {
+    outline: 2px dashed rgb(147, 147, 147);
+    transition: all 0.2s ease;
+    margin-left: 2px;
+    height: 25px;
+}
+
+/* Sortering */
+
+.EON .item-header, .item-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* Anpassa efter behov */
+  /* gap: 0.5em; */
+}
+.EON .sortable {
+  cursor: pointer;
 }
 
 /* General */
@@ -391,6 +415,10 @@
     width: 33%;
 }
 
+.EON .three-inner-column {
+    width: 30%;
+}
+
 .EON .four-column {
     width: 25%;
 }
@@ -491,6 +519,36 @@
 
 .EON .headline-background i {
     font-size: 16px;
+}
+
+.EON .item-listrow {
+    line-height: 25px;
+    width: 100%;
+    height: 25px;
+}
+
+.EON .item-listbox {
+    line-height: 25px;
+    height: 25px;
+    display: inline-flex;
+    box-sizing: border-box;
+    align-items: center;
+}
+
+.EON .item-listbox.centerText {
+    justify-content: center;
+}
+
+.EON .item-listbox img {
+  height: 15px;                /* Justera beroende på ikonstorlek */
+  width: auto;
+  display: block;              /* Ta bort extra utrymme under bilden */
+}
+
+.EON .centerText .img-icon {
+  display: inline-block; /* eller ta bort "display: block" om det finns */
+  max-width: 100%;
+  height: auto;
 }
 
 /* Slå tärning */
@@ -688,7 +746,7 @@
 
 .EON input.attribute-value {   
     text-align: left;
-    padding: 12px 5px;
+    /* padding: 12px 5px; */
     box-sizing: border-box; 
     width: 60px;
     height: var(--eon-line-height-default);
@@ -719,7 +777,7 @@
 
 .EON.itemsheet select.text-value {   
     width: 75%;
-    position-left: relative;
+    position: relative;
     left: 2px;
     padding: 5px;
 }
@@ -737,8 +795,15 @@
     margin-left: 12px;
 }
 
-.avtrubbning-column {
+.EON .avtrubbning-column {
     width: 90%
+}
+
+/* RADER */
+
+.EON span.number-of-text {
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 /* FÄRDIGHETER */
@@ -821,6 +886,12 @@ input.skill-value {
     height: 200px;
 }
 
+/* BAKGRUND */
+
+.EON .description-row p {
+    margin: 0;
+}
+
 /* ITEMS */
 
 .EON.itemsheet .item-area {
@@ -886,6 +957,10 @@ input.skill-value {
 .EON.itemsheet .item-property-area {
     height: 32px;
     width: 280px;
+}
+
+.EON.itemsheet .clear .pullLeft.item-property-area {
+    width: 70px;
 }
 
 .tic-container {    

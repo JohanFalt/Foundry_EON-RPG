@@ -18,6 +18,7 @@ export default class EonVarelse extends foundry.abstract.DataModel {
         const schema = {};
         schema.installningar = new fields.SchemaField({
             ...installningar(),
+            eon: new fields.StringField({required: true, initial: ""}),
             varelsemall: new fields.StringField({required: true, nullable: false, initial: ""}),
             varelsegrupp: new fields.StringField({required: true, nullable: false, initial: ""})
         });

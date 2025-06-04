@@ -1,5 +1,6 @@
 import installningar from "./installningar.js";
 import basforemal from "./_basforemal.js";
+import egenskaper from "./egenskaper.js";
 
 /**
  * Data schema, attributes, and methods specific to Actor.
@@ -18,10 +19,12 @@ export default class foremal extends basforemal {
 
         schema.installningar = new fields.SchemaField({
             ...installningar(),
+            forvaring: new fields.BooleanField({initial: false}),
             behallare: new fields.BooleanField({initial: false}),
             buren: new fields.BooleanField({initial: false}),
             aktiv: new fields.BooleanField({initial: false}),
             exceptionell: new fields.BooleanField({initial: false, required: true}),
+            forvaringid: new fields.StringField({required: true, initial: ""})
         });
 
         schema.volym = new fields.SchemaField({
@@ -31,36 +34,37 @@ export default class foremal extends basforemal {
         });
 
         schema.egenskaper = new fields.ArrayField(
-            new fields.SchemaField({
-                uuid: new fields.StringField({
-                    initial: '',
-                    nullable: false,
-                }),
-                _id: new fields.StringField({
-                    initial: '',
-                    nullable: false,
-                }),
-                label: new fields.StringField({
-                    initial: '',
-                    nullable: false,
-                }),
-                namn: new fields.StringField({
-                    initial: '',
-                    nullable: false,
-                }),
-                varde: new fields.NumberField({
-                    initial: 0,
-                    nullable: false,
-                    required: false,
-                    min: 0
-                }),
-                beskrivning: new fields.HTMLField(),
-                harniva: new fields.NumberField({...valueInteger}) 
-            }),
-            {
-                initial: [],
-                nullable: false,
-            }
+            // new fields.SchemaField({
+            //     uuid: new fields.StringField({
+            //         initial: '',
+            //         nullable: false,
+            //     }),
+            //     _id: new fields.StringField({
+            //         initial: '',
+            //         nullable: false,
+            //     }),
+            //     label: new fields.StringField({
+            //         initial: '',
+            //         nullable: false,
+            //     }),
+            //     namn: new fields.StringField({
+            //         initial: '',
+            //         nullable: false,
+            //     }),
+            //     varde: new fields.NumberField({
+            //         initial: 0,
+            //         nullable: false,
+            //         required: false,
+            //         min: 0
+            //     }),
+            //     beskrivning: new fields.HTMLField(),
+            //     harniva: new fields.NumberField({...valueInteger}) 
+            // }),
+            // {
+            //     initial: [],
+            //     nullable: false,
+            // }
+            ...egenskaper()
         );
 
         schema.antal = new fields.NumberField({required: true, nullable: false, integer: true, initial: 1, min: 0});

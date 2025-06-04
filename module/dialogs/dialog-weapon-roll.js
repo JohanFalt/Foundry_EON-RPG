@@ -41,6 +41,9 @@ export class WeaponRoll {
         if (actor.type.toLowerCase().replace(" ", "") == "rollperson") {
             this.#_isPC = true;
         }
+        else if (actor.type.toLowerCase().replace(" ", "") == "rollperson5") {
+            this.#_isPC = true;
+        }
 
         this.actorAttribut = {
 			"tvarde": 0,
@@ -551,6 +554,9 @@ export class DialogWeaponRoll extends FormApplication {
         super(roll, {submitOnChange: true, closeOnSubmit: false});
 
         if (actor.type.toLowerCase().replace(" ", "") == "rollperson") {
+            this.#_isPC = true;
+        }
+        else if (actor.type.toLowerCase().replace(" ", "") == "rollperson5") {
             this.#_isPC = true;
         }
 

@@ -1,4 +1,5 @@
 export {default as EonRollperson} from "./actor/rollperson.js";
+export {default as Eon5Rollperson} from "./actor/rollperson5.js";
 export {default as EonVarelse} from "./actor/varelse.js";
 
 export {default as EonFolkslag} from "./item/folkslag.js";

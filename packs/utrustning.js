@@ -426,7 +426,8 @@ export const datautrustning = {
         "forvaring": {
             "tygaxelvaska": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Axelväska, tyg",
                 "vikt": 0.3,
@@ -434,7 +435,8 @@ export const datautrustning = {
             },
             "baltespung": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Bältespung",
                 "vikt": 0.2,
@@ -442,7 +444,8 @@ export const datautrustning = {
             },
             "dokumentkavel": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Dokumentkavel, vattentät",
                 "vikt": 0.2,
@@ -450,7 +453,8 @@ export const datautrustning = {
             },
             "silverdosa": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Dosa, försilvrad",
                 "vikt": 0.1,
@@ -458,7 +462,8 @@ export const datautrustning = {
             },
             "tenndosa": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Dosa, tenn",
                 "vikt": 0.1,
@@ -466,7 +471,8 @@ export const datautrustning = {
             },
             "kartfodral": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Kartfodral, tyg",
                 "vikt": 0.1,
@@ -474,7 +480,8 @@ export const datautrustning = {
             },
             "litenkista": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Kista, liten",
                 "vikt": 15,
@@ -482,7 +489,8 @@ export const datautrustning = {
             },
             "storkista": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Kista, stor",
                 "vikt": 60,
@@ -490,7 +498,8 @@ export const datautrustning = {
             },
             "litenkorg": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Korg, liten",
                 "vikt": 0.8,
@@ -498,7 +507,8 @@ export const datautrustning = {
             },
             "storkorg": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Korg, stor",
                 "vikt": 1.5,
@@ -506,7 +516,8 @@ export const datautrustning = {
             },
             "tralada": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Låda, trä",
                 "vikt": 2,
@@ -514,7 +525,8 @@ export const datautrustning = {
             },
             "vattentatlada": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Låda, vattentät",
                 "vikt": 2,
@@ -522,7 +534,8 @@ export const datautrustning = {
             },
             "penningpung": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Penningpung",
                 "vikt": 0.1,
@@ -530,7 +543,8 @@ export const datautrustning = {
             },
             "remvaska": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Remväska, läder",
                 "vikt": 0.9,
@@ -538,7 +552,8 @@ export const datautrustning = {
             },
             "ryggsack": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Ryggsäck, linne",
                 "vikt": 1,
@@ -546,7 +561,8 @@ export const datautrustning = {
             },
             "sadelvaska": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Sadelväska",
                 "vikt": 2,
@@ -554,7 +570,8 @@ export const datautrustning = {
             },
             "metallskrin": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Skrin, metall",
                 "vikt": 1,
@@ -562,7 +579,8 @@ export const datautrustning = {
             },
             "storjutesack": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Säck, juteväv, stor",
                 "vikt": 0.8,
@@ -570,7 +588,8 @@ export const datautrustning = {
             },
             "litenlinnesack": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Säck, linne, liten",
                 "vikt": 0.4,
@@ -578,7 +597,8 @@ export const datautrustning = {
             },
             "storlinnesack": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Säck, linne, stor",
                 "vikt": 0.8,
@@ -586,7 +606,8 @@ export const datautrustning = {
             },
             "tobakspung": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Tobakspung",
                 "vikt": 0.1,
@@ -723,7 +744,8 @@ export const datautrustning = {
             },
             "pilkoger": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Koger, pilar",
                 "vikt": 0.2,
@@ -731,7 +753,8 @@ export const datautrustning = {
             },
             "skaktkoger": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Koger, skäktor",
                 "vikt": 0.2,
@@ -1814,7 +1837,8 @@ export const datautrustning = {
             },
             "korg": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Korg, stor",
                 "vikt": 1.5,
@@ -2616,7 +2640,8 @@ export const datautrustning = {
             },
             "tunna": {
                 "installningar": {
-                    "behallare": false
+                    "behallare": false,
+                    "forvaring": true
                 },
                 "namn": "Tunna, trä (100 liter)",
                 "vikt": 12,

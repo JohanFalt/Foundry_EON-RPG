@@ -4,11 +4,11 @@ import ItemHelper from "../item-helper.js";
 import CreateHelper from "../create-helper.js";
 import SelectHelper from "../select-helpers.js"
 
-export default class EonCreatureSheet extends ActorSheet {
+export default class EonCreatureSheet extends foundry.appv1.sheets.ActorSheet {
     /** @override */
     static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
-			classes: ["EON varelse"],
+			classes: ["EON EON4 varelse"],
             tabs: [{
                 navSelector: ".sheet-tabs",
                 contentSelector: ".sheet-body",
@@ -45,11 +45,13 @@ export default class EonCreatureSheet extends ActorSheet {
         const version = game.data.system.version;	
 
 		if (!actorData.system.installningar.skapad) {
+            actorData.system.installningar.eon = "eon4";
+
             await CreateHelper.SkapaFardigheter(this.actor, CONFIG.EON, version);
             actorData.system.skada.vandning.lista = await CreateHelper.SkapaVandningar();
 
             actorData.system.installningar.skapad = true;
-            actorData.system.installningar.version = version;
+            actorData.system.installningar.version = version;            
             await this.actor.update(actorData);
 		}	
         
@@ -89,7 +91,7 @@ export default class EonCreatureSheet extends ActorSheet {
 
         data.listData = SelectHelper.SetupActor(this.actor);
 
-        data.enrichedBeskrivning = await TextEditor.enrichHTML(this.actor.system.bakgrund.beskrivning);
+        data.enrichedBeskrivning = await foundry.applications.ux.TextEditor.implementation.enrichHTML(this.actor.system.bakgrund.beskrivning);
 
         console.log(data.actor.name);
         console.log(data.actor);
@@ -137,7 +139,9 @@ export default class EonCreatureSheet extends ActorSheet {
         //     return false;
         // }
 
-        const droppedItem = await Item.implementation.fromDropData(_data);          
+        const droppedItem = await Item.implementation.fromDropData(_data);   
+        
+        droppedItem.system.installningar.eon = "eon4";
 
         if (((droppedItem.type.toLowerCase() == "närstridsvapen") || (droppedItem.type.toLowerCase() == "avståndsvapen") || (droppedItem.type.toLowerCase() == "sköld")) && 
                 (droppedItem.system.grupp != "")) {
@@ -154,7 +158,7 @@ export default class EonCreatureSheet extends ActorSheet {
             }
 
             if (!found) {
-                let itemData = await CreateHelper.SkapaFardighetItem('allman', game.EON.fardigheter['strid'][fardighet], fardighet, version, false, true);
+                let itemData = await CreateHelper.SkapaFardighetItem(this.actor, 'allman', game.EON.fardigheter['strid'][fardighet], fardighet, version, false, true);
                 await this.actor.createEmbeddedDocuments("Item", [itemData]);
             }            
         }

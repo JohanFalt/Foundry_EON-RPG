@@ -58,18 +58,18 @@
                 </div>
 
                 {{#each item.system.kroppsdel as |rustning key|}}
-                    <div class="item-row" style="line-height: 25px; width:100%;">
-                        <div style="width: 100px;">{{rustning.namn}}</div>
-                        <div style="width: 150px;">
+                    <div class="item-row item-listrow">
+                        <div class="item-listbox" style="width: 100px;">{{rustning.namn}}</div>
+                        <div class="item-listbox" style="width: 150px;">
                             <select class="inputdata" data-source="armor" data-kroppsdel="{{rustning.kroppsdel}}" style="width: 125px;">                                
                                 <option value="">- Inget -</option>
                                 {{selectOptions ../EON.forsvar.rustningsmaterial selected=rustning.material labelAttr="namn" localize=false}}
                             </select>
                         </div>
-                        <div class="centerText" style="width: 50px;">
+                        <div class="item-listbox centerText" style="width: 50px;">
                             <input type="checkbox" class="modifiera-checkbox" data-kroppsdel="{{rustning.kroppsdel}}" {{#if rustning.modifiera}}checked{{/if}} />
                         </div>
-                        <div class="centerText  " style="width: 50px;">
+                        <div class="item-listbox centerText" style="width: 50px;">
                             {{#if rustning.modifiera}}
                                 <i class="fa-solid fa-square-plus green pointer" 
                                    data-source="armor"
@@ -84,7 +84,7 @@
                                    data-property="hugg"></i>
                             {{/if}}
                         </div>
-                        <div class="centerText  " style="width: 50px;">
+                        <div class="item-listbox centerText" style="width: 50px;">
                             {{#if rustning.modifiera}}
                                 <i class="fa-solid fa-square-plus green pointer" 
                                    data-source="armor"
@@ -99,7 +99,7 @@
                                    data-property="kross"></i>
                             {{/if}}
                         </div>
-                        <div class="centerText  " style="width: 50px;">
+                        <div class="item-listbox centerText" style="width: 50px;">
                             {{#if rustning.modifiera}}
                                 <i class="fa-solid fa-square-plus green pointer" 
                                    data-source="armor"
@@ -114,7 +114,7 @@
                                    data-property="stick"></i>
                             {{/if}}
                         </div>
-                        <div class="centerText  " style="width: 50px;">{{rustning.belastning}}</div>
+                        <div class="item-listbox centerText" style="width: 50px;">{{rustning.belastning}}</div>
                     </div>                    
                 {{/each}}
             </div>

@@ -5,7 +5,11 @@ import CreateHelper from "./create-helper.js";
  * @param oldVersion   The existing version no: e.g. 1.5.9
  * @param newVersion   The new version no: e.g. 1.5.10
  */
-export function CompareVersion(oldVersion, newVersion) {
+export function CompareVersion(oldVersion, newVersion, isDemo = false) {
+    if (isDemo) {
+        return true;
+    }
+
     if ((newVersion == undefined) || (oldVersion == undefined)) {
         return false;
     }
@@ -101,6 +105,7 @@ export const updateActor = async function(actor, config, systemVersion) {
         let update = false;
         let version210 = await CompareVersion(actor.system.installningar.version, "2.1.0");
         let version311 = await CompareVersion(actor.system.installningar.version, "3.1.1");
+        let version400 = await CompareVersion(actor.system.installningar.version, "4.0.0");
 
         if (updateData.system.installningar.version == "") {
             updateData.system.installningar.version = "1.0.0";
@@ -122,7 +127,7 @@ export const updateActor = async function(actor, config, systemVersion) {
 				const grupp = "mystik";
                 let fardighet = "harmonisera";
 
-                let itemData = await CreateHelper.SkapaFardighetItem(grupp, config.fardigheter[grupp][fardighet], fardighet, updateData.system.installningar.version);
+                let itemData = await CreateHelper.SkapaFardighetItem(actor, grupp, config.fardigheter[grupp][fardighet], fardighet, updateData.system.installningar.version);
                 await actor.createEmbeddedDocuments("Item", [itemData]);
 			}            
 
@@ -146,6 +151,21 @@ export const updateActor = async function(actor, config, systemVersion) {
             }
         }
 
+        if (version400) {
+            updateData.system.installningar.version = "4.0.0";
+            update = true;
+
+            if (actor.system.installningar.eon === "") {
+                updateData.system.installningar.eon = "eon4";
+            }
+            if (actor.type === "rollperson5") {
+                if (!Number.isInteger(actor.system.harleddegenskaper?.visdom)) {
+                    updateData.system.harleddegenskaper.visdom = 0;
+                    console.log('visdom ' + actor.name);
+                }                
+            }
+        }
+
         if (update) {
             await actor.update(updateData);
             update = false;
@@ -163,32 +183,33 @@ export const updateActor = async function(actor, config, systemVersion) {
 
 /**
  * patch an actor to the latest version
- * @param {Items} item   The item to Update
+ * @param {foundry.documents.collections.Items} item   The item to Update
  * @param config   game.EON 
  */
 export const updateItem = async function(item, config, actor) {
     try {
-        const updateData = foundry.utils.duplicate(item);
         let update = false;
+        let version210 = await CompareVersion(item.system.installningar.version, "2.1.0");
+        let version310 = await CompareVersion(item.system.installningar.version, "3.1.0");     
+        let version400 = await CompareVersion(item.system.installningar.version, "4.0.0");   
 
-        if (item.system.installningar.version == "") {
+        const updateData = foundry.utils.duplicate(item);        
+
+        if (item.system.installningar.version === "") {
             updateData.system.installningar.version = "1.0.0";
             update = true;
-        }
-
-        let version210 = await CompareVersion(updateData.system.installningar.version, "2.1.0");
-        let version310 = await CompareVersion(updateData.system.installningar.version, "3.1.0");        
+        }        
 
         if (version210) {
             updateData.system.installningar.version = "2.1.0";
 
-            if (item.type.toLowerCase() == "färdighet") {
+            if (item.type.toLowerCase() === "färdighet") {
                 if ((!item.system.installningar.lattlard) && (!item.system.installningar.svarlard)) {
                     updateData.system.installningar.normal = true;
                     update = true;
                 }
             }
-            if ((item.type.toLowerCase() == "skada") && (item.system.typ == "")) {
+            if ((item.type.toLowerCase() === "skada") && (item.system.typ === "")) {
                 updateData.system.typ = "skada";
                 update = true;
             }
@@ -197,7 +218,7 @@ export const updateItem = async function(item, config, actor) {
         if (version310) {
             updateData.system.installningar.version = "3.1.0";
 
-            if (((item.type.toLowerCase() == "närstridsvapen") || (item.type.toLowerCase() == "avståndsvapen") || (item.type.toLowerCase() == "sköld")) && (item.system.egenskaper.length > 0)) {
+            if (((item.type.toLowerCase() === "närstridsvapen") || (item.type.toLowerCase() === "avståndsvapen") || (item.type.toLowerCase() === "sköld")) && (item.system.egenskaper.length > 0)) {
                 update = true;
 
                 const pack = game.packs.get("eon-rpg.vapenegenskaper");
@@ -224,8 +245,17 @@ export const updateItem = async function(item, config, actor) {
             }
         }
 
+        if (version400) {
+            updateData.system.installningar.version = "4.0.0";
+            update = true;
+
+            if (item.system.installningar.eon === "") {
+                updateData.system.installningar.eon = "eon4";
+            }
+        }
+
         if (update) {
-            console.log("Uppdaterar " + item.name + " " + item.system.installningar.version);
+            //console.log("Uppdaterar " + item.name + " " + item.system.installningar.version);
             await item.update(updateData);
             update = false;
         }
@@ -250,6 +280,7 @@ export const updateItem = async function(item, config, actor) {
  */
  export const updateCompendium = async function(pack, config, systemVersion) {
     const entity = pack.documentName;
+    if ( ["Scene"].includes(entity) ) return;
     if ( !["Actor", "Item", "Scene"].includes(entity) ) return;
 
     // Unlock the pack for editing
@@ -268,7 +299,7 @@ export const updateItem = async function(item, config, actor) {
                     await updateActor(ent, config, systemVersion);
                     break;
                 case "Item":
-                    //await updateItem(ent, config, undefined);
+                    await updateItem(ent, config, undefined);
                     break;
                 case "Scene":
                     break;
@@ -297,6 +328,18 @@ export async function patchWorld(systemVersion, installedVersion, config) {
     if (CompareVersion(installedVersion, systemVersion)) {
         ui.notifications.warn(`Uppdaterar världen från version ${installedVersion} till ${systemVersion} stäng inte världen eller din Foundry. Var god vänta då det kan ta tid...`, {permanent: true});
 
+        for (const id of game.actors.invalidDocumentIds) {
+            try {
+                const actor = game.actors.getInvalid(id);
+                console.error(`Actor ${actor.name} is of a not valid type and have been removed from the system`);
+                await actor.delete()
+            }
+            catch(err) {
+                console.error(`invalidDocumentIds ${actor.name}: ${err.message}`);
+                console.error(err);
+            }
+        }
+
         for (const actor of game.actors) {
             await updateActor(actor, config, systemVersion);
         }
@@ -305,17 +348,17 @@ export async function patchWorld(systemVersion, installedVersion, config) {
             await updateItem(item, config, undefined);
         }
 
-        // for ( let pack of game.packs ) {
-        //     try {
-        //         if ( pack.metadata.packageType !== "world" ) continue;
-        //         if ( pack.metadata.packageType !== "system" ) continue;
-        //         if ( !["Actor", "Item", "Scene"].includes(pack.documentName) ) continue;
-        //         await updateCompendium(pack, config, systemVersion);
-        //     } catch(err) {
-        //         console.error(err);
-        //         isError = true;
-        //     }
-        // }
+        for ( let pack of game.packs ) {
+            try {
+                //if ( pack.metadata.packageType !== "world" ) continue;
+                //if ( pack.metadata.packageType !== "system" ) continue;
+                //if ( !["Actor", "Item", "Scene"].includes(pack.documentName) ) continue;
+                await updateCompendium(pack, config, systemVersion);
+            } catch(err) {
+                console.error(err);
+                isError = true;
+            }
+        }
 
         ui.notifications.info("Klar!", {permanent: true});
     }
@@ -325,7 +368,7 @@ export async function patchWorld(systemVersion, installedVersion, config) {
  * Sends version text to chat
  * @param systemVersion The new system version
  */
-export async function DoNotice(systemVersion, installedVersion) {
+export async function DoNotice(systemVersion, installedVersion, isDemo = false) {
     if (!game.user.isGM) {
       return;
     }
@@ -333,43 +376,71 @@ export async function DoNotice(systemVersion, installedVersion) {
     let partMessage = "";
     let futureMessage = "";    
 
-    if (await CompareVersion(installedVersion, '3.1.0')) {
+    if (await CompareVersion(installedVersion, '4.0.0', isDemo)) {
         partMessage += `
-            <li><h3>Eon IV kompendium</h3>
-                <b>Föremål</b> - Från grundboken alla vapen, sköldar och vapenegenskaper.<br />
-                <b>Tabeller</b> - skada, träfftabell och varelse vändningar<br />
-                <b>Varelser</b> - alla djur och början till varelserna (fick hoppas vissa då systemet har inte riktigt support för alla varianter upptäcktes det på slutet, de som saknas kommer i v3.2).</li>
-            <li>Rollformulär till varelser med stöd för vändningar.</li>
-            <li>Funktionen för vapenegenskaper har gjorts om så nu drar man de egenskaper man vill att ett vapen skall ha till vapnet.</li>
-            <li>Fler val vid vapenanfall - försvarstekniker, attacktypsalternativ.</li>
-            <li>Vapenutrustning har nu också "antal".</li>
-            <li>Man kan editera en rustnings skydd och belastning.</li>
-            <li>Olika valutor</li>
-            <li>Förbättringsslag direkt i editeringsfönstret för färdigheten.</li>
-            <li>I lite mer detalj: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/5?closed=1">v3.1</a></li>
-        `;
+        <p><ul style="margin-top: 0">
+            <li>Stöd för Foundry v13</li>
+            <li>Eon 5 rollformulär</li>
+            <li>Tillägg till Eon IV kompendium:<br />
+                Utrustning<br />
+                Folkslag<br />
+                Folkslags egenskaper<br />
+                Språk
+            </li>
+            <li>Dra föremål mellan rollformulär</li>
+            <li>Väskor och behållare</li>
+            <li>Manuell sortering av Utrustningslistan på namn och typ.</li>
+            <li>Folkslag lagrar nu de egenskaper som folkslaget har samt de språk de talar. Dessa läggs till automatiskt till formuläret när Folkslaget läggs till.</li>
+            <li>I lite mer detalj: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/8?closed=1">v4.0</a></li>
+        </ul></p>     
+        <h4>Eon 5 rollformulär</h4>  
+        <p>Lagt till en beta-version av ett nytt Eon 5 rollformulär, finns också en världsinställning vilken version av Eon man spelar som fasställer vilken typ av Rollformulär (bl a) som är förvalt när man skapar en ny Actor.</p>
 
-        futureMessage += `
-            <li>Utrustningslistan, väskor och behållare</li>
-            <li>Initiativ</li>            
-            <li>Mer varelser</li>
-            <li>Strid</li>
+        <h4>Dra föremål mellan rollformulär</h4>
+        <p>Man kan nu dra utrustning, vapen, rustningar och förvaringsutrustning mellan rollformulärer. Dessa läggs då till på det nya formuläret och tas bort från det ursprungliga. Fungerar mellan Eon 4 och Eon 5 rollformuläret.</p>
+
+        <h4>Väskor och behållare</h4>
+        <p>Man kan sätta en utrustning så den blir Förvaring, alltså en behållare att lägga annan utrustning i. Detta gör man med drag and drop. Du sätter egenskapen Förvaring på föremålet du vill ha som förvaring därefter drar den utrustning du vill förvara i den till den.</p>
         `;
     }
 
-    if (await CompareVersion(installedVersion, '3.1.1')) {
-        partMessage += `
-            <li>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/286">#286</a>, <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/287">#287</a>] - Utmattning är nu kopplade till Tokens. Se <a href="https://github.com/JohanFalt/Foundry_EON-RPG/wiki/Token">Wiki</a></li>.
-            <li>[BUGG][<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/288">#288</a>] - Föremålens formulär öppnades inte som de skulle efter att man skapade dem till en Rollperson.</li>
-            <li>[BUGG][<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/285">#285</a>] - Man kunde inte skapa myntsorten Koppar och Silverdaler.</li>
-        `;
-    }
+    // if (await CompareVersion(installedVersion, '3.1.0')) {
+    //     partMessage += `
+    //         <li><h3>Eon IV kompendium</h3>
+    //             <b>Föremål</b> - Från grundboken alla vapen, sköldar och vapenegenskaper.<br />
+    //             <b>Tabeller</b> - skada, träfftabell och varelse vändningar<br />
+    //             <b>Varelser</b> - alla djur och början till varelserna (fick hoppas vissa då systemet har inte riktigt support för alla varianter upptäcktes det på slutet, de som saknas kommer i v3.2).</li>
+    //         <li>Rollformulär till varelser med stöd för vändningar.</li>
+    //         <li>Funktionen för vapenegenskaper har gjorts om så nu drar man de egenskaper man vill att ett vapen skall ha till vapnet.</li>
+    //         <li>Fler val vid vapenanfall - försvarstekniker, attacktypsalternativ.</li>
+    //         <li>Vapenutrustning har nu också "antal".</li>
+    //         <li>Man kan editera en rustnings skydd och belastning.</li>
+    //         <li>Olika valutor</li>
+    //         <li>Förbättringsslag direkt i editeringsfönstret för färdigheten.</li>
+    //         <li>I lite mer detalj: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/5?closed=1">v3.1</a></li>
+    //     `;
 
-    if (await CompareVersion(installedVersion, '3.1.2')) {
-        partMessage += `
-            <li>Förberedande för Foundry v13.</li>
-        `;
-    }
+    //     futureMessage += `
+    //         <li>Utrustningslistan, väskor och behållare</li>
+    //         <li>Initiativ</li>            
+    //         <li>Mer varelser</li>
+    //         <li>Strid</li>
+    //     `;
+    // }
+
+    // if (await CompareVersion(installedVersion, '3.1.1')) {
+    //     partMessage += `
+    //         <li>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/286">#286</a>, <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/287">#287</a>] - Utmattning är nu kopplade till Tokens. Se <a href="https://github.com/JohanFalt/Foundry_EON-RPG/wiki/Token">Wiki</a></li>.
+    //         <li>[BUGG][<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/288">#288</a>] - Föremålens formulär öppnades inte som de skulle efter att man skapade dem till en Rollperson.</li>
+    //         <li>[BUGG][<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/285">#285</a>] - Man kunde inte skapa myntsorten Koppar och Silverdaler.</li>
+    //     `;
+    // }
+
+    // if (await CompareVersion(installedVersion, '3.1.2')) {
+    //     partMessage += `
+    //         <li>Förberedande för Foundry v13.</li>
+    //     `;
+    // }
 
     // if (await CompareVersion(installedVersion, '2.2.0')) {
     //     partMessage += `
@@ -434,7 +505,7 @@ export async function DoNotice(systemVersion, installedVersion) {
     }
 
     let introduction = `
-        <div class="tray-title-area">Version ${systemVersion} installerat</div>
+        <div class="tray-title-area"><h4>Version ${systemVersion} installerat</h4></div>
         <div class="tray-action-area">
             Systemet är nu uppdaterat till en ny version.
             <p>Delar av detta system innehåller material som tillhör <a href="https://helmgast.se/">Helmgast AB</a> som äger copyright och trademark. Allt material används med tillåtelse.</p>
@@ -444,9 +515,7 @@ export async function DoNotice(systemVersion, installedVersion) {
     let message = `
         <div class="tray-title-area">Nytt för versionen</div>
         <div class="tray-action-area">
-            <ul style="margin-top: 0">
             ${partMessage}
-            </ul>
         </div>`;
 
     if (futureMessage != '') {
@@ -476,7 +545,7 @@ export async function DoNotice(systemVersion, installedVersion) {
 
     message = introduction + message + support;
     
-    const enrichedMessage = await TextEditor.enrichHTML(`${message}`, { async: true });
+    const enrichedMessage = await foundry.applications.ux.TextEditor.implementation.enrichHTML(`${message}`, { async: true });
     await ChatMessage.create({
       user: game.user.id,
       content: enrichedMessage

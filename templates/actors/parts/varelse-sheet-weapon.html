@@ -11,18 +11,18 @@
 
         <div class="centerText" style="width: 60px;">Träffa</div>
 
-        <div class="centerText" style="width: 50px;"><img src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-icon" title="Hugg" /></div>
-        <div class="centerText" style="width: 50px;"><img src="{{EON.CONFIG.ikoner.skada_kross}}" class="item img-icon" title="Kross" /></div>
-        <div class="centerText" style="width: 50px;"><img src="{{EON.CONFIG.ikoner.skada_stick}}" class="item img-icon" title="Stick" /></div>
+        <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-icon" title="Hugg" /></div>
+        <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_kross}}" class="item img-icon" title="Kross" /></div>
+        <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_stick}}" class="item img-icon" title="Stick" /></div>
         <div style="margin-left: 50px;">Egenskaper</div>
     </div>   
 
     {{#each actor.system.listdata.vapen.narstrid as | vapen key|}}
-        <div class="item-row" style="line-height: 25px; width:100%;">
-            <div class="weapon-icon"><a class="item-edit" title="Editera vapen" data-source="weapon" data-itemid="{{vapen._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
-            <div class="vrollable" style="width: 150px;" data-source="weapon" data-itemid="{{vapen._id}}">{{vapen.name}}</div>
+        <div class="item-row item-listrow">
+            <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera vapen" data-source="weapon" data-itemid="{{vapen._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="item-listbox vrollable" style="width: 150px;" data-source="weapon" data-itemid="{{vapen._id}}">{{vapen.name}}</div>
 
-            <div class="centerText  " style="width: 60px;">
+            <div class="item-listbox centerText" style="width: 60px;">
                 {{#if (ne vapen.system.grupp "")}}
                     {{getDiceValue (getActorSkillGroupValue ../actor vapen.system.grupp "")}}
                 {{else}}
@@ -30,11 +30,11 @@
                 {{/if}}
             </div>        
 
-            <div class="centerText  " style="width: 50px;">{{#if (eq vapen.system.hugg.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.hugg ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
-            <div class="centerText  " style="width: 50px;">{{#if (eq vapen.system.kross.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.kross ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
-            <div class="centerText  " style="width: 50px;">{{#if (eq vapen.system.stick.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.stick ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
+            <div class="item-listbox centerText" style="width: 50px;">{{#if (eq vapen.system.hugg.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.hugg ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
+            <div class="item-listbox centerText" style="width: 50px;">{{#if (eq vapen.system.kross.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.kross ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
+            <div class="item-listbox centerText" style="width: 50px;">{{#if (eq vapen.system.stick.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.stick ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
             
-            <div title="{{getPropertyList vapen.system.egenskaper}}" style="margin-left: 50px;">{{shorten (getPropertyList vapen.system.egenskaper) 50 false}}</div>                        
+            <div class="item-listbox" title="{{getPropertyList vapen.system.egenskaper}}" style="margin-left: 50px;">{{shorten (getPropertyList vapen.system.egenskaper) 50 false}}</div>                        
         </div>
     {{/each}}
     
@@ -52,13 +52,13 @@
     </div>   
 
     {{#each actor.system.listdata.vapen.avstand as | vapen key|}}
-        <div class="item-row" style="line-height: 25px; width:100%;">
-            <div class="weapon-icon"><a class="item-edit" title="Editera vapen" data-source="weapon" data-itemid="{{vapen._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
-            <div class="vrollable" style="width: 150px;" data-source="weapon" data-itemid="{{vapen._id}}">{{vapen.name}}</div>
-            <div class="centerText  " style="width: 60px;">{{getDiceValue vapen.system.traffa}}</div>        
-            <div class="centerText  " style="width: 100px;">{{getDiceValue vapen.system.skada}} {{{getWeaponDamageType vapen.system.skadetyp}}}</div>
-            <div class="centerText  " style="width: 100px;">{{{getRange ../EON.CONFIG.vapenavstand vapen.system.rackvidd}}}</div>
-            <div title="{{getPropertyList vapen.system.egenskaper}}">{{shorten (getPropertyList vapen.system.egenskaper) 50 false}}</div>                        
+        <div class="item-row item-listrow">
+            <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera vapen" data-source="weapon" data-itemid="{{vapen._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="item-listbox vrollable" style="width: 150px;" data-source="weapon" data-itemid="{{vapen._id}}">{{vapen.name}}</div>
+            <div class="item-listbox centerText" style="width: 60px;">{{getDiceValue vapen.system.traffa}}</div>        
+            <div class="item-listbox centerText" style="width: 100px;">{{getDiceValue vapen.system.skada}} {{{getWeaponDamageType vapen.system.skadetyp}}}</div>
+            <div class="item-listbox centerText" style="width: 100px;">{{{getRange ../EON.CONFIG.vapenavstand vapen.system.rackvidd}}}</div>
+            <div class="item-listbox" title="{{getPropertyList vapen.system.egenskaper}}">{{shorten (getPropertyList vapen.system.egenskaper) 50 false}}</div>                        
         </div>
     {{/each}}
 </div>

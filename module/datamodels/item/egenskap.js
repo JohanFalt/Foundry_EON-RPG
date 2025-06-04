@@ -16,6 +16,7 @@ export default class EonEgenskap extends basforemal {
         schema.installningar = new fields.SchemaField({
             ...installningar(),
             vapen: new fields.BooleanField({initial: false}),
+            folkslag: new fields.BooleanField({initial: false}),
             harniva: new fields.BooleanField({initial: false})
         });
 

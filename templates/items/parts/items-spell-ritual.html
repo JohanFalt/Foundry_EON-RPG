@@ -2,34 +2,34 @@
 
     <div class="large-headline">Ritualer</div>    
 
-    <div class="headline headline-background item-row" style="line-height: 25px; width:100%;">
-        <div class="weapon-icon">
+    <div class="headline headline-background item-row item-listrow">
+        <div class="item-listbox weapon-icon">
             <a class="item-create" title="Lägg till ritual" data-type="ritual">
                 <i class="fa-solid fa-square-plus green"></i>
             </a>
         </div>
-        <div style="width: 120px;">Namn</div>
-        <div class="centerText" style="width: 75px;">Bonus</div>
-        <div class="centerText" style="width: 75px;">Övertag</div>
-        <div class="centerText" style="width: 50px;">Kost.</div>        
-        <div class="centerText" style="width: 50px;">Tid</div>
+        <div class="item-listbox" style="width: 120px;">Namn</div>
+        <div class="item-listbox centerText" style="width: 75px;">Bonus</div>
+        <div class="item-listbox centerText" style="width: 75px;">Övertag</div>
+        <div class="item-listbox centerText" style="width: 50px;">Kost.</div>        
+        <div class="item-listbox centerText" style="width: 50px;">Tid</div>
         <div>Moment</div>
     </div>
 
     {{#each item.system.ritual as |item key|}}
-        <div class="item-row {{#if item.editera}}highlighted{{/if}}" style="line-height: 25px; width:100%;">
+        <div class="item-row {{#if item.editera}}highlighted{{/if}} item-listrow">
             {{#if item.editera}}
-                <div class="weapon-icon"><a class="item-save" title="Spara ritual" data-source="ritual" data-itemid="{{key}}"><i class="icon fa-solid fa-sd-card"></i></a></div>
+                <div class="item-listbox weapon-icon"><a class="item-save" title="Spara ritual" data-source="ritual" data-itemid="{{key}}"><i class="icon fa-solid fa-sd-card"></i></a></div>
             {{else}}
-                <div class="weapon-icon"><a class="item-edit" title="Editera ritual" data-source="ritual" data-itemid="{{key}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+                <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera ritual" data-source="ritual" data-itemid="{{key}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             {{/if}}
-            <div style="width: 120px;" title="{{item.namn}}">{{shorten item.namn 20 false}}</div>
-            <div class="centerText" style="width: 75px;">{{item.bonus}}</div>
-            <div class="centerText" style="width: 75px;">{{item.overtag}}</div>
-            <div class="centerText" style="width: 50px;">{{item.kostnad}} s</div>
-            <div class="centerText" style="width: 50px;">{{item.tid}}</div>
-            <div title="{{getSkillnameRitualList item.moment}}">{{shorten (getSkillnameRitualList item.moment) 10 false}}</div>
-            <div class="pointer red item-delete" title="Ta bort ritual" data-type="ritual" data-key="{{key}}" style="flex-grow: 1; text-align: right;"><i class="icon fa-solid fa-trash-can"></i></div>
+            <div class="item-listbox" style="width: 120px;" title="{{item.namn}}">{{shorten item.namn 20 false}}</div>
+            <div class="item-listbox centerText" style="width: 75px;">{{item.bonus}}</div>
+            <div class="item-listbox centerText" style="width: 75px;">{{item.overtag}}</div>
+            <div class="item-listbox centerText" style="width: 50px;">{{item.kostnad}} s</div>
+            <div class="item-listbox centerText" style="width: 50px;">{{item.tid}}</div>
+            <div title="item-listbox {{getSkillnameRitualList actor item.moment}}">{{shorten (getSkillnameRitualList actor item.moment) 10 false}}</div>
+            <div class="item-listbox pointer red item-delete" title="Ta bort ritual" data-type="ritual" data-key="{{key}}" style="flex-grow: 1; text-align: right;"><i class="icon fa-solid fa-trash-can"></i></div>
         </div>
     {{/each}}
 
@@ -66,13 +66,13 @@
     </div>
 
     <div class="item-box" style="width: 400px;">
-        <div class="headline item-row" style="line-height: 25px; width:100%;">
-            <div class="weapon-icon">
+        <div class="headline item-row item-listrow">
+            <div class="item-listbox weapon-icon">
                 <a class="item-create" title="Lägg till moment" data-source="ritual" data-type="moment">
                     <i class="fa-solid fa-square-plus green"></i>
                 </a>
             </div>
-            <div>Moment</div>
+            <div class="item-listbox">Moment</div>
         </div>
 
         {{#each (getListProperty item.system.ritual this.selectedRitual "moment") as |item key|}}

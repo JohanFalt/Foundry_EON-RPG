@@ -21,7 +21,8 @@ export default class EonRollperson extends foundry.abstract.DataModel {
         const schema = {};
 
         schema.installningar = new fields.SchemaField({
-            ...installningar()
+            ...installningar(),
+            eon: new fields.StringField({required: true, initial: "eon4"})
         });
 
         schema.grundegenskaper = new fields.SchemaField({
@@ -137,7 +138,6 @@ export default class EonRollperson extends foundry.abstract.DataModel {
     }
 
     static migrateData(source) {
-        //const systemVersion = game.settings.get("eon-rpg", "systemVersion");
         let version310 = CompareVersion(source.installningar?.version, "3.1.0");
 
         if (version310) {

@@ -99,6 +99,9 @@ eon.harleddegenskaper = {
     livskraft: {
         namn: "Livskraft"
     },
+    visdom: {
+        namn: "Visdom"
+    },
     grundskada: {
         namn: "Grundskada",
         rollable: false
@@ -284,27 +287,27 @@ eon.magi = {
 }
 
 eon.utrustningsgrupper = {
-    personlig: "Personlig utrustning",
-    husgrad: "Husgråd",
-    spel: "Spel",
-    belysning: "Belysning & elddon",
-    forvaring: "Förvaring",
-    special: "Specialutrustning",
-    vapen: "Vapentillbehör",
-    lakare: "Läkareutrustning",
-    tyg: "Tyg & skinn",
-    huvudbonad: "Huvudbonader",
-    klader: "Kläder",
-    skodon: "Skodon",
-    vildmark: "Vildmarksutrustning",
-    jakt: "Jaktutrustning",
-    fiske: "Fiskeutrustning",
-    klatter: "Klätterutrustning",
-    verktyg: "Verktyg",
-    musik: "Musikinstrument",
     behallare: "Behållare",
+    belysning: "Belysning & elddon",
+    fiske: "Fiskeutrustning",
+    forvaring: "Förvaring",
+    husgrad: "Husgråd",
+    huvudbonad: "Huvudbonader",    
+    jakt: "Jaktutrustning",
+    klader: "Kläder",
+    klatter: "Klätterutrustning",
+    lakare: "Läkareutrustning",
+    musik: "Musikinstrument",
+    personlig: "Personlig utrustning",    
+    proviant: "Proviant",
+    skodon: "Skodon",
     skrivdon: "Skrivdon",
-    proviant: "Proviant"
+    special: "Specialutrustning",
+    spel: "Spel",
+    tyg: "Tyg & skinn",
+    vapen: "Vapentillbehör",
+    verktyg: "Verktyg",
+    vildmark: "Vildmarksutrustning"
 }
 
 eon.valuta = {

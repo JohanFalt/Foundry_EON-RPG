@@ -211,11 +211,9 @@ export async function RollDice(diceRoll) {
                 rollInfo += ", ";
             }
             if(egenskap.varde > 0) {
-                //rollInfo += game.EON.egenskaper[egenskap.namn].namn + " " + egenskap.varde;
                 rollInfo += egenskap.label + " " + egenskap.varde;
             }
             else {
-                //rollInfo += game.EON.egenskaper[egenskap.namn].namn;
                 rollInfo += egenskap.label;
             }            
         }
@@ -335,7 +333,7 @@ export async function RollDice(diceRoll) {
 
     // Render the chat card template
     const template = `modules/eon-dice-roller/templates/roll-template.html`;
-    const html = await renderTemplate(template, templateData);
+    const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
 
     const chatData = {
         rolls: allDices,
@@ -368,7 +366,7 @@ export async function SendMessage(actor, config, headline, message) {
 
     // Render the chat card template
     const template = `modules/eon-dice-roller/templates/roll-template.html`;
-    const html = await renderTemplate(template, templateData);
+    const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
 
     const chatData = {
         content: html,

@@ -27,6 +27,7 @@ export default class ItemHelper {
                     system: {
                         installningar: {
                             skapad: true,
+                            eon: actor.system.installningar.eon,
                             version: version,
                             kantabort: true
                         }
@@ -40,6 +41,7 @@ export default class ItemHelper {
                     system: {
                         installningar: {
                             skapad: true,
+                            eon: actor.system.installningar.eon,
                             version: version,
                             kantabort: true
                         },
@@ -58,6 +60,7 @@ export default class ItemHelper {
                 system: {
                     installningar: {
                         skapad: true,
+                        eon: actor.system.installningar.eon,
                         version: version,
                         kantabort: true
                     }
@@ -74,6 +77,7 @@ export default class ItemHelper {
                 system: {
                     installningar: {
                         skapad: true,
+                        eon: actor.system.installningar.eon,
                         version: version
                     },
                     magnitud: 0
@@ -90,6 +94,7 @@ export default class ItemHelper {
                 system: {
                     installningar: {
                         skapad: true,
+                        eon: actor.system.installningar.eon,
                         version: version
                     },
                     magnitud: 0
@@ -106,6 +111,7 @@ export default class ItemHelper {
                 system: {
                     installningar: {
                         skapad: true,
+                        eon: actor.system.installningar.eon,
                         version: version
                     }
                 }
@@ -128,6 +134,7 @@ export default class ItemHelper {
                 system: {
                     installningar: {
                         skapad: true,
+                        eon: actor.system.installningar.eon,
                         version: version
                     },
                     typ: "utrustning"                    
@@ -145,6 +152,7 @@ export default class ItemHelper {
                 system: {
                     installningar: {
                         skapad: true,
+                        eon: actor.system.installningar.eon,
                         version: version
                     },
                     typ: "utrustning"
@@ -162,6 +170,7 @@ export default class ItemHelper {
                 system: {
                     installningar: {
                         skapad: true,
+                        eon: actor.system.installningar.eon,
                         version: version
                     },
                     typ: "utrustning",
@@ -180,6 +189,7 @@ export default class ItemHelper {
                 system: {
                     installningar: {
                         skapad: true,
+                        eon: actor.system.installningar.eon,
                         version: version
                     },
                     typ: "utrustning",
@@ -197,6 +207,7 @@ export default class ItemHelper {
                 system: {
                     installningar: {
                         skapad: true,
+                        eon: actor.system.installningar.eon,
                         version: version
                     },
                     typ: "utrustning"
@@ -226,6 +237,7 @@ export default class ItemHelper {
                 system: {
                     installningar: {
                         skapad: true,
+                        eon: actor.system.installningar.eon,
                         version: version,
                         buren: false
                     },
@@ -257,6 +269,7 @@ export default class ItemHelper {
                 system: {
                     installningar: {
                         skapad: true,
+                        eon: actor.system.installningar.eon,
                         version: version,
                         behallare: false
                     },
@@ -275,6 +288,7 @@ export default class ItemHelper {
                 system: {
                     installningar: {
                         skapad: true,
+                        eon: actor.system.installningar.eon,
                         version: version
                     },
                     typ: "skada"
@@ -291,6 +305,7 @@ export default class ItemHelper {
                 system: {
                     installningar: {
                         skapad: true,
+                        eon: actor.system.installningar.eon,
                         version: version
                     },
                     typ: "faltstorning"
@@ -305,6 +320,78 @@ export default class ItemHelper {
 
         return false;
     }
+
+    static async AddAncestryProperty(actor, ancenstry) {
+        const pack = game.packs.get("eon-rpg.folkslagegenskaper");
+        const egenskaper = await pack.getDocuments({type: "Egenskap"});
+
+        for (const egenskap of ancenstry.system.egenskaper) {
+            let i = egenskaper.find(e => e.uuid === egenskap.uuid);       
+            
+            if (i === undefined) {
+                // finns den i världen?
+                i = game.items.find(e => e.uuid === egenskap.uuid);
+
+                if (i === undefined) {
+                    continue;
+                }
+            }
+
+            const itemData = {
+                name: i.name,
+                type: "Egenskap",                
+                system: {
+                    installningar: {
+                        skapad: true,
+                        eon: actor.system.installningar.eon,
+                        version: i.system.installningar.version,
+                        kantabort: true,
+                        folkslag: true,
+                        harniva: i.system.installningar.harniva
+                    },
+                    niva: i.system.niva,
+                    beskrivning: i.system.beskrivning
+                }
+            };            
+
+            await actor.createEmbeddedDocuments("Item", [itemData]);
+        }
+    }
+
+    static async AddAncestryLanguage(actor, ancenstry) {
+        const pack = game.packs.get("eon-rpg.sprak");
+        const sprak = await pack.getDocuments({type: "Språk"});
+
+        for (const s of ancenstry.system.sprak) {
+            let i = sprak.find(e => e.uuid === s.uuid);       
+            
+            if (i === undefined) {
+                // finns den i världen?
+                i = game.items.find(e => e.uuid === s.uuid);
+
+                if (i === undefined) {
+                    continue;
+                }
+            }
+
+            const itemData = {
+                name: i.name,
+                type: "Språk",                
+                system: {
+                    installningar: {
+                        skapad: true,
+                        eon: actor.system.installningar.eon,
+                        version: i.system.installningar.version,
+                        kantabort: true,
+                    }
+                }
+            };            
+
+            await actor.createEmbeddedDocuments("Item", [itemData]);
+        }
+    }
+
+    
 
     // Användes för att skapa upp vapenegenskaperna i kompendiet
     static async CreateWeaponProperty() {
@@ -332,6 +419,7 @@ export default class ItemHelper {
         }
     }
 
+    // Användes för att skapa upp närstridsvapnen i kompendiet
     static async CreateCloseWeapon() {
         for (const grupp in CONFIG.EON.vapengrupper) {
             for (const vapenmall in game.EON.narstridsvapen[grupp]) {
@@ -376,6 +464,7 @@ export default class ItemHelper {
         }
     }
 
+    // Användes för att skapa upp avståndsvapen i kompendiet
     static async CreateRangeWeapon() {
         for (const grupp in CONFIG.EON.vapengrupper) {
             for (const vapenmall in game.EON.avstandsvapen[grupp]) {
@@ -417,6 +506,7 @@ export default class ItemHelper {
         }
     }
 
+    // Användes för att skapa upp sköldar i kompendiet
     static async CreateShield() {
         for (const grupp in CONFIG.EON.vapengrupper) {
             for (const vapenmall in game.EON.forsvar[grupp]) {
@@ -454,6 +544,92 @@ export default class ItemHelper {
                 };
 
                 Item.createDocuments([itemData], {pack: "eon-rpg.skoldar"});
+            }
+        }
+    }
+
+    // Användes för att skapa upp utrustning i kompendiet
+    // Lägg till ItemHelper.CreateEquipment(); i Ready
+    static async CreateEquipment() {
+        for (const grupp in CONFIG.EON.utrustningsgrupper) {
+            // if(grupp != "vildmark") {
+            //     continue;
+            // }
+
+            for (const utrustningmall in game.EON.utrustning[grupp]) {
+                const utrustning = game.EON.utrustning[grupp][utrustningmall];
+                let image = "icons/svg/item-bag.svg";
+                let itemData;
+
+                if (utrustning.installningar?.behallare === true) {
+                    itemData = {
+                        img: image,
+                        name: utrustning.namn,
+                        type: "Utrustning",               
+                        system: {
+                            installningar: {
+                                skapad: true,
+                                behallare: true,
+                                forvaring: false,
+                                version: "4.0.0"
+                            },
+                            volym: {
+                                enhet: utrustning?.volym?.enhet,
+                                antal: utrustning?.volym?.antal,
+                                max: utrustning?.volym?.max
+                            },
+                            typ: "utrustning",
+                            mall: utrustningmall,
+                            grupp: grupp,
+                            vikt: utrustning.vikt,
+                            pris: utrustning.pris
+                        }                    
+                    };
+                }
+                else if (utrustning.installningar?.forvaring === true) {
+                    itemData = {
+                        img: image,
+                        name: utrustning.namn,
+                        type: "Utrustning",               
+                        system: {
+                            installningar: {
+                                skapad: true,
+                                behallare: false,
+                                forvaring: true,
+                                version: "4.0.0"
+                            },
+                            typ: "utrustning",
+                            mall: utrustningmall,
+                            grupp: grupp,
+                            vikt: utrustning.vikt,
+                            pris: utrustning.pris
+                        }                    
+                    };
+                }
+                else {
+                    itemData = {
+                        img: image,
+                        name: utrustning.namn,
+                        type: "Utrustning",               
+                        system: {
+                            installningar: {
+                                skapad: true,
+                                behallare: false,
+                                forvaring: false,
+                                version: "4.0.0"
+                            },
+                            typ: "utrustning",
+                            mall: utrustningmall,
+                            grupp: grupp,
+                            vikt: utrustning.vikt,
+                            pris: utrustning.pris
+                        }                    
+                    };
+                }
+
+                Item.createDocuments([itemData], {pack: "eon-rpg.utrustning"});
+
+                console.warn("Created: " + itemData.name);
             }
         }
     }

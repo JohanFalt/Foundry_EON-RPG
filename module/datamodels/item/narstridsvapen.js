@@ -1,4 +1,3 @@
-import foremal from "./base/foremal.js";
 import vapen from "./base/vapen.js";
 
 /**

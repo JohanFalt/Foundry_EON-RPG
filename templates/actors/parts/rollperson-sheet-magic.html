@@ -10,8 +10,8 @@
     <div class="skill-headline headline">Mystikfärdigheter</div>
 
     {{#each (getActorSkillGroup actor.system.listdata.fardigheter "mystik") as |fardighet key|}}
-        <div class="skill clear">
-            <div class="pullLeft" >
+        <div class="item-listrow skill clear">
+            <div class="item-listbox pullLeft" >
                 {{#if fardighet.system.installningar.lattlard}}
                     <div style="width: 8px;"><i class="fa-solid fa-sort-up green"></i></div>
                 {{/if}}
@@ -19,10 +19,10 @@
                     <div style="width: 8px; line-height: 18px;"><i class="fa-solid fa-sort-down red"></i></div>
                 {{/if}}
             </div>
-            <div class="vrollable pullLeft caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div> 
+            <div class="item-listbox vrollable pullLeft caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div> 
                     
             <div class="pullLeft dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
-            <div class="pullLeft skill-short">{{getAttributeShortName fardighet.system.attribut}}</div>
+            <div class="item-listbox pullLeft skill-short">{{getAttributeShortName fardighet.system.attribut false}}</div>
         </div>
     {{/each}}
 
@@ -32,34 +32,34 @@
 
     <div class="large-headline">Formelsamling</div>
 
-    <div class="headline headline-background item-row" style="line-height: 25px; width:100%;">
-        <div class="weapon-icon">
+    <div class="headline headline-background item-row item-listrow">
+        <div class="item-listbox weapon-icon">
             <a class="item-create" title="Lägg till besvärjelse" data-type="besvärjelse">
                 <i class="fa-solid fa-square-plus green"></i>
             </a>
         </div>
-        <div style="width: 195px;">Namn</div>
-        <div style="width: 75px;">Aspekt</div>
-        <div class="centerText" style="width: 80px;">Svårighet</div>
-        <div style="width: 140px;">Omfång</div>
-        <div style="width: 140px;">Räckvidd</div>
-        <div style="width: 140px;">Varaktighet</div>
+        <div class="item-listbox" style="width: 195px;">Namn</div>
+        <div class="item-listbox" style="width: 75px;">Aspekt</div>
+        <div class="item-listbox centerText" style="width: 80px;">Svårighet</div>
+        <div class="item-listbox" style="width: 140px;">Omfång</div>
+        <div class="item-listbox" style="width: 140px;">Räckvidd</div>
+        <div class="item-listbox" style="width: 140px;">Varaktighet</div>
     </div>
 
     {{#each actor.system.listdata.magi.besvarjelse as |kraft key|}}
-        <div class="item-row" style="line-height: 25px; width:100%;">
-            <div class="weapon-icon"><a class="item-edit" title="Editera besvärjelse" data-source="besvärjelse" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+        <div class="item-row item-listrow">
+            <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera besvärjelse" data-source="besvärjelse" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             {{#if (eq kraft.system.beskrivning "")}}
-                <div class="weapon-icon"><i class="icon fa-regular fa-share"></i></div>
+                <div class="item-listbox weapon-icon"><i class="icon fa-regular fa-share"></i></div>
             {{else}}
-                <div class="weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-share"></i></a></div>
+                <div class="item-listbox weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-share"></i></a></div>
             {{/if}}
-            <div class="vrollable" style="width: 175px;" data-source="spell" data-itemid="{{kraft._id}}">{{kraft.name}}</div>
-            <div style="width: 75px;">{{getConfigPropertyName kraft.system.aspekt ../EON.CONFIG.aspekter}}</div>
-            <div class="centerText" style="width: 80px;">{{kraft.system.svarighet}}</div>
-            <div style="width: 140px;">{{shorten (getSpellSetting kraft "omfang") 15 false}}</div>
-            <div style="width: 140px;">{{shorten (getSpellSetting kraft "rackvidd") 15 false}}</div>
-            <div style="width: 140px;">{{shorten (getSpellSetting kraft "varaktighet") 15 false}}</div>
+            <div class="item-listbox vrollable" style="width: 175px;" data-source="spell" data-itemid="{{kraft._id}}">{{kraft.name}}</div>
+            <div class="item-listbox" style="width: 75px;">{{getConfigPropertyName kraft.system.aspekt ../EON.CONFIG.aspekter}}</div>
+            <div class="item-listbox centerText" style="width: 80px;">{{kraft.system.svarighet}}</div>
+            <div class="item-listbox" style="width: 140px;">{{shorten (getSpellSetting kraft "omfang") 15 false}}</div>
+            <div class="item-listbox" style="width: 140px;">{{shorten (getSpellSetting kraft "rackvidd") 15 false}}</div>
+            <div class="item-listbox" style="width: 140px;">{{shorten (getSpellSetting kraft "varaktighet") 15 false}}</div>
         </div>
     {{/each}}
  
@@ -69,28 +69,28 @@
 
     <div class="large-headline">Kongelat</div>
 
-    <div class="headline headline-background item-row" style="line-height: 25px; width:100%;">
-        <div class="weapon-icon">
+    <div class="headline headline-background item-row item-listrow">
+        <div class="item-listbox weapon-icon">
             <a class="item-create" title="Lägg till kongelat" data-type="kongelat">
                 <i class="fa-solid fa-square-plus green"></i>
             </a>
         </div>
-        <div style="width: 195px;">Aspekt</div>
-        <div class="centerText" style="width: 100px;">Magnitud</div>
-        <div class="centerText" style="width: 75px;">Antal</div>
+        <div class="item-listbox" style="width: 195px;">Aspekt</div>
+        <div class="item-listbox centerText" style="width: 100px;">Magnitud</div>
+        <div class="item-listbox vcenterText" style="width: 75px;">Antal</div>
     </div>
 
     {{#each actor.system.listdata.magi.kongelat as |kongelat key|}}
-        <div class="item-row" style="line-height: 25px; width:100%;">
-            <div class="weapon-icon"><a class="item-edit" title="Editera kongelat" data-source="kongelat" data-itemid="{{kongelat._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+        <div class="item-row item-listrow">
+            <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera kongelat" data-source="kongelat" data-itemid="{{kongelat._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             {{#if (eq kongelat.system.beskrivning "")}}
-                <div class="weapon-icon"><i class="icon fa-regular fa-share"></i></div>
+                <div class="item-listbox weapon-icon"><i class="icon fa-regular fa-share"></i></div>
             {{else}}
-                <div class="weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{kongelat._id}}"><i class="icon fa-solid fa-share"></i></a></div>
+                <div class="item-listbox weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{kongelat._id}}"><i class="icon fa-solid fa-share"></i></a></div>
             {{/if}}
-            <div style="width: 175px;">{{getConfigPropertyName kongelat.name ../EON.CONFIG.aspekter}}</div>
-            <div class="centerText" style="width: 100px;">{{getPropertyLevel kongelat.system.egenskaper "magnitud"}}</div>
-            <div class="centerText" style="width: 75px;">{{kongelat.system.antal}} st</div>
+            <div class="item-listbox" style="width: 175px;">{{getConfigPropertyName kongelat.name ../EON.CONFIG.aspekter}}</div>
+            <div class="item-listbox centerText" style="width: 100px;">{{getPropertyLevel kongelat.system.egenskaper "magnitud"}}</div>
+            <div class="item-listbox centerText" style="width: 75px;">{{kongelat.system.antal}} st</div>
         </div>
     {{/each}}
 
@@ -100,26 +100,26 @@
 
     <div class="large-headline">Fältstörning</div>
 
-    <div class="headline headline-background item-row" style="line-height: 25px; width:100%;">
-        <div class="weapon-icon">
+    <div class="headline headline-background item-row item-listrow">
+        <div class="item-listbox weapon-icon">
             <a class="item-create" title="Lägg till fältstörning" data-type="fältstörning">
                 <i class="fa-solid fa-square-plus green"></i>
             </a>
         </div>
-        <div style="width: 195px;">Aspekt</div>
-        <div>Nivå</div>
+        <div class="item-listbox" style="width: 195px;">Aspekt</div>
+        <div class="item-listbox">Nivå</div>
     </div>
 
     {{#each actor.system.listdata.magi.faltstorning as |faltstorning key|}}
-        <div class="item-row" style="line-height: 25px; width:100%;">
-            <div class="weapon-icon"><a class="item-edit" title="Editera fältstörning" data-source="faltstorning" data-itemid="{{faltstorning._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+        <div class="item-row item-listrow">
+            <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera fältstörning" data-source="faltstorning" data-itemid="{{faltstorning._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             {{#if (eq faltstorning.system.beskrivning "")}}
-                <div class="weapon-icon"><i class="icon fa-regular fa-share"></i></div>
+                <div class="item-listbox weapon-icon"><i class="icon fa-regular fa-share"></i></div>
             {{else}}
-                <div class="weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{faltstorning._id}}"><i class="icon fa-solid fa-share"></i></a></div>
+                <div class="item-listbox weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{faltstorning._id}}"><i class="icon fa-solid fa-share"></i></a></div>
             {{/if}}
-            <div style="width: 175px;">{{getConfigPropertyName faltstorning.name ../EON.CONFIG.aspekter}}</div>
-            <div>{{getConfigPropertyName faltstorning.system.niva ../EON.CONFIG.magi.faltstorning}}</div>
+            <div class="item-listbox" style="width: 175px;">{{getConfigPropertyName faltstorning.name ../EON.CONFIG.aspekter}}</div>
+            <div class="item-listbox">{{getConfigPropertyName faltstorning.system.niva ../EON.CONFIG.magi.faltstorning}}</div>
         </div>
     {{/each}}    
 

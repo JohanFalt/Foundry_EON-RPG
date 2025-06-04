@@ -49,6 +49,21 @@ export const systemSettings = function() {
     // "core" is core settings
 	// ""eon-rpg"" as system setting
 	// "eon" or other then is module settings
+
+    
+    game.settings.register("eon-rpg", "bookEon", {
+		name: "Eon",
+		hint: "Vilken version av Eon används primärt?",
+		scope: "world",
+		config: false,
+		default: "eon4",
+		type: String,
+		choices: {
+			"eon4": "Eon 4",
+			"eon5": "Eon 5"
+		}
+	});
+
 	game.settings.register("eon-rpg", "bookCombat", {
 		name: "Strid",
 		hint: "Skall systemet använda sig av de regler och tillägg som kom i boken Strid?",
@@ -144,7 +159,7 @@ export class Books extends FormApplication {
         if (hasPermission) {
             for (let s of game.settings.settings.values()) {
                 // // Exclude settings the user cannot change
-                if ((s.key == "bookCombat") || (s.key == "bookMagic")) {
+                if ((s.key == "bookEon") || (s.key == "bookCombat") || (s.key == "bookMagic")) {
                     // Update setting data
                     const setting = foundry.utils.duplicate(s);
 

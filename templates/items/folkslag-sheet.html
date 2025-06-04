@@ -1,46 +1,40 @@
 <form class="{{cssClass}}" autocomplete="off">
 
 	<div class="sheet-item">
+
 		<header class="sheet-header item-top">	
-            <div style="display: flex;">
-                <div style="min-width: 110px;">
-					<img src="{{item.img}}" class="item img-block" />
-				</div>
 
-				<div class="pullLeft" style="min-width: 270px;">
-					<div class="item-top">
-						<div class="item-property-area   floating-label-group">
-							<input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
-							<span class="floating-label">Namn</span>
-						</div>
-					</div>    
-				</div>
+			<div class="item-row">
+                <div class="item-column" style="width: 600px;">
+                    <div class="tab" data-group="primary" data-tab="values">
+                        <div class="item-row">
+                            {{> "systems/eon-rpg/templates/items/parts/items-ancestry-data.html"}}
+                        </div>
+                    </div>
+                    <div class="tab" data-group="primary" data-tab="property">
+                        {{> "systems/eon-rpg/templates/items/parts/items-ancestry-property.html"}}
+                    </div>
+                    <div class="tab" data-group="primary" data-tab="description">
+                        {{> "systems/eon-rpg/templates/items/parts/items-description.html"}}
+                    </div>
+                </div>
 
-				<div class="pullLeft" style="flex-grow: 1; text-align: right;">
+                <div class="pullLeft" style="flex-grow: 1; text-align: right;">
+                    {{#if hasActor}}
+                        <div class="pointer red item-delete large-icon" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
+                    {{/if}}     
+                    
                     <div class="information-area top-sidetext">FOLKSLAG</div>
                 </div>
-			</div>	
+            </div>            
 		</header>
 		
-		<section class="item-body">
+		<section class="item-body" style="position: absolute; bottom: 0; width: 100%; margin-bottom: 5px;">
 
-            <div class="headline">
-                <div class="attribute-area">Grundattribut</div>
+            <div>
+                {{> "systems/eon-rpg/templates/items/parts/navigation-ancestry.html"}}
             </div>
 
-            {{#each EON.CONFIG.grundegenskaper as |attribute key|}}            
-                <div class="attribute clear">
-                    <div class="vrollable pullLeft caption">{{attribute.namn}}</div>
-                    <div class="pullLeft dice-value tic pointer" data-property="grundegenskaper.{{key}}.grund">{{getDiceValue (getActorAttribute ../item "grundegenskaper" key)}}</div>
-                </div>
-            {{/each}}
-
-			<div>
-				<div class="large-headline">Beskrivning</div>
-				<div class="small-editor-box">
-					{{editor enrichedBeskrivning target="system.beskrivning" button=true owner=owner editable=true}}
-				</div>
-			</div>
 		</section>
 
 	</div>

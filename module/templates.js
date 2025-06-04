@@ -1,12 +1,12 @@
 import DiceHelper from "./dice-helper.js";
 import { dataskapa } from "../packs/skapa.js";
 import { datafardigheter } from "../packs/fardigheter.js";
+import { data5fardigheter } from "../packs/fardigheter.js";
 import { datavapen } from "../packs/vapen.js";
 import { datastrid } from "../packs/strid.js";
 import { datautrustning } from "../packs/utrustning.js";
 import { datadjur } from "../packs/djur.js";
 import { datavaluta } from "../packs/valuta.js";
-import ItemHelper from "./item-helper.js";
 
 /**
  * Define a set of template paths to pre-load
@@ -19,6 +19,8 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/actors/parts/rollperson-navigation.html",
 
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-top.html",
+		"systems/eon-rpg/templates/actors/parts/rollperson5-sheet-top.html",
+
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-bio.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-trait.html",
 		"systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon.html",
@@ -42,6 +44,7 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/actors/parts/varelse-sheet-weapon.html",
 		"systems/eon-rpg/templates/actors/parts/varelse-sheet-bio.html",
 
+		"systems/eon-rpg/templates/items/parts/navigation-ancestry.html",
 		"systems/eon-rpg/templates/items/parts/navigation-weapon.html",
 		"systems/eon-rpg/templates/items/parts/navigation-faith.html",
 		"systems/eon-rpg/templates/items/parts/navigation-spell.html",
@@ -49,7 +52,10 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/items/parts/items-melee-weapon-data.html",
 		"systems/eon-rpg/templates/items/parts/items-missile-weapon-data.html",
 		"systems/eon-rpg/templates/items/parts/items-defence-weapon-data.html",
+		"systems/eon-rpg/templates/items/parts/items-ancestry-data.html",
+		
 		"systems/eon-rpg/templates/items/parts/items-weapon-property.html",
+		"systems/eon-rpg/templates/items/parts/items-ancestry-property.html",
 
 		"systems/eon-rpg/templates/items/parts/items-faith-data.html",
 		"systems/eon-rpg/templates/items/parts/items-faith-skills.html",
@@ -64,7 +70,7 @@ export const PreloadHandlebarsTemplates = async function () {
     /* Load the template parts
 		That function is part of foundry, not founding it here is normal
 	*/
-	return loadTemplates(templatePaths);
+	return foundry.applications.handlebars.loadTemplates(templatePaths);
 };
 
 export async function Setup() {
@@ -76,7 +82,12 @@ export async function Setup() {
 		let fileData = dataskapa;
 		Object.assign(importData, fileData);
 
+		// EON 4
 		fileData = datafardigheter;
+		Object.assign(importData, fileData);
+
+		// EON 5
+		fileData = data5fardigheter;
 		Object.assign(importData, fileData);
 
 		if (!harStrid) {
@@ -102,158 +113,158 @@ export async function Setup() {
     }
 }
 
-export async function RegisterRollableTables() {
-	console.warn("RegisterRollableTables() är depricated och skall inte användas.");
+// export async function RegisterRollableTables() {
+// 	console.warn("RegisterRollableTables() är depricated och skall inte användas.");
 	
-	let stridfolderData = false;
-	let skadefolderData = false;
-	let vandningfolderData = false;
+// 	let stridfolderData = false;
+// 	let skadefolderData = false;
+// 	let vandningfolderData = false;
 
-	// skapa mapp-strukturen först strid
-	for (const folder of game.folders) {
-		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Strid")) {
-			stridfolderData = folder;
-			break;
-		}
-	}
+// 	// skapa mapp-strukturen först strid
+// 	for (const folder of game.folders) {
+// 		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Strid")) {
+// 			stridfolderData = folder;
+// 			break;
+// 		}
+// 	}
 
-	if (!stridfolderData) {
-		// Create a new Folder
-		stridfolderData = await Folder.create({
-			name: "[EON] Strid",
-			type: "RollTable",
-			parent: null,
-			sorting: 'm',
-			"flags.eon.folderId": "Strid"
-		});
-	}
+// 	if (!stridfolderData) {
+// 		// Create a new Folder
+// 		stridfolderData = await Folder.create({
+// 			name: "[EON] Strid",
+// 			type: "RollTable",
+// 			parent: null,
+// 			sorting: 'm',
+// 			"flags.eon.folderId": "Strid"
+// 		});
+// 	}
 
-	// skapa mapp-strukturen först skada
-	for (const folder of game.folders) {
-		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Skadetabell")) {
-			skadefolderData = folder;
-			break;
-		}
-	}
+// 	// skapa mapp-strukturen först skada
+// 	for (const folder of game.folders) {
+// 		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Skadetabell")) {
+// 			skadefolderData = folder;
+// 			break;
+// 		}
+// 	}
 
-	if (!skadefolderData) {
-		// Create a new Folder
-		skadefolderData = await Folder.create({
-			name: "[EON] Skadetabell",
-			type: "RollTable",
-			parent: null,
-			sorting: 'm',
-			"flags.eon.folderId": "Skadetabell"
-		});
-	}
+// 	if (!skadefolderData) {
+// 		// Create a new Folder
+// 		skadefolderData = await Folder.create({
+// 			name: "[EON] Skadetabell",
+// 			type: "RollTable",
+// 			parent: null,
+// 			sorting: 'm',
+// 			"flags.eon.folderId": "Skadetabell"
+// 		});
+// 	}
 
-	// skapa mapp-strukturen först vändning
-	for (const folder of game.folders) {
-		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Vandningstabell")) {
-			vandningfolderData = folder;
-			break;
-		}
-	}
+// 	// skapa mapp-strukturen först vändning
+// 	for (const folder of game.folders) {
+// 		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Vandningstabell")) {
+// 			vandningfolderData = folder;
+// 			break;
+// 		}
+// 	}
 
-	if (!vandningfolderData) {
-		// Create a new Folder
-		vandningfolderData = await Folder.create({
-			name: "[EON] Vändningstabell",
-			type: "RollTable",
-			parent: null,
-			sorting: 'm',
-			"flags.eon.folderId": "Vandningstabell"
-		});
-	}
+// 	if (!vandningfolderData) {
+// 		// Create a new Folder
+// 		vandningfolderData = await Folder.create({
+// 			name: "[EON] Vändningstabell",
+// 			type: "RollTable",
+// 			parent: null,
+// 			sorting: 'm',
+// 			"flags.eon.folderId": "Vandningstabell"
+// 		});
+// 	}
 
-	// läs in alla tabellerna
-	let data = await FilePicker.browse("data", "systems/eon-rpg/packs/tabeller", { bucket: null, extensions: [".json", ".JSON"], wildcard: false }); 
+// 	// läs in alla tabellerna
+// 	let data = await FilePicker.browse("data", "systems/eon-rpg/packs/tabeller", { bucket: null, extensions: [".json", ".JSON"], wildcard: false }); 
 
-	for (const file of data.files) {
-		const fileData = await fetch(`${file}`).then((response) => response.json());
+// 	for (const file of data.files) {
+// 		const fileData = await fetch(`${file}`).then((response) => response.json());
 
-		let id = "";
+// 		let id = "";
 
-		try {
-			id = game.settings.get('eon-rpg', fileData.id);
-		}
-		catch(err) {
-			// om tabellen inte har en inställning hoppa över denna (settings.js)
-			console.warn(`${fileData.id} finns inte registrerad i systemet`);
-			continue;
-		}
+// 		try {
+// 			id = game.settings.get('eon-rpg', fileData.id);
+// 		}
+// 		catch(err) {
+// 			// om tabellen inte har en inställning hoppa över denna (settings.js)
+// 			console.warn(`${fileData.id} finns inte registrerad i systemet`);
+// 			continue;
+// 		}
 
-		let folderData = false;
+// 		let folderData = false;
 
-		// kontrollera om mappen redan finns
-		if (fileData.mapp != "") {
-			if (fileData.mapp == "Skadetabell") {
-				folderData = skadefolderData;
-			}
-			if (fileData.mapp == "Strid") {
-				folderData = stridfolderData;
-			}
-			if (fileData.mapp == "Vandningstabell") {
-				folderData = vandningfolderData;
-			}
-		}	
+// 		// kontrollera om mappen redan finns
+// 		if (fileData.mapp != "") {
+// 			if (fileData.mapp == "Skadetabell") {
+// 				folderData = skadefolderData;
+// 			}
+// 			if (fileData.mapp == "Strid") {
+// 				folderData = stridfolderData;
+// 			}
+// 			if (fileData.mapp == "Vandningstabell") {
+// 				folderData = vandningfolderData;
+// 			}
+// 		}	
 
-		let range = 1;
+// 		let range = 1;
 
-		try {
-			range = parseInt(fileData.tabell.results[fileData.tabell.results.length-1].range[1]);
-		}
-		catch(err) {
-			console.error(`Kunde inte läsa in antalet sidor tabellen ${fileData.id} skulle ha`);
-			continue;
-		}		
+// 		try {
+// 			range = parseInt(fileData.tabell.results[fileData.tabell.results.length-1].range[1]);
+// 		}
+// 		catch(err) {
+// 			console.error(`Kunde inte läsa in antalet sidor tabellen ${fileData.id} skulle ha`);
+// 			continue;
+// 		}		
 
-		if (id == "") {
-			let formula = `1d${range}`;
+// 		if (id == "") {
+// 			let formula = `1d${range}`;
 
-			if (fileData.tabell?.formula != undefined) {
-				formula = fileData.tabell?.formula;
-			}
+// 			if (fileData.tabell?.formula != undefined) {
+// 				formula = fileData.tabell?.formula;
+// 			}
 
-			let tabell = await RollTable.implementation.create({
-				name: fileData.tabell.name,
-				results: fileData.tabell.results,
-				img: fileData.tabell.img,
-				description: fileData.tabell.description,
-				folder: folderData._id,
-				replacement: true,
-				displayRoll: true,
-				formula: formula
-			});
+// 			let tabell = await RollTable.implementation.create({
+// 				name: fileData.tabell.name,
+// 				results: fileData.tabell.results,
+// 				img: fileData.tabell.img,
+// 				description: fileData.tabell.description,
+// 				folder: folderData._id,
+// 				replacement: true,
+// 				displayRoll: true,
+// 				formula: formula
+// 			});
 
-			console.log(`Tabell ${fileData.id} skapad ${tabell._id}`);
-			await game.settings.set('eon-rpg', fileData.id, tabell._id);
-		}
-		// kontrollera version på tabellen
-		// om tabellen är borttagen OM borttagen skall den läggas till igen?
-		else {
-			const table = game.tables.find(i => i._id === id);
+// 			console.log(`Tabell ${fileData.id} skapad ${tabell._id}`);
+// 			await game.settings.set('eon-rpg', fileData.id, tabell._id);
+// 		}
+// 		// kontrollera version på tabellen
+// 		// om tabellen är borttagen OM borttagen skall den läggas till igen?
+// 		else {
+// 			const table = game.tables.find(i => i._id === id);
 
-			if ((!table) || (table == undefined)) {
-				let tabell = await RollTable.implementation.create({
-					name: fileData.tabell.name,
-					results: fileData.tabell.results,
-					img: fileData.tabell.img,
-					description: fileData.tabell.description,
-					folder: folderData._id,
-					replacement: true,
-					displayRoll: true,
-					formula: `1d${range}`
-				});
+// 			if ((!table) || (table == undefined)) {
+// 				let tabell = await RollTable.implementation.create({
+// 					name: fileData.tabell.name,
+// 					results: fileData.tabell.results,
+// 					img: fileData.tabell.img,
+// 					description: fileData.tabell.description,
+// 					folder: folderData._id,
+// 					replacement: true,
+// 					displayRoll: true,
+// 					formula: `1d${range}`
+// 				});
 
-				console.log(`Tabell ${fileData.id} skapad ${tabell._id}`);		
-				await game.settings.set('eon-rpg', fileData.id, tabell._id);
-			}			
-		}		
-	}
+// 				console.log(`Tabell ${fileData.id} skapad ${tabell._id}`);		
+// 				await game.settings.set('eon-rpg', fileData.id, tabell._id);
+// 			}			
+// 		}		
+// 	}
 
-	//await Macro.implementation.create({});
-}
+// 	//await Macro.implementation.create({});
+// }
 
 export const RegisterHandlebarsHelpers = function () {
 
@@ -315,13 +326,22 @@ export const RegisterHandlebarsHelpers = function () {
 	});
 
 	// hämtar en särskild färdighets namn
-	Handlebars.registerHelper("getSkillname", function(grupp, skill) {
-		return game.EON.fardigheter[grupp][skill].namn;
+	Handlebars.registerHelper("getSkillname", function(actor, grupp, skill) {
+		if (actor.type.toLowerCase() === "rollperson") {
+			return game.EON.fardigheter[grupp][skill].namn;
+		}
+		else if (actor.type.toLowerCase() === "rollperson5") {
+			return game.EON.fardigheter5[grupp][skill].namn;
+		}		
+		else {
+			return game.EON.fardigheter[grupp][skill].namn;
+		}
 	});
 
 	// hämtar en särskild färdighets namn
-	Handlebars.registerHelper("getSkillnameRitualList", function(list) {
+	Handlebars.registerHelper("getSkillnameRitualList", function(actor, list) {
 		let oversatt = "";
+
 
 		if (!list || !Array.isArray(list)) {
 			console.warn("Invalid list in getSkillnameRitualList:", list);
@@ -330,21 +350,34 @@ export const RegisterHandlebarsHelpers = function () {
 
 		try {
 			for (const moment of list) {
+				let skillName = "";
+
 				if (!moment.grupp || !moment.fardighet) {
 					console.warn("Missing grupp or fardighet in moment:", moment);
 					continue;
 				}
 
-				// First try to get from game.EON.fardigheter
-				let skillName = game.EON.fardigheter?.[moment.grupp]?.[moment.fardighet]?.namn;
-				
-				// If not found, try CONFIG.EON.fardigheter
-				if (!skillName) {
-					skillName = CONFIG.EON.fardigheter?.[moment.grupp]?.[moment.fardighet]?.namn;
+				if (actor.system.installningar.eon === "eon4") {
+					// First try to get from game.EON.fardigheter
+					skillName = game.EON.fardigheter?.[moment.grupp]?.[moment.fardighet]?.namn;
+					
+					// If not found, try CONFIG.EON.fardigheter
+					if (!skillName) {
+						skillName = CONFIG.EON.fardigheter?.[moment.grupp]?.[moment.fardighet]?.namn;
+					}
+				}
+				else if (actor.system.installningar.eon === "eon4") {
+					// First try to get from game.EON.fardigheter
+					skillName = game.EON.fardigheter5?.[moment.grupp]?.[moment.fardighet]?.namn;
+					
+					// If not found, try CONFIG.EON.fardigheter
+					if (!skillName) {
+						skillName = CONFIG.EON.fardigheter?.[moment.grupp]?.[moment.fardighet]?.namn;
+					}
 				}
 
 				// If still not found, use the raw fardighet name
-				if (!skillName) {
+				if (skillName == "") {
 					skillName = moment.fardighet;
 				}
 
@@ -525,21 +558,37 @@ export const RegisterHandlebarsHelpers = function () {
 	});	
 
 	// hämtar ett attributs kortnamn
-	Handlebars.registerHelper("getAttributeShortName", function(attribut) {
+	Handlebars.registerHelper("getAttributeShortName", function(attribut, withdiv = true) {
 		if (attribut == "") {
 			return "";
 		}
 
-		return "("+CONFIG.EON.grundegenskaper[attribut].kort+")";
+		if (withdiv) {
+			return '<div class="skill-short">('+CONFIG.EON.grundegenskaper[attribut].kort+')</div>';
+		}
+		else {
+			return '('+CONFIG.EON.grundegenskaper[attribut].kort+')';
+		}		
 	});
 
 	// Hämtar mysteriets färdigheter och listar dessa snyggt
-	Handlebars.registerHelper("getMysterySkills", function(skills) {
+	Handlebars.registerHelper("getMysterySkills", function(actor, skills) {
 		let list = "";
+		let skillList = "";
+
+		if (actor.system.installningar.eon === "eon4") {
+			skillList = game.EON.fardigheter;
+		}
+		else if (actor.system.installningar.eon === "eon5") {
+			skillList = game.EON.fardigheter5;
+		}
+		else {
+			return "";
+		}
 
 		for (const skill of skills) {
-			//list = list + CONFIG.EON.fardigheter.mystik[skill.fardighet];
-			if (game.EON.fardigheter.mystik[skill.fardighet] == undefined) {
+
+			if (skillList.mystik[skill.fardighet] == undefined) {
 				continue;
 			}
 
@@ -547,7 +596,7 @@ export const RegisterHandlebarsHelpers = function () {
 				list = list + ", ";
 			}
 
-			list = list + game.EON.fardigheter.mystik[skill.fardighet].namn;
+			list = list + skillList.mystik[skill.fardighet].namn;
 
 			if (skill.huvud) {
 				list = list + "*";
@@ -869,6 +918,14 @@ export const RegisterHandlebarsHelpers = function () {
 		return "";
 	});
 
+	Handlebars.registerHelper("getEquipmentGroupName", function(groupid) {
+		if ((groupid == "") || (groupid == undefined)) {
+			return "";
+		}
+
+		return CONFIG.EON.utrustningsgrupper[groupid];
+	});
+
 	Handlebars.registerHelper("getCurrencyList", function() {
 		if (!CONFIG.EON.datavaluta?.valuta) {
 			console.warn("No currency data found");
@@ -905,4 +962,122 @@ export const RegisterHandlebarsHelpers = function () {
 		
 		return result;
 	});
+
+	Handlebars.registerHelper('round', function(value, decimals) {
+		return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+	});
+
+	// Visar listan med Förvaringar på Rollformuläret.
+	Handlebars.registerHelper('getEquipmentContainers', function(actor) {
+		// Hitta alla förvarings Items på Actor
+		const items = (actor?.items || []).filter(item => item.type === "Utrustning" && item.system.installningar.forvaring);
+		items.sort((a, b) => a.name.localeCompare(b.name));
+
+		let html = ``;
+
+		// Loopa igenom dessa
+		for (const forvaring of items) {
+			// html för inkapsling av raden
+			const headerhtml = `<div class="item-row container item-listrow" data-itemid="${forvaring._id}" data-actor-id="${actor?._id}">`;
+			// slutet av raden
+			const footerhtml = `</div>`;
+
+			let descriptionhtml = ``;
+
+			// skapa beskrivning rutan
+			if (forvaring.system.beskrivning == "") {
+				descriptionhtml = `<div class="weapon-icon"><i class="icon fa-regular fa-share" title="Beskrivning saknas"></i></div>`;
+			}
+			else {
+				descriptionhtml = `<div class="weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="${forvaring._id}"><i class="icon fa-solid fa-share"></i></a></div>`;
+			}
+			
+			// skapa edit icon rutan
+			const edithtml = `<div class="weapon-icon"><a class="item-edit" title="Editera utrustning" data-source="utrustning" data-itemid="${forvaring._id}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>`;
+
+			// skapa active icon rutan
+			let isChecked = forvaring.system.installningar.buren ? "checked" : "";
+			const activehtml = `<div class="active-icon"><input class="pointer item-active" name="foremal.system.installningar.buren" type="checkbox" data-itemid="${forvaring._id}" data-property="buren" ${isChecked} title="Buren utrustning" /></div>`;
+
+			// skapa namn rutan
+			const namehtml = `<div class="draggable" style="width: 180px;" data-itemid="${forvaring._id}">${forvaring.name}</div>`;
+
+			// skapa antal rutan
+			// TODO skall verkligen antal vara mer än 1?
+			const numberhtml = `<div style="width: 50px;">
+									<i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="${forvaring._id}"></i>
+									${forvaring.system.antal}
+									<i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="${forvaring._id}"></i>
+								</div>`;
+
+			// skapa vikt rutan
+			let weighthtml = `<div style="width: 50px;">-</div>`;
+			let weight = 0;
+
+			if (forvaring.system.vikt > 0) {
+				weight = forvaring.system.vikt * forvaring.system.antal;
+				weighthtml = `<div style="width: 50px;">${weight.toFixed(2)}</div>`;
+			}
+
+			let containerWeight = weight;
+
+			// hämta eventuell utrustning som ligger i denna förvaring
+			//const containedItems = (actor?.items || []).filter(item => item.type === "Utrustning" && item.system.installningar.forvaringid == forvaring._id);
+			let containedItemshtml = ``;
+
+			// for (const item of containedItems) {
+			// 	let weight = item.system.vikt * item.system.antal;
+			// 	containerWeight += weight;
+
+			// 	containedItemshtml += `<div>${item.name}</div>`;
+			// }
+
+			// beräkna total vikt
+			let totalweighthtml = `<div style="width: 50px;">${containerWeight.toFixed(2)}</div>`;;
+
+			html += headerhtml + edithtml + descriptionhtml + activehtml + namehtml + numberhtml + weighthtml + totalweighthtml + footerhtml + containedItemshtml;
+		}
+
+		return html;
+	});
+
+	// Visar listan med Förvaringar på Rollformuläret.
+	Handlebars.registerHelper('getConnectedItems', function(actor, itemid) {
+		const items = (actor?.items || []).filter(item => item.system.installningar.forvaringid == itemid);
+		items.sort((a, b) => a.name.localeCompare(b.name));
+
+		return items;
+	});
+
+	// sortering
+	// Hantera sortering i listor
+	// Registera en helper som kollar om ett fält är det som är sorterat just nu
+	Handlebars.registerHelper('isSorted', function(listKey, key, options) {
+		const sheet = options.data.root.sheet;
+		return sheet?.sortState?.[listKey]?.key === key;
+	});
+
+	// Handlebars.registerHelper('isSortedAsc', function(listKey, key, options) {
+	// 	const sheet = options.data.root.sheet;
+	// 	return sheet?.sortState?.[listKey]?.key === key && sheet.sortState[listKey].asc;
+	// });
+
+	Handlebars.registerHelper('isSortedAsc', function(listName, key, options) {
+		const sortState = options.data.root.sheet?.sortState?.[listName];
+		return sortState?.key === key && sortState?.asc;
+	});
+
+	Handlebars.registerHelper('isSortedDesc', function(listName, key, options) {
+		const sortState = options.data.root.sheet?.sortState?.[listName];
+		return sortState?.key === key && !sortState?.asc;
+	});
+
+	Handlebars.registerHelper('getAncestryProperties', function(actor) {
+		const items = (actor?.items || []).filter(item => (item.type === "Egenskap") && (item.system.installningar.folkslag === true));
+		items.sort((a, b) => a.name.localeCompare(b.name));
+
+		return items;
+	});
+
+
 }

@@ -134,7 +134,7 @@ export class AttributeRoll {
     }
 
     get hamtaAntalSar() {
-        if (this.actor.type.toLowerCase().replace(" ", "") != "rollperson") {
+        if ((this.actor.type.toLowerCase().replace(" ", "") != "rollperson") && (this.actor.type.toLowerCase().replace(" ", "") != "rollperson5")) {
             return 0;
         }
 
@@ -394,12 +394,13 @@ export class SkillRoll {
     */
     constructor(item, actor) {
         if (item.type == "Färdighet") {
-            if ((item.system.grupp == "rorelse") && (game.settings.get("eon-rpg", "hinderenceSkillGroupMovement"))) {
+
+            if ((item.system.grupp == "rorelse") && (CONFIG.EON.settings.hinderenceSkillGroupMovement)) { 
                 if ((actor.system.berakning.belastning.totaltavdrag.tvarde > 0) || (actor.system.berakning.belastning.totaltavdrag.bonus > 0)) {
                     this.#_harBelastning = true;
                 }                
             }
-            if ((item.system.attribut == "rorlighet") && (game.settings.get("eon-rpg", "hinderenceAttributeMovement"))) {
+            if ((item.system.attribut == "rorlighet") && (CONFIG.EON.settings.hinderenceAttributeMovement)) { 
                 if ((actor.system.berakning.belastning.totaltavdrag.tvarde > 0) || (actor.system.berakning.belastning.totaltavdrag.bonus > 0)) {
                     this.#_harBelastning = true;
                 }  
@@ -811,9 +812,7 @@ export class DialogMysteryRoll extends FormApplication {
         this.config = game.EON.CONFIG;     
         this.EON = game.EON; 
         this.isDialog = true;  
-        this.options.title = `${actor.name} - ${roll.namn}`;
-
-        
+        this.options.title = `${actor.name} - ${roll.namn}`;        
     }
 
     /** @override */
@@ -862,7 +861,13 @@ export class DialogMysteryRoll extends FormApplication {
 
             const roll = new DiceRollContainer(this.actor, this.config);
             roll.typeroll = CONFIG.EON.slag.fardighet;
-            roll.action = game.EON.fardigheter.mystik[diceroll.fardighet].namn;
+
+            if (this.actor.system.installningar.eon === "eon4") {
+                roll.action = game.EON.fardigheter.mystik[diceroll.fardighet].namn;
+            }
+            else if (this.actor.system.installningar.eon === "eon5") {
+                roll.action = game.EON.fardigheter5.mystik[diceroll.fardighet].namn;
+            }
 
             let grundTarning = 0;
             let grundBonus = 0;

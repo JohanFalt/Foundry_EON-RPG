@@ -2,28 +2,6 @@ export default class SelectHelper {
     static SetupActor(actor) {
         let listData = [];
 
-        listData.folkslag = {};
-
-        let folkslag = {
-            "": "- Välj -"
-        };
-
-        if (actor.system.bakgrund.folkslag == 'custom') {
-            let id = actor.system.bakgrund.folkslag;
-            let namn = actor.system.altvarde.folkslag;
-
-            folkslag = Object.assign(folkslag, {[id]: namn});
-        }
-
-        for (const grupp in game.EON.folkslag) {
-            let id = grupp.toLowerCase();
-            let namn = game.EON.folkslag[grupp].namn;
-
-            folkslag = Object.assign(folkslag, {[id]: namn});
-        }
-
-        listData.folkslag = folkslag;
-
         listData.vapenArm = {
             "": "- Välj -",
             "hoger": "Höger",
