@@ -2,9 +2,9 @@
 
 ![Latest Release Download Count](https://img.shields.io/github/downloads/p4535992/Foundry_EON-RPG/latest/v4.0.0.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge)
 
-![](https://img.shields.io/badge/Foundry-v13-informational)
+![Foundry 13](https://img.shields.io/badge/Foundry-v13-informational)
 
-![](https://img.shields.io/badge/Foundry-v12-informational)
+![Foundry 12](https://img.shields.io/badge/Foundry-v12-informational)
 
 I would never require it by anyone or even expect someone to do but if you really want to feel free to [buy me a coffee](https://ko-fi.com/johanfk) 
 
