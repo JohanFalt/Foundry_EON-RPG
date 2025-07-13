@@ -8,8 +8,11 @@ import ItemHelper from "../item-helper.js";
 export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 
 	static get defaultOptions() {
+		//let mode = (game.settings.get('core', 'uiConfig').colorScheme.applications == "dark" ? " wod-theme-dark " : " wod-theme-light ");
+        let mode = " wod-theme-light ";
+
 		const options = foundry.utils.mergeObject(super.defaultOptions, {
-			classes: ["EON itemsheet"],
+			classes: ["EON itemsheet" + mode],
 			tabs: [{
                 navSelector: ".item-tabs",
                 contentSelector: ".sheet-header",

@@ -1,10 +1,19 @@
 .EON .editor {
-  border: 1px solid var(--eon-border-color);
   border-radius: 3px;
-  color: black;
   min-height: 200px;
   max-height: 210px;
+}
+
+.wod-theme-light.EON .editor {
+  border: 1px solid var(--eon-border-color);
+  color: black;
   background-color: var(--eon-back-color-inputs);
+}
+
+.wod-theme-dark.EON .editor {
+  border: 1px solid var(--eon-border-color-dark);
+  color: white;
+  background-color: var(--eon-back-color-inputs-dark);
 }
 
 .EON .editor-content {

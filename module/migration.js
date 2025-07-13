@@ -404,6 +404,16 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         `;
     }
 
+    if (await CompareVersion(installedVersion, '4.0.1')) {
+        partMessage += `
+        <p>
+            <h4>Eon 5 rollformulär</h4>            
+            <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/329">#329</a>] - Belastningstabellen gav fel värde i Eon 5.</p>
+            <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/333">#333</a>] - Kan inte spara karaktärsdrag samt om man hade mer än ett rollformulär öppet så togs värdet på det andra rollformulärets karaktärsdraget.</p>
+        </p>           
+        `;
+    }
+
     // if (await CompareVersion(installedVersion, '3.1.0')) {
     //     partMessage += `
     //         <li><h3>Eon IV kompendium</h3>

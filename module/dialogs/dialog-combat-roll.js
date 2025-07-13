@@ -26,8 +26,11 @@ export class DialogCombat extends FormApplication {
     }
 
     static get defaultOptions() {
+        //let mode = (game.settings.get('core', 'uiConfig').colorScheme.applications == "dark" ? " wod-theme-dark " : " wod-theme-light ");
+        let mode = " wod-theme-light ";
+
         return foundry.utils.mergeObject(super.defaultOptions, {
-            classes: ["EON general-dialog"],
+            classes: ["EON general-dialog" + mode],
             template: "systems/eon-rpg/templates/dialogs/dialog-combat-roll.html",
             closeOnSubmit: false,
             submitOnChange: true,

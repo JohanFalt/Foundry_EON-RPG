@@ -7,8 +7,11 @@ import SelectHelper from "../select-helpers.js"
 export default class EonCreatureSheet extends foundry.appv1.sheets.ActorSheet {
     /** @override */
     static get defaultOptions() {
+        //let mode = (game.settings.get('core', 'uiConfig').colorScheme.applications == "dark" ? " wod-theme-dark " : " wod-theme-light ");
+        let mode = " wod-theme-light ";
+
 		return foundry.utils.mergeObject(super.defaultOptions, {
-			classes: ["EON EON4 varelse"],
+			classes: ["EON EON4 varelse" + mode ],
             tabs: [{
                 navSelector: ".sheet-tabs",
                 contentSelector: ".sheet-body",

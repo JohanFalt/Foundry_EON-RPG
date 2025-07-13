@@ -183,8 +183,11 @@ export class DialogAttribute {
 export class DialogAttributeEdit extends FormApplication {
 
     static get defaultOptions() {
+        //let mode = (game.settings.get('core', 'uiConfig').colorScheme.applications == "dark" ? " wod-theme-dark " : " wod-theme-light ");
+        let mode = " wod-theme-light ";
+
         return foundry.utils.mergeObject(super.defaultOptions, {
-            classes: ["EON general-dialog"],
+            classes: ["EON general-dialog" + mode],
             closeOnSubmit: false,
             submitOnChange: true,
             resizable: false

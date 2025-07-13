@@ -1,3 +1,5 @@
+import DialogHelper from "./dialog-helper.js";
+
 export default class classActorHelper {
     static HandleDragDrop(sheet, actor, html, element) {
         const original = element;
@@ -202,8 +204,6 @@ export default class classActorHelper {
             citemData.system.installningar.eon = itemData.system.installningar.eon;
             await destinationActor.createEmbeddedDocuments("Item", [citemData]);
 
-            console.log("Flyttat behållaföremål itemData " + itemData.name);
-
             actor.deleteEmbeddedDocuments("Item", [citem._id]);
         }
         
@@ -212,4 +212,87 @@ export default class classActorHelper {
 
         return true;
     } 
+
+    static async OnsheetChange(event, actor) {
+        const element = event.currentTarget;
+		const dataset = element.dataset;
+
+		const source = dataset.source;
+        const actorData = foundry.utils.duplicate(actor);
+
+        if (source == "miljo") {
+            var e = document.getElementById("miljo");
+
+            if (e.value == "custom") {
+                DialogHelper.AttributeEditDialog(actor, "bakgrund", source);
+                return;
+            }
+
+            return;
+        }
+        if (source == "arketyp") {
+            var e = document.getElementById("arketyp");
+            
+            if (e.value == "custom") {
+                DialogHelper.AttributeEditDialog(actor, "bakgrund", source);
+                return;
+            }
+
+            return;
+        }        
+        if (source == "valmaende") {
+            let ruta = document.getElementById("fokus_varde");
+
+            const oldIndex = Number(dataset.value);
+            const newIndex = Number(ruta.value);
+
+            if (newIndex < oldIndex) {
+
+                actorData.system.egenskap.fokus.varde = newIndex;
+                actorData.system.egenskap.fokus.max = newIndex;
+                
+                await actor.update(actorData);
+                return true;                
+            }    
+            
+            return;
+        }
+        if (source == "karaktarsdrag") {
+            const index = Number(dataset.index);
+            let property = dataset.name;
+
+            if (property.includes(".")) {
+                let properties = property.split(".");
+
+                if (properties.length == 2) {
+                    const value1 = properties[0];
+                    const value2 = properties[1];
+                    property = property.replace(".", "_");
+
+                    let e = document.getElementById(actor._id + "_" + source + "_" + property + "_" + index);
+                    const newvalue = e.value
+
+                    actorData.system.egenskap.karaktärsdrag[index][value1][value2] = newvalue;
+                }
+                else {
+                    return;
+                }                
+            }
+            else {
+                let e = document.getElementById(actor._id + "_" + source + "_" + property + "_" + index);
+                const newvalue = e.value
+    
+                actorData.system.egenskap.karaktärsdrag[index][property] = newvalue;
+            }
+            
+            await actor.update(actorData);
+            return true;
+        }
+        if (source == "lakningstakt") {
+            let value = parseInt(element.value);
+            actorData.system.strid.lakningstakt = value;
+            await this.actor.update(actorData);
+            return;
+        }
+    }
 }

@@ -39,17 +39,36 @@
     --eon-line-height-floattext: 25px;
 
     --eon-sheet-background-color: url('../assets/img/graphics/background.jpg');
+    --eon-sheet-background-color-dark: black;
+
     --eon-sheet-text-color: black;
+    --eon-sheet-text-color-dark: white;
+
     --eon-main-full-color: rgba(121, 8, 19, 1);
+
     --eon-back-color-inputs: white;
+    --eon-back-color-inputs-dark: black;
+
     --eon-back-readonly-color-inputs: rgb(242, 242, 242, 1);
+    --eon-back-readonly-color-inputs-dark: black;
+
     --eon-text-normal-color: black;
+    --eon-text-normal-color-dark: white;
+
     --eon-border-color: black;
+    --eon-border-color-dark: white;
 
     --eon-item-background-color: url('../assets/img/graphics/background.jpg');
+    --eon-item-background-color-dark: black;
 
     --eon-select-empty-background-color: black;
+    --eon-select-empty-background-color-dark: white;
+
     --eon-select-empty-text-color: white;
+    --eon-select-empty-text-color-dark: black;
+
+    --eon-information-background: #f3f3f3;
+    --eon-information-background-dark: #0c0c0c;
     
     --eon-color-good: rgb(2, 106, 2);
     --eon-color-bad: rgb(151, 3, 3);
@@ -126,19 +145,40 @@
 .EON.rollperson .window-content,
 .EON.varelse .window-content,
 .EON.general-dialog .window-content {
-    background: var(--eon-sheet-background-color) no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
 }
 
+.wod-theme-light.EON.rollperson .window-content,
+.wod-theme-light.EON.varelse .window-content,
+.wod-theme-light.EON.general-dialog .window-content {
+    background: var(--eon-sheet-background-color) no-repeat;
+    color: var(--eon-text-normal-color);
+}
+
+.wod-theme-dark.EON.rollperson .window-content,
+.wod-theme-dark.EON.varelse .window-content,
+.wod-theme-dark.EON.general-dialog .window-content {
+    background: var(--eon-sheet-background-color-dark) no-repeat;
+    color: var(--eon-text-normal-color-dark);
+}
+
 .EON.itemsheet .window-content {
-    background: var(--eon-item-background-color) no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+}
+
+
+.wod-theme-light.EON.itemsheet .window-content {
+    background: var(--eon-item-background-color) no-repeat;
+}
+
+.wod-theme-dark.EON.itemsheet .window-content {
+    background: var(--eon-item-background-color-dark) no-repeat;
 }
 
 .EON.itemsheet .item-body,
@@ -156,9 +196,14 @@
     padding-right: 0px;
 }
 
-.EON .sheet-item,
-.EON .sheet-character {    
+.wod-theme-light.EON .sheet-item,
+.wod-theme-light.EON .sheet-character {    
     color: var(--eon-sheet-text-color);
+}
+
+.wod-theme-dark.EON .sheet-item,
+.wod-theme-dark.EON .sheet-character {    
+    color: var(--eon-sheet-text-color-dark);
 }
 
 .EON.normal-text {
@@ -173,16 +218,44 @@
 .EON input[type="text"],
 .EON input[type="number"],
 .EON select {
+    width: 98%;
+}
+
+.wod-theme-light.EON span.resource-value,
+.wod-theme-light.EON input[type="text"],
+.wod-theme-light.EON input[type="number"],
+.wod-theme-light.EON select,
+.wod-theme-light.EON button {
+    color: var(--eon-text-normal-color);    
+}
+
+.wod-theme-dark.EON span.resource-value,
+.wod-theme-dark.EON input[type="text"],
+.wod-theme-dark.EON input[type="number"],
+.wod-theme-dark.EON select,
+.wod-theme-dark.EON button {
+    color: var(--eon-text-normal-color-dark);    
+}
+
+.wod-theme-light.EON span.resource-value,
+.wod-theme-light.EON input[type="text"],
+.wod-theme-light.EON input[type="number"],
+.wod-theme-light.EON select {
     background: var(--eon-back-color-inputs);
     background-color: var(--eon-back-color-inputs);
-    color: var(--eon-text-normal-color);    
-    width: 98%;
+}
+
+.wod-theme-dark.EON span.resource-value,
+.wod-theme-dark.EON input[type="text"],
+.wod-theme-dark.EON input[type="number"],
+.wod-theme-dark.EON select {
+    background: var(--eon-back-color-inputs-dark);
+    background-color: var(--eon-back-color-inputs-dark);
 }
 
 .EON input[type="text"]:disabled,
 .EON input[type="number"]:disabled,
 .EON div.disabled {
-    background: var(--eon-back-readonly-color-inputs);
     cursor: not-allowed;
     border-top-style: none;
     border-left-style: none;
@@ -194,14 +267,36 @@
     margin-right: 2px;
 }
 
-.EON select option {
+.wod-theme-light.EON input[type="text"]:disabled,
+.wod-theme-light.EON input[type="number"]:disabled,
+.wod-theme-light.EON div.disabled {
+    background: var(--eon-back-readonly-color-inputs);
+}
+
+.wod-theme-dark.EON input[type="text"]:disabled,
+.wod-theme-dark.EON input[type="number"]:disabled,
+.wod-theme-dark.EON div.disabled {
+    background: var(--eon-back-readonly-color-inputs-dark);
+}
+
+.wod-theme-light.EON select option {
     background: var(--eon-back-color-inputs);
     color: var(--eon-text-normal-color);
 }
 
-.EON select option[value=""] {
+.wod-theme-dark.EON select option {
+    background: var(--eon-back-color-inputs-dark);
+    color: var(--eon-text-normal-color-dark);
+}
+
+.wod-theme-light.EON select option[value=""] {
     background: var(--eon-select-empty-background-color);
     color: var(--eon-select-empty-text-color);
+}
+
+.wod-theme-dark.EON select option[value=""] {
+    background: var(--eon-select-empty-background-color-dark);
+    color: var(--eon-select-empty-text-color-dark);
 }
 
 .EON .sheet-character,
@@ -440,16 +535,41 @@
 .EON .item-edit:focus,
 .EON .vrollable:hover,
 .EON .vrollable:focus {
-    color: #000;  
     cursor: pointer;
+}
+
+.wod-theme-light.EON .item-edit:hover,
+.wod-theme-light.EON .item-edit:focus,
+.wod-theme-light.EON .vrollable:hover,
+.wod-theme-light.EON .vrollable:focus {
+    color: var(--eon-sheet-text-color);  
+}
+
+.wod-theme-dark.EON .item-edit:hover,
+.wod-theme-dark.EON .item-edit:focus,
+.wod-theme-dark.EON .vrollable:hover,
+.wod-theme-dark.EON .vrollable:focus {
+    color: var(--eon-sheet-text-color-dark);  
+}
+
+.wod-theme-light.EON .item-edit:hover,
+.wod-theme-light.EON .item-edit:focus,
+.wod-theme-light.EON .vrollable:hover,
+.wod-theme-light.EON .vrollable:focus {
     text-shadow: 0 0 10px var(--eon-main-full-color);
+}
+
+.wod-theme-dark.EON .item-edit:hover,
+.wod-theme-dark.EON .item-edit:focus,
+.wod-theme-dark.EON .vrollable:hover,
+.wod-theme-dark.EON .vrollable:focus {
+    text-shadow: 0 0 10px var(--eon-main-full-color-dark);
 }
 
 .EON .vrollable:hover,
 .EON .vrollable:focus {
     background: url('../assets/img/icons/perspective-dice-six-faces-six.svg');
     background-repeat: no-repeat;
-    /* background-size: contain; */
     background-size: 23px;
     background-position: right;
 }
@@ -463,16 +583,23 @@
 }
 
 .EON .dice-value {
-    background-color: var(--eon-back-color-inputs);
-    /* font-family: var(--eon-main-font); */
     width: 50px;
     text-align: center;
     margin-left: 5px;
     margin-right: 5px;
     border-radius: 3px;
-    border: 1px solid var(--eon-border-color);
     height: var(--eon-line-height-default);
     line-height: var(--eon-line-height-default);
+}
+
+.wod-theme-light.EON .dice-value {
+    background-color: var(--eon-back-color-inputs);
+    border: 1px solid var(--eon-border-color);
+}
+
+.wod-theme-dark.EON .dice-value {
+    background-color: var(--eon-back-color-inputs-dark);
+    border: 1px solid var(--eon-border-color-dark);
 }
 
 .EON .macroBtn {
@@ -492,14 +619,23 @@
 }
 
 .EON .information-box {
-    background: #f3f3f3;
-    border: black;
     border-width: 1px;
     border-style: solid;
     border-radius: 5px;
     padding: 3px;
     margin-top: 5px;
     max-width: 200px;
+}
+
+.wod-theme-light.EON .information-box {
+    background: #f3f3f3;
+    background: var(--eon-information-background);
+    border: var(--eon-border-color);
+}
+
+.wod-theme-dark.EON .information-box {
+    background: var(--eon-information-background-dark);
+    border: var(--eon-border-color-dark);
 }
 
 .EON.itemsheet .top-sidetext,
@@ -572,8 +708,12 @@
     margin-bottom: 5px;
 }
 
-.EON button.active {
+.wod-theme-light.EON button.active {
     background-color: var(--eon-back-color-inputs);
+}
+
+.wod-theme-dark.EON button.active {
+    background-color: var(--eon-back-color-inputs-dark);
 }
 
 /* Navigation */
@@ -582,10 +722,16 @@
     display:flex;
 }
 
-.EON .tabButton:hover,
-.EON .tabButton:focus,
-.EON .tabButton.active {
+.wod-theme-light.EON .tabButton:hover,
+.wod-theme-light.EON .tabButton:focus,
+.wod-theme-light.EON .tabButton.active {
     background-color: var(--eon-back-color-inputs);
+}
+
+.wod-theme-dark.EON .tabButton:hover,
+.wod-theme-dark.EON .tabButton:focus,
+.wod-theme-dark.EON .tabButton.active {
+    background-color: var(--eon-back-color-inputs-dark);
 }
 
 .EON .tabButton {
@@ -650,25 +796,39 @@
 .EON .resource-circle .resource-value {
   height: 14px;
   width: 14px;
-  border: 1px solid var(--eon-border-color);
   display: inline-block;
   border-radius: 50%;
   cursor: pointer;
 }
 
+.wod-theme-light.EON .resource-circle .resource-value {
+  border: 1px solid var(--eon-border-color);
+}
+
+.wod-theme-dark.EON .resource-circle .resource-value {
+  border: 1px solid var(--eon-border-color-dark);
+}
+
 .EON .resource-box .resource-value {
     height: 16px;
     width: 16px;
-    border: 1px solid var(--eon-border-color);
     display: inline-block;
     cursor: pointer;
+}
+
+.wod-theme-light.EON .resource-box .resource-value {
+    border: 1px solid var(--eon-border-color);
+}
+
+.wod-theme-dark.EON .resource-box .resource-value {
+    border: 1px solid var(--eon-border-color-dark);
 }
 
 .EON span.resource-box-center {
     margin-top: calc(var(--eon-line-height-floattext) / 7);
 }
 
-.EON .resource-value.active {
+.wod-theme-light.EON .resource-value.active {
     background:
       linear-gradient(
         45deg,
@@ -687,6 +847,28 @@
         black 55%,
         white 57%,
         white 100%
+      );
+}
+
+.wod-theme-dark.EON .resource-value.active {
+    background:
+      linear-gradient(
+        45deg,
+        transparent 0%,
+        transparent 43%,
+        white 45%,
+        white 55%,
+        transparent 57%,
+        transparent 100%
+      ),
+      linear-gradient(
+        135deg,
+        black 0%,
+        black 43%,
+        white 45%,
+        white 55%,
+        black 57%,
+        black 100%
       );
 }
 
@@ -912,14 +1094,24 @@ input.skill-value {
 
 .EON.itemsheet .item-section,
 .EON.general-dialog .item-section {
-    background: #fff;
     padding-bottom: 10px;
     padding-top: 10px;
     margin-bottom: 10px;
     padding-left: 10px;
     padding-right: 10px;
-    border: 1px solid black;
     border-radius: 5px;
+}
+
+.wod-theme-light.EON.itemsheet .item-section,
+.wod-theme-light.EON.general-dialog .item-section {
+    background: var(--eon-back-color-inputs);
+    border: 1px solid var(--eon-border-color);
+}
+
+.wod-theme-dark.EON.itemsheet .item-section,
+.wod-theme-dark.EON.general-dialog .item-section {
+    background: var(--eon-back-color-inputs-dark);
+    border: 1px solid var(--eon-border-color-dark);
 }
 
 .EON.itemsheet.vapen .item-section {
@@ -963,7 +1155,7 @@ input.skill-value {
     width: 70px;
 }
 
-.tic-container {    
+.EON .tic-container {    
     position: absolute;
     top: 240px;
     left: 110px;
@@ -978,52 +1170,60 @@ input.skill-value {
     max-height: 300px
 }
 
-.img-block {
+.EON .img-block {
     width: 100px;
 }
 
-.img-icon {
+.EON .img-icon {
     width: 25px;
     height: 25px;
     border: 0;
 }
 
-.img-text-icon {
+.EON .img-text-icon {
     width: 15px;
     height: 15px;
     border: 0;
 }
 
-.fardighetsvarde {
+.EON .fardighetsvarde {
     font-size: 40px;
     position: absolute;
     left: 30px;
     top: -3px;
 }
 
-.weapon-value {
+.EON .weapon-value {
     width: 45px;
     line-height: 20px;
-    background-color: var(--eon-back-color-inputs);
     border-radius: 3px;
-    border-bottom: 1px solid var(--eon-border-color);
     height: 20px;
     margin: 3px 5px;
     text-align: center;
 }
 
-.floating-label-group {
+.wod-theme-light.EON .weapon-value {
+    background-color: var(--eon-back-color-inputs);
+    border-bottom: 1px solid var(--eon-border-color);
+}
+
+.wod-theme-dark.EON .weapon-value {
+    background-color: var(--eon-back-color-inputs-dark);
+    border-bottom: 1px solid var(--eon-border-color-dark);
+}
+
+.EON .floating-label-group {
   position: relative;
   
 }
-.floating-label-group .floating-div-label {
+.EON .floating-label-group .floating-div-label {
   position: absolute;
   pointer-events: none;
   font-size: var(--eon-box-headline-size);
   left: 5px;
   top: 2px;  
 }
-.floating-label-group .floating-label {
+.EON .floating-label-group .floating-label {
     position: absolute;
     pointer-events: none;
     font-family: var(--eon-main-headline-norm);
@@ -1069,14 +1269,22 @@ input.skill-value {
 /* Dialogs */
 
 .EON.general-dialog .window-content {
-    color: var(--eon-sheet-text-color);
     font-size: var(--eon-font-small);
     font-weight: normal;
-    background: var(--eon-item-background-color) no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+}
+
+.wod-theme-light.EON.general-dialog .window-content {
+    color: var(--eon-sheet-text-color);
+    background: var(--eon-item-background-color) no-repeat;
+}
+
+.wod-theme-dark .EON.general-dialog .window-content {
+    color: var(--eon-sheet-text-color-dark);
+    background: var(--eon-item-background-color-dark) no-repeat;
 }
 
 .EON.general-dialog .window-content {

@@ -185,6 +185,10 @@ export class DiceRollContainer {
     }
 }
 
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 /* Slår ett antal tärningar */
 export async function RollDice(diceRoll) {
     const number = diceRoll.number;

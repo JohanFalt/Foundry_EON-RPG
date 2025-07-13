@@ -90,7 +90,7 @@ export default class CalculateHelper {
             actorData.system.skada.infektion = 0;
         }
 
-        const grundUtmattningRustning = this._beraknaRustningBelastning(actorData.items.filter(rustning => rustning.type === "Rustning" && rustning.system.installningar.buren));
+        const grundUtmattningRustning = this._beraknaRustningBelastning(actorData.items.filter(rustning => rustning.type === "Rustning" && rustning.system.installningar.buren), actorData.system.installningar.eon);
 
         actorData.system.skada.utmattning.grund = actorData.system.skada.infektion + grundUtmattningRustning;
 
@@ -168,54 +168,78 @@ export default class CalculateHelper {
         actorData.system.harleddegenskaper.initiativ.totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper.initiativ);
     }
 
-    static BeraknaBelastningAvdrag(varde) {
+    /* Belastningstabellen som detta är från Strid */
+    static BeraknaBelastningAvdrag(varde, bok) {
         let avdrag = {
 			"tvarde": 0,
 			"bonus": 0
 		};
 
-        if ((varde >= 17) && (varde <= 20)) {
-            avdrag = {
-                "tvarde": 0,
-                "bonus": 2
-            };
-        }
-        else if ((varde >= 21) && (varde <= 24)) {
-            avdrag = {
-                "tvarde": 1,
-                "bonus": 0
-            };
-        }
-        else if ((varde >= 25) && (varde <= 28)) {
-            avdrag = {
-                "tvarde": 1,
-                "bonus": 2
-            };
-        }
-        else if ((varde >= 29) && (varde <= 48)) {
-            avdrag = {
-                "tvarde": 2,
-                "bonus": 0
-            };
-        }
-        else if (varde >= 48) {
-            let totalt = Math.floor((varde - 48) / 4);
-            let bonus = totalt + 1;
+        if (bok == "eon4") {
+            if ((varde >= 17) && (varde <= 20)) {
+                avdrag = {
+                    "tvarde": 0,
+                    "bonus": 2
+                };
+            }
+            else if ((varde >= 21) && (varde <= 24)) {
+                avdrag = {
+                    "tvarde": 1,
+                    "bonus": 0
+                };
+            }
+            else if ((varde >= 25) && (varde <= 28)) {
+                avdrag = {
+                    "tvarde": 1,
+                    "bonus": 2
+                };
+            }
+            else if ((varde >= 29) && (varde <= 48)) {
+                avdrag = {
+                    "tvarde": 2,
+                    "bonus": 0
+                };
+            }
+            else if (varde >= 48) {
+                let totalt = Math.floor((varde - 48) / 4);
+                let bonus = totalt + 1;
 
-            if (bonus > 3) {
-                const tarning = {
-                    tvarde: 2,
-                    bonus: 0
+                if (bonus > 3) {
+                    const tarning = {
+                        tvarde: 2,
+                        bonus: 0
+                    }
+
+                    avdrag = DiceHelper.BeraknaBonus(tarning, bonus);
                 }
+                else {
+                    avdrag = {
+                        tvarde: 2,
+                        bonus: bonus
+                    }
+                }            
+            }
+        }
 
-                avdrag = DiceHelper.BeraknaBonus(tarning, bonus);
+        if (bok == "eon5") {
+            if ((varde >= 17) && (varde <= 24)) {
+                avdrag = {
+                    "tvarde": 1,
+                    "bonus": 0
+                };
+            }
+            else if ((varde >= 25) && (varde <= 48)) {
+                avdrag = {
+                    "tvarde": 2,
+                    "bonus": 0
+                };
             }
             else {
                 avdrag = {
-                    tvarde: 2,
-                    bonus: bonus
-                }
-            }            
+                    "tvarde": 3,
+                    "bonus": 0
+                };
+            }
         }
 
         return avdrag;
@@ -251,22 +275,91 @@ export default class CalculateHelper {
         return isLattlard ? difficulty : Math.max(difficulty, 4);
     }
 
-    static _beraknaRustningBelastning(rustning) {
+    /* Belastningstabellen baserad på rustning */
+    static _beraknaRustningBelastning(rustning, bok) {
         let grundUtmattning = 0;
 
-        for (const item of rustning) {
-            if (item.system.belastning < 9) {
-                grundUtmattning = 0;
+        if (bok == "eon4") {
+            // Grundboken
+            for (const item of rustning) {
+                if (item.system.belastning < 9) {
+                    grundUtmattning = 0;
+                }
+                else if ((item.system.belastning >= 9) || (item.system.belastning <= 32)) {
+                    grundUtmattning = 3;
+                }
+                else if ((item.system.belastning >= 33) || (item.system.belastning <= 40)) {
+                    grundUtmattning = 6;
+                }
+                else {
+                    const number = item.system.belastning - 40;
+                    grundUtmattning = Math.floor(number / 8) * 3;
+                }
+            }       
+        }
+        
+        if (bok == "strid") {
+            // Strid
+            for (const item of rustning) {
+                if (item.system.belastning < 9) {
+                    grundUtmattning = 0;
+                }
+                else if ((item.system.belastning >= 9) || (item.system.belastning <= 12)) {
+                    grundUtmattning = 2;
+                }
+                else if ((item.system.belastning >= 13) || (item.system.belastning <= 28)) {
+                    grundUtmattning = 3;
+                }
+                else if ((item.system.belastning >= 29) || (item.system.belastning <= 32)) {
+                    grundUtmattning = 4;
+                }
+                else if ((item.system.belastning >= 33) || (item.system.belastning <= 36)) {
+                    grundUtmattning = 5;
+                }
+                else if ((item.system.belastning >= 37) || (item.system.belastning <= 40)) {
+                    grundUtmattning = 6;
+                }
+                else if ((item.system.belastning >= 41) || (item.system.belastning <= 44)) {
+                    grundUtmattning = 8;
+                }
+                else if ((item.system.belastning >= 45) || (item.system.belastning <= 48)) {
+                    grundUtmattning = 9;
+                }
+                else {
+                    const number = item.system.belastning - 48;
+                    grundUtmattning = (Math.floor(number / 4) * 2) + 9;
+                }
             }
-            else if ((item.system.belastning >= 9) || (item.system.belastning <= 32)) {
-                grundUtmattning = 3;
-            }
-            else if ((item.system.belastning >= 33) || (item.system.belastning <= 40)) {
-                grundUtmattning = 6;
-            }
-            else {
-                const number = item.system.belastning - 40;
-                grundUtmattning = Math.floor(number / 8) * 3;
+        }
+
+        if (bok == "eon5") {
+            // Eon 5
+            for (const item of rustning) {
+                if (item.system.belastning < 9) {
+                    grundUtmattning = 0;
+                }
+                else if ((item.system.belastning >= 9) || (item.system.belastning <= 16)) {
+                    grundUtmattning = 1;
+                }
+                else if ((item.system.belastning >= 17) || (item.system.belastning <= 24)) {
+                    grundUtmattning = 2;
+                }
+                else if ((item.system.belastning >= 25) || (item.system.belastning <= 32)) {
+                    grundUtmattning = 4;
+                }
+                else if ((item.system.belastning >= 33) || (item.system.belastning <= 40)) {
+                    grundUtmattning = 6;
+                }
+                else if ((item.system.belastning >= 41) || (item.system.belastning <= 48)) {
+                    grundUtmattning = 8;
+                }
+                else if ((item.system.belastning >= 49) || (item.system.belastning <= 56)) {
+                    grundUtmattning = 10;
+                }
+                else {
+                    const number = item.system.belastning - 56;
+                    grundUtmattning = (Math.floor(number / 8) * 2) + 10;
+                }
             }
         }
 

@@ -11,8 +11,11 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     /** @override */
     static get defaultOptions() {
+        //let mode = (game.settings.get('core', 'uiConfig').colorScheme.applications == "dark" ? " wod-theme-dark " : " wod-theme-light ");
+        let mode = " wod-theme-light ";
+
         return foundry.utils.mergeObject(super.defaultOptions, {
-            classes: ["EON EON5 rollperson"],
+            classes: ["EON EON5 rollperson" + mode],
             tabs: [{
                 navSelector: ".sheet-tabs",
                 contentSelector: ".sheet-body",
@@ -276,10 +279,10 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
             }
 
             const totalVarde = data.actor.system.berakning.belastning.vapen + data.actor.system.berakning.belastning.rustning + data.actor.system.berakning.belastning.utrustning;
-            data.actor.system.berakning.belastning.totaltavdrag = CalculateHelper.BeraknaBelastningAvdrag(totalVarde);
+            data.actor.system.berakning.belastning.totaltavdrag = CalculateHelper.BeraknaBelastningAvdrag(totalVarde, actorData.system.installningar.eon);
         }
         else {
-            data.actor.system.berakning.belastning.totaltavdrag = CalculateHelper.BeraknaBelastningAvdrag(data.actor.system.berakning.belastning.rustning);
+            data.actor.system.berakning.belastning.totaltavdrag = CalculateHelper.BeraknaBelastningAvdrag(data.actor.system.berakning.belastning.rustning, actorData.system.installningar.eon);
         }
 
         data.listData = SelectHelper.SetupActor(data.actor);
@@ -684,98 +687,19 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     /**
         * Körs när något blir ändrat på rollformuläret som kan få vidare effekt för andra saker. Att man t ex ställer in något på Skräddarsytt.
-        * @param _event
+        * @param event
     */
     async _onsheetChange(event) {
-        event.preventDefault();
+        event.preventDefault();		
 
-        const element = event.currentTarget;
-        const dataset = element.dataset;
-
-        const source = dataset.source;
-        const actorData = foundry.utils.duplicate(this.actor);
-
-        if (source == "miljo") {
-            var e = document.getElementById("miljo");
-
-            if (e.value == "custom") {
-                DialogHelper.AttributeEditDialog(this.actor, "bakgrund", source);
-                return;
-            }
-
-            return;
-        }
-        if (source == "arketyp") {
-            var e = document.getElementById("arketyp");
-            
-            if (e.value == "custom") {
-                DialogHelper.AttributeEditDialog(this.actor, "bakgrund", source);
-                return;
-            }
-
-            return;
-        }        
-        if (source == "valmaende") {
-            let ruta = document.getElementById("fokus_varde");
-
-            const oldIndex = Number(dataset.value);
-            const newIndex = Number(ruta.value);
-
-            if (newIndex < oldIndex) {
-
-                actorData.system.egenskap.fokus.varde = newIndex;
-                actorData.system.egenskap.fokus.max = newIndex;
-                
-                await this.actor.update(actorData);
-                this.render();
-                return;                
-            }    
-            
-            return;
-        }
-        if (source == "karaktarsdrag") {
-            const index = Number(dataset.index);
-            let property = dataset.name;
-
-            if (property.includes(".")) {
-                let properties = property.split(".");
-
-                if (properties.length == 2) {
-                    const value1 = properties[0];
-                    const value2 = properties[1];
-                    property = property.replace(".", "_");
-
-                    let e = document.getElementById(source + "_" + property + "_" + index);
-                    const newvalue = e.value
-
-                    actorData.system.egenskap.karaktärsdrag[index][value1][value2] = newvalue;
-                }
-                else {
-                    return;
-                }                
-            }
-            else {
-                let e = document.getElementById(source + "_" + property + "_" + index);
-                const newvalue = e.value
-    
-                actorData.system.egenskap.karaktärsdrag[index][property] = newvalue;
-            }
-            
-            await this.actor.update(actorData);
+        if (await ActorHelper.OnsheetChange(event, this.actor) === true) {
             this.render();
-            return;
-        }
-        if (source == "lakningstakt") {
-            let value = parseInt(element.value);
-            actorData.system.strid.lakningstakt = value;
-            await this.actor.update(actorData);
-            return;
-        }
+        }        
     }
 
     /**
         * Funktion som säkerställer att alla rutor och boxar fylls i mer rätt grafik.
-        * @param _event
+        * @param html
     */
     _setupDotCounters(html) {
         html.find(".resource-circle").each(function () {
