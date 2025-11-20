@@ -404,7 +404,15 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         `;
     }
 
-    if (await CompareVersion(installedVersion, '4.0.1')) {
+    if (await CompareVersion(installedVersion, '4.0.2', isDemo)) {
+        partMessage += `
+        <p>
+            <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/336">#336</a>] - BUGG: Att dra in vapen till Eon 4 rollformulär fungerade inte.</p>
+        </p>           
+        `;
+    }
+
+    if (await CompareVersion(installedVersion, '4.0.1', isDemo)) {
         partMessage += `
         <p>
             <h4>Eon 5 rollformulär</h4>            
@@ -413,102 +421,6 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         </p>           
         `;
     }
-
-    // if (await CompareVersion(installedVersion, '3.1.0')) {
-    //     partMessage += `
-    //         <li><h3>Eon IV kompendium</h3>
-    //             <b>Föremål</b> - Från grundboken alla vapen, sköldar och vapenegenskaper.<br />
-    //             <b>Tabeller</b> - skada, träfftabell och varelse vändningar<br />
-    //             <b>Varelser</b> - alla djur och början till varelserna (fick hoppas vissa då systemet har inte riktigt support för alla varianter upptäcktes det på slutet, de som saknas kommer i v3.2).</li>
-    //         <li>Rollformulär till varelser med stöd för vändningar.</li>
-    //         <li>Funktionen för vapenegenskaper har gjorts om så nu drar man de egenskaper man vill att ett vapen skall ha till vapnet.</li>
-    //         <li>Fler val vid vapenanfall - försvarstekniker, attacktypsalternativ.</li>
-    //         <li>Vapenutrustning har nu också "antal".</li>
-    //         <li>Man kan editera en rustnings skydd och belastning.</li>
-    //         <li>Olika valutor</li>
-    //         <li>Förbättringsslag direkt i editeringsfönstret för färdigheten.</li>
-    //         <li>I lite mer detalj: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/5?closed=1">v3.1</a></li>
-    //     `;
-
-    //     futureMessage += `
-    //         <li>Utrustningslistan, väskor och behållare</li>
-    //         <li>Initiativ</li>            
-    //         <li>Mer varelser</li>
-    //         <li>Strid</li>
-    //     `;
-    // }
-
-    // if (await CompareVersion(installedVersion, '3.1.1')) {
-    //     partMessage += `
-    //         <li>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/286">#286</a>, <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/287">#287</a>] - Utmattning är nu kopplade till Tokens. Se <a href="https://github.com/JohanFalt/Foundry_EON-RPG/wiki/Token">Wiki</a></li>.
-    //         <li>[BUGG][<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/288">#288</a>] - Föremålens formulär öppnades inte som de skulle efter att man skapade dem till en Rollperson.</li>
-    //         <li>[BUGG][<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/285">#285</a>] - Man kunde inte skapa myntsorten Koppar och Silverdaler.</li>
-    //     `;
-    // }
-
-    // if (await CompareVersion(installedVersion, '3.1.2')) {
-    //     partMessage += `
-    //         <li>Förberedande för Foundry v13.</li>
-    //     `;
-    // }
-
-    // if (await CompareVersion(installedVersion, '2.2.0')) {
-    //     partMessage += `
-    //         <li>[INSTÄLLNING] Vilka fonter man vill använda till brödtext och rubriker.</li>
-    //         <li>[DESIGN] Fixat och trixat i designen av alla formulärer i systemet.</li>            
-    //         <li>[SYSTEM] Lagt till automatisk beräkning för avdrag på färdighetsslag enligt grundboken när det gäller sår, smärta och belastning.</li>
-    //         <li>[SYSTEM] Man kan nu skicka beskrivningar till chatten.</li>
-    //         <li>[SYSTEM] Flyttat att höja/sänka grundegenskaperna/färdigheterna inne i EDITERA.</li>
-    //         <li>[SYSTEM] Alla beskrivningsrutor stödjer nu Foundrys inre länkning samt HTML.</li>
-    //         <li>[MAGI] Lagt till så man kan registrera ritualversioner till besvärjelser.</li>
-    //         <li>I lite mer detalj: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/1?closed=1">v2.2</a></li>
-    //     `;
-
-    //     futureMessage += `
-    //         <li>Boken Strid</li>
-    //         <li>Varelser</li>            
-    //         <li>Utrustningslistan</li>
-    //         <li>Folkslag</li>
-    //         <li>Vad som ligger planerat: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/5">v2.3</a></li>
-    //     `;
-    // }
-
-    /* if (await CompareVersion(installedVersion, '2.1.0')) {
-        partMessage += `
-            <li>[INSTÄLLNING] Regelbok - Magi är en inställning som aktiveras automatiskt i din världs inställningar. Detta gör att man kan se magifliken på rollformuläret.</li>  
-            <li>[BAKGRUND] Folkslag kan nu skapas som ett föremål i systemet om man vill ha ett folkslag som inte finns med i grundlistan.</li>
-            <li>[MAGI] Fliken Magi</li>                  
-            <li>[MAGI] Besvärjelser är nu ett nytt föremål i systemet. Man lägger till dem i sin värld eller direkt på rollformuläret.</li>
-            <li>[MAGI] Kongelat är nu ett nytt föremål i systemet. Man lägger till dem i sin värld eller direkt på rollformuläret.</li>
-            <li>[MAGI] Fältstörning är nu ett nytt föremål i systemet. Man lägger till dem i sin värld eller direkt på rollformuläret.</li>            
-            <li>[MAGI] Aspekter är nu en ny typ av färdigheter i systemet. Man skapar aspekten under mystikfärdigheterna och markerar den som en aspektfärdighet. Sedan kopplas denna automatiskt rätt när man använder magi.</li>
-            <li>[MAGI] Använda improviserad magi.</li>
-            <li>[RUSTNING] Grundrustning och rustning räknas ihop.</li>
-            <li>I lite mer detalj: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/2?closed=1">v2.1</a></li>
-            `; 
-    } */
-
-    /* if (await CompareVersion(installedVersion, '2.0.0')) {
-        partMessage += `
-            <li>Skarp version (v2.0)</li>
-            <li>Fliken Bakgrund</li>
-            <li>Bonus på tärningsslag med vapen</li>
-            <li>Grafik</li>`;
-    }    
-
-    if (await CompareVersion(installedVersion, '2.0.4')) {
-        partMessage += `<li>[GRAFIK] Textboxarnas grafik fortplantades in i hur journaltexter såg ut.`;
-    }
-
-    if (await CompareVersion(installedVersion, '2.0.3')) {
-        partMessage += `<li>[BAKGRUND] Texten under karaktärsdragen sparas inte. <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/102">#102</a></li>`;
-    }
-
-    if (await CompareVersion(installedVersion, '2.0.2')) {
-        partMessage += `
-            <li>[VAPEN] Problem med att vapen bytte från närstridsvapen till avståndsvapen utan anledning. <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/107">#107</a></li>
-            <li>[VAPEN] Vapenskadan räknar inte alltid ihop grundskada och vapenskada. <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/106">#106</a></li>`;
-    }    */     
 
     if (partMessage == "") {
         return;

@@ -404,24 +404,30 @@ export default class EonActorSheet extends foundry.appv1.sheets.ActorSheet {
         else if ((droppedItem.type == "Utrustning") && (droppedItem.system.installningar.behallare) && (this.actor.type.toLowerCase().replace(" ", "") == "rollperson")) {
             itemData = foundry.utils.duplicate(droppedItem);            
             itemData.system.antal = parseInt(droppedItem.system.volym.antal);     
-            update = true;       
+            //update = true;       
         }
         else if (droppedItem.type == "Folkslag") {
             ui.notifications.warn(`Folkslag kan inte läggas till denna typ av Actor '${this.actor.type}'.`);
             return false;
         }  
         
-        if (droppedItem.system.installningar.eon !== "eon4") {           
-            update = true;
-        }
+        // if (droppedItem.system.installningar.eon !== "eon4") {           
+        //     update = true;
+        // }
 
-        if (update) {
-            if (itemData == undefined) {
-                itemData = foundry.utils.duplicate(droppedItem);            
-            }
-            itemData.system.installningar.eon = "eon4";
-            await this.actor.createEmbeddedDocuments('Item', [itemData])
+        // if (update) {
+        //     if (itemData == undefined) {
+        //         itemData = foundry.utils.duplicate(droppedItem);            
+        //     }
+        //     itemData.system.installningar.eon = "eon4";
+        //     await this.actor.createEmbeddedDocuments('Item', [itemData])
+        // }
+
+        if (itemData == undefined) {
+            itemData = foundry.utils.duplicate(droppedItem);            
         }
+        itemData.system.installningar.eon = "eon4";
+        await this.actor.createEmbeddedDocuments('Item', [itemData])
     }
 
     /** @override */
