@@ -404,6 +404,14 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         `;
     }
 
+    if (await CompareVersion(installedVersion, '4.0.3', isDemo)) {
+        partMessage += `
+        <p>
+            <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/337">#337</a>] - BUGG: Fel i beräkningen av belstning.</p>
+        </p>           
+        `;
+    }
+
     if (await CompareVersion(installedVersion, '4.0.2', isDemo)) {
         partMessage += `
         <p>

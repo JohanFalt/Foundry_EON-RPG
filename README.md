@@ -1,3 +1,5 @@
+![Latest Release Download Count](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v4.0.3/v4.0.3.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge)
+
 ![Latest Release Download Count](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v4.0.2/v4.0.2.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge)
 
 ![Latest Release Download Count](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v4.0.1/v4.0.1.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge)

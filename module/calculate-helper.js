@@ -176,31 +176,37 @@ export default class CalculateHelper {
 		};
 
         if (bok == "eon4") {
+            if (varde < 17) {
+                avdrag = {
+                    "tvarde": 0,
+                    "bonus": 0
+                };
+            }
             if ((varde >= 17) && (varde <= 20)) {
                 avdrag = {
                     "tvarde": 0,
                     "bonus": 2
                 };
             }
-            else if ((varde >= 21) && (varde <= 24)) {
+            if ((varde >= 21) && (varde <= 24)) {
                 avdrag = {
                     "tvarde": 1,
                     "bonus": 0
                 };
             }
-            else if ((varde >= 25) && (varde <= 28)) {
+            if ((varde >= 25) && (varde <= 28)) {
                 avdrag = {
                     "tvarde": 1,
                     "bonus": 2
                 };
             }
-            else if ((varde >= 29) && (varde <= 48)) {
+            if ((varde >= 29) && (varde <= 48)) {
                 avdrag = {
                     "tvarde": 2,
                     "bonus": 0
                 };
             }
-            else if (varde >= 48) {
+            if (varde > 48) {
                 let totalt = Math.floor((varde - 48) / 4);
                 let bonus = totalt + 1;
 
@@ -222,19 +228,25 @@ export default class CalculateHelper {
         }
 
         if (bok == "eon5") {
+            if (varde < 17) {
+                avdrag = {
+                    "tvarde": 0,
+                    "bonus": 0
+                };
+            }
             if ((varde >= 17) && (varde <= 24)) {
                 avdrag = {
                     "tvarde": 1,
                     "bonus": 0
                 };
             }
-            else if ((varde >= 25) && (varde <= 48)) {
+            if ((varde >= 25) && (varde <= 48)) {
                 avdrag = {
                     "tvarde": 2,
                     "bonus": 0
                 };
             }
-            else {
+            if (varde > 48) {
                 avdrag = {
                     "tvarde": 3,
                     "bonus": 0
@@ -267,7 +279,8 @@ export default class CalculateHelper {
     
         if (isLattlard) {
             difficulty -= 2;
-        } else if (isSvarlard) {
+        } 
+        else if (isSvarlard) {
             difficulty += 4;
         }
     
@@ -285,13 +298,13 @@ export default class CalculateHelper {
                 if (item.system.belastning < 9) {
                     grundUtmattning = 0;
                 }
-                else if ((item.system.belastning >= 9) || (item.system.belastning <= 32)) {
+                if ((item.system.belastning >= 9) || (item.system.belastning <= 32)) {
                     grundUtmattning = 3;
                 }
-                else if ((item.system.belastning >= 33) || (item.system.belastning <= 40)) {
+                if ((item.system.belastning >= 33) || (item.system.belastning <= 40)) {
                     grundUtmattning = 6;
                 }
-                else {
+                if (item.system.belastning > 40){
                     const number = item.system.belastning - 40;
                     grundUtmattning = Math.floor(number / 8) * 3;
                 }
@@ -304,28 +317,28 @@ export default class CalculateHelper {
                 if (item.system.belastning < 9) {
                     grundUtmattning = 0;
                 }
-                else if ((item.system.belastning >= 9) || (item.system.belastning <= 12)) {
+                if ((item.system.belastning >= 9) || (item.system.belastning <= 12)) {
                     grundUtmattning = 2;
                 }
-                else if ((item.system.belastning >= 13) || (item.system.belastning <= 28)) {
+                if ((item.system.belastning >= 13) || (item.system.belastning <= 28)) {
                     grundUtmattning = 3;
                 }
-                else if ((item.system.belastning >= 29) || (item.system.belastning <= 32)) {
+                if ((item.system.belastning >= 29) || (item.system.belastning <= 32)) {
                     grundUtmattning = 4;
                 }
-                else if ((item.system.belastning >= 33) || (item.system.belastning <= 36)) {
+                if ((item.system.belastning >= 33) || (item.system.belastning <= 36)) {
                     grundUtmattning = 5;
                 }
-                else if ((item.system.belastning >= 37) || (item.system.belastning <= 40)) {
+                if ((item.system.belastning >= 37) || (item.system.belastning <= 40)) {
                     grundUtmattning = 6;
                 }
-                else if ((item.system.belastning >= 41) || (item.system.belastning <= 44)) {
+                if ((item.system.belastning >= 41) || (item.system.belastning <= 44)) {
                     grundUtmattning = 8;
                 }
-                else if ((item.system.belastning >= 45) || (item.system.belastning <= 48)) {
+                if ((item.system.belastning >= 45) || (item.system.belastning <= 48)) {
                     grundUtmattning = 9;
                 }
-                else {
+                if (item.system.belastning > 48) {
                     const number = item.system.belastning - 48;
                     grundUtmattning = (Math.floor(number / 4) * 2) + 9;
                 }
@@ -338,25 +351,25 @@ export default class CalculateHelper {
                 if (item.system.belastning < 9) {
                     grundUtmattning = 0;
                 }
-                else if ((item.system.belastning >= 9) || (item.system.belastning <= 16)) {
+                if ((item.system.belastning >= 9) || (item.system.belastning <= 16)) {
                     grundUtmattning = 1;
                 }
-                else if ((item.system.belastning >= 17) || (item.system.belastning <= 24)) {
+                if ((item.system.belastning >= 17) || (item.system.belastning <= 24)) {
                     grundUtmattning = 2;
                 }
-                else if ((item.system.belastning >= 25) || (item.system.belastning <= 32)) {
+                if ((item.system.belastning >= 25) || (item.system.belastning <= 32)) {
                     grundUtmattning = 4;
                 }
-                else if ((item.system.belastning >= 33) || (item.system.belastning <= 40)) {
+                if ((item.system.belastning >= 33) || (item.system.belastning <= 40)) {
                     grundUtmattning = 6;
                 }
-                else if ((item.system.belastning >= 41) || (item.system.belastning <= 48)) {
+                if ((item.system.belastning >= 41) || (item.system.belastning <= 48)) {
                     grundUtmattning = 8;
                 }
-                else if ((item.system.belastning >= 49) || (item.system.belastning <= 56)) {
+                if ((item.system.belastning >= 49) || (item.system.belastning <= 56)) {
                     grundUtmattning = 10;
                 }
-                else {
+                if (item.system.belastning > 56) {
                     const number = item.system.belastning - 56;
                     grundUtmattning = (Math.floor(number / 8) * 2) + 10;
                 }
