@@ -492,7 +492,13 @@ export const RegisterHandlebarsHelpers = function () {
 			return "";
 		}
 
-		return lista[nr][property];
+		if (lista[nr][property] != undefined) {
+			return lista[nr][property];
+		}
+		else {
+			return "";
+		}
+		
 	});
 
 	// lägger ihop två tärningspooler till en.

@@ -28,7 +28,9 @@
             <div class="item-listbox centerText" style="width: 75px;">{{item.overtag}}</div>
             <div class="item-listbox centerText" style="width: 50px;">{{item.kostnad}} s</div>
             <div class="item-listbox centerText" style="width: 50px;">{{item.tid}}</div>
-            <div title="item-listbox {{getSkillnameRitualList actor item.moment}}">{{shorten (getSkillnameRitualList actor item.moment) 10 false}}</div>
+            {{#if hasActor}}
+                <div title="item-listbox {{getSkillnameRitualList ../actor item.moment}}">{{shorten (getSkillnameRitualList ../actor item.moment) 10 false}}</div>
+            {{/if}}
             <div class="item-listbox pointer red item-delete" title="Ta bort ritual" data-type="ritual" data-key="{{key}}" style="flex-grow: 1; text-align: right;"><i class="icon fa-solid fa-trash-can"></i></div>
         </div>
     {{/each}}

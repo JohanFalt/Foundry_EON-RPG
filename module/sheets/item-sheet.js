@@ -33,7 +33,7 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		this.isPC = false;
 
 		if (this.actor != undefined) {
-			if ((this.actor.type.toLowerCase().replace(" ", "") != "rollperson") && (this.actor.type.toLowerCase().replace(" ", "") != "rollperson5")) {
+			if ((this.actor.type.toLowerCase().replace(" ", "") == "rollperson") || (this.actor.type.toLowerCase().replace(" ", "") == "rollperson5")) {
 				this.isPC = true;
 			}
 		}
@@ -174,8 +174,9 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		data.EON = game.EON;
 		data.EON.CONFIG = CONFIG.EON;
 
-		if (this.item.actor != null) {
+		if ((this.item.actor != null) && (data.isPC)) {
 			data.hasActor = true;
+			data.actor = this.item.actor;
 
 			if (this.item.type.toLowerCase() == "färdighet") {
 				data.hasExperience = false;
@@ -211,11 +212,11 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 			data.hasActor = false;
 		}
 
-		if ((!data.isPC) && (data.hasActor) && this.item.system.grupp != "") {
-			data.showTraffa = false;
+		if ((!data.isPC) && this.item.system.grupp == "") {
+			data.showTraffa = true;
 		}
 		else {
-			data.showTraffa = true;
+			data.showTraffa = false;
 		}
 
 		if (this.item.type.toLowerCase() === "rustning") {

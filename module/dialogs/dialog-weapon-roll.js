@@ -61,14 +61,19 @@ export class WeaponRoll {
         this.vapennamn = item["name"];
 
         const weaponData = item.system;
-        this.vapen.isRangedWeapon = weaponData.grupp === "bage" || 
+        /*this.vapen.isRangedWeapon = weaponData.grupp === "bage" || 
                                     weaponData.grupp === "kastvapen" || 
-                                    (weaponData.rackvidd && ["kort", "medellangt", "langt", "mycketlangt"].includes(weaponData.rackvidd));
+                                    (weaponData?.rackvidd && ["kort", "medellangt", "langt", "mycketlangt"].includes(weaponData?.rackvidd));    */
+
+        this.vapen.isRangedWeapon = item.type === "Avståndsvapen";
 
         if (item.type == "Sköld") {            
             this.#_isattack = false;
             this.#_isdefence = true;             
         }
+
+        this.actorAttribut = item.system.traffa;
+        this.actorAttributNamn = item.name;
 
         if (this.#_isPC) {
             if (actor.system.berakning.svarighet.smarta > 0) {
@@ -91,8 +96,21 @@ export class WeaponRoll {
                 }     
             }
         }
+        else if (item.system.grupp !== "") {
+            if (actor.system.listdata?.fardigheter != undefined) {
+                for (const fardighet of actor.system.listdata?.fardigheter) {
+                    if (fardighet.system.id == item.system.grupp) {
+                        this.actorAttribut = fardighet.system.varde;
+                        this.actorAttributNamn = fardighet.name;
+                        break;
+                    }
+                }     
+            }
+        }
         else {
+            // kontrollera om färdighet finns
             this.actorAttribut = item.system.traffa;
+            this.actorAttributNamn = item.name;
         }    
 
         this.setDamageType();

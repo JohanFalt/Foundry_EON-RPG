@@ -404,10 +404,22 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         `;
     }
 
+    if (await CompareVersion(installedVersion, '4.0.4', isDemo)) {
+        partMessage += `
+        <p>
+            <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/339">#339</a>] - BUGG: EON 4 - Kunde inte ändra på en varelses färdigheter.</p>
+            <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/343">#343</a>] - BUGG: EON 4 - En varelses vapenattacker blev fel om man använde vanliga vapen.</p>
+            <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/340">#340</a>] - BUGG: Fel editering av ritualer till besvärjelser.</p>
+            <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/341">#341</a>] - BUGG: Fel när man skulle editera en valuta.</p>
+            <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/338">#338</a>] - BUGG: Fel vid beräkning av grundutmattning på grund av rustningar.</p>
+        </p>           
+        `;
+    }
+
     if (await CompareVersion(installedVersion, '4.0.3', isDemo)) {
         partMessage += `
         <p>
-            <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/337">#337</a>] - BUGG: Fel i beräkningen av belstning.</p>
+            <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/337">#337</a>] - BUGG: Fel i beräkningen av belastning.</p>
         </p>           
         `;
     }

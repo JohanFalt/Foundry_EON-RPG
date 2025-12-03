@@ -10,9 +10,9 @@
                     <div class="item-property-area   floating-label-group">
                         <select class="text-value inputdata" name="name" data-source="valuta">
                             <option value="">- Välj valuta -</option>
-                            {{#each (getCurrencyList EON.CONFIG.datavaluta)}}
-                                <option value="{{this.namn}}" {{#if (eq ../item.name this.namn)}}selected{{/if}}>
-                                    {{this.namn}} ({{this.ursprung}})
+                            {{#each (getCurrencyList EON.CONFIG.datavaluta) as | valuta key|}}
+                                <option value="{{valuta.namn}}" {{#if (eq ../item.name valuta.namn)}}selected{{/if}}>
+                                    {{valuta.namn}} ({{valuta.ursprung}})
                                 </option>
                             {{/each}}
                         </select>

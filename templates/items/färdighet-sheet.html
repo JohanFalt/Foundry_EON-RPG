@@ -1,5 +1,4 @@
 <form class="{{cssClass}}" autocomplete="off">
-
 	<div class="sheet-item">
 		<header class="sheet-header item-top">	
 
@@ -9,6 +8,7 @@
 				</div>
 
 				<div class="item-column" style="min-width: 270px;">
+
 					<div class="item-property-area   floating-label-group">
 						{{#if item.system.aspekt}}
 							<select class="text-value inputdata" name="system.id" data-source="aspekt">
@@ -19,21 +19,25 @@
 							<input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
 						{{/if}}
 						<span class="floating-label">Namn</span>
-					</div>	
+					</div>
 
-					{{#if (and (this.isPC) (eq this.system.installningar.eon "eon4"))}}
+					{{#if (eq item.system.installningar.eon "eon4")}}
 
-						<div class="item-property-area   floating-label-group">
-							<select class="text-value" name="system.attribut">
-								<option value="">- Välj -</option>
-								<option value="">- Inget attribut -</option>
-								{{selectOptions EON.CONFIG.grundegenskaper selected=item.system.attribut labelAttr="namn"}}
-							</select>
-							<span class="floating-label">Attribut</span>
-						</div>	
+						{{#if isPC}}
+
+							<div class="item-property-area   floating-label-group">
+								<select class="text-value" name="system.attribut">
+									<option value="">- Välj -</option>
+									<option value="">- Inget attribut -</option>
+									{{selectOptions EON.CONFIG.grundegenskaper selected=item.system.attribut labelAttr="namn"}}
+								</select>
+								<span class="floating-label">Attribut</span>
+							</div>	
+
+						{{/if}}
 
 					{{/if}}
-					
+
 					<div class="item-property-area   floating-label-group">
 						<input class="text-value editable" name="system.referens" type="text" value="{{item.system.referens}}" data-dtype="String" />
 						<span class="floating-label">Referens</span>
@@ -46,7 +50,7 @@
 
 					<div class="information-area information-box">För att höja/sänka sitt färdighetsvärde höger-eller vänsterklickar på rutan.</div>
 
-					{{#if this.isPC}}
+					{{#if isPC}}
 						{{#unless (eq item.system.grupp "ovriga")}}
 							<div class="item-row">
 								<div class="headline-checkbox">Lättlärd</div>
@@ -80,7 +84,7 @@
 							<div class="headline-checkbox">Kännetecken</div>
 							<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.kannetecken}} data-dtype="Boolean" data-field="kannetecken" /></div>
 						</div>
-					{{/if}}					
+					{{/if}}		
 
 				</div>
 
@@ -93,9 +97,10 @@
 					<div class="information-area top-sidetext">FÄRDIGHET</div>
 				</div>
 
-			</div>		
+			</div>
+
 		</header>
-		
+
 		<section class="item-body">		
 			
 			{{#if hasExperience}}
@@ -106,6 +111,5 @@
 			{{/if}}
 					
 		</section>
-
 	</div>
 </form>
