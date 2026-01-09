@@ -208,6 +208,9 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 				data.listData.vapenegenskaper = [];
 			}
 		}
+		else if (this.item.actor != null) {
+			data.hasActor = true;		
+		}
 		else {
 			data.hasActor = false;
 		}

@@ -751,6 +751,15 @@ export const data5fardigheter = {
                     "bonus": 0
                 }
             },
+            "klattra": {
+                "namn": "Klättra",
+                "referens": "s175",
+                "attribut": "rorlighet",
+                "grund": {
+                    "tvarde": 2,
+                    "bonus": 0
+                }
+            },
             "marsch": {
                 "namn": "Marsch",
                 "referens": "",

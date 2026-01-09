@@ -404,6 +404,15 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         `;
     }
 
+    if (await CompareVersion(installedVersion, '4.0.5', isDemo)) {
+        partMessage += `
+        <p>
+            <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/345">#345</a>] - BUGG: EON 5 - Färdigheten Klättra fanns inte med i färdighetslistan när man skapar en rollperson.</p>
+            <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/342">#342</a>] - BUGG: Varelse EON 4 - Man kan inte ta bort nya färdigheter och egenskaper från varelseformuläret.</p>
+        </p>           
+        `;
+    }
+
     if (await CompareVersion(installedVersion, '4.0.4', isDemo)) {
         partMessage += `
         <p>
