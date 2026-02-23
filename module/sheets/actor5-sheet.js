@@ -73,7 +73,7 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
             await CreateHelper.SkapaFardigheter(this.actor, CONFIG.EON, version);
             await CreateHelper.SkapaKaraktarsdrag(actorData);
             await CreateHelper.SkapaKaraktarsdrag(actorData);
-            const vapenlista = await ItemHelper.GetWeapon("narstridsvapen");
+            const vapenlista = await ItemHelper.GetWeapon("narstridsvapen5");
             await CreateHelper.SkapaNarstridsvapen(this.actor, "obevapnad", vapenlista, version, true);
 
             actorData.system.installningar.skapad = true;
@@ -476,11 +476,6 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
 
         if (dataset.source == "weapon") {
             DialogHelper.WeaponDialog(event, this.actor);
-            return;
-        }
-
-        if (dataset.source == "initiative") {
-            DialogHelper.CombatDialog(this.actor);
             return;
         }
         

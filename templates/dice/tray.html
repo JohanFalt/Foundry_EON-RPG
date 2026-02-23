@@ -1,0 +1,25 @@
+<div class="eon-roller">
+  <div class="eon-roller__math flexrow">
+    {{#numFromLoop 1 10}}
+      <button class="eon-roller__num" data-value="{{this}}">{{this}}</button>
+    {{/numFromLoop}}
+    <button class="eon-roller__num" data-value="-1">...</button>
+  </div>
+
+  {{#each dicerows as |dice|}}
+    <div class="eon-roller__buttons flexrow">
+      {{#each dice as |label key|}}
+        <button id="eon-roller__button_{{key}}" class="eon-roller__button" data-formula="{{key}}" title="{{key}}"><span class="eon-roller__flag eon-roller__flag--{{key}} hide"></span>{{> (dtSvgDie key) }}</button>
+      {{/each}}
+    </div>
+  {{/each}}
+
+  <div class="eon-roller__math flexrow eon-wrapper">
+    <button class="eon-roller__ob active">Ob</button>
+    <button class="eon-roller__math eon-roller__math--sub" data-type="-1">-</button>
+    <input class="eon-roller__input" name="dice.tray.modifier" type="text" value="0" readonly />
+    <button class="eon-roller__math eon-roller__math--add" data-type="+1">+</button>
+    <div id="eon-roller-math" hidden></div>
+    <button class="eon-roller__roll">Rulla</button>
+  </div>
+</div>

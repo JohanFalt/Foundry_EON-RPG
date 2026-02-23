@@ -1,0 +1,43 @@
+<div class="migration-wizard-content">
+    <div class="migration-wizard-body">
+        <div class="dialog-area">
+            <div class="infobox">
+                <div class="wizard-page-indicator">
+                    Sida {{pageNumber}} av {{totalPages}}
+                </div>
+            </div>
+
+            <div class="dialog-area wizard-message-area">
+                <div class="wizard-message-content">
+                    {{{currentMessage}}}
+                </div>
+            </div>
+
+            {{#if showCheckbox}}
+            <div class="wizard-checkbox-area" style="margin-top: 15px; padding: 10px;">
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" 
+                           data-action="toggleCheckbox" 
+                           {{#if dontShowAgainChecked}}checked{{/if}}
+                           style="margin-right: 8px;">
+                    <span>Visa inte igen</span>
+                </label>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+
+    <div class="migration-wizard-buttons centerText flex-row">
+        {{#unless isFirstPage}}
+            <button class="button fullSplatColor pointer dialog-three-button" data-action="previous">Föregående</button>
+        {{else}}
+            <button class="button fullSplatColor disabled dialog-three-button" disabled>Föregående</button>
+        {{/unless}}
+
+        {{#unless isLastPage}}
+            <button class="button fullSplatColor pointer dialog-three-button" data-action="next">Nästa</button>
+        {{else}}
+            <button class="button fullSplatColor pointer dialog-three-button" data-action="close">Stäng</button>
+        {{/unless}}
+    </div>
+</div>

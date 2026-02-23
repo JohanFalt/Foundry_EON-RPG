@@ -22,7 +22,6 @@ export default class basegenskap extends foundry.abstract.TypeDataModel {
         schema.mall = new fields.StringField({required: true, initial: ""});
         schema.referens = new fields.StringField({required: true, initial: ""});
         schema.beskrivning = new fields.HTMLField();
-        schema.eon
 
         return schema;
     }

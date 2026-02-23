@@ -3,6 +3,7 @@ import { dataskapa } from "../packs/skapa.js";
 import { datafardigheter } from "../packs/fardigheter.js";
 import { data5fardigheter } from "../packs/fardigheter.js";
 import { datavapen } from "../packs/vapen.js";
+import { data5vapen } from "../packs/vapen_eon5.js";
 import { datastrid } from "../packs/strid.js";
 import { datautrustning } from "../packs/utrustning.js";
 import { datadjur } from "../packs/djur.js";
@@ -65,6 +66,8 @@ export const PreloadHandlebarsTemplates = async function () {
 
 		"systems/eon-rpg/templates/items/parts/items-description.html",
 		"systems/eon-rpg/templates/items/valuta-sheet.html",
+		"systems/eon-rpg/templates/combat/eon-combat-tracker.html",
+		"systems/eon-rpg/templates/combat/eon-combatant-portrait.html",
     ];
 
     /* Load the template parts
@@ -92,11 +95,15 @@ export async function Setup() {
 
 		if (!harStrid) {
 			fileData = datavapen;
+			Object.assign(importData, fileData);
+
+			fileData = data5vapen;
+			Object.assign(importData, fileData);
 		}
 		else {
 			fileData = datastrid;
-		}
-		Object.assign(importData, fileData);
+			Object.assign(importData, fileData);
+		}		
 
 		fileData = datautrustning;
 		Object.assign(importData, fileData);

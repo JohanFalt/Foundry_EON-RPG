@@ -9,6 +9,16 @@ export const systemSettings = function() {
 		type: String,
 	});
 
+    /* Messages */
+    game.settings.register("eon-rpg", "eoncombattrackerbeta", {
+		name: "Read about eon combat tracker beta",
+		hint: "",
+		scope: "world",
+		config: false,
+		default: false,
+		type: Boolean,
+	});
+
     game.settings.register("eon-rpg", "textfont", {
 		name: "Textfont",
 		hint: "Valda fonten till text (kräver omstart av Foundry)",

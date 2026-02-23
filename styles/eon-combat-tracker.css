@@ -1,0 +1,172 @@
+.eon-combat-tracker {
+    position: fixed !important;
+    top: 8px !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+    z-index: 60;
+    pointer-events: auto;
+}
+
+.eon-combat-track-root {
+    min-width: 900px;
+    max-width: 95vw;
+    background: rgba(20, 20, 22, 0.92);
+    border: 1px solid rgba(110, 140, 180, 0.7);
+    border-radius: 10px;
+    padding: 8px 10px;
+    color: #e7edf8;
+}
+
+.eon-combat-track-header {
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.phase-gate-banner {
+    margin-bottom: 8px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid #9f8536;
+    background: rgba(125, 92, 16, 0.25);
+    color: #f6eac2;
+    text-align: center;
+    font-size: 12px;
+}
+
+.eon-combat-track-row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.eon-combatant-portrait {
+    position: relative;
+    min-width: 210px;
+    background: rgba(39, 42, 48, 0.95);
+    border: 1px solid rgba(129, 152, 186, 0.6);
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.eon-combatant-portrait.has-group-separator {
+    margin-left: 14px;
+}
+
+.eon-combatant-portrait.has-group-separator::before {
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background: #5da0ff;
+    border-radius: 2px;
+}
+
+.eon-combatant-portrait.is-current-turn {
+    border-color: #f2d36b;
+    box-shadow: 0 0 0 1px #f2d36b inset;
+}
+
+.portrait-image {
+    width: 52px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 6px;
+    display: block;
+    margin: 0 auto 6px auto;
+}
+
+.portrait-name {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.portrait-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.phase-actions,
+.role-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+.action-row {
+    margin-bottom: 6px;
+}
+
+.eon-combatant-portrait button {
+    width: 100%;
+    color: #e8efff;
+    background: #2f3746;
+    border: 1px solid #52617b;
+    border-radius: 6px;
+    padding: 4px 6px;
+    cursor: pointer;
+}
+
+.eon-combatant-portrait button:hover {
+    background: #3c4860;
+    border-color: #7d90b4;
+}
+
+.eon-combatant-portrait button.is-selected {
+    /* background: #3c4860;
+    border-color: #7d90b4;
+    color: #e8efff; */
+    background: #f2d36b;
+    border-color: #7d90b4;
+    color: #000;
+}
+
+.eon-combatant-portrait button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.eon-combatant-portrait button.needs-roll {
+    animation: pulse-roll 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse-roll {
+    0% { box-shadow: 0 0 0 0 rgba(125, 174, 255, 0.45); }
+    100% { box-shadow: 0 0 0 8px rgba(125, 174, 255, 0); }
+}
+
+.round-end-line {
+    position: absolute;
+    right: -10px;
+    top: 12px;
+    bottom: 12px;
+    width: 2px;
+    background: rgba(232, 210, 124, 0.9);
+    border-radius: 2px;
+}
+
+.round-end-line::after {
+    content: "";
+    position: absolute;
+    right: -4px;
+    bottom: -2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(232, 210, 124, 0.95);
+}
+
+.eon-combat-track-empty {
+    opacity: 0.8;
+    text-align: center;
+    padding: 8px 0;
+}

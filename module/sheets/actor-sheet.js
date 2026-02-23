@@ -540,11 +540,6 @@ export default class EonActorSheet extends foundry.appv1.sheets.ActorSheet {
             DialogHelper.WeaponDialog(event, this.actor);
 			return;
         }
-
-        if (dataset.source == "initiative") {
-            DialogHelper.CombatDialog(this.actor);
-            return;
-        }
         
 		ui.notifications.error("Slag saknar funktion");
 

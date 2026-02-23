@@ -1,7 +1,7 @@
 {
     "id": "eon-rpg",
     "title": "Eon RPG",
-    "version": "4.0.5",
+    "version": "5.0.0",
     "compatibility": {
         "minimum": "13",
         "verified": "13",
@@ -17,7 +17,9 @@
     ],
     "styles": [
         "styles/eon-main.css",
-        "styles/editor/editor.css"
+        "styles/editor/editor.css",
+        "styles/eon-combat-tracker.css",
+        "styles/dice/eon-dice-roller.css"
     ],
     "relationships": {
         "requires": [{
@@ -42,6 +44,7 @@
             "flags": {
                 "eon": {
                     "types": [
+                        "eon4",
                         "grundbok",
                         "vapen",
                         "egenskaper"
@@ -59,6 +62,7 @@
             "flags": {
                 "eon": {
                     "types": [
+                        "eon4",
                         "grundbok",
                         "foremal",
                         "vapen",
@@ -77,6 +81,7 @@
             "flags": {
                 "eon": {
                     "types": [
+                        "eon4",
                         "grundbok",
                         "foremal",
                         "vapen",
@@ -95,6 +100,7 @@
             "flags": {
                 "eon": {
                     "types": [
+                        "eon4",
                         "grundbok",
                         "foremal",
                         "vapen",
@@ -113,6 +119,7 @@
             "flags": {
                 "eon": {
                     "types": [
+                        "eon4",
                         "grundbok",
                         "foremal",
                         "utrustning"
@@ -130,6 +137,7 @@
             "flags": {
                 "eon": {
                     "types": [
+                        "eon4",
                         "grundbok",
                         "tabeller",
                         "varelser"
@@ -147,6 +155,7 @@
             "flags": {
                 "eon": {
                     "types": [
+                        "eon4",
                         "grundbok",
                         "tabeller"
                     ]
@@ -163,6 +172,7 @@
             "flags": {
                 "eon": {
                     "types": [
+                        "eon4",
                         "grundbok",
                         "varelser"
                     ]
@@ -179,6 +189,7 @@
             "flags": {
                 "eon": {
                     "types": [
+                        "eon4",
                         "grundbok",
                         "varelser"
                     ]
@@ -195,6 +206,7 @@
             "flags": {
                 "eon": {
                     "types": [
+                        "eon4",
                         "grundbok",
                         "folkslag"
                     ]
@@ -211,6 +223,7 @@
             "flags": {
                 "eon": {
                     "types": [
+                        "eon4",
                         "grundbok",
                         "egenskaper",
                         "folkslag"
@@ -228,9 +241,103 @@
             "flags": {
                 "eon": {
                     "types": [
+                        "eon4",
                         "grundbok",
                         "språk",
                         "folkslag"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "vapenegenskaper5",
+            "label": "Vapenegenskaper",
+            "system": "eon-rpg",
+            "path": "packs/vapenegenskaper5",
+            "type": "Item",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "eon5",
+                        "grundbok",
+                        "vapen",
+                        "egenskaper"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "narstridsvapen5",
+            "label": "Närstridsvapen",
+            "system": "eon-rpg",
+            "path": "packs/narstridsvapen5",
+            "type": "Item",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "eon5",
+                        "grundbok",
+                        "foremal",
+                        "vapen",
+                        "narstridsvapen"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "avstandsvapen5",
+            "label": "Avståndsvapen",
+            "system": "eon-rpg",
+            "path": "packs/avstandsvapen5",
+            "type": "Item",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "eon5",
+                        "grundbok",
+                        "foremal",
+                        "vapen",
+                        "avstandsvapen"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "skoldar5",
+            "label": "Sköldar",
+            "system": "eon-rpg",
+            "path": "packs/skoldar5",
+            "type": "Item",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "eon5",
+                        "grundbok",
+                        "foremal",
+                        "vapen",
+                        "skoldar"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "utrustning5",
+            "label": "Utrustning",
+            "system": "eon-rpg",
+            "path": "packs/utrustning5",
+            "type": "Item",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "eon5",
+                        "grundbok",
+                        "foremal",
+                        "utrustning"
                     ]
                 }
             }
@@ -239,13 +346,11 @@
     "packFolders": [{
         "name": "Eon IV - Grundbok",
         "sorting": "m",
-        "color": "#cd2c1e",
         "packs": [],
         "folders": [
             {
                 "name": "Folkslag",
                 "sorting": "m",
-                "color": "#b72c1f",
                 "packs": [
                     "folkslag",
                     "folkslagegenskaper",
@@ -255,7 +360,6 @@
             {
                 "name": "Föremål",
                 "sorting": "m",
-                "color": "#b72c1f",
                 "packs": [
                     "narstridsvapen",
                     "avstandsvapen",
@@ -267,7 +371,6 @@
             {
                 "name": "Tabeller",
                 "sorting": "m",
-                "color": "#b72c1f",
                 "packs": [
                     "tabeller",
                     "vandningar"
@@ -276,10 +379,27 @@
             {
                 "name": "Varelser",
                 "sorting": "m",
-                "color": "#b72c1f",
                 "packs": [
                     "djur",
                     "varelser"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Eon V - Grundbok",
+        "sorting": "m",
+        "packs": [],
+        "folders": [
+            {
+                "name": "Föremål",
+                "sorting": "m",
+                "packs": [
+                    "narstridsvapen5",
+                    "avstandsvapen5",
+                    "skoldar5",
+                    "vapenegenskaper5",
+                    "utrustning5"
                 ]
             }
         ]
@@ -299,8 +419,8 @@
         "gridUnits": "m"
     },  
     "url": "https://github.com/JohanFalt/Foundry_EON-RPG",
-    "manifest": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v4.0.5/system.json",  
-    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v4.0.5/v4.0.5.zip",
+    "manifest": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.0.0/system.json",  
+    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.0.0/v5.0.0.zip",
     "bugs": "https://github.com/JohanFalt/Foundry_EON-RPG/issues",
     "license": "LICENSE.txt"
 }

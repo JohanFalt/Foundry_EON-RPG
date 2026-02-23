@@ -193,16 +193,18 @@ export class DialogAttributeRoll extends FormApplication {
         });
     }
 
-    constructor(actor, roll) {
+    constructor(actor, roll, options = {}) {
         super(roll, {submitOnChange: true, closeOnSubmit: false});
         this.actor = actor;     
-        this.config = game.EON.CONFIG;   
+        this.config = CONFIG.EON ?? game.EON?.CONFIG ?? {};   
         this.isDialog = true;  
+        this.onRollComplete = typeof options.onRollComplete === "function" ? options.onRollComplete : null;
+        this.onRollCancelled = typeof options.onRollCancelled === "function" ? options.onRollCancelled : null;
         
         let headline = "";
         
         if (roll.type != "skada") {
-            headline = game.EON.CONFIG[roll.type][roll.key].namn;
+            headline = this.config?.[roll.type]?.[roll.key]?.namn ?? roll.key;
         }
         else {
             headline = actor.system[roll.type][roll.key].namn;
@@ -302,6 +304,8 @@ export class DialogAttributeRoll extends FormApplication {
 
     /* clicked to roll */
     async _generalRoll(event) {
+        event?.preventDefault();
+
         if (this.object.close) {
             this.close();
             return;
@@ -369,12 +373,24 @@ export class DialogAttributeRoll extends FormApplication {
         roll.grundvarde = grundvarde;
 
         const result = await RollDice(roll);
+        if (this.onRollComplete) {
+            await this.onRollComplete({
+                result: Number(result),
+                dice: visadeTarningar,
+                roll
+            });
+        }
         this.close();
     }
 
     /* clicked to close form */
     _closeForm(event) {
+        event?.preventDefault();
         this.object.close = true;
+        if (this.onRollCancelled) {
+            this.onRollCancelled();
+        }
+        this.close();
     }    
 }
 

@@ -1,3 +1,4 @@
+import { eon } from "./config.js";
 import CreateHelper from "./create-helper.js";
 
 export default class ItemHelper {
@@ -394,171 +395,281 @@ export default class ItemHelper {
     
 
     // Användes för att skapa upp vapenegenskaperna i kompendiet
+    // Lägg till ItemHelper.CreateWeaponProperty(); i Ready
     static async CreateWeaponProperty() {
-        const version = game.data.system.version;
+        const itemlist = game.EON.egenskaper5;
+        const eonversion = "eon5";
+        const pack = "eon-rpg.vapenegenskaper5";
 
-        for (const egenskap in game.EON.egenskaper) {
-            let itemData = {
-                name: game.EON.egenskaper[egenskap].namn,
+        try {
+            const itemDataArray = Object.keys(itemlist).map(egenskap => ({
+                name: itemlist[egenskap].namn,
                 type: "Egenskap",                
                 system: {
                     id: egenskap,
-                    referens: "sid 241",
-                    beskrivning: game.EON.egenskaper[egenskap].beskrivning,
+                    referens: "sid 97",
+                    beskrivning: itemlist[egenskap].beskrivning,
                     installningar: {
                         skapad: true,
-                        version: "3.1.0",
+                        version: "5.0.0",
                         kantabort: true,
                         vapen: true,
-                        harniva: game.EON.egenskaper[egenskap].harniva
+                        eon: eonversion,
+                        harniva: itemlist[egenskap].harniva
                     }                    
                 }
-            };
+            }));
 
-            Item.createDocuments([itemData], {pack: "eon-rpg.vapenegenskaper"});
+            const created = await Item.createDocuments(itemDataArray, {pack: pack});
+            console.log(`EON | Lagt till ${created.length} vapenegenskaper i ${pack}`);
+        } catch (error) {
+            console.error("EON | Fel vid skapande av vapenegenskaper:", error);
+            throw error;
         }
     }
 
     // Användes för att skapa upp närstridsvapnen i kompendiet
+    // Lägg till ItemHelper.CreateCloseWeapon(); i Ready
     static async CreateCloseWeapon() {
+        const itemlist = game.EON.narstridsvapen5;
+        const eonversion = "eon5";
+        const pack = "eon-rpg.narstridsvapen5";
+        
+        // Lookup-map för vapenikoner
+        const vapenIkoner = {
+            "slagsmal": CONFIG.EON.ikoner.foremal_hand,
+            "dolk": CONFIG.EON.ikoner.foremal_dolk,
+            "kedjevapen": CONFIG.EON.ikoner.foremal_kedjevapen,
+            "klubba": CONFIG.EON.ikoner.foremal_klubba,
+            "spjut": CONFIG.EON.ikoner.foremal_spjut,
+            "stav": CONFIG.EON.ikoner.foremal_stav,
+            "svard": CONFIG.EON.ikoner.foremal_svard,
+            "yxa": CONFIG.EON.ikoner.foremal_yxa
+        };
+
+        // Samla alla vapen först
+        const allaVapen = [];
         for (const grupp in CONFIG.EON.vapengrupper) {
-            for (const vapenmall in game.EON.narstridsvapen[grupp]) {
-                const vapen = game.EON.narstridsvapen[grupp][vapenmall]
-                let image = "icons/svg/item-bag.svg";
+            if (grupp != "yxa") {
+                continue;
+            }
 
-                if (grupp == "slagsmal") image = CONFIG.EON.ikoner.foremal_hand;
-                if (grupp == "dolk") image = CONFIG.EON.ikoner.foremal_dolk;
-                if (grupp == "kedjevapen") image = CONFIG.EON.ikoner.foremal_kedjevapen;
-                if (grupp == "klubba") image = CONFIG.EON.ikoner.foremal_klubba;
-                if (grupp == "spjut") image = CONFIG.EON.ikoner.foremal_spjut;
-                if (grupp == "stav") image = CONFIG.EON.ikoner.foremal_stav;
-                if (grupp == "svard") image = CONFIG.EON.ikoner.foremal_svard;
-                if (grupp == "yxa") image = CONFIG.EON.ikoner.foremal_yxa;
+            if (!game.EON.narstridsvapen5[grupp]) {
+                continue;
+            }
 
-                let itemData = {
-                    img: image,
-                    name: vapen.namn,
-                    type: "Närstridsvapen",                
-                    system: {
-                        installningar: {
-                            skapad: true,
-                            version: "3.1.0"
-                        },
-                        typ: "utrustning",
-                        mall: vapenmall,
-                        grupp: vapen.grupp,
-                        enhand: vapen.enhand,
-                        tvahand: vapen.tvahand,
-                        hugg: vapen.hugg,
-                        stick: vapen.stick,
-                        kross: vapen.kross,
-                        langd: vapen.langd,
-                        vikt: vapen.vikt,
-                        pris: vapen.pris,
-                        egenskaper: await this.GetWeaponProperty(vapen)                  
-                    }                    
-                };
-
-                Item.createDocuments([itemData], {pack: "eon-rpg.narstridsvapen"});
+            for (const vapenmall in itemlist[grupp]) {
+                const vapen = itemlist[grupp][vapenmall];
+                allaVapen.push({
+                    vapen: vapen,
+                    vapenmall: vapenmall,
+                    grupp: grupp,
+                    image: vapenIkoner[grupp] || "icons/svg/item-bag.svg"                    
+                });
             }
         }
+
+        // Hämta alla vapenegenskaper parallellt
+        const egenskaperPromises = allaVapen.map(v => this.GetWeaponProperty(v.vapen, eonversion));
+        const allaEgenskaper = await Promise.all(egenskaperPromises);
+
+        // Skapa alla itemData objekt
+        const itemDataArray = allaVapen.map((vapenData, index) => ({
+            img: vapenData.image,
+            name: vapenData.vapen.namn,
+            type: "Närstridsvapen",                
+            system: {
+                installningar: {
+                    skapad: true,
+                    version: "5.0.0",
+                    eon: eonversion
+                },
+                typ: "utrustning",
+                mall: vapenData.vapenmall,
+                grupp: vapenData.vapen.grupp,
+                enhand: vapenData.vapen.enhand,
+                tvahand: vapenData.vapen.tvahand,
+                hugg: vapenData.vapen.hugg,
+                stick: vapenData.vapen.stick,
+                kross: vapenData.vapen.kross,
+                langd: vapenData.vapen.langd,
+                vikt: vapenData.vapen.vikt,
+                pris: vapenData.vapen.pris,
+                egenskaper: allaEgenskaper[index]                  
+            }                    
+        }));
+
+        // Skapa alla dokument i batch
+        await Item.createDocuments(itemDataArray, {pack: pack});
+
+        console.log(`EON | Lagt till ${itemDataArray.length} närstridsvapen i ${pack}`);
     }
 
     // Användes för att skapa upp avståndsvapen i kompendiet
+    // Lägg till ItemHelper.CreateRangeWeapon(); i Ready
     static async CreateRangeWeapon() {
+        const itemlist = game.EON.avstandsvapen5;
+        const eonversion = "eon5";
+        const pack = "eon-rpg.avstandsvapen5";
+
+        // Lookup-map för vapenikoner
+        const vapenIkoner = {
+            "armborst": CONFIG.EON.ikoner.foremal_armborst,
+            "bage": CONFIG.EON.ikoner.foremal_bage,
+            "kastvapen": CONFIG.EON.ikoner.foremal_kastvapen
+        };
+
+        //"blasror": CONFIG.EON.ikoner.foremal_blasror
+
+        // Samla alla vapen först
+        const allaVapen = [];
         for (const grupp in CONFIG.EON.vapengrupper) {
-            for (const vapenmall in game.EON.avstandsvapen[grupp]) {
-                const vapen = game.EON.avstandsvapen[grupp][vapenmall]
-                let image = "icons/svg/item-bag.svg";
+            if (grupp != "blasror") {
+                continue;
+            }
 
-                if (grupp == "armborst") image = CONFIG.EON.ikoner.foremal_armborst;
-                if (grupp == "bage") image = CONFIG.EON.ikoner.foremal_bage;
-                if (grupp == "kastvapen") image = CONFIG.EON.ikoner.foremal_kastvapen;
+            if (!itemlist[grupp]) {
+                continue;
+            }
 
-                let itemData = {
-                    img: image,
-                    name: vapen.namn,
-                    type: "Avståndsvapen",                
-                    system: {
-                        installningar: {
-                            skapad: true,
-                            version: "3.1.0"
-                        },
-                        typ: "utrustning",
-                        mall: vapenmall,
-                        grupp: vapen.grupp,
-                        enhand: vapen.enhand,
-                        tvahand: vapen.tvahand,
-                        
-                        skada: vapen.skada,
-                        skadetyp: vapen.skadetyp,
-                        rackvidd: vapen.rackvidd,
-
-                        langd: vapen.langd,
-                        vikt: vapen.vikt,
-                        pris: vapen.pris,
-                        egenskaper: await this.GetWeaponProperty(vapen)                  
-                    }                    
-                };
-
-                Item.createDocuments([itemData], {pack: "eon-rpg.avstandsvapen"});
+            for (const vapenmall in itemlist[grupp]) {
+                const vapen = itemlist[grupp][vapenmall];
+                allaVapen.push({
+                    vapen: vapen,
+                    vapenmall: vapenmall,
+                    grupp: grupp,
+                    image: vapenIkoner[grupp] || "icons/svg/item-bag.svg"
+                });
             }
         }
+
+        // Hämta alla vapenegenskaper parallellt
+        const egenskaperPromises = allaVapen.map(v => this.GetWeaponProperty(v.vapen, eonversion));
+        const allaEgenskaper = await Promise.all(egenskaperPromises);
+
+        // Skapa alla itemData objekt
+        const itemDataArray = allaVapen.map((vapenData, index) => ({
+            img: vapenData.image,
+            name: vapenData.vapen.namn,
+            type: "Avståndsvapen",
+            system: {
+                installningar: {
+                    skapad: true,
+                    version: "5.0.0",
+                    eon: eonversion
+                },
+                typ: "utrustning",
+                mall: vapenData.vapenmall,
+                grupp: vapenData.vapen.grupp,
+                enhand: vapenData.vapen.enhand,
+                tvahand: vapenData.vapen.tvahand,
+                skada: vapenData.vapen.skada,
+                skadetyp: vapenData.vapen.skadetyp,
+                rackvidd: vapenData.vapen.rackvidd,
+                langd: vapenData.vapen.langd,
+                vikt: vapenData.vapen.vikt,
+                pris: vapenData.vapen.pris,
+                egenskaper: allaEgenskaper[index]
+            }
+        }));
+
+        // Skapa alla dokument i batch
+        await Item.createDocuments(itemDataArray, {pack: pack});
+
+        console.log(`EON | Lagt till ${itemDataArray.length} avståndsvapen i ${pack}`);
     }
 
     // Användes för att skapa upp sköldar i kompendiet
+    // Lägg till ItemHelper.CreateShield(); i Ready
     static async CreateShield() {
+        const itemlist = game.EON.forsvar5;
+        const pack = "eon-rpg.skoldar5";
+        const eonversion = "eon5";
+
+        // Lookup-map för vapenikoner
+        const vapenIkoner = {
+            "skold": CONFIG.EON.ikoner.foremal_skold
+        };
+
+        // Samla alla sköldar först
+        const allaSkoldar = [];
         for (const grupp in CONFIG.EON.vapengrupper) {
-            for (const vapenmall in game.EON.forsvar[grupp]) {
-                const vapen = game.EON.forsvar[grupp][vapenmall]
-                let image = "icons/svg/item-bag.svg";
+            if (grupp != "skold") {
+                continue;
+            }
 
-                if (grupp == "skold") image = CONFIG.EON.ikoner.foremal_skold;
+            if (!itemlist[grupp]) {
+                continue;
+            }
 
-                let itemData = {
-                    img: image,
-                    name: vapen.namn,
-                    type: "Sköld",                
-                    system: {
-                        installningar: {
-                            skapad: true,
-                            version: "3.1.0"
-                        },
-                        typ: "utrustning",
-                        mall: vapenmall,
-                        grupp: vapen.grupp,
-                        enhand: vapen.enhand,
-                        tvahand: vapen.tvahand,
-
-                        narstrid: vapen.narstrid,
-                        avstand: vapen.avstand,
-                        skydd: vapen.skydd,
-                        skada: vapen.skada,
-                        skadetyp: vapen.skadetyp,
-
-                        langd: vapen.langd,
-                        vikt: vapen.vikt,
-                        pris: vapen.pris,
-                        egenskaper: await this.GetWeaponProperty(vapen)                  
-                    }                    
-                };
-
-                Item.createDocuments([itemData], {pack: "eon-rpg.skoldar"});
+            for (const vapenmall in itemlist[grupp]) {
+                const vapen = itemlist[grupp][vapenmall];
+                allaSkoldar.push({
+                    vapen: vapen,
+                    vapenmall: vapenmall,
+                    grupp: grupp,
+                    image: vapenIkoner[grupp] || "icons/svg/item-bag.svg"
+                });
             }
         }
+
+        // Hämta alla vapenegenskaper parallellt
+        const egenskaperPromises = allaSkoldar.map(v => this.GetWeaponProperty(v.vapen, eonversion));
+        const allaEgenskaper = await Promise.all(egenskaperPromises);
+
+        // Skapa alla itemData objekt
+        const itemDataArray = allaSkoldar.map((vapenData, index) => ({
+            img: vapenData.image,
+            name: vapenData.vapen.namn,
+            type: "Sköld",
+            system: {
+                installningar: {
+                    skapad: true,
+                    version: "5.0.0",
+                    eon: eonversion
+                },
+                typ: "utrustning",
+                mall: vapenData.vapenmall,
+                grupp: vapenData.vapen.grupp,
+                enhand: vapenData.vapen.enhand,
+                tvahand: vapenData.vapen.tvahand,
+                narstrid: vapenData.vapen.narstrid,
+                avstand: vapenData.vapen.avstand,
+                skydd: vapenData.vapen.skydd,
+                skada: vapenData.vapen.skada,
+                skadetyp: vapenData.vapen.skadetyp,
+                langd: vapenData.vapen.langd,
+                vikt: vapenData.vapen.vikt,
+                pris: vapenData.vapen.pris,
+                egenskaper: allaEgenskaper[index]
+            }
+        }));
+
+        // Skapa alla dokument i batch
+        await Item.createDocuments(itemDataArray, {pack: pack});
+
+        console.log(`EON | Lagt till ${itemDataArray.length} sköldar i ${pack}`);
     }
 
     // Användes för att skapa upp utrustning i kompendiet
     // Lägg till ItemHelper.CreateEquipment(); i Ready
     static async CreateEquipment() {
-        for (const grupp in CONFIG.EON.utrustningsgrupper) {
-            // if(grupp != "vildmark") {
-            //     continue;
-            // }
+        const itemlist = game.EON.utrustning;
+        const pack = "eon-rpg.utrustning";
+        const image = "icons/svg/item-bag.svg";
+        const itemDataArray = [];
 
-            for (const utrustningmall in game.EON.utrustning[grupp]) {
-                const utrustning = game.EON.utrustning[grupp][utrustningmall];
-                let image = "icons/svg/item-bag.svg";
+        for (const grupp in CONFIG.EON.utrustningsgrupper) {
+            if(grupp != "vildmark") {
+                continue;
+            }
+
+            if (!itemlist[grupp]) {
+                continue;
+            }
+
+            for (const utrustningmall in itemlist[grupp]) {
+                const utrustning = itemlist[grupp][utrustningmall];
                 let itemData;
 
                 if (utrustning.installningar?.behallare === true) {
@@ -626,16 +737,87 @@ export default class ItemHelper {
                         }                    
                     };
                 }
-
-                Item.createDocuments([itemData], {pack: "eon-rpg.utrustning"});
-
-                console.warn("Created: " + itemData.name);
+                itemDataArray.push(itemData);
             }
+        }
+
+        await Item.createDocuments(itemDataArray, {pack: pack});
+        console.log(`EON | Lagt till ${itemDataArray.length} utrustning i ${pack}`);
+    }
+
+    static async DeleteAllCompendiumItems(packName, confirm = true) {
+        const pack = game.packs.get(packName);
+        
+        if (!pack) {
+            console.error(`EON | Kompendium "${packName}" hittades inte`);
+            return false;
+        }
+
+        const documents = await pack.getDocuments();
+        
+        if (documents.length === 0) {
+            console.log(`EON | Kompendium "${packName}" är redan tomt`);
+            return true;
+        }
+
+        if (confirm) {
+            const performDelete = await new Promise((resolve) => {
+                Dialog.confirm({
+                    title: `Radera alla items från ${packName}`,
+                    content: `Är du säker på att du vill radera alla ${documents.length} items från kompendiet "${packName}"?<br><br>Detta går inte att ångra!`,
+                    yes: () => resolve(true),
+                    no: () => resolve(false),
+                });
+            });
+
+            if (!performDelete) {
+                console.log(`EON | Radering avbruten av användaren`);
+                return false;
+            }
+        }
+
+        try {
+            // Använd Item.deleteDocuments() med pack-optionen
+            const ids = documents.map(doc => doc.id);
+            await Item.deleteDocuments(ids, {pack: packName});
+
+            console.log(`EON | Raderade ${ids.length} items från ${packName}`);
+            ui.notifications.info(`Raderade ${ids.length} items från ${packName}`);
+            return true;
+        } catch (error) {
+            console.error(`EON | Fel vid radering från ${packName}:`, error);
+            ui.notifications.error(`Fel vid radering från ${packName}`);
+            return false;
         }
     }
 
-    static async GetWeaponProperty(vapen) {
-        const pack = game.packs.get("eon-rpg.vapenegenskaper");
+    static async GetWeaponProperty(vapen, version = false) {
+        let pack;
+        let eonversion;
+
+        if (!version) {
+            eonversion = vapen.system.installningar.eon;
+        }
+        else {
+            eonversion = version;
+        }
+        
+        if (eonversion === "eon4") {
+            pack = game.packs.get("eon-rpg.vapenegenskaper");
+        }
+        else if (eonversion === "eon5") {
+            pack = game.packs.get("eon-rpg.vapenegenskaper5");
+        }
+        else {
+            // Fallback till eon4 om värdet är odefinierat eller okänt
+            pack = game.packs.get("eon-rpg.vapenegenskaper");
+        }
+        
+        if (!pack) {
+            ui.notifications.error("Kunde inte hitta vapenegenskaper-kompendiet");
+            return [];
+        }
+        
         const egenskaper = await pack.getDocuments({type: "Egenskap"});
         let nylista = [];
         

@@ -209,6 +209,10 @@ eon.vapengrupper = {
         namn:"Båge",
         grupp: "avstandsvapen"
     },
+    blasror: {
+        namn:"Blåsör",
+        grupp: "avstandsvapen"
+    },
     kastvapen: {
         namn:"Kastvapen",
         grupp: "avstandsvapen"
@@ -325,5 +329,29 @@ eon.strid = {
     lakningstakt: {
         namn: "Läkningstakt",
         rollable: false
+    }
+}
+// Combat phases configuration
+// Order: 1 = Avstånd (Distance), 2 = Närstrid (Close), 3 = Mystik (Mystic), 4 = Övrigt (Other)
+eon.combatPhases = {
+    initiative_distance: {
+        namn: "Avstånd",
+        order: 1,
+        icon: "systems/eon-rpg/assets/img/icons/bowman.svg"
+    },
+    initiative_close: {
+        namn: "Närstrid",
+        order: 2,
+        icon: "systems/eon-rpg/assets/img/icons/swordman.svg"
+    },
+    initiative_mystic: {
+        namn: "Mystik",
+        order: 3,
+        icon: "systems/eon-rpg/assets/img/icons/magic-swirl.svg"
+    },
+    initiative_other: {
+        namn: "Övrigt",
+        order: 4,
+        icon: "systems/eon-rpg/assets/img/icons/shrug.svg"
     }
 }

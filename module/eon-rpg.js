@@ -10,6 +10,13 @@ import { systemSettings } from "./settings.js";
 import * as Templates from "./templates.js";
 import * as Migration from "./migration.js";
 import { datavaluta } from '../packs/valuta.js';
+import { CombatHelper } from "./combat-helper.js";
+import { EonCombatTracker } from "./apps/EonCombatTracker.js";
+
+import ItemHelper from "./item-helper.js";
+import MigrationWizard from "./ui/migration-wizard-helper.js";
+
+let eonCombatTrackerApp = null;
 
 /* ------------------------------------ */
 /* 1. Init system						*/
@@ -71,7 +78,10 @@ Hooks.once("init", async function() {
 
     Templates.PreloadHandlebarsTemplates();
     Templates.RegisterHandlebarsHelpers();
-    game.EON = await Templates.Setup();    
+    game.EON = await Templates.Setup();
+    
+    // Initialize combat helper for initiative phase system
+    CombatHelper.init();
 });
 
 /* ------------------------------------ */
@@ -98,8 +108,85 @@ Hooks.once("ready", async () => {
                 await Migration.DoNotice(systemVersion, installedVersion, isDemo);
                 game.settings.set("eon-rpg", "systemVersion", systemVersion);
             }
-        }        
+        }      
+        
+        if (!game.settings.get('eon-rpg', 'eoncombattrackerbeta')) {
+            MigrationWizard.show([
+                // Sida 1
+                `<h2>Eon Combat Tracker</h2>
+                <p>Eon Combat Tracker är systemets strids-/initiativspår som visas överst i mitten när du startar en <strong>encounter</strong>. Den följer Eons fasindelning (Avstånd, Närstrid, Mystik, Övrigt) och stödjer <strong>delstrider</strong> enligt regelboken.</p>
+                <p>Alla deltagare i encountern visas som porträtt. För varje porträtt kan du välja fas, slå initiativ (Reaktion), vid närstrid välja motståndare och bekräfta delstrid, samt använda <strong>Nästa</strong> för att gå vidare. Turordningen hanterar delstrider en i taget.</p>`,
+                // Sida 2
+                `<h2>Så använder du trackern</h2>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Skapa encounter</strong></li>
+                <li><strong>Välj deltagare</strong> – Lägg till respektive deltagare genom Foundry på normalt sätt.</li>
+                <li><strong>Starta encounter</strong> – Eon Combat Tracker visas automatiskt överst.</li>                
+                <li><strong>Välj fas</strong> – Varje deltagare väljer först fas. Alla måste välja fas innan andra val blir tillgängliga.</li>
+                <li><strong>Slå initiativ</strong> – Öppnar formuläret för att slå Reaktion, lägg till eventuell bonus. Försvarare i delstrid slår inte initiativ separat.</li>
+                <li><strong>Delstrid</strong> – Vid Närstrid: välj motståndare, bekräfta delstrid, sätt roll. Byta motståndare kräver att du först lämnar delstrid.</li>
+                <li><strong>Nästa</strong> – Den som har tur klickar Nästa; turordningen följer en delstrid i taget. Sista i rundan har markering; då blir det ny runda.</li>
+                <li><strong>Avsluta striden</strong> – När striden är slut stäng encounter i Foundry och trackern kommer att stängas automatiskt.</li>
+                </ol>`,
+                // Sida 3
+                `<h2>Beta – vi vill ha din feedback</h2>
+                <p>Eon Combat Tracker är för närvarande i <strong>beta</strong>. Det kan finnas buggar och saker som kan förbättras.</p>
+                <p><strong>Vill du hjälpa till?</strong> Berätta gärna vad som fungerar bra och vad som kan bli bättre.</p>
+                <p style="margin-top: 14px;">Skicka feedback och förbättringsförslag här:</p>
+                <p style="margin-left: 20px; margin-top: 8px;"><a href="https://github.com/JohanFalt/Foundry_EON-RPG/discussions" target="_blank" rel="noopener">https://github.com/JohanFalt/Foundry_EON-RPG/discussions</a></p>
+                <p style="margin-top: 12px;">Tack för att du testar Eon Combat Tracker!</p>`
+            ], 'eoncombattrackerbeta');
+        }
     } 
+
+});
+
+function isEncounterStarted(combat) {
+    return Boolean(combat && combat.started);
+}
+
+function resolveHTMLElement(htmlLike) {
+    if (!htmlLike) return null;
+    if (htmlLike instanceof HTMLElement) return htmlLike;
+    if (Array.isArray(htmlLike) && htmlLike[0] instanceof HTMLElement) return htmlLike[0];
+    if (htmlLike[0] instanceof HTMLElement) return htmlLike[0];
+    if (typeof htmlLike.querySelector === "function") return htmlLike;
+    return null;
+}
+
+async function renderEonCombatTrackerIfNeeded() {
+    if (!isEncounterStarted(game.combat)) {
+        if (eonCombatTrackerApp) {
+            await eonCombatTrackerApp.close({ force: true });
+            eonCombatTrackerApp = null;
+        }
+        return;
+    }
+
+    if (!eonCombatTrackerApp) {
+        eonCombatTrackerApp = new EonCombatTracker();
+    }
+    await eonCombatTrackerApp.render(true);
+}
+
+Hooks.on("renderCombatTracker", async (_app, html) => {
+    await renderEonCombatTrackerIfNeeded();
+});
+
+Hooks.on("combatStart", async () => {
+    await renderEonCombatTrackerIfNeeded();
+});
+
+Hooks.on("createCombat", async () => {
+    await renderEonCombatTrackerIfNeeded();
+});
+
+Hooks.on("updateCombat", async () => {
+    await renderEonCombatTrackerIfNeeded();
+});
+
+Hooks.on("deleteCombat", async () => {
+    await renderEonCombatTrackerIfNeeded();
 });
 
 Hooks.on("renderActorSheet", (sheet) => { 

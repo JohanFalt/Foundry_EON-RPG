@@ -1,0 +1,61 @@
+<div class="eon-combat-track-root">
+    <div class="eon-combat-track-header">Runda {{roundLabel}}</div>
+    {{#unless allPhasesSelected}}
+    <div class="phase-gate-banner">Välj fas för alla combatants innan andra val blir tillgängliga.</div>
+    {{/unless}}
+
+    {{#if hasCombatants}}
+    <div class="eon-combat-track-row">
+        {{#each combatants}}
+        <article class="eon-combatant-portrait {{#if isCurrentTurn}}is-current-turn{{/if}} {{#if showGroupSeparator}}has-group-separator{{/if}} {{#if isLastInRound}}is-last-in-round{{/if}}">
+            <img class="portrait-image" src="{{img}}" alt="{{name}}" />
+            <div class="portrait-name">{{name}}</div>
+            <div class="portrait-meta">
+                <span>Init: {{initiative}}</span>
+                {{#if phaseLabel}}<span>Fas: {{phaseLabel}}</span>{{/if}}
+                {{#if roleLabel}}<span>Delstrid - {{roleLabel}}</span>{{/if}}
+                {{#if pendingTargetsCount}}<span>Valda motståndare: {{pendingTargetsCount}}</span>{{/if}}
+            </div>
+
+            <div class="phase-actions">
+                <button type="button" data-action="set-phase" data-combatant-id="{{id}}" data-phase="initiative_distance" class="{{#if isPhaseDistanceSelected}}is-selected{{/if}}">Avstånd</button>
+                <button type="button" data-action="set-phase" data-combatant-id="{{id}}" data-phase="initiative_close" class="{{#if isPhaseCloseSelected}}is-selected{{/if}}">Närstrid</button>
+                <button type="button" data-action="set-phase" data-combatant-id="{{id}}" data-phase="initiative_mystic" class="{{#if isPhaseMysticSelected}}is-selected{{/if}}">Mystik</button>
+                <button type="button" data-action="set-phase" data-combatant-id="{{id}}" data-phase="initiative_other" class="{{#if isPhaseOtherSelected}}is-selected{{/if}}">Övrigt</button>
+            </div>
+
+            <div class="action-row">
+                <button type="button" data-action="roll-initiative" data-combatant-id="{{id}}" {{#unless canRollInitiativeAction}}disabled{{/unless}} title="{{rollInitiativeDisabledReason}}" class="{{#if canRollInitiativeAction}}needs-roll{{/if}}">Slå initiativ</button>
+            </div>
+
+            {{#if showRoleActions}}
+            <div class="action-row">
+                <button type="button" data-action="select-subcombat-targets" data-combatant-id="{{id}}" {{#unless canSelectSubcombatTargets}}disabled{{/unless}} title="{{selectSubcombatTargetsDisabledReason}}">Välj motståndare</button>
+            </div>
+            <div class="action-row">
+                <button type="button" data-action="confirm-subcombat" data-combatant-id="{{id}}" {{#unless canConfirmSubcombat}}disabled{{/unless}}>Bekräfta delstrid</button>
+            </div>
+            <div class="role-actions">
+                <button type="button" data-action="set-role" data-role="attacker" data-combatant-id="{{id}}" {{#unless canUseRoleActions}}disabled{{/unless}} class="{{#if isRoleAttackerSelected}}is-selected{{/if}}">Anfallare</button>
+                <button type="button" data-action="set-role" data-role="defender" data-combatant-id="{{id}}" {{#unless canUseRoleActions}}disabled{{/unless}} class="{{#if isRoleDefenderSelected}}is-selected{{/if}}">Försvarare</button>
+            </div>
+            {{/if}}
+            <div class="action-row">
+                <button type="button" data-action="leave-subcombat" data-combatant-id="{{id}}" {{#unless canLeaveSubcombat}}disabled{{/unless}}>Lämna delstrid</button>
+            </div>
+
+            {{#if canNext}}
+            <div class="action-row">
+                <button type="button" data-action="next-turn" data-combatant-id="{{id}}">Nästa</button>
+            </div>
+            {{/if}}
+            {{#if isLastInRound}}
+            <div class="round-end-line"></div>
+            {{/if}}
+        </article>
+        {{/each}}
+    </div>
+    {{else}}
+    <div class="eon-combat-track-empty">Inga deltagare i aktiv encounter.</div>
+    {{/if}}
+</div>

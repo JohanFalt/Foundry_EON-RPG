@@ -1,0 +1,7 @@
+2026/02/23-07:05:34.210 4bbc Recovering log #65
+2026/02/23-07:05:34.448 4bbc Delete type=0 #65
+2026/02/23-07:05:34.448 4bbc Delete type=3 #64
+2026/02/23-08:44:53.958 118 Level-0 table #69: started
+2026/02/23-08:44:53.958 118 Level-0 table #69: 0 bytes OK
+2026/02/23-08:44:54.035 118 Delete type=0 #67
+2026/02/23-08:44:54.371 118 Manual compaction at level-0 from '!folders!3cCy6Bagwo6esFVP' @ 72057594037927935 : 1 .. '!items!yHNbB9LmhaGvskK9' @ 0 : 0; will stop at (end)
