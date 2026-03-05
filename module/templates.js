@@ -2,11 +2,11 @@ import DiceHelper from "./dice-helper.js";
 import { dataskapa } from "../packs/skapa.js";
 import { datafardigheter } from "../packs/fardigheter.js";
 import { data5fardigheter } from "../packs/fardigheter.js";
-import { datavapen } from "../packs/vapen.js";
-import { data5vapen } from "../packs/vapen_eon5.js";
-import { datastrid } from "../packs/strid.js";
-import { datautrustning } from "../packs/utrustning.js";
-import { datautrustning5 } from "../packs/utrustning5.js";
+// import { datavapen } from "../packs/vapen.js";
+// import { data5vapen } from "../packs/vapen_eon5.js";
+// import { datastrid } from "../packs/strid.js";
+// import { datautrustning } from "../packs/utrustning.js";
+// import { datautrustning5 } from "../packs/utrustning5.js";
 import { datadjur } from "../packs/djur.js";
 import { datavaluta } from "../packs/valuta.js";
 
