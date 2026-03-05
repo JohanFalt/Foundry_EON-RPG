@@ -123,9 +123,9 @@ Hooks.once("ready", async () => {
                 <li><strong>Välj deltagare</strong> – Lägg till respektive deltagare genom Foundry på normalt sätt.</li>
                 <li><strong>Starta encounter</strong> – Eon Combat Tracker visas automatiskt överst.</li>                
                 <li><strong>Välj fas</strong> – Varje deltagare väljer först fas. Alla måste välja fas innan andra val blir tillgängliga.</li>
-                <li><strong>Slå initiativ</strong> – Öppnar formuläret för att slå Reaktion, lägg till eventuell bonus. Försvarare i delstrid slår inte initiativ separat.</li>
-                <li><strong>Delstrid</strong> – Vid Närstrid: välj motståndare, bekräfta delstrid, sätt roll. Byta motståndare kräver att du först lämnar delstrid.</li>
-                <li><strong>Nästa</strong> – Den som har tur klickar Nästa; turordningen följer en delstrid i taget. Sista i rundan har markering; då blir det ny runda.</li>
+                <li><strong>Slå initiativ</strong> – Öppnar formuläret för att slå Reaktion, lägg till eventuell bonus. Försvarare i delstrid slår inte initiativ separat. Finns en "slå initiativ för alla" knapp på vänster hovermeny.</li>
+                <li><strong>Delstrid</strong> – Vid Närstrid: välj motståndare, bekräfta delstrid, sätt roll. Byta motståndare kräver att du först lämnar delstrid. Den som väljer motståndare sätts automatiskt som anfallare.</li>
+                <li><strong>Nästa/föregående</strong> – Man flyttar markeringen vems tur det är med pilarna i vänster/höger hovermeny; turordningen följer en delstrid i taget. Efter den som är sist i rundan finns en markering; då blir det ny runda.</li>
                 <li><strong>Avsluta striden</strong> – När striden är slut stäng encounter i Foundry och trackern kommer att stängas automatiskt.</li>
                 </ol>`,
                 // Sida 3
@@ -163,6 +163,14 @@ async function renderEonCombatTrackerIfNeeded() {
         return;
     }
 
+    if (!game.settings.get("eon-rpg", "eonCombatTrackerEnabled")) {
+        if (eonCombatTrackerApp) {
+            await eonCombatTrackerApp.close({ force: true });
+            eonCombatTrackerApp = null;
+        }
+        return;
+    }
+
     if (!eonCombatTrackerApp) {
         eonCombatTrackerApp = new EonCombatTracker();
     }
@@ -182,6 +190,14 @@ Hooks.on("createCombat", async () => {
 });
 
 Hooks.on("updateCombat", async () => {
+    await renderEonCombatTrackerIfNeeded();
+});
+
+Hooks.on("updateCombatant", async () => {
+    await renderEonCombatTrackerIfNeeded();
+});
+
+Hooks.on("createCombatant", async () => {
     await renderEonCombatTrackerIfNeeded();
 });
 

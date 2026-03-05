@@ -33,6 +33,7 @@ export class CombatHelper {
     }
 
     static requiresInitiativeRoll(combatant) {
+        if (combatant?.defeated) return false;
         const role = combatant?.flags?.["eon-rpg"]?.subcombatRole ?? "";
         return role !== "defender";
     }
@@ -199,24 +200,55 @@ export class CombatHelper {
         if (!combat?.combatants?.contents?.length) return [];
 
         const list = [...combat.combatants.contents];
+        // Per subcombat group: highest initiative among attackers in that group (for sorting within phase)
         const attackerInitByGroup = {};
         for (const c of list) {
             const g = this._eonGroupKey(c);
             const role = c.flags?.["eon-rpg"]?.subcombatRole ?? "";
             if (g !== "main" && role === "attacker") {
-                attackerInitByGroup[g] = Number(c.initiative ?? -99999);
+                const init = Number(c.initiative ?? -99999);
+                if (attackerInitByGroup[g] === undefined || init > attackerInitByGroup[g]) {
+                    attackerInitByGroup[g] = init;
+                }
             }
         }
+        // Groups with no attacker get 0 (so they don't get a high key from undefined)
+        for (const c of list) {
+            const g = this._eonGroupKey(c);
+            if (g !== "main" && attackerInitByGroup[g] === undefined) attackerInitByGroup[g] = 0;
+        }
+
+        const baseInit = (val) => Math.max(0, Number(val ?? 0) % 10000);
+
+        const sortKey = (c) => {
+            const group = this._eonGroupKey(c);
+            if (group === "main") return baseInit(c.initiative);
+            const groupKey = baseInit(attackerInitByGroup[group]);
+            // Group with no attacker (key 0): use each combatant's own initiative so they interleave with others
+            if (groupKey === 0) return baseInit(c.initiative);
+            return groupKey;
+        };
+
+        const inConfirmedSubcombat = (c) => {
+            const group = this._eonGroupKey(c);
+            return group !== "main" && baseInit(attackerInitByGroup[group]) > 0;
+        };
 
         list.sort((a, b) => {
             const phaseA = this._eonPhaseOrder(a.flags?.["eon-rpg"]?.phase ?? "");
             const phaseB = this._eonPhaseOrder(b.flags?.["eon-rpg"]?.phase ?? "");
             if (phaseA !== phaseB) return phaseA - phaseB;
 
+            if (a.defeated !== b.defeated) return a.defeated ? 1 : -1;
+
+            const confirmedA = inConfirmedSubcombat(a);
+            const confirmedB = inConfirmedSubcombat(b);
+            if (confirmedA !== confirmedB) return confirmedA ? -1 : 1;
+
             const groupA = this._eonGroupKey(a);
             const groupB = this._eonGroupKey(b);
-            const keyA = groupA === "main" ? Number(a.initiative ?? -99999) : (attackerInitByGroup[groupA] ?? -99999);
-            const keyB = groupB === "main" ? Number(b.initiative ?? -99999) : (attackerInitByGroup[groupB] ?? -99999);
+            const keyA = sortKey(a);
+            const keyB = sortKey(b);
             if (keyA !== keyB) return keyB - keyA;
 
             if (groupA !== groupB) return groupA.localeCompare(groupB);
@@ -258,11 +290,69 @@ export class CombatHelper {
             roundAdvanced = true;
         }
 
+        // Skip defeated combatants
+        const maxAttempts = eonOrder.length;
+        for (let attempts = 0; attempts < maxAttempts; attempts++) {
+            const candidateId = eonOrder[nextIndex];
+            const candidate = combat.combatants.get(candidateId);
+            if (!candidate?.defeated) break;
+            nextIndex++;
+            if (nextIndex >= eonOrder.length) {
+                nextIndex = 0;
+                roundAdvanced = true;
+            }
+        }
+
         const nextCombatantId = eonOrder[nextIndex];
         const turns = combat.turns ?? [];
         const turnIndex = turns.findIndex((t) => (t.id ?? t.combatantId) === nextCombatantId);
         if (turnIndex < 0) return null;
 
         return { nextTurnIndex: turnIndex, roundAdvanced };
+    }
+
+    /**
+     * Go to the previous turn in Eon order.
+     * Returns { prevTurnIndex, roundRewound } for combat.update(), or null.
+     */
+    static advanceToPreviousEonTurn(combat) {
+        if (!combat?.combatants?.size) return null;
+
+        const currentCombatant = combat.combatant;
+        if (!currentCombatant) return null;
+
+        const eonOrder = this.getEonTurnOrder(combat);
+        if (!eonOrder.length) return null;
+
+        const currentId = currentCombatant.id;
+        const currentIndex = eonOrder.indexOf(currentId);
+        if (currentIndex < 0) return null;
+
+        let prevIndex = currentIndex - 1;
+        let roundRewound = false;
+        if (prevIndex < 0) {
+            prevIndex = eonOrder.length - 1;
+            roundRewound = true;
+        }
+
+        // Skip defeated combatants
+        const maxAttempts = eonOrder.length;
+        for (let attempts = 0; attempts < maxAttempts; attempts++) {
+            const candidateId = eonOrder[prevIndex];
+            const candidate = combat.combatants.get(candidateId);
+            if (!candidate?.defeated) break;
+            prevIndex--;
+            if (prevIndex < 0) {
+                prevIndex = eonOrder.length - 1;
+                roundRewound = true;
+            }
+        }
+
+        const prevCombatantId = eonOrder[prevIndex];
+        const turns = combat.turns ?? [];
+        const turnIndex = turns.findIndex((t) => (t.id ?? t.combatantId) === prevCombatantId);
+        if (turnIndex < 0) return null;
+
+        return { prevTurnIndex: turnIndex, roundRewound };
     }
 }

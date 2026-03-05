@@ -654,13 +654,15 @@ export default class ItemHelper {
     // Användes för att skapa upp utrustning i kompendiet
     // Lägg till ItemHelper.CreateEquipment(); i Ready
     static async CreateEquipment() {
-        const itemlist = game.EON.utrustning;
-        const pack = "eon-rpg.utrustning";
-        const image = "icons/svg/item-bag.svg";
-        const itemDataArray = [];
+        const itemlist = game.EON.utrustning5;
+        const eonversion = "eon5";
+        const pack = "eon-rpg.utrustning5";
+        const defaultImage = "icons/svg/item-bag.svg";
 
-        for (const grupp in CONFIG.EON.utrustningsgrupper) {
-            if(grupp != "vildmark") {
+        // Samla alla utrustningsföremål först
+        const allaUtrustning = [];
+        for (const grupp in CONFIG.EON.utrustningsgrupper5) {
+            if (grupp != "religios") {
                 continue;
             }
 
@@ -670,78 +672,51 @@ export default class ItemHelper {
 
             for (const utrustningmall in itemlist[grupp]) {
                 const utrustning = itemlist[grupp][utrustningmall];
-                let itemData;
-
-                if (utrustning.installningar?.behallare === true) {
-                    itemData = {
-                        img: image,
-                        name: utrustning.namn,
-                        type: "Utrustning",               
-                        system: {
-                            installningar: {
-                                skapad: true,
-                                behallare: true,
-                                forvaring: false,
-                                version: "4.0.0"
-                            },
-                            volym: {
-                                enhet: utrustning?.volym?.enhet,
-                                antal: utrustning?.volym?.antal,
-                                max: utrustning?.volym?.max
-                            },
-                            typ: "utrustning",
-                            mall: utrustningmall,
-                            grupp: grupp,
-                            vikt: utrustning.vikt,
-                            pris: utrustning.pris
-                        }                    
-                    };
-                }
-                else if (utrustning.installningar?.forvaring === true) {
-                    itemData = {
-                        img: image,
-                        name: utrustning.namn,
-                        type: "Utrustning",               
-                        system: {
-                            installningar: {
-                                skapad: true,
-                                behallare: false,
-                                forvaring: true,
-                                version: "4.0.0"
-                            },
-                            typ: "utrustning",
-                            mall: utrustningmall,
-                            grupp: grupp,
-                            vikt: utrustning.vikt,
-                            pris: utrustning.pris
-                        }                    
-                    };
-                }
-                else {
-                    itemData = {
-                        img: image,
-                        name: utrustning.namn,
-                        type: "Utrustning",               
-                        system: {
-                            installningar: {
-                                skapad: true,
-                                behallare: false,
-                                forvaring: false,
-                                version: "4.0.0"
-                            },
-                            typ: "utrustning",
-                            mall: utrustningmall,
-                            grupp: grupp,
-                            vikt: utrustning.vikt,
-                            pris: utrustning.pris
-                        }                    
-                    };
-                }
-                itemDataArray.push(itemData);
+                allaUtrustning.push({
+                    utrustning: utrustning,
+                    utrustningmall: utrustningmall,
+                    grupp: grupp,
+                    image: defaultImage
+                });
             }
         }
 
+        // Skapa alla itemData objekt
+        const itemDataArray = allaUtrustning.map(({ utrustning, utrustningmall, grupp, image }) => {
+            const isBehallare = utrustning.installningar?.behallare === true;
+            const isForvaring = utrustning.installningar?.forvaring === true;
+            const system = {
+                installningar: {
+                    skapad: true,
+                    behallare: isBehallare,
+                    forvaring: isForvaring,
+                    version: "5.0.0",
+                    eon: eonversion
+                },
+                typ: "utrustning",
+                mall: utrustningmall,
+                grupp: grupp,
+                vikt: utrustning.vikt,
+                pris: utrustning.pris
+            };
+            if (isBehallare && utrustning.volym) {
+                system.volym = {
+                    enhet: utrustning.volym.enhet,
+                    antal: utrustning.volym.antal,
+                    max: utrustning.volym.max
+                };
+            }
+            return {
+                img: image,
+                name: utrustning.namn,
+                type: "Utrustning",
+                system: system
+            };
+        });
+
+        // Skapa alla dokument i batch
         await Item.createDocuments(itemDataArray, {pack: pack});
+
         console.log(`EON | Lagt till ${itemDataArray.length} utrustning i ${pack}`);
     }
 

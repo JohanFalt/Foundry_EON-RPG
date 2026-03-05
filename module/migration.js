@@ -425,6 +425,17 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         `;
     }
 
+    if (await CompareVersion(installedVersion, '5.0.1', isDemo)) {
+         partMessage += `
+         <p>
+             <p>Uppdaterade Eon 5 kompendiumet och lade till Utrustning.</p>
+             <p>Uppdaterat utseendet på Stridshanteraren, ikonknappar och mer kompakt utseende.</p>
+             <p>Rättade några föremål i Eon 4 kompendiumet.</p>             
+             <p>Fixat några darkmode fel.</p>
+         </p>           
+         `;
+    }
+
     // if (await CompareVersion(installedVersion, '4.0.5', isDemo)) {
     //     partMessage += `
     //     <p>

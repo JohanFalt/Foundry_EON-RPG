@@ -8,59 +8,143 @@
 }
 
 .eon-combat-track-root {
+    position: relative;
     min-width: 900px;
-    max-width: 95vw;
+    /* Fas 3: max 50% of scene area (interface - sidebar); set via JS. Fallback when JS has not run. */
+    max-width: var(--eon-combat-track-max-width, min(95vw, 960px));
     background: rgba(20, 20, 22, 0.92);
     border: 1px solid rgba(110, 140, 180, 0.7);
     border-radius: 10px;
-    padding: 8px 10px;
+    padding: 6px 10px;
     color: #e7edf8;
 }
 
 .eon-combat-track-header {
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     text-align: center;
+    font-size: 13px;
 }
 
 .phase-gate-banner {
-    margin-bottom: 8px;
-    padding: 6px 8px;
+    margin-bottom: 6px;
+    padding: 4px 8px;
     border-radius: 6px;
     border: 1px solid #9f8536;
     background: rgba(125, 92, 16, 0.25);
     color: #f6eac2;
     text-align: center;
-    font-size: 12px;
+    font-size: 11px;
+}
+
+/* Hover zones – left and right edges */
+.eon-combat-track-hover-left,
+.eon-combat-track-hover-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 32px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.eon-combat-track-hover-left {
+    left: -35px;
+    border-radius: 10px 0 0 10px;
+}
+
+.eon-combat-track-hover-right {
+    right: -30px;
+    border-radius: 0 10px 10px 0;
+}
+
+.eon-combat-track-hover-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+/* Synliga vid hover över hela trackern eller över själva hover-zonerna */
+.eon-combat-track-root:hover .eon-combat-track-hover-left .eon-combat-track-hover-inner,
+.eon-combat-track-root:hover .eon-combat-track-hover-right .eon-combat-track-hover-inner,
+.eon-combat-track-hover-left:hover .eon-combat-track-hover-inner,
+.eon-combat-track-hover-right:hover .eon-combat-track-hover-inner {
+    opacity: 1;
+}
+
+.eon-combat-track-roll-all,
+.eon-combat-track-prev,
+.eon-combat-track-next {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e8efff;
+    background: rgba(47, 55, 70, 0.9);
+    border: 1px solid #52617b;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.eon-combat-track-roll-all:hover,
+.eon-combat-track-prev:hover,
+.eon-combat-track-next:hover {
+    background: #3c4860;
+    border-color: #7d90b4;
+}
+
+.eon-combat-track-hover-right .eon-combat-track-hover-inner {
+    margin-left: auto;
+}
+
+.eon-combat-track-hover-left .eon-combat-track-prev {
+    margin-top: auto;
+}
+
+.eon-combat-track-hover-right .eon-combat-track-next {
+    margin-top: auto;
+}
+
+/* Hide portrait row until scroll is set after turn change (avoids visible jump to left) */
+.eon-combat-tracker.eon-combat-track-scroll-pending .eon-combat-track-row,
+.eon-combat-track-root.eon-combat-track-scroll-pending .eon-combat-track-row {
+    visibility: hidden;
 }
 
 .eon-combat-track-row {
     display: flex;
     flex-wrap: nowrap;
-    gap: 8px;
+    gap: 6px;
     overflow-x: auto;
-    padding-bottom: 4px;
+    padding-bottom: 2px;
 }
 
 .eon-combatant-portrait {
     position: relative;
-    min-width: 210px;
+    min-width: 160px;
     background: rgba(39, 42, 48, 0.95);
     border: 1px solid rgba(129, 152, 186, 0.6);
     border-radius: 8px;
-    padding: 8px;
+    padding: 6px;
 }
 
 .eon-combatant-portrait.has-group-separator {
-    margin-left: 14px;
+    margin-left: 12px;
 }
 
 .eon-combatant-portrait.has-group-separator::before {
     content: "";
     position: absolute;
-    left: -12px;
-    top: 10px;
-    bottom: 10px;
+    left: -10px;
+    top: 8px;
+    bottom: 8px;
     width: 2px;
     background: #5da0ff;
     border-radius: 2px;
@@ -71,49 +155,214 @@
     box-shadow: 0 0 0 1px #f2d36b inset;
 }
 
+.eon-combatant-portrait.is-defeated {
+    opacity: 0.6;
+    filter: grayscale(0.7);
+}
+.eon-combatant-portrait.is-defeated .portrait-image {
+    filter: grayscale(1);
+}
+
+.portrait-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6px;
+    margin-bottom: 4px;
+    min-height: 1.5em;
+}
+
+.portrait-header .portrait-name {
+    flex: 1;
+    min-width: 0;
+}
+
+.portrait-defeated-btn {
+    flex-shrink: 0;
+    padding: 2px 4px;
+    background: rgba(60, 60, 70, 0.8);
+    border: 1px solid rgba(120, 120, 130, 0.6);
+    border-radius: 4px;
+    color: #b0b0b8;
+    cursor: pointer;
+    line-height: 1;
+}
+.portrait-defeated-btn:hover {
+    background: rgba(80, 80, 90, 0.9);
+    color: #e0e0e8;
+}
+.portrait-defeated-btn.is-defeated {
+    color: #c44;
+    border-color: rgba(180, 80, 80, 0.7);
+}
+.portrait-defeated-btn.is-defeated:hover {
+    color: #e66;
+}
+
+.portrait-and-phases {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
 .portrait-image {
-    width: 52px;
-    height: 52px;
+    width: 36px;
+    height: 36px;
     object-fit: cover;
     border-radius: 6px;
-    display: block;
-    margin: 0 auto 6px auto;
+    flex-shrink: 0;
+}
+
+.phase-icons {
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+    flex-wrap: wrap;
+}
+
+.phase-icons button {
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #2f3746;
+    border: 1px solid #52617b;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.phase-icons button img {
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+}
+
+.phase-icons button:hover {
+    background: #3c4860;
+    border-color: #7d90b4;
+}
+
+.phase-icons button.is-selected {
+    background: #f2d36b;
+    border-color: #7d90b4;
+}
+
+.phase-icons button.is-selected img {
+    filter: brightness(0.4);
+}
+
+.role-icons {
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+.role-icons button {
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #2f3746;
+    border: 1px solid #52617b;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.role-icons button img {
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+}
+
+.role-icons button:hover {
+    background: #3c4860;
+    border-color: #7d90b4;
+}
+
+.role-icons button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.role-icons button.is-selected {
+    background: #f2d36b;
+    border-color: #7d90b4;
+}
+
+.role-icons button.is-selected img {
+    filter: brightness(0.4);
 }
 
 .portrait-name {
     text-align: center;
     font-weight: 700;
-    margin-bottom: 6px;
+    margin-bottom: 2px;
+    font-size: 12px;
+}
+
+.portrait-meta-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.portrait-meta-row .portrait-initiative-btn {
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.portrait-meta-row .portrait-initiative-btn:disabled {
+    animation: none;
 }
 
 .portrait-meta {
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    font-size: 12px;
-    margin-bottom: 8px;
+    gap: 1px;
+    font-size: 10px;
+    margin-bottom: 4px;
+}
+
+.portrait-meta-row .portrait-meta {
+    margin-bottom: 0;
 }
 
 .phase-actions,
 .role-actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4px;
-    margin-bottom: 6px;
+    gap: 3px;
+    margin-bottom: 4px;
 }
 
 .action-row {
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 .eon-combatant-portrait button {
-    width: 100%;
     color: #e8efff;
     background: #2f3746;
     border: 1px solid #52617b;
     border-radius: 6px;
-    padding: 4px 6px;
+    padding: 3px 5px;
     cursor: pointer;
+    font-size: 11px;
 }
 
 .eon-combatant-portrait button:hover {
@@ -122,9 +371,6 @@
 }
 
 .eon-combatant-portrait button.is-selected {
-    /* background: #3c4860;
-    border-color: #7d90b4;
-    color: #e8efff; */
     background: #f2d36b;
     border-color: #7d90b4;
     color: #000;
@@ -136,7 +382,17 @@
 }
 
 .eon-combatant-portrait button.needs-roll {
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     animation: pulse-roll 1.2s ease-in-out infinite;
+}
+
+.eon-combatant-portrait button.needs-roll i {
+    font-size: 1.1rem;
 }
 
 @keyframes pulse-roll {
@@ -146,9 +402,9 @@
 
 .round-end-line {
     position: absolute;
-    right: -10px;
-    top: 12px;
-    bottom: 12px;
+    right: -8px;
+    top: 8px;
+    bottom: 8px;
     width: 2px;
     background: rgba(232, 210, 124, 0.9);
     border-radius: 2px;
@@ -159,8 +415,8 @@
     position: absolute;
     right: -4px;
     bottom: -2px;
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: rgba(232, 210, 124, 0.95);
 }
@@ -168,5 +424,100 @@
 .eon-combat-track-empty {
     opacity: 0.8;
     text-align: center;
-    padding: 8px 0;
+    padding: 6px 0;
+    font-size: 12px;
+}
+
+/* Dialog: Välj motståndare */
+.eon-select-opponent-dialog.window-app {
+    border: 1px solid rgba(110, 140, 180, 0.7);
+    border-radius: 10px;
+}
+
+.eon-select-opponent-dialog .window-header {
+    background: rgba(20, 20, 22, 0.92);
+    border-bottom: 1px solid rgba(110, 140, 180, 0.7);
+    color: #e7edf8;
+}
+
+.eon-select-opponent-dialog .window-content {
+    background: rgba(20, 20, 22, 0.92);
+    color: #e7edf8;
+    padding: 1rem;
+}
+
+.eon-select-opponent-dialog .window-content p {
+    margin: 0 0 0.75rem 0;
+    color: #e7edf8;
+    font-size: 13px;
+}
+
+.eon-select-opponent-dialog .window-content form {
+    margin: 0;
+}
+
+.eon-select-opponent-dialog .window-content label {
+    display: block;
+    margin: 6px 0;
+    padding: 6px 8px;
+    background: rgba(39, 42, 48, 0.95);
+    border: 1px solid rgba(129, 152, 186, 0.6);
+    border-radius: 6px;
+    color: #e8efff;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+    font-size: 12px;
+}
+
+.eon-select-opponent-dialog .window-content label:hover {
+    background: rgba(60, 72, 96, 0.95);
+    border-color: #7d90b4;
+}
+
+.eon-select-opponent-dialog .window-content label input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.eon-select-opponent-dialog .window-content label:has(input[type="checkbox"]:checked) {
+    background: rgba(242, 211, 107, 0.2);
+    border-color: #f2d36b;
+    color: #f6eac2;
+}
+
+.eon-select-opponent-dialog .form-footer button {
+    color: #e8efff !important;
+    background: #2f3746;
+    border: 1px solid #52617b;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.eon-select-opponent-dialog .form-footer button:hover {
+    background: #3c4860;
+    border-color: #7d90b4;
+    color: #e8efff !important;
+}
+
+.eon-select-opponent-dialog .form-footer button[data-action="save"] {
+    background: rgba(242, 211, 107, 0.3);
+    border-color: #f2d36b;
+    color: #f6eac2 !important;
+}
+
+.eon-select-opponent-dialog .form-footer button[data-action="save"]:hover {
+    background: rgba(242, 211, 107, 0.5);
+    border-color: #f2d36b;
+    color: #f6eac2 !important;
+}
+
+.eon-select-opponent-dialog .form-footer button[data-action="cancel"] {
+    color: #e8efff !important;
+}
+
+.eon-select-opponent-dialog .form-footer button span {
+    color: inherit !important;
 }

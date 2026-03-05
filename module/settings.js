@@ -46,6 +46,15 @@ export const systemSettings = function() {
 		}
 	});
 
+    game.settings.register("eon-rpg", "eonCombatTrackerEnabled", {
+        name: "Aktivera Eon Combat Tracker",
+        hint: "Visas överst när encounter startas. Foundrys vanliga combat tracker i sidofältet visas alltid.",
+        scope: "world",
+        config: true,
+        default: true,
+        type: Boolean
+    });
+
     /* patch settings */
 	// game.settings.register("eon-rpg", "patch200", {
 	// 	name: "patch200",

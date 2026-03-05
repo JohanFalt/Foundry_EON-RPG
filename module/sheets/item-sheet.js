@@ -8,8 +8,8 @@ import ItemHelper from "../item-helper.js";
 export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 
 	static get defaultOptions() {
-		//let mode = (game.settings.get('core', 'uiConfig').colorScheme.applications == "dark" ? " wod-theme-dark " : " wod-theme-light ");
-        let mode = " wod-theme-light ";
+		//let mode = (game.settings.get('core', 'uiConfig').colorScheme.applications == "dark" ? " eon-theme-dark " : " eon-theme-light ");
+        let mode = " eon-theme-light ";
 
 		const options = foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ["EON itemsheet" + mode],
@@ -173,6 +173,7 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 
 		data.EON = game.EON;
 		data.EON.CONFIG = CONFIG.EON;
+		//data.equipmentData = (this.actor && this.actor.type.toLowerCase().replace(" ", "") === "rollperson5" && game.EON.utrustning5) ? game.EON.utrustning5.utrustning5 : game.EON.utrustning;
 
 		if ((this.item.actor != null) && (data.isPC)) {
 			data.hasActor = true;
@@ -1132,29 +1133,31 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 			return;
 		}
 
-		if (source == "equipment") {
-			const typ = this.item.system.grupp;
-			const utrustningmall = element.value;
-			const utrustning = game.EON.utrustning[typ][utrustningmall];
+		// if (source == "equipment") {
+		// 	const typ = this.item.system.grupp;
+		// 	const utrustningmall = element.value;
+		// 	const equipmentData = (this.actor && this.actor.type.toLowerCase().replace(" ", "") === "rollperson5" && game.EON.utrustning5) ? game.EON.utrustning5.utrustning5 : game.EON.utrustning;
+		// 	const utrustning = equipmentData[typ] && equipmentData[typ][utrustningmall];
+		// 	if (!utrustning) return;
 
-			const itemData = foundry.utils.duplicate(this.item);
-			itemData.name = utrustning.namn;			
-			itemData.system.mall = utrustningmall;
-			itemData.system.grupp = typ;
-			itemData.system.vikt = utrustning.vikt;
-			itemData.system.pris = utrustning.pris;
+		// 	const itemData = foundry.utils.duplicate(this.item);
+		// 	itemData.name = utrustning.namn;			
+		// 	itemData.system.mall = utrustningmall;
+		// 	itemData.system.grupp = typ;
+		// 	itemData.system.vikt = utrustning.vikt;
+		// 	itemData.system.pris = utrustning.pris;
 
-			if (utrustning.installningar.behallare) {
-				itemData.system.installningar.behallare = utrustning.installningar.behallare;
-				itemData.system.volym.enhet = utrustning.volym.enhet;
-				itemData.system.volym.antal = utrustning.volym.antal;
-				itemData.system.volym.max = utrustning.volym.max;
-			}
-			await this.item.update(itemData);
-			this.render();
+		// 	if (utrustning.installningar?.behallare) {
+		// 		itemData.system.installningar.behallare = utrustning.installningar.behallare;
+		// 		itemData.system.volym.enhet = utrustning.volym.enhet;
+		// 		itemData.system.volym.antal = utrustning.volym.antal;
+		// 		itemData.system.volym.max = utrustning.volym.max;
+		// 	}
+		// 	await this.item.update(itemData);
+		// 	this.render();
 
-			return;
-		}
+		// 	return;
+		// }
 
 		if (source == "moment") {
 			await this._setMysterieMoment(event);

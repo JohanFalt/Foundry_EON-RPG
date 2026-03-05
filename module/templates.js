@@ -6,6 +6,7 @@ import { datavapen } from "../packs/vapen.js";
 import { data5vapen } from "../packs/vapen_eon5.js";
 import { datastrid } from "../packs/strid.js";
 import { datautrustning } from "../packs/utrustning.js";
+import { datautrustning5 } from "../packs/utrustning5.js";
 import { datadjur } from "../packs/djur.js";
 import { datavaluta } from "../packs/valuta.js";
 
@@ -93,20 +94,23 @@ export async function Setup() {
 		fileData = data5fardigheter;
 		Object.assign(importData, fileData);
 
-		if (!harStrid) {
-			fileData = datavapen;
-			Object.assign(importData, fileData);
+		// if (!harStrid) {
+		// 	fileData = datavapen;
+		// 	Object.assign(importData, fileData);
 
-			fileData = data5vapen;
-			Object.assign(importData, fileData);
-		}
-		else {
-			fileData = datastrid;
-			Object.assign(importData, fileData);
-		}		
+		// 	fileData = data5vapen;
+		// 	Object.assign(importData, fileData);
+		// }
+		// else {
+		// 	fileData = datastrid;
+		// 	Object.assign(importData, fileData);
+		// }		
 
-		fileData = datautrustning;
-		Object.assign(importData, fileData);
+		// fileData = datautrustning;
+		// Object.assign(importData, fileData);
+
+		// fileData = datautrustning5;
+		// Object.assign(importData, fileData);
 
 		fileData = datadjur;
 		Object.assign(importData, fileData);

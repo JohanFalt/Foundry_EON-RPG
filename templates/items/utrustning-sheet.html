@@ -30,7 +30,7 @@
                     {{/if}}
 
                     {{#if (eq item.system.typ "utrustning")}}
-                        <div class="item-property-area floating-label-group">
+                        <!-- <div class="item-property-area floating-label-group">
                             <select class="text-value" name="system.grupp">                                
                                 {{#select item.system.grupp}}
                                     <option value="">- Välj -</option>
@@ -47,13 +47,13 @@
                                 <option value="">- Välj -</option>                                       
                                 {{#select item.system.mall}}    
                                     <option value="{{item._id}}">- Skräddarsytt -</option> 
-                                    {{#each (getEquipmentGroup EON.utrustning item.system.grupp) as |utrustning key|}}     
+                                    {{#each (getEquipmentGroup equipmentData item.system.grupp) as |utrustning key|}}     
                                         <option value="{{key}}">{{utrustning.namn}}</option>               
                                     {{/each}}
                                 {{/select}}
                             </select>
                             <span class="floating-label">Utrustning</span>
-                        </div>  
+                        </div>   -->
 
                         <div class="clear">
                             <div class="pullLeft item-property-area floating-label-group ">

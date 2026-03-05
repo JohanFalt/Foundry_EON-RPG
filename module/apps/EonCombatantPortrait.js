@@ -34,28 +34,38 @@ export class EonCombatantPortrait {
         return "";
     }
 
+    get isDefeated() {
+        return Boolean(this.combatant?.defeated);
+    }
+
     toContext() {
         const actor = this.combatant?.actor;
         const isCurrentTurn = this.tracker?.combat?.combatant?.id === this.combatant?.id;
         const phaseSelected = this.phase !== "";
         const isClose = this.phase === "initiative_close";
         const isDefender = this.role === "defender";
+        const defeated = this.isDefeated;
 
         let rollInitiativeDisabledReason = "";
-        if (!phaseSelected) rollInitiativeDisabledReason = "Välj fas först.";
+        if (defeated) rollInitiativeDisabledReason = "Besegrad/ute slår inte initiativ.";
+        else if (!phaseSelected) rollInitiativeDisabledReason = "Välj fas först.";
         else if (this.interactionsLocked) rollInitiativeDisabledReason = "Alla combatants måste välja fas först.";
         else if (isDefender) rollInitiativeDisabledReason = "Försvarare slår inte initiativ separat i delstrid.";
 
-        const canRollInitiativeAction = phaseSelected && !this.interactionsLocked && !isDefender;
-        const canUseRoleActions = isClose && !this.interactionsLocked;
+        const canRollInitiativeAction = phaseSelected && !isDefender && !defeated;
+        const showInitiativeButton = phaseSelected && !defeated;
+        const canUseRoleActions = isClose && !this.interactionsLocked && !defeated;
         const notInSubcombat = this.groupId === "main";
-        const canSelectSubcombatTargets = isClose && !this.interactionsLocked && notInSubcombat;
+        const groupHasAttacker = notInSubcombat || (this.tracker?.combat?.combatants?.contents?.some(
+            (c) => (c.flags?.["eon-rpg"]?.groupId === this.groupId && c.flags?.["eon-rpg"]?.subcombatRole === "attacker")
+        ) ?? false);
+        const canSelectSubcombatTargets = isClose && (notInSubcombat || !groupHasAttacker) && !defeated;
         const canConfirmSubcombat = canSelectSubcombatTargets && this.pendingTargets.length > 0;
-        const canLeaveSubcombat = this.groupId !== "main" && !this.interactionsLocked;
-        const showRoleActions = isClose;
+        const canLeaveSubcombat = this.groupId !== "main" && !this.interactionsLocked && !defeated;
+        const showRoleActions = isClose && !defeated;
 
         let selectSubcombatTargetsDisabledReason = "";
-        if (isClose && !notInSubcombat) selectSubcombatTargetsDisabledReason = "Lämna delstrid först om du vill välja andra motståndare.";
+        if (isClose && notInSubcombat === false && groupHasAttacker) selectSubcombatTargetsDisabledReason = "Lämna delstrid först om du vill välja andra motståndare.";
 
         const phaseLabel = this.phase
             ? (CONFIG?.EON?.combatPhases?.[this.phase]?.namn ?? this.phase)
@@ -72,6 +82,7 @@ export class EonCombatantPortrait {
             groupId: this.groupId,
             roleLabel: this.roleLabel,
             pendingTargetsCount: this.pendingTargets.length,
+            isDefeated: defeated,
             isCurrentTurn,
             canNext: isCurrentTurn && !this.interactionsLocked,
             showGroupSeparator: this.showGroupSeparator,
@@ -85,6 +96,7 @@ export class EonCombatantPortrait {
             isRoleAttackerSelected: this.role === "attacker",
             isRoleDefenderSelected: this.role === "defender",
             canRollInitiativeAction,
+            showInitiativeButton,
             canUseRoleActions,
             canSelectSubcombatTargets,
             canConfirmSubcombat,

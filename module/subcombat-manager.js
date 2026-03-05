@@ -37,13 +37,20 @@ export class SubcombatManager {
             return null;
         }
 
+        if (combatant.defeated) {
+            ui.notifications.warn("Besegrad/ute kan inte bekräfta delstrid.");
+            return null;
+        }
+
         const targetIds = [...new Set((flags.pendingSubcombatTargets ?? []).filter(Boolean))];
         if (!targetIds.length) {
             ui.notifications.warn("Välj minst en motståndare för delstrid.");
             return null;
         }
 
-        const validTargets = targetIds.map((id) => combat.combatants.get(id)).filter(Boolean);
+        const validTargets = targetIds
+            .map((id) => combat.combatants.get(id))
+            .filter((c) => c && !c.defeated);
         if (!validTargets.length) return null;
 
         const existingGroupIds = new Set();
@@ -73,12 +80,15 @@ export class SubcombatManager {
         for (const member of members.values()) {
             const memberFlags = this._flags(member);
             const role = member.id === combatant.id ? "attacker" : (memberFlags.subcombatRole || "defender");
+            const isAttacker = member.id === combatant.id;
+            // All subcombat members use initiative_close so they sort together in the tracker.
+            const phase = "initiative_close";
             updates.push({
                 _id: member.id,
                 flags: {
                     "eon-rpg": {
                         ...memberFlags,
-                        phase: "initiative_close",
+                        phase,
                         groupId,
                         groupType: "subcombat",
                         subcombatRole: role,

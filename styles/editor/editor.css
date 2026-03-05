@@ -4,13 +4,13 @@
   max-height: 210px;
 }
 
-.wod-theme-light.EON .editor {
+.eon-theme-light.EON .editor {
   border: 1px solid var(--eon-border-color);
   color: black;
   background-color: var(--eon-back-color-inputs);
 }
 
-.wod-theme-dark.EON .editor {
+.eon-theme-dark.EON .editor {
   border: 1px solid var(--eon-border-color-dark);
   color: white;
   background-color: var(--eon-back-color-inputs-dark);
