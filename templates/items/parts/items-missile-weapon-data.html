@@ -18,35 +18,6 @@
         <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
         <span class="floating-label">Namn</span>
     </div>
-
-    <!--
-    <div class="item-property-area   floating-label-group">
-        <select class="text-value" name="system.grupp">
-            <option value="">- Välj -</option>
-            {{#select item.system.grupp}}
-                {{#each EON.CONFIG.vapengrupper as |vapengrupp key|}}
-                    {{#if (eq vapengrupp.grupp "avstandsvapen")}}
-                        <option value="{{key}}">{{vapengrupp.namn}}</option>
-                    {{/if}}
-                {{/each}}
-            {{/select}}
-        </select>
-        <span class="floating-label">Färdighet</span>
-    </div>
-
-    <div class="item-property-area   floating-label-group">
-        <select class="text-value inputdata" name="system.mall" data-source="weapon-range">
-            <option value="">- Välj -</option>                                       
-            {{#select item.system.mall}}    
-                <option value="{{item._id}}">- Skräddarsytt -</option> 
-                {{#each (getWeaponGroup EON.avstandsvapen item.system.grupp) as |vapen key|}}     
-                    <option value="{{key}}">{{vapen.namn}}</option>               
-                {{/each}}
-            {{/select}}
-        </select>
-        <span class="floating-label">Vapenmall</span>
-    </div>  
-    -->  
     
     <div class="item-property-area   floating-label-group">
         <input class="attribute-value editable" name="system.langd" type="text" value="{{item.system.langd}}" data-dtype="Number" />

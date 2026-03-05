@@ -14,35 +14,6 @@
         <span class="floating-label">Namn</span>
     </div>
 
-    <!--
-    <div class="item-property-area   floating-label-group">
-        <select class="text-value" name="system.grupp">                                
-            {{#select item.system.grupp}}
-                <option value="">- Välj -</option>
-                {{#each EON.CONFIG.vapengrupper as |vapengrupp key|}}
-                    {{#if (eq vapengrupp.grupp "forsvar")}}
-                        <option value="{{key}}">{{vapengrupp.namn}}</option>
-                    {{/if}}
-                {{/each}}
-            {{/select}}
-        </select>
-        <span class="floating-label">Färdighet</span>
-    </div>
-
-    <div class="item-property-area   floating-label-group">
-        <select class="text-value inputdata" name="system.mall" data-source="shield">
-            <option value="">- Välj -</option>                                       
-            {{#select item.system.mall}}    
-                <option value="{{item._id}}">- Skräddarsytt -</option> 
-                {{#each (getWeaponGroup EON.forsvar item.system.grupp) as |vapen key|}}     
-                    <option value="{{key}}">{{vapen.namn}}</option>               
-                {{/each}}
-            {{/select}}
-        </select>
-        <span class="floating-label">Vapenmall</span>
-    </div>  
-    -->   
-
     <div class="item-property-area   floating-label-group ">
         <input class="attribute-value editable" name="system.vikt" type="text" value="{{item.system.vikt}}" data-dtype="Number" />
         <span class="floating-label">Vikt (kg)</span>

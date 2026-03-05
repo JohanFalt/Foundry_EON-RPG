@@ -1,7 +1,7 @@
 {
     "id": "eon-rpg",
     "title": "Eon RPG",
-    "version": "5.0.2",
+    "version": "5.1.0",
     "compatibility": {
         "minimum": "13",
         "verified": "13",
@@ -419,8 +419,8 @@
         "gridUnits": "m"
     },  
     "url": "https://github.com/JohanFalt/Foundry_EON-RPG",
-    "manifest": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.0.2/system.json",  
-    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.0.2/v5.0.2.zip",
+    "manifest": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.1.0/system.json",  
+    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.1.0/v5.1.0.zip",
     "bugs": "https://github.com/JohanFalt/Foundry_EON-RPG/issues",
     "license": "LICENSE.txt"
 }

@@ -428,11 +428,6 @@ export const RegisterHandlebarsHelpers = function () {
 		return lista;
 	});
 
-	// hämtar en särskild grupp av vapnen
-	Handlebars.registerHelper("getWeaponGroup", function(vapengrupp, grupp) {
-		return vapengrupp[grupp];
-	});
-
 	// hämtar en särskild vapenskada
 	Handlebars.registerHelper("getWeaponDamageType", function(skada) {
 		if (isEmpty(skada)) {
@@ -491,11 +486,6 @@ export const RegisterHandlebarsHelpers = function () {
 
 		return 0;
 	});	
-
-	// hämtar en särskild grupp av utrustning
-	Handlebars.registerHelper("getEquipmentGroup", function(utrustningsgrupp, grupp) {
-		return utrustningsgrupp[grupp];
-	});
 
 	// hämtar en särskild egenskap i en särskild lista
 	Handlebars.registerHelper("getListProperty", function(lista, nr, property) {

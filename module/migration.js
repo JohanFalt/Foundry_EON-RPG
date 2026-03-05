@@ -425,7 +425,7 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         `;
     }
 
-    if (await CompareVersion(installedVersion, '5.0.1', isDemo)) {
+    if (await CompareVersion(installedVersion, '5.1.0', isDemo)) {
          partMessage += `
          <p>
              <p>Uppdaterade Eon 5 kompendiumet och lade till Utrustning.</p>
