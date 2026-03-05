@@ -30,31 +30,6 @@
                     {{/if}}
 
                     {{#if (eq item.system.typ "utrustning")}}
-                        <!-- <div class="item-property-area floating-label-group">
-                            <select class="text-value" name="system.grupp">                                
-                                {{#select item.system.grupp}}
-                                    <option value="">- Välj -</option>
-                                    {{#each EON.CONFIG.utrustningsgrupper as |utrustninggrupp key|}}
-                                        <option value="{{key}}">{{utrustninggrupp}}</option>
-                                    {{/each}}
-                                {{/select}}
-                            </select>
-                            <span class="floating-label">Grupp</span>
-                        </div>
-
-                        <div class="item-property-area floating-label-group">
-                            <select class="text-value inputdata" name="system.mall" data-source="equipment">
-                                <option value="">- Välj -</option>                                       
-                                {{#select item.system.mall}}    
-                                    <option value="{{item._id}}">- Skräddarsytt -</option> 
-                                    {{#each (getEquipmentGroup equipmentData item.system.grupp) as |utrustning key|}}     
-                                        <option value="{{key}}">{{utrustning.namn}}</option>               
-                                    {{/each}}
-                                {{/select}}
-                            </select>
-                            <span class="floating-label">Utrustning</span>
-                        </div>   -->
-
                         <div class="clear">
                             <div class="pullLeft item-property-area floating-label-group ">
                                 <input class="attribute-value editable" name="system.antal" type="text" value="{{item.system.antal}}" data-dtype="Number" />
