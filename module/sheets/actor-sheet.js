@@ -283,7 +283,7 @@ export default class EonActorSheet extends foundry.appv1.sheets.ActorSheet {
             data.actor.system.berakning.belastning.totaltavdrag = CalculateHelper.BeraknaBelastningAvdrag(totalVarde, actorData.system.installningar.eon);
         }
         else {
-            data.actor.system.berakning.belastning.totaltavdrag = CalculateHelper.BeraknaBelastningAvdrag(data.actor.system.berakning.belastning.rustning, actorData.systeminstallningar.eon);
+            data.actor.system.berakning.belastning.totaltavdrag = CalculateHelper.BeraknaBelastningAvdrag(data.actor.system.berakning.belastning.rustning, actorData.system.installningar.eon);
         }
 
         data.listData = SelectHelper.SetupActor(data.actor);
