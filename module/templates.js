@@ -785,11 +785,11 @@ export const RegisterHandlebarsHelpers = function () {
 	});
 
 	Handlebars.registerHelper("getArmorType", function(armor) {
-		if (armor == "") {
+		if (!armor || !game.EON?.forsvar?.rustningsmaterial) {
 			return "";
 		}
 
-		return game.EON.forsvar.rustningsmaterial[armor].namn;
+		return game.EON.forsvar.rustningsmaterial[armor]?.namn ?? "";
 	});
 
 	Handlebars.registerHelper("propertyTrueInList", function(list, property) {
