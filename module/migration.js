@@ -423,7 +423,15 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         <h4>Eon stridsmodul</h4>  
         <p>Denna modulen hanterar turordningen i strid. Den är för närvarande i beta och kan användas som ett alternativ till Foundrys inbyggda stridsmodul.</p>
         `;
-    }
+    
+    
+    if (await CompareVersion(installedVersion, '5.1.1', isDemo)) {
+         partMessage += `
+         <p>
+             <p>Ett fel hittades där man inte kunde hantera rustningar korrekt.</p>
+         </p>           
+         `;
+    }}
 
     if (await CompareVersion(installedVersion, '5.1.0', isDemo)) {
          partMessage += `

@@ -35,7 +35,7 @@
                 {{#each actor.system.listdata.kroppsdelar as |rustning key|}}
                     <div class="item-row item-listrow">
                         <div class="item-listbox" style="width: 100px;">{{rustning.namn}}</div>
-                        <div class="item-listbox" style="width: 125px;">{{#if (ne rustning.material "")}}{{getArmorType rustning.material}}{{else}}&nbsp;{{/if}}</div>
+                        <div class="item-listbox" style="width: 125px;">{{#if (ne rustning.material "")}}{{getArmorType rustning.material ../actor}}{{else}}&nbsp;{{/if}}</div>
                         <div class="centerText item-listbox" style="width: 50px;">           
                             {{sum 
                                 rustning.hugg 

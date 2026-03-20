@@ -231,12 +231,13 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 			if (data.system) {
 				data.system.belastning = data.item.system.belastning;
 			}
+
+			const isEon5 = this.item.actor?.type?.toLowerCase().replace(" ", "") === "rollperson5"
+				|| this.item.system?.installningar?.eon === "eon5"
+				|| CONFIG.EON.settings?.bookEon === "eon5";
+			data.rustningsmaterial = (isEon5 ? CONFIG.EON?.forsvar5?.rustningsmaterial : CONFIG.EON?.forsvar?.rustningsmaterial) ?? {};
 		}
 
-		console.log(data.item.type);
-		console.log(data.item);
-		console.log(data.EON);
-		
 		return data;
 	}
 
@@ -1098,12 +1099,20 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 			itemData.system.tacker = "";
 
 			if (rustningsmall != "") {
-				const rustning = game.EON.forsvar.rustningsmaterial[rustningsmall];
+				const isEon5 = this.item.actor?.type?.toLowerCase().replace(" ", "") === "rollperson5"
+					|| this.item.system?.installningar?.eon === "eon5"
+					|| CONFIG.EON.settings?.bookEon === "eon5";
+				const rustningsmaterial = isEon5 ? CONFIG.EON?.forsvar5?.rustningsmaterial : CONFIG.EON?.forsvar?.rustningsmaterial;
+				const rustning = rustningsmaterial?.[rustningsmall];
+				if (!rustning) {
+					ui.notifications.warn("Rustningsmaterial hittades inte.");
+					return;
+				}
 
 				hugg = rustning.hugg;
 				kross = rustning.kross;
 				stick = rustning.stick;
-				belastning = rustning.belastning * game.EON.CONFIG.kroppsdelsfaktor[kroppsdel];
+				belastning = rustning.belastning * CONFIG.EON.kroppsdelsfaktor[kroppsdel];
 				namn = rustning.namn;
 			}
 

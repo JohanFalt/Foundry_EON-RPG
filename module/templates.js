@@ -784,12 +784,17 @@ export const RegisterHandlebarsHelpers = function () {
 		return text;
 	});
 
-	Handlebars.registerHelper("getArmorType", function(armor) {
-		if (!armor || !game.EON?.forsvar?.rustningsmaterial) {
+	Handlebars.registerHelper("getArmorType", function(armor, actorOrEon5) {
+		if (armor == "") {
 			return "";
 		}
-
-		return game.EON.forsvar.rustningsmaterial[armor]?.namn ?? "";
+		const isEon5 = actorOrEon5?.type?.toLowerCase?.().replace?.(" ", "") === "rollperson5"
+			|| actorOrEon5?.system?.installningar?.eon === "eon5"
+			|| actorOrEon5 === "eon5"
+			|| actorOrEon5 === true;
+		const rustningsmaterial = isEon5 ? CONFIG.EON?.forsvar5?.rustningsmaterial : CONFIG.EON?.forsvar?.rustningsmaterial;
+		const entry = rustningsmaterial?.[armor];
+		return entry?.namn ?? armor;
 	});
 
 	Handlebars.registerHelper("propertyTrueInList", function(list, property) {

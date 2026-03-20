@@ -143,6 +143,170 @@ eon.kroppsdelsfaktor = {
     hogerben: 1
 }
 
+eon.forsvar = {
+    rustningsmaterial: {
+        fjallpansar: {
+            namn: "Fjällpansar",
+            hugg: 10,
+            kross: 8,
+            stick: 6,
+            belastning: 3
+        },
+        hardatlader: {
+            namn: "Härdat läder",
+            hugg: 5,
+            kross: 6,
+            stick: 5,
+            belastning: 2
+        },
+        lamellpansar: {
+            namn: "Lamellpansar",
+            hugg: 10,
+            kross: 6,
+            stick: 8,
+            belastning: 3
+        },
+        mjuktlader: {
+            namn: "Mjukt läder",
+            hugg: 3,
+            kross: 3,
+            stick: 2,
+            belastning: 1
+        },
+        nitlader: {
+            namn: "Nitläder",
+            hugg: 6,
+            kross: 6,
+            stick: 4,
+            belastning: 2
+        },
+        plat: {
+            namn: "Plåt",
+            hugg: 15,
+            kross: 12,
+            stick: 15,
+            belastning: 4
+        },
+        pals: {
+            namn: "Päls",
+            hugg: 4,
+            kross: 2,
+            stick: 2,
+            belastning: 1
+        },
+        ringbrynja: {
+            namn: "Ringbrynja",
+            hugg: 12,
+            kross: 4,
+            stick: 8,
+            belastning: 3
+        },
+        ringlader: {
+            namn: "Ringläder",
+            hugg: 7,
+            kross: 5,
+            stick: 4,
+            belastning: 2
+        },
+        tunnplat: {
+            namn: "Tunnplåt",
+            hugg: 10,
+            kross: 7,
+            stick: 10,
+            belastning: 3
+        },
+        vadderattyp: {
+            namn: "Vadderat tyg",
+            hugg: 2,
+            kross: 4,
+            stick: 2,
+            belastning: 1
+        }
+    }
+};
+
+eon.forsvar5 = {
+    rustningsmaterial: {
+        fjallpansar: {
+            namn: "Fjällpansar",
+            hugg: 10,
+            kross: 8,
+            stick: 6,
+            belastning: 3
+        },
+        hardatlader: {
+            namn: "Härdat läder",
+            hugg: 5,
+            kross: 6,
+            stick: 5,
+            belastning: 2
+        },
+        lamellpansar: {
+            namn: "Lamellpansar",
+            hugg: 10,
+            kross: 6,
+            stick: 8,
+            belastning: 3
+        },
+        mjuktlader: {
+            namn: "Mjukt läder",
+            hugg: 3,
+            kross: 3,
+            stick: 2,
+            belastning: 1
+        },
+        nitlader: {
+            namn: "Nitläder",
+            hugg: 6,
+            kross: 6,
+            stick: 4,
+            belastning: 2
+        },
+        plat: {
+            namn: "Plåt",
+            hugg: 15,
+            kross: 12,
+            stick: 15,
+            belastning: 4
+        },
+        pals: {
+            namn: "Päls",
+            hugg: 4,
+            kross: 2,
+            stick: 2,
+            belastning: 1
+        },
+        ringbrynja: {
+            namn: "Ringbrynja",
+            hugg: 12,
+            kross: 4,
+            stick: 8,
+            belastning: 3
+        },
+        ringlader: {
+            namn: "Ringläder",
+            hugg: 7,
+            kross: 5,
+            stick: 4,
+            belastning: 2
+        },
+        tunnplat: {
+            namn: "Tunnplåt",
+            hugg: 10,
+            kross: 7,
+            stick: 10,
+            belastning: 3
+        },
+        vadderattyp: {
+            namn: "Vadderat tyg",
+            hugg: 2,
+            kross: 4,
+            stick: 2,
+            belastning: 1
+        }
+    }
+};
+
 eon.vapenskador = {
     hugg: "Hugg",
     kross: "Kross",
