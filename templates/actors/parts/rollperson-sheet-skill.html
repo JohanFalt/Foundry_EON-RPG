@@ -92,7 +92,11 @@
                         <div class="vrollable caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div> 
                             
                         <div class="dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
-                        {{{getAttributeShortName fardighet.system.attribut}}}
+                        {{#if (eq actor.system.installningar.eon "eon4")}}
+                            {{{getAttributeShortName fardighet.system.attribut}}}
+                        {{else if (eq actor.system.installningar.eon "eon5")}}
+                            <div>{{skillDisplayShort fardighet}}</div>
+                        {{/if}}
                         <div class="pointer skill-icon">
                             <a class="item-edit" title="Editera färdighet" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
                         </div>

@@ -349,6 +349,35 @@ export const RegisterHandlebarsHelpers = function () {
 		}
 	});
 
+	Handlebars.registerHelper("skillDisplayShort", function(fardighet) {	
+		let name = "";
+
+		if (fardighet.system.expertis) {
+			name = "E";
+		}
+		if (fardighet.system.kannetecken) {
+			name = "K";
+		}
+		if (fardighet.system.formaga) {
+			name = "F";
+		}
+		if (fardighet.system.hantverk) {
+			name = "H";
+		}
+		
+		if (fardighet.system.installningar.blockering) {
+			name = "B " + name;
+		}	
+		if (fardighet.system.installningar.inkompetent) {
+			name = "I " + name;
+		}
+		if (fardighet.system.installningar.talang) {
+			name = "T " + name;
+		}	
+
+		return name;
+	});
+
 	// hämtar en särskild färdighets namn
 	Handlebars.registerHelper("getSkillnameRitualList", function(actor, list) {
 		let oversatt = "";

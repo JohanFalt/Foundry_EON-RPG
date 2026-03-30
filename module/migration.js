@@ -425,6 +425,16 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         `;
     }
 
+    if (await CompareVersion(installedVersion, '5.1.3', isDemo)) {
+         partMessage += `
+         <p>
+            <p>Eon 5 - Övriga färdigheter saknade valet förmåga.</p>
+            <p>Eon 5 - Färdigheter saknade talang, inkompetent och blockering.</p>
+            <p>Översättningsfel i Bakgrundsfliken.</p>
+         </p>           
+         `;
+    }
+
     if (await CompareVersion(installedVersion, '5.1.2', isDemo)) {
          partMessage += `
          <p>

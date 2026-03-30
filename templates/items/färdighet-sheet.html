@@ -52,15 +52,32 @@
 
 					{{#if isPC}}
 						{{#unless (eq item.system.grupp "ovriga")}}
-							<div class="item-row">
-								<div class="headline-checkbox">Lättlärd</div>
-								<div><input class="svarighet pointer" type="checkbox" data-value="L" {{isChecked item.system.installningar.lattlard}} data-dtype="String" /></div>
-							</div>
-				
-							<div class="item-row">
-								<div class="headline-checkbox">Svårlärd</div>
-								<div><input class="svarighet pointer" type="checkbox" data-value="S" {{isChecked item.system.installningar.svarlard}} data-dtype="String" /></div>
-							</div> 
+							{{#if (eq item.system.installningar.eon "eon4")}}
+								<div class="item-row">
+									<div class="headline-checkbox">Lättlärd</div>
+									<div><input class="svarighet pointer" type="checkbox" data-value="L" {{isChecked item.system.installningar.lattlard}} data-dtype="String" /></div>
+								</div>
+					
+								<div class="item-row">
+									<div class="headline-checkbox">Svårlärd</div>
+									<div><input class="svarighet pointer" type="checkbox" data-value="S" {{isChecked item.system.installningar.svarlard}} data-dtype="String" /></div>
+								</div> 
+							{{else if (eq item.system.installningar.eon "eon5")}}
+								<div class="item-row">
+									<div class="headline-checkbox">Talang</div>
+									<div><input class="svarighet pointer" type="checkbox" data-value="T" {{isChecked item.system.installningar.talang}} data-dtype="String" /></div>
+								</div>
+					
+								<div class="item-row">
+									<div class="headline-checkbox">Inkompetent</div>
+									<div><input class="svarighet pointer" type="checkbox" data-value="I" {{isChecked item.system.installningar.inkompetent}} data-dtype="String" /></div>
+								</div>
+
+								<div class="item-row">
+									<div class="headline-checkbox">Blockering</div>
+									<div><input class="svarighet pointer" type="checkbox" data-value="B" {{isChecked item.system.installningar.blockering}} data-dtype="String" /></div>
+								</div>
+							{{/if}}
 						{{/unless}}
 					{{/if}}
 
@@ -72,14 +89,21 @@
 					{{/if}}
 					
 					{{#if (eq item.system.grupp "ovriga")}}
-						<div class="item-row">
-							<div class="headline-checkbox">Hantverk</div>
-							<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.hantverk}} data-dtype="Boolean" data-field="hantverk" /></div>
-						</div>
+						
 						<div class="item-row">
 							<div class="headline-checkbox">Expertis</div>
 							<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.expertis}} data-dtype="Boolean" data-field="expertis" /></div>
-						</div>  
+						</div> 
+						{{#if (eq item.system.installningar.eon "eon5")}}
+							<div class="item-row">
+								<div class="headline-checkbox">Förmåga</div>
+								<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.formaga}} data-dtype="Boolean" data-field="formaga" /></div>
+							</div>
+						{{/if}}
+						<div class="item-row">
+							<div class="headline-checkbox">Hantverk</div>
+							<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.hantverk}} data-dtype="Boolean" data-field="hantverk" /></div>
+						</div> 
 						<div class="item-row">
 							<div class="headline-checkbox">Kännetecken</div>
 							<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.kannetecken}} data-dtype="Boolean" data-field="kannetecken" /></div>

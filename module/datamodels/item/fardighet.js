@@ -21,12 +21,16 @@ export default class EonFardighet extends basforemal {
             ...installningar(),            
             lattlard: new fields.BooleanField({initial: false}),
             svarlard: new fields.BooleanField({initial: false}),
-            normal: new fields.BooleanField({initial: true})            
+            normal: new fields.BooleanField({initial: true}),
+            talang: new fields.BooleanField({initial: false}),
+            inkompetent: new fields.BooleanField({initial: false}),
+            blockering: new fields.BooleanField({initial: false})
         });
 
         schema.expertis = new fields.BooleanField({initial: false});
         schema.kannetecken = new fields.BooleanField({initial: false});
         schema.hantverk = new fields.BooleanField({initial: false});
+        schema.formaga = new fields.BooleanField({initial: false});
         schema.aspekt = new fields.BooleanField({initial: false});
 
         schema.varde = new fields.SchemaField({

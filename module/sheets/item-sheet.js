@@ -815,13 +815,30 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		itemData.system.installningar.svarlard = false;
 		itemData.system.installningar.normal = true;
 
-		if ((dataset.value == "S") && (!this.item.system.installningar.svarlard)) {
-			itemData.system.installningar.svarlard = true;
-			itemData.system.installningar.normal = false;
+		if (itemData.system.installningar.eon === "eon4") {
+			itemData.system.installningar.lattlard = false;
+			itemData.system.installningar.svarlard = false;
+			itemData.system.installningar.normal = true;
+
+			if ((dataset.value == "S") && (!this.item.system.installningar.svarlard)) {
+				itemData.system.installningar.svarlard = true;
+				itemData.system.installningar.normal = false;
+			}
+			if ((dataset.value == "L") && (!this.item.system.installningar.lattlard)) {
+				itemData.system.installningar.lattlard = true;
+				itemData.system.installningar.normal = false;
+			}
 		}
-		if ((dataset.value == "L") && (!this.item.system.installningar.lattlard)) {
-			itemData.system.installningar.lattlard = true;
-			itemData.system.installningar.normal = false;
+		if (itemData.system.installningar.eon === "eon5") {
+			if (dataset.value == "T") {
+				itemData.system.installningar.talang = !itemData.system.installningar.talang;
+			}
+			if (dataset.value == "I") {
+				itemData.system.installningar.inkompetent = !itemData.system.installningar.inkompetent;
+			}
+			if (dataset.value == "B") {
+				itemData.system.installningar.blockering = !itemData.system.installningar.blockering;
+			}
 		}
 		
 		await this.item.update(itemData);
@@ -868,7 +885,17 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 			const fields = dataset.field.split(".");
 
 			if (fields.length == 1) {
-				itemData.system[fields[0]] = !itemData.system[fields[0]];
+				const value = itemData.system[fields[0]];
+
+				// om man valt hantverk, expertis, förmåga eller kännetecken så ska de andra två avmarkeras automatiskt
+				if ((fields === "hantverk") || (fields === "expertis") || (fields === "kannetecken") || (fields === "formaga")) {
+					itemData.system.hantverk = false;
+					itemData.system.expertis = false;
+					itemData.system.kannetecken = false;
+					itemData.system.formaga = false;
+				}
+
+				itemData.system[fields[0]] = !value;
 			}			
 			else if (fields.length == 2) {
 				itemData.system[fields[0]][fields[1]] = !itemData.system[fields[0]][fields[1]];
