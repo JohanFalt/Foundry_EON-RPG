@@ -12,11 +12,178 @@ import * as Migration from "./migration.js";
 import { datavaluta } from '../packs/valuta.js';
 import { CombatHelper } from "./combat-helper.js";
 import { EonCombatTracker } from "./apps/EonCombatTracker.js";
+import { CharacterCreationWizard } from "./apps/CharacterCreationWizard.js";
 
 import ItemHelper from "./item-helper.js";
 import MigrationWizard from "./ui/migration-wizard-helper.js";
 
 let eonCombatTrackerApp = null;
+
+/**
+ * Replace config display strings with localized versions from lang (eon.config.*).
+ * Called after CONFIG.EON = eon so templates and helpers see the correct language.
+ */
+function localizeEonConfig(eon) {
+    const localizeKey = (key) => game.i18n.localize(key);
+
+    // slag
+    if (eon.slag) {
+        eon.slag.grundegenskap = localizeKey("eon.config.slag.grundegenskap");
+        eon.slag.fardighet = localizeKey("eon.config.slag.fardighet");
+        eon.slag.mysterium = localizeKey("eon.config.slag.mysterium");
+        eon.slag.vapen = localizeKey("eon.config.slag.vapen");
+    }
+
+    // grundegenskaper
+    if (eon.grundegenskaper) {
+        for (const attributKey of Object.keys(eon.grundegenskaper)) {
+            const grundegenskap = eon.grundegenskaper[attributKey];
+            if (grundegenskap && typeof grundegenskap === "object") {
+                grundegenskap.namn = localizeKey(`eon.config.grundegenskaper.${attributKey}.namn`);
+                if (grundegenskap.kort) {
+                    grundegenskap.kort = localizeKey(`eon.config.grundegenskaper.${attributKey}.kort`);
+                }
+            }
+        }
+    }
+
+    // harleddegenskaper
+    if (eon.harleddegenskaper) {
+        for (const attributKey of Object.keys(eon.harleddegenskaper)) {
+            const harleddegenskap = eon.harleddegenskaper[attributKey];
+            if (harleddegenskap && typeof harleddegenskap === "object" && harleddegenskap.namn) {
+                harleddegenskap.namn = localizeKey(`eon.config.harleddegenskaper.${attributKey}.namn`);
+            }
+        }
+    }
+
+    // fardighetgrupper
+    if (eon.fardighetgrupper) {
+        for (const gruppKey of Object.keys(eon.fardighetgrupper)) {
+            eon.fardighetgrupper[gruppKey] = localizeKey(`eon.config.fardighetgrupper.${gruppKey}`);
+        }
+    }
+
+    // kroppsdelar.grund
+    if (eon.kroppsdelar?.grund) {
+        for (const kroppsdelKey of Object.keys(eon.kroppsdelar.grund)) {
+            eon.kroppsdelar.grund[kroppsdelKey] = localizeKey(`eon.config.kroppsdelar.grund.${kroppsdelKey}`);
+        }
+    }
+
+    // vapenskador
+    if (eon.vapenskador) {
+        for (const skadetypKey of Object.keys(eon.vapenskador)) {
+            eon.vapenskador[skadetypKey] = localizeKey(`eon.config.vapenskador.${skadetypKey}`);
+        }
+    }
+
+    // vapenavstand
+    if (eon.vapenavstand) {
+        for (const avstandKey of Object.keys(eon.vapenavstand)) {
+            const avstandEntry = eon.vapenavstand[avstandKey];
+            if (avstandEntry && typeof avstandEntry === "object" && avstandEntry.namn) {
+                avstandEntry.namn = localizeKey(`eon.config.vapenavstand.${avstandKey}.namn`);
+            }
+        }
+    }
+
+    // vapengrupper
+    if (eon.vapengrupper) {
+        for (const vapengruppKey of Object.keys(eon.vapengrupper)) {
+            const vapengrupp = eon.vapengrupper[vapengruppKey];
+            if (vapengrupp && typeof vapengrupp === "object" && vapengrupp.namn) {
+                vapengrupp.namn = localizeKey(`eon.config.vapengrupper.${vapengruppKey}.namn`);
+            }
+        }
+    }
+
+    // rustningsmaterial (forsvar + forsvar5)
+    for (const forsvarKey of ["forsvar", "forsvar5"]) {
+        const rustningsmaterial = eon[forsvarKey]?.rustningsmaterial;
+        if (rustningsmaterial) {
+            for (const materialKey of Object.keys(rustningsmaterial)) {
+                const entry = rustningsmaterial[materialKey];
+                if (entry && typeof entry === "object" && entry.namn) {
+                    entry.namn = localizeKey(entry.namn);
+                }
+            }
+        }
+    }
+
+    // aspekter
+    if (eon.aspekter) {
+        for (const aspektKey of Object.keys(eon.aspekter)) {
+            eon.aspekter[aspektKey] = localizeKey(`eon.config.aspekter.${aspektKey}`);
+        }
+    }
+
+    // magi
+    if (eon.magi) {
+        if (eon.magi.faltstorning) {
+            for (const faltstorningKey of Object.keys(eon.magi.faltstorning)) {
+                eon.magi.faltstorning[faltstorningKey] = localizeKey(`eon.config.magi.faltstorning.${faltstorningKey}`);
+            }
+        }
+        if (eon.magi.varaktighet && typeof eon.magi.varaktighet === "object") {
+            for (const varaktighetKey of Object.keys(eon.magi.varaktighet)) {
+                const varaktighetEntry = eon.magi.varaktighet[varaktighetKey];
+                if (typeof varaktighetEntry === "string") {
+                    eon.magi.varaktighet[varaktighetKey] = localizeKey(`eon.config.magi.varaktighet.${varaktighetKey}`);
+                }
+            }
+        }
+        if (eon.magi.omradesomfang) {
+            for (const omfangKey of Object.keys(eon.magi.omradesomfang)) {
+                eon.magi.omradesomfang[omfangKey] = localizeKey(`eon.config.magi.omradesomfang.${omfangKey}`);
+            }
+        }
+        if (eon.magi.rackvidd) {
+            for (const rackviddKey of Object.keys(eon.magi.rackvidd)) {
+                eon.magi.rackvidd[rackviddKey] = localizeKey(`eon.config.magi.rackvidd.${rackviddKey}`);
+            }
+        }
+    }
+
+    // utrustningsgrupper & utrustningsgrupper5
+    if (eon.utrustningsgrupper) {
+        for (const gruppKey of Object.keys(eon.utrustningsgrupper)) {
+            eon.utrustningsgrupper[gruppKey] = localizeKey(`eon.config.utrustningsgrupper.${gruppKey}`);
+        }
+    }
+    if (eon.utrustningsgrupper5) {
+        for (const gruppKey of Object.keys(eon.utrustningsgrupper5)) {
+            eon.utrustningsgrupper5[gruppKey] = localizeKey(`eon.config.utrustningsgrupper5.${gruppKey}`);
+        }
+    }
+
+    // valuta (eon.valuta = { valuta: "Valuta" })
+    if (eon.valuta && typeof eon.valuta === "object") {
+        eon.valuta.valuta = localizeKey("eon.config.valuta");
+    }
+
+    // djurgrupper
+    if (eon.djurgrupper) {
+        for (const djurgruppKey of Object.keys(eon.djurgrupper)) {
+            eon.djurgrupper[djurgruppKey] = localizeKey(`eon.config.djurgrupper.${djurgruppKey}`);
+        }
+    }
+
+    // strid
+    if (eon.strid?.lakningstakt?.namn) {
+        eon.strid.lakningstakt.namn = localizeKey("eon.config.strid.lakningstakt.namn");
+    }
+
+    // combatPhases
+    if (eon.combatPhases) {
+        for (const fasKey of Object.keys(eon.combatPhases)) {
+            const combatPhase = eon.combatPhases[fasKey];
+            if (combatPhase && typeof combatPhase === "object" && combatPhase.namn) {
+                combatPhase.namn = localizeKey(`eon.config.combatPhases.${fasKey}.namn`);
+            }
+        }
+    }
+}
 
 /* ------------------------------------ */
 /* 1. Init system						*/
@@ -29,6 +196,7 @@ Hooks.once("init", async function() {
     CONFIG.Actor.dataModels.Varelse = models.EonVarelse;
 
     CONFIG.Item.dataModels.Folkslag = models.EonFolkslag;
+    CONFIG.Item.dataModels.Folkslag5 = models.Eon5Folkslag;
     CONFIG.Item.dataModels.Färdighet = models.EonFardighet;
     CONFIG.Item.dataModels.Språk = models.EonSprak;
     CONFIG.Item.dataModels.Mysterie = models.EonMysterie;
@@ -47,6 +215,9 @@ Hooks.once("init", async function() {
 	systemSettings();
 
     CONFIG.EON = eon;
+    CONFIG.EON.CharacterCreationWizard = CharacterCreationWizard;
+    // Localize config strings from lang (eon.config.*) so templates get correct language
+    localizeEonConfig(eon);
     CONFIG.EON.settings = [];
     CONFIG.EON.settings.bookEon = game.settings.get("eon-rpg", "bookEon");
     CONFIG.EON.settings.bookCombat = game.settings.get("eon-rpg", "bookCombat") == "strid";
@@ -96,7 +267,6 @@ Hooks.once("setup", function () {
 /* 3. When ready						*/
 /* ------------------------------------ */
 Hooks.once("ready", async () => {
-    // Do anything once the system is ready
 	const installedVersion = game.settings.get("eon-rpg", "systemVersion");
     const systemVersion = game.data.system.version;
     const isDemo = false;
@@ -110,33 +280,50 @@ Hooks.once("ready", async () => {
             }
         }      
         
-        if (!game.settings.get('eon-rpg', 'eoncombattrackerbeta')) {
-            MigrationWizard.show([
-                // Sida 1
-                `<h2>Eon Combat Tracker</h2>
-                <p>Eon Combat Tracker är systemets strids-/initiativspår som visas överst i mitten när du startar en <strong>encounter</strong>. Den följer Eons fasindelning (Avstånd, Närstrid, Mystik, Övrigt) och stödjer <strong>delstrider</strong> enligt regelboken.</p>
-                <p>Alla deltagare i encountern visas som porträtt. För varje porträtt kan du välja fas, slå initiativ (Reaktion), vid närstrid välja motståndare och bekräfta delstrid, samt använda <strong>Nästa</strong> för att gå vidare. Turordningen hanterar delstrider en i taget.</p>`,
-                // Sida 2
-                `<h2>Så använder du trackern</h2>
-                <ol style="margin-left: 20px; margin-top: 10px;">
-                <li><strong>Skapa encounter</strong></li>
-                <li><strong>Välj deltagare</strong> – Lägg till respektive deltagare genom Foundry på normalt sätt.</li>
-                <li><strong>Starta encounter</strong> – Eon Combat Tracker visas automatiskt överst.</li>                
-                <li><strong>Välj fas</strong> – Varje deltagare väljer först fas. Alla måste välja fas innan andra val blir tillgängliga.</li>
-                <li><strong>Slå initiativ</strong> – Öppnar formuläret för att slå Reaktion, lägg till eventuell bonus. Försvarare i delstrid slår inte initiativ separat. Finns en "slå initiativ för alla" knapp på vänster hovermeny.</li>
-                <li><strong>Delstrid</strong> – Vid Närstrid: välj motståndare, bekräfta delstrid, sätt roll. Byta motståndare kräver att du först lämnar delstrid. Den som väljer motståndare sätts automatiskt som anfallare.</li>
-                <li><strong>Nästa/föregående</strong> – Man flyttar markeringen vems tur det är med pilarna i vänster/höger hovermeny; turordningen följer en delstrid i taget. Efter den som är sist i rundan finns en markering; då blir det ny runda.</li>
-                <li><strong>Avsluta striden</strong> – När striden är slut stäng encounter i Foundry och trackern kommer att stängas automatiskt.</li>
-                </ol>`,
-                // Sida 3
-                `<h2>Beta – vi vill ha din feedback</h2>
-                <p>Eon Combat Tracker är för närvarande i <strong>beta</strong>. Det kan finnas buggar och saker som kan förbättras.</p>
-                <p><strong>Vill du hjälpa till?</strong> Berätta gärna vad som fungerar bra och vad som kan bli bättre.</p>
-                <p style="margin-top: 14px;">Skicka feedback och förbättringsförslag här:</p>
-                <p style="margin-left: 20px; margin-top: 8px;"><a href="https://github.com/JohanFalt/Foundry_EON-RPG/discussions" target="_blank" rel="noopener">https://github.com/JohanFalt/Foundry_EON-RPG/discussions</a></p>
-                <p style="margin-top: 12px;">Tack för att du testar Eon Combat Tracker!</p>`
-            ], 'eoncombattrackerbeta');
-        }
+        // Visa wizards en i taget med kort fördröjning (första först, sedan nästa när användaren stängt)
+        const showWizards = async () => {
+            if (!game.settings.get('eon-rpg', 'eoncombattrackerbeta')) {
+                await MigrationWizard.show([
+                        // Sida 1
+                        `<h2>Eon Combat Tracker</h2>
+                        <p>Eon Combat Tracker är systemets strids-/initiativspår som visas överst i mitten när du startar en <strong>encounter</strong>. Den följer Eons fasindelning (Avstånd, Närstrid, Mystik, Övrigt) och stödjer <strong>delstrider</strong> enligt regelboken.</p>
+                        <p>Alla deltagare i encountern visas som porträtt. För varje porträtt kan du välja fas, slå initiativ (Reaktion), vid närstrid välja motståndare och bekräfta delstrid, samt använda <strong>Nästa</strong> för att gå vidare. Turordningen hanterar delstrider en i taget.</p>`,
+                        // Sida 2
+                        `<h2>Så använder du trackern</h2>
+                        <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Skapa encounter</strong></li>
+                        <li><strong>Välj deltagare</strong> – Lägg till respektive deltagare genom Foundry på normalt sätt.</li>
+                        <li><strong>Starta encounter</strong> – Eon Combat Tracker visas automatiskt överst.</li>                
+                        <li><strong>Välj fas</strong> – Varje deltagare väljer först fas. Alla måste välja fas innan andra val blir tillgängliga.</li>
+                        <li><strong>Slå initiativ</strong> – Öppnar formuläret för att slå Reaktion, lägg till eventuell bonus. Försvarare i delstrid slår inte initiativ separat. Finns en "slå initiativ för alla" knapp på vänster hovermeny.</li>
+                        <li><strong>Delstrid</strong> – Vid Närstrid: välj motståndare, bekräfta delstrid, sätt roll. Byta motståndare kräver att du först lämnar delstrid. Den som väljer motståndare sätts automatiskt som anfallare.</li>
+                        <li><strong>Nästa/föregående</strong> – Man flyttar markeringen vems tur det är med pilarna i vänster/höger hovermeny; turordningen följer en delstrid i taget. Efter den som är sist i rundan finns en markering; då blir det ny runda.</li>
+                        <li><strong>Avsluta striden</strong> – När striden är slut stäng encounter i Foundry och trackern kommer att stängas automatiskt.</li>
+                        </ol>`
+                ], 'eoncombattrackerbeta');
+            }
+
+            if (!game.settings.get('eon-rpg', 'eontranslation')) {
+                await MigrationWizard.show([
+                        // Sida 1
+                        `<h2>Språk och översättning</h2>
+                        <p>Eon-systemet stödjer både <strong>svenska</strong> och <strong>engelska</strong>. För att använda systemet på svenska går du till <strong>Foundry-inställningarna</strong> (kugghjulen) och ändrar <strong>Språk</strong> från engelska till svenska.</p>
+                        <p>Språkvalet är en <strong>spelarnivåinställning</strong>. Det innebär att varje användare kan välja språk för sin egen klient. Om en spelare vill se gränssnittet på engelska kan de ställa in det hos sig utan att det påverkar andra – resten av gruppen kan fortsätta använda svenska.</p>
+                        <p style="margin-top: 12px;">Efter att du bytt språk laddas Eon-gränssnittet om med valt språk.</p>`
+                ], 'eontranslation');
+            }
+
+            if (!game.settings.get('eon-rpg', 'eoncreationwizard')) {
+                await MigrationWizard.show([
+                        // Sida 1
+                        `<h2>Hjälpformuläret för Eon 5</h2>
+                        <p>För en <strong>Eon 5-rollperson</strong> som ännu inte är slutförd använder du <strong>Hjälpformuläret</strong> – samma typ av val och hjälpfält som i regelboken. Du byter <strong>flik</strong> (Val, Händelser, Grundegenskaper, Färdigheter, …) och har en <strong>översikt till vänster</strong> med viktiga siffror och tabellslag.</p>
+                        <p>Utkastet sparas på <strong>samma rollperson</strong> medan du arbetar. <strong>Slutför</strong> överför då uppgifterna till det ordinarie rollformuläret enligt reglerna. Redan under skapandet kan en del synas på arket (t.ex. grundfärdigheter och föremål du lagt till). <strong>Fortsätt senare</strong> stänger fönstret och behåller utkastet – öppna rollpersonen igen för att fortsätta.</p>
+                        <p style="margin-top: 12px;">När du <strong>öppnar arket</strong> för en oslutförd rollperson öppnas karaktärsskapandet oftast <strong>automatiskt</strong>.</p>`
+                ], 'eoncreationwizard');
+            }
+        };
+        setTimeout(() => showWizards(), 100);
     } 
 
 });
@@ -258,7 +445,7 @@ Hooks.on("renderItemSheet", (sheet) => {
         (sheet.object.type.toLowerCase().replace(" ", "") == "mysterie")) {
         sheet.element[0].classList.add("besvarjelse");
     }
-    if (sheet.object.type.toLowerCase().replace(" ", "") == "folkslag") {
+    if ((sheet.object.type.toLowerCase().replace(" ", "") == "folkslag") || (sheet.object.type.toLowerCase().replace(" ", "") == "folkslag5")) {
         sheet.element[0].classList.add("folkslag");
     }
 });
@@ -299,7 +486,7 @@ Hooks.on("renderFormApplication", (sheet) => {
             sheet.element[0].classList.add("besvarjelse");
         }
 
-        if (sheet.object.typ.toLowerCase().replace(" ", "") == "folkslag") {
+        if ((sheet.object.type.toLowerCase().replace(" ", "") == "folkslag") || (sheet.object.type.toLowerCase().replace(" ", "") == "folkslag5")) {
             sheet.element[0].classList.add("folkslag");
         }
     }    

@@ -6,11 +6,11 @@
     <div class="item-column" style="min-width: 270px;">
         <div class="item-property-area floating-label-group">
             <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
-            <span class="floating-label">Namn</span>
+            <span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
         </div> 
 
         <div class="headline">
-            <div class="attribute-area">Grundattribut</div>
+            <div class="attribute-area">{{localize "eon.sheets.actor.grundattribut"}}</div>
         </div>
 
         {{#each EON.CONFIG.grundegenskaper as |attribute key|}}    
@@ -24,7 +24,7 @@
     </div>
 
     <div class="item-column">
-        <div class="item-headline headline">Språk</div>
+        <div class="item-headline headline">{{localize "eon.sheets.item.sprak"}}</div>
 
         {{#each item.system.sprak as |sprak key|}}    
             <div class="item-row">
@@ -34,6 +34,6 @@
             
         {{/each}}
 
-        <div class="information-area information-box">För att lägga till ett språk, dra den som skall användas från kompendiet (Folkslag/Språk) eller skapa en egen.</div>
+        <div class="information-area information-box">{{localize "eon.sheets.info.laggTillSprakKompendium"}}</div>
     </div>
 </div>

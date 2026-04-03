@@ -1,31 +1,31 @@
 <div class="item-box">
     <!-- <div class="item-row">
-        <div class="large-headline">Avståndsvapen</div>
-        <div class="pointer"><a class="item-create" title="Lägg till vapen" data-type="avståndsvapen"><i class="fa-solid fa-square-plus green"></i></a></div>
+        <div class="large-headline">{{localize "eon.sheets.actor.avstandsvapen"}}</div>
+        <div class="pointer"><a class="item-create" title="{{localize 'eon.sheets.actor.laggTillAvstandsvapen'}}" data-type="avståndsvapen"><i class="fa-solid fa-square-plus green"></i></a></div>
     </div> -->
 
     <div class="headline headline-background item-row">
         <div class="weapon-icon pointer">
-            <a class="item-create" title="Lägg till vapen" data-type="avståndsvapen"><i class="fa-solid fa-square-plus green"></i></a>
+            <a class="item-create" title="{{localize 'eon.sheets.actor.laggTillAvstandsvapen'}}" data-type="avståndsvapen"><i class="fa-solid fa-square-plus green"></i></a>
         </div>
-        <div style="width: 175px;">Avståndsvapen</div>
-        <div class="centerText" style="width: 75px;">Träffa</div>
-        <div class="centerText" style="width: 70px;">Skada</div>
-        <div class="centerText" style="width: 90px;">Räckvidd</div>        
-        <div class="centerText" style="width: 50px;">Antal</div>
-        <div class="centerText" style="width: 50px;">Vikt</div>
-        <div>Egenskaper</div>
+        <div style="width: 175px;">{{localize "eon.sheets.actor.avstandsvapen"}}</div>
+        <div class="centerText" style="width: 75px;">{{localize "eon.sheets.actor.traffa"}}</div>
+        <div class="centerText" style="width: 70px;">{{localize "eon.sheets.actor.skada"}}</div>
+        <div class="centerText" style="width: 90px;">{{localize "eon.sheets.actor.rackvidd"}}</div>        
+        <div class="centerText" style="width: 50px;">{{localize "eon.sheets.item.antal"}}</div>
+        <div class="centerText" style="width: 50px;">{{localize "eon.sheets.actor.vikt"}}</div>
+        <div>{{localize "eon.sheets.actor.egenskaper"}}</div>
     </div>
 
     {{#each actor.system.listdata.utrustning.vapen.avstand as |vapen key|}}
         <div class="item-row item-listrow">
-            <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera vapen" data-source="weapon" data-itemid="{{vapen._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="item-listbox weapon-icon"><a class="item-edit" title="{{localize 'eon.sheets.actor.editeraVapen'}}" data-source="weapon" data-itemid="{{vapen._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             {{#if (eq vapen.system.beskrivning "")}}
                 <div class="item-listbox weapon-icon"><i class="icon fa-regular fa-share"></i></div>
             {{else}}
-                <div class="item-listbox weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{vapen._id}}"><i class="icon fa-solid fa-share"></i></a></div>
+                <div class="item-listbox weapon-icon"><a class="item-send" title="{{localize 'eon.sheets.item.skickaBeskrivning'}}" data-source="description" data-itemid="{{vapen._id}}"><i class="icon fa-solid fa-share"></i></a></div>
             {{/if}}
-            <div class="item-listbox active-icon"><input class="pointer item-active" title="Bära vapen" name="vapen.system.installningar.buren" type="checkbox" data-itemid="{{vapen._id}}" data-property="buren" {{isChecked vapen.system.installningar.buren}} /></div>
+            <div class="item-listbox active-icon"><input class="pointer item-active" title="{{localize 'eon.sheets.actor.baraVapen'}}" name="vapen.system.installningar.buren" type="checkbox" data-itemid="{{vapen._id}}" data-property="buren" {{isChecked vapen.system.installningar.buren}} /></div>
             <div class="item-listbox vrollable draggable" style="width: 125px;" data-source="weapon" data-itemid="{{vapen._id}}">{{vapen.name}}</div>
             <div class="item-listbox centerText" style="width: 75px;">{{getDiceValue (getActorSkillGroupValue ../actor vapen.system.grupp "strid")}}</div>
             <div class="item-listbox centerText" style="width: 70px;">{{getDiceValue vapen.system.skada}} {{{getWeaponDamageType vapen.system.skadetyp}}}</div>
@@ -36,7 +36,7 @@
                 <span class="number-of-text">{{vapen.system.antal}}</span>
                 <i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="{{vapen._id}}"></i>
             </div>
-            <div class="item-listbox centerText  " style="width: 50px;">
+            <div class="item-listbox centerText" style="width: 50px;">
                 {{#if (eq vapen.system.vikt 0)}}
                     -
                 {{else}}
@@ -50,11 +50,11 @@
 
 <!-- <div style="min-height: 100px;">
     <div class="item-row">
-        <div class="large-headline">Ammunition</div>
+        <div class="large-headline">{{localize "eon.sheets.actor.ammunition"}}</div>
         <div><i class="fa-solid fa-square-plus green"></i></div>
     </div>
     <div class="headline item-row item-listrow">
-        <div style="width: 100px;">Beskrivning</div>
+        <div style="width: 100px;">{{localize "eon.sheets.item.beskrivning"}}</div>
         <div style="width: 50px;">Antal</div>
     </div>
 </div> -->

@@ -3,13 +3,13 @@
         <div class="item-row">
             <div>
                 <div class="item-row headline">
-                    <div style="width: 100px;">Delområde</div>
-                    <div style="width: 50px;">Kod</div>
-                    <div style="width: 125px;">Material</div>
-                    <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-icon" title="Hugg" /></div>
-                    <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_kross}}" class="item img-icon" title="Kross" /></div>
-                    <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_stick}}" class="item img-icon" title="Stick" /></div>
-                    <div>Egenskaper</div>
+                    <div style="width: 100px;">{{localize "eon.sheets.actor.delomrade"}}</div>
+                    <div style="width: 50px;">{{localize "eon.sheets.actor.kod"}}</div>
+                    <div style="width: 125px;">{{localize "eon.sheets.actor.material"}}</div>
+                    <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-icon" title="{{localize 'eon.config.vapenskador.hugg'}}" /></div>
+                    <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_kross}}" class="item img-icon" title="{{localize 'eon.config.vapenskador.kross'}}" /></div>
+                    <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_stick}}" class="item img-icon" title="{{localize 'eon.config.vapenskador.stick'}}" /></div>
+                    <div>{{localize "eon.sheets.actor.egenskaper"}}</div>
                 </div>
                 
                 {{#numFromLoop 1 26}}
@@ -25,16 +25,16 @@
         <div class="item-row">
             <div>
                 <div class="item-row headline">
-                    <div style="width: 100px;">Delområde</div>
-                    <div style="width: 125px;">Material</div>
-                    <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-icon" title="Hugg" /></div>
-                    <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_kross}}" class="item img-icon" title="Kross" /></div>
-                    <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_stick}}" class="item img-icon" title="Stick" /></div>
+                    <div style="width: 100px;">{{localize "eon.sheets.actor.delomrade"}}</div>
+                    <div style="width: 125px;">{{localize "eon.sheets.actor.material"}}</div>
+                    <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-icon" title="{{localize 'eon.config.vapenskador.hugg'}}" /></div>
+                    <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_kross}}" class="item img-icon" title="{{localize 'eon.config.vapenskador.kross'}}" /></div>
+                    <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_stick}}" class="item img-icon" title="{{localize 'eon.config.vapenskador.stick'}}" /></div>
                 </div>
 
                 {{#each actor.system.listdata.kroppsdelar as |rustning key|}}
                     <div class="item-row item-listrow">
-                        <div class="item-listbox" style="width: 100px;">{{rustning.namn}}</div>
+                        <div class="item-listbox" style="width: 100px;">{{localize rustning.namn}}</div>
                         <div class="item-listbox" style="width: 125px;">{{#if (ne rustning.material "")}}{{getArmorType rustning.material ../actor}}{{else}}&nbsp;{{/if}}</div>
                         <div class="centerText item-listbox" style="width: 50px;">           
                             {{sum 
@@ -64,22 +64,22 @@
 <div class="item-box">
     <div class="headline headline-background item-row">
         <div class="weapon-icon pointer">
-            <a class="item-create" title="Lägg till rustning" data-type="rustning">
+            <a class="item-create" title="{{localize 'eon.sheets.actor.laggTillRustning'}}" data-type="rustning">
                 <i class="fa-solid fa-square-plus green"></i>
             </a>
         </div>
-        <div style="width: 175px;">Rustning</div>
-        <div style="width: 100px;">Belastning</div>      
-        <div>Delområde</div> 
+        <div style="width: 175px;">{{localize "eon.sheets.actor.rustning"}}</div>
+        <div style="width: 100px;">{{localize "eon.sheets.actor.belastning"}}</div>      
+        <div>{{localize "eon.sheets.actor.delomrade"}}</div> 
     </div>
 
     {{#each actor.system.listdata.utrustning.rustning as | rustning key|}}
         <div class="item-row item-listrow">
-            <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera rustning" data-source="armor" data-itemid="{{rustning._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="item-listbox weapon-icon"><a class="item-edit" title="{{localize 'eon.sheets.actor.editeraRustning'}}" data-source="armor" data-itemid="{{rustning._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             {{#if (eq rustning.system.beskrivning "")}}
                 <div class="item-listbox weapon-icon"><i class="icon fa-regular fa-share"></i></div>
             {{else}}
-                <div class="item-listbox weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{rustning._id}}"><i class="icon fa-solid fa-share"></i></a></div>
+                <div class="item-listbox weapon-icon"><a class="item-send" title="{{localize 'eon.sheets.item.skickaBeskrivning'}}" data-source="description" data-itemid="{{rustning._id}}"><i class="icon fa-solid fa-share"></i></a></div>
             {{/if}}
             <div class="item-listbox active-icon"><input class="pointer item-active" name="rustning.system.installningar.buren" type="checkbox" data-itemid="{{rustning._id}}" data-property="buren" {{isChecked rustning.system.installningar.buren}} /></div>
             <div class="item-listbox  draggable" data-itemid="{{rustning._id}}" style="width: 125px;">{{rustning.name}}</div>

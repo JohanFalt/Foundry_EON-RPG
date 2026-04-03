@@ -1,5 +1,6 @@
 import basforemal from "./base/_basforemal.js";
 import installningar from "./base/installningar.js";
+import bonus from "./base/bonus.js";
 
 /**
  * Data schema, attributes, and methods specific to Rollperson type Actors.
@@ -20,7 +21,13 @@ export default class EonEgenskap extends basforemal {
             harniva: new fields.BooleanField({initial: false})
         });
 
-        schema.niva = new fields.NumberField({...valueInteger});
+        schema.niva = new fields.NumberField({...valueInteger});        
+
+        // schema.bonus = new fields.ArrayField(
+        //     new fields.SchemaField({
+        //         ...bonus()
+        //     })
+        // );
 
         return schema;
     }

@@ -11,21 +11,33 @@
                 <div class="pullLeft" style="min-width: 270px;">
 
                     {{#if (eq item.system.typ "kongelat")}}
-                        <div class="item-property-area   floating-label-group">
+                        <div class="item-property-area floating-label-group">
                             <select class="text-value" name="name">                                
                                 {{#select item.name}}
-                                    <option value="Kongelat">- Välj -</option>
+                                    <option value="Kongelat">{{localize "eon.sheets.item.valjOption"}}</option>
                                     {{#each EON.CONFIG.aspekter as |aspekt key|}}
-                                        <option value="{{key}}">{{aspekt}}</option>
+                                        <option value="{{key}}">{{localize aspekt}}</option>
                                     {{/each}}
                                 {{/select}}
                             </select>
-                            <span class="floating-label">Aspekt</span>
+                            <span class="floating-label">{{localize "eon.sheets.item.aspekt"}}</span>
                         </div>
                     {{else}}
-                        <div class="item-property-area   floating-label-group">
+                        <div class="item-property-area floating-label-group">
                             <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
-                            <span class="floating-label">Namn</span>
+                            <span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
+                        </div>
+
+                        <div class="item-property-area floating-label-group">
+                            <select class="text-value editable" name="system.grupp" style="width: 125px;">                                
+                                <option value="">{{localize "eon.sheets.item.ingetOption"}}</option>
+                                {{#if (eq item.system.installningar.eon "eon4")}}
+                                    {{selectOptions EON.CONFIG.utrustningsgrupper selected=item.system.grupp localize=true}}
+                                {{else}}
+                                     {{selectOptions EON.CONFIG.utrustningsgrupper5 selected=item.system.grupp localize=true}}
+                                {{/if}}
+                            </select>
+                            <span class="floating-label">{{localize "eon.sheets.item.grupp"}}</span>
                         </div>
                     {{/if}}
 
@@ -33,27 +45,27 @@
                         <div class="clear">
                             <div class="pullLeft item-property-area floating-label-group ">
                                 <input class="attribute-value editable" name="system.antal" type="text" value="{{item.system.antal}}" data-dtype="Number" />
-                                <span class="floating-label">Antal</span>
+                                <span class="floating-label">{{localize "eon.sheets.item.antal"}}</span>
                             </div>
 
                             <div class="pullLeft item-property-area floating-label-group ">
                                 <input class="attribute-value editable" name="system.vikt" type="text" value="{{item.system.vikt}}" data-dtype="Number" />
-                                <span class="floating-label">Vikt (kg)</span>
+                                <span class="floating-label">{{localize "eon.sheets.item.viktKg"}}</span>
                             </div>
 
                             <div class="pullLeft item-property-area floating-label-group ">
                                 <input class="attribute-value editable" name="system.pris" type="text" value="{{item.system.pris}}" data-dtype="Number" />
-                                <span class="floating-label">Pris (silver)</span>
+                                <span class="floating-label">{{localize "eon.sheets.item.prisSilver"}}</span>
                             </div>
                         </div>
 
                         <div class="clear">
-                            <div class="pullLeft item-headline caption">Förvaring</div>
+                            <div class="pullLeft item-headline caption">{{localize "eon.sheets.item.forvaring"}}</div>
                             <div class="pullLeft"><input class="item-active" name="system.installningar.forvaring" type="checkbox" data-property="forvaring" {{isChecked item.system.installningar.forvaring}} data-dtype="Boolean" /></div>
                         </div>
                         
                         <div class="clear">
-                            <div class="pullLeft item-headline caption">Antal per enhet</div>
+                            <div class="pullLeft item-headline caption">{{localize "eon.sheets.item.antalPerEnhet"}}</div>
                             <div class="pullLeft"><input class="item-active" name="system.installningar.behallare" type="checkbox" data-property="behallare" {{isChecked item.system.installningar.behallare}} data-dtype="Boolean" /></div>
                         </div>
                     {{/if}}
@@ -70,17 +82,17 @@
                         <div class="clear">
                             <div class="pullLeft item-property-area floating-label-group ">
                                 <input class="attribute-value editable" name="system.antal" type="text" value="{{item.system.antal}}" data-dtype="Number" />
-                                <span class="floating-label">Antal</span>
+                                <span class="floating-label">{{localize "eon.sheets.item.antal"}}</span>
                             </div>
 
                             <div class="pullLeft item-property-area floating-label-group ">
                                 <input class="attribute-value editable" name="system.vikt" type="text" value="{{item.system.vikt}}" data-dtype="Number" />
-                                <span class="floating-label">Vikt (kg)</span>
+                                <span class="floating-label">{{localize "eon.sheets.item.viktKg"}}</span>
                             </div>
 
                             <div class="pullLeft item-property-area floating-label-group ">
                                 <input class="attribute-value editable" name="system.pris" type="text" value="{{item.system.pris}}" data-dtype="Number" />
-                                <span class="floating-label">Pris (silver)</span>
+                                <span class="floating-label">{{localize "eon.sheets.item.prisSilver"}}</span>
                             </div>
                         </div>
 
@@ -91,17 +103,17 @@
                         <div class="clear">
                             <div class="pullLeft item-property-area floating-label-group ">
                                 <input class="attribute-value editable" name="system.volym.antal" type="text" value="{{item.system.volym.antal}}" data-dtype="Number" />
-                                <span class="floating-label">Antal</span>
+                                <span class="floating-label">{{localize "eon.sheets.item.antal"}}</span>
                             </div>
 
                             <!-- <div class="item-property-area floating-label-group ">
                                 <input class="attribute-value editable" name="system.volym.max" type="text" value="{{item.system.volym.max}}" data-dtype="Number" />
-                                <span class="floating-label">Max antal</span>
+                                <span class="floating-label">{{localize "eon.sheets.item.maxAntal"}}</span>
                             </div> -->
 
                             <div class="pullLeft item-property-area floating-label-group ">
                                 <input class="attribute-value editable" name="system.volym.enhet" type="text" value="{{item.system.volym.enhet}}" data-dtype="String" />
-                                <span class="floating-label">Enhet</span>
+                                <span class="floating-label">{{localize "eon.sheets.item.enhet"}}</span>
                             </div>
                         </div>
                     {{/if}}
@@ -113,10 +125,10 @@
                     {{/if}}     
                     
                     {{#if (eq item.system.typ "kongelat")}}
-                        <div class="information-area top-sidetext">KONGELAT</div>
+                        <div class="information-area top-sidetext">{{localize "eon.sheets.item.kongelat"}}</div>
                     {{/if}}
                     {{#if (eq item.system.typ "utrustning")}}
-                        <div class="information-area top-sidetext">UTRUSTNING</div>
+                        <div class="information-area top-sidetext">{{localize "eon.sheets.item.utrustning"}}</div>
                     {{/if}}
                 </div>
             </div>
@@ -127,14 +139,14 @@
 
             {{#if (and hasActor item.system.installningar.forvaring)}}
                 <div class="item-box">
-                    <div class="large-headline">Förvarar</div>
+                    <div class="large-headline">{{localize "eon.sheets.item.forvarar"}}</div>
 
                     {{#each (getConnectedItems item.actor item._id) as |utrustning key|}}
                         <div class="clear">
                             <div class="pullLeft" style="width: 220px;">
                                 {{utrustning.name}}
                             </div>
-                            <div class="pointer item-pull" data-itemid="{{utrustning._id}}" title="Flytta ut ur förvaring"><i class="icon fa-solid fa-trash-can"></i></div>
+                            <div class="pointer item-pull" data-itemid="{{utrustning._id}}" title="{{localize 'eon.sheets.item.flyttaUtUrForvaring'}}"><i class="icon fa-solid fa-trash-can"></i></div>
                         </div>
                     {{/each}}
                 </div>

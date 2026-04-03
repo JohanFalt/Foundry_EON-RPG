@@ -11,24 +11,26 @@ export class EonCombatTracker extends HandlebarsApplicationMixin(ApplicationV2) 
         }
     };
 
-    static DEFAULT_OPTIONS = {
-        id: "eon-combat-tracker",
-        classes: ["eon-combat-tracker"],
-        tag: "section",
-        position: {
-            width: 1200,
-            height: "auto",
-            top: 12,
-            left: 200
-        },
-        actions: {},
-        window: {
-            frame: false,
-            positioned: true,
-            title: "Eon Combat Tracker",
-            controls: []
-        }
-    };
+    static get DEFAULT_OPTIONS() {
+        return {
+            id: "eon-combat-tracker",
+            classes: ["eon-combat-tracker"],
+            tag: "section",
+            position: {
+                width: 1200,
+                height: "auto",
+                top: 12,
+                left: 200
+            },
+            actions: {},
+            window: {
+                frame: false,
+                positioned: true,
+                title: game.i18n.localize("eon.combat.title"),
+                controls: []
+            }
+        };
+    }
 
     /** @type {ResizeObserver|null} */
     _maxWidthResizeObserver = null;
@@ -287,7 +289,7 @@ export class EonCombatTracker extends HandlebarsApplicationMixin(ApplicationV2) 
         if (action === "roll-initiative") {
             const hasPhase = (combatant.flags?.["eon-rpg"]?.phase ?? "") !== "";
             if (!hasPhase) {
-                ui.notifications.warn("Välj fas först.");
+                ui.notifications.warn(game.i18n.localize("eon.combat.valjFas"));
                 return;
             }
             await CombatHelper.rollReactionInitiative(combatant, { promptDialog: true });
@@ -298,7 +300,7 @@ export class EonCombatTracker extends HandlebarsApplicationMixin(ApplicationV2) 
         if (action === "select-subcombat-targets") {
             const phase = combatant.flags?.["eon-rpg"]?.phase ?? "";
             if (phase !== "initiative_close") {
-                ui.notifications.warn("Välj närstridsfas först.");
+                ui.notifications.warn(game.i18n.localize("eon.combat.valjNarstridsfas"));
                 return;
             }
             await this._openSubcombatTargetDialog(combatant);
@@ -308,7 +310,7 @@ export class EonCombatTracker extends HandlebarsApplicationMixin(ApplicationV2) 
         if (action === "confirm-subcombat") {
             const phase = combatant.flags?.["eon-rpg"]?.phase ?? "";
             if (phase !== "initiative_close") {
-                ui.notifications.warn("Välj närstridsfas först.");
+                ui.notifications.warn(game.i18n.localize("eon.combat.valjNarstridsfas"));
                 return;
             }
             await SubcombatManager.confirmIntent(combatant);
@@ -318,7 +320,7 @@ export class EonCombatTracker extends HandlebarsApplicationMixin(ApplicationV2) 
         }
 
         if (this.interactionsLocked && action !== "set-phase") {
-            ui.notifications.warn("Alla combatants måste välja fas först.");
+            ui.notifications.warn(game.i18n.localize("eon.combat.allaMasteValjaFas"));
             return;
         }
 
@@ -379,17 +381,17 @@ export class EonCombatTracker extends HandlebarsApplicationMixin(ApplicationV2) 
             (c) => (c.flags?.["eon-rpg"]?.groupId === groupId && c.flags?.["eon-rpg"]?.subcombatRole === "attacker")
         );
         if (groupId !== "main" && groupHasAttacker) {
-            ui.notifications.warn("Lämna delstrid först om du vill välja andra motståndare.");
+            ui.notifications.warn(game.i18n.localize("eon.combat.lamnaDelstridForst"));
             return;
         }
 
         const candidates = combat.combatants.contents.filter((c) => c.id !== combatant.id && !c.defeated);
         if (!candidates.length) {
-            ui.notifications.warn("Inga andra deltagare att välja.");
+            ui.notifications.warn(game.i18n.localize("eon.combat.ingaAndraDeltagare"));
             return;
         }
         if (!candidates.length) {
-            ui.notifications.warn("Inga giltiga motståndare i närstrid att välja.");
+            ui.notifications.warn(game.i18n.localize("eon.combat.ingaGiltigaMotstandare"));
             return;
         }
 
@@ -401,12 +403,12 @@ export class EonCombatTracker extends HandlebarsApplicationMixin(ApplicationV2) 
 
         const dialog = new foundry.applications.api.DialogV2({
             classes: ["eon-select-opponent-dialog"],
-            window: { title: "Välj motståndare" },
+            window: { title: game.i18n.localize("eon.combat.valjMotstandareTitle") },
             content: `<form><p>Välj en eller flera motståndare:</p>${rows}</form>`,
             buttons: [
                 {
                     action: "save",
-                    label: "Välj",
+                    label: game.i18n.localize("eon.dialogs.valj"),
                     callback: async (_event, button, app) => {
                         const root = app.element instanceof HTMLElement ? app.element : app.element?.[0];
                         if (!root) return;
@@ -445,7 +447,7 @@ export class EonCombatTracker extends HandlebarsApplicationMixin(ApplicationV2) 
                 },
                 {
                     action: "cancel",
-                    label: "Avbryt"
+                    label: game.i18n.localize("eon.dialogs.avbryt")
                 }
             ]
         });

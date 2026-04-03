@@ -1,0 +1,802 @@
+<div class="eon-ccw-wrapper">
+  <aside class="eon-ccw-sidebar">
+    <div class="eon-ccw-summary-title">{{localize "eon.wizard.sidebarOversiktRubrik"}}</div>
+    <p class="eon-ccw-summary-hint">{{localize "eon.wizard.sidebarHint"}}</p>
+
+    <div class="eon-ccw-summary-section">
+      <div class="eon-ccw-summary-title">{{localize "eon.wizard.sidebarHandelser"}}</div>
+      <p class="eon-ccw-summary-hint">{{localize "eon.wizard.sidebarHandelserHint"}}</p>
+      <div class="eon-ccw-datagrid eon-ccw-datagrid--summary-2">
+        {{#each handelseOvRows}}
+        <div class="eon-ccw-datagrid__row">
+          <div class="eon-ccw-datagrid__cell">{{label}}</div>
+          <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--num">
+            <div class="eon-ccw-num-tiny-stepper" role="group">
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_ht_{{key}}" data-ccw-step-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+              <input type="number" class="eon-ccw-num-tiny" name="ccw_ht_{{key}}" value="{{value}}" min="0" step="1" data-dtype="Number" />
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_ht_{{key}}" data-ccw-step-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    
+    <div class="eon-ccw-summary-section">
+      <div class="eon-ccw-summary-title">{{localize "eon.wizard.sidebarGrundegenskaper"}}</div>
+      <p class="eon-ccw-summary-hint">{{localize "eon.wizard.sidebarGrundegenskaperHint"}}</p>
+      <div class="eon-ccw-datagrid eon-ccw-datagrid--summary-attr">
+        <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--head">
+          <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr">{{localize "eon.sheets.item.attribut"}}</div>
+          <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr">{{localize "eon.sheets.actor.grund"}}</div>
+          <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr">{{localize "eon.sheets.item.bonus"}}</div>
+        </div>
+        {{#each harleddaRowsOv}}
+        <div class="eon-ccw-datagrid__row">
+          <div class="eon-ccw-datagrid__cell">{{label}}</div>
+          <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--num">
+            <div class="eon-ccw-num-tiny-stepper" role="group">
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_ov_attr_{{key}}_g" data-ccw-step-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+              <input type="number" class="eon-ccw-num-tiny" name="ccw_ov_attr_{{key}}_g" value="{{grund}}" step="1" data-dtype="Number" />
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_ov_attr_{{key}}_g" data-ccw-step-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+            </div>
+          </div>
+          <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--num">
+            <div class="eon-ccw-num-tiny-stepper" role="group">
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_ov_attr_{{key}}_b" data-ccw-step-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+              <input type="number" class="eon-ccw-num-tiny" name="ccw_ov_attr_{{key}}_b" value="{{bonus}}" step="1" data-dtype="Number" />
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_ov_attr_{{key}}_b" data-ccw-step-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+        <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--extra-attr-poang">
+          <div class="eon-ccw-datagrid__cell">{{localize "eon.wizard.valfriaAttributPoangLabel"}}</div>
+          <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--num"></div>
+          <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--num">
+            <div class="eon-ccw-num-tiny-stepper" role="group">
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_extra_attr_poang" data-ccw-step-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+              <input type="number" class="eon-ccw-num-tiny" name="ccw_extra_attr_poang" value="{{wizardDraft.extraAttributPoang}}" step="1" data-dtype="Number" aria-label="{{localize 'eon.wizard.valfriaAttributPoangLabel'}}" />
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_extra_attr_poang" data-ccw-step-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="eon-ccw-summary-section">
+      <div class="eon-ccw-summary-title">{{localize "eon.wizard.sidebarEnheter"}}</div>
+      <p class="eon-ccw-summary-hint">{{localize "eon.wizard.sidebarEnheterHint"}}</p>
+      <div class="eon-ccw-datagrid eon-ccw-datagrid--summary-2">
+        {{#each enhetRowsOv}}
+        <div class="eon-ccw-datagrid__row">
+          <div class="eon-ccw-datagrid__cell">{{label}}</div>
+          <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--num">
+            <div class="eon-ccw-num-tiny-stepper" role="group">
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_ov_e_{{key}}" data-ccw-step-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+              <input type="number" class="eon-ccw-num-tiny" name="ccw_ov_e_{{key}}" value="{{value}}" min="0" step="1" data-dtype="Number" />
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_ov_e_{{key}}" data-ccw-step-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="eon-ccw-summary-section">
+      <div class="eon-ccw-summary-title">{{localize "eon.wizard.sidebarPaketSteg13"}}</div>
+      <div class="eon-ccw-datagrid eon-ccw-datagrid--summary-2">
+        {{#each paketRows}}
+        <div class="eon-ccw-datagrid__row">
+          <div class="eon-ccw-datagrid__cell">{{label}}</div>
+          <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--num">
+            <div class="eon-ccw-num-tiny-stepper" role="group">
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_pkt_{{key}}" data-ccw-step-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+              <input type="number" class="eon-ccw-num-tiny" name="ccw_pkt_{{key}}" value="{{value}}" min="0" step="1" data-dtype="Number" />
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_pkt_{{key}}" data-ccw-step-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+  </aside>
+
+  <div class="eon-ccw-main">
+    <header class="eon-ccw-header">{{localize "eon.wizard.mainHeaderSubtitle"}}</header>
+    <div class="eon-ccw-tabs" role="tablist">
+      <button type="button" class="eon-ccw-tab {{#if tabVal}}active{{/if}}" data-action="ccwTab" data-tab="val">{{localize "eon.wizard.tabVal"}}</button>
+      <button type="button" class="eon-ccw-tab {{#if tabHandelser}}active{{/if}}" data-action="ccwTab" data-tab="handelser">{{localize "eon.wizard.tabHandelser"}}</button>
+      <button type="button" class="eon-ccw-tab {{#if tabGrundegenskaper}}active{{/if}}" data-action="ccwTab" data-tab="grundegenskaper">{{localize "eon.wizard.tabGrundegenskaper"}}</button>
+      <button type="button" class="eon-ccw-tab {{#if tabFardigheter}}active{{/if}}" data-action="ccwTab" data-tab="fardigheter">{{localize "eon.wizard.tabFardigheter"}}</button>
+      <button type="button" class="eon-ccw-tab {{#if tabSprak}}active{{/if}}" data-action="ccwTab" data-tab="sprak">{{localize "eon.wizard.tabSprak"}}</button>
+      <button type="button" class="eon-ccw-tab {{#if tabKaraktarsdrag}}active{{/if}}" data-action="ccwTab" data-tab="karaktarsdrag">{{localize "eon.wizard.tabKaraktarsdrag"}}</button>
+      <button type="button" class="eon-ccw-tab {{#if tabNamnDetaljer}}active{{/if}}" data-action="ccwTab" data-tab="namnDetaljer">{{localize "eon.wizard.tabNamnDetaljer"}}</button>
+      <button type="button" class="eon-ccw-tab {{#if tabUtrustning}}active{{/if}}" data-action="ccwTab" data-tab="utrustning">{{localize "eon.wizard.tabUtrustning"}}</button>
+      <button type="button" class="eon-ccw-tab {{#if tabMystik}}active{{/if}}" data-action="ccwTab" data-tab="mystik">{{localize "eon.wizard.tabMystik"}}</button>
+    </div>
+
+    <div class="eon-ccw-content">
+      {{#if tabVal}}
+      <div class="eon-ccw-panel">
+        <div class="eon-ccw-section">
+          <div class="eon-ccw-section-title"><span class="eon-ccw-step-num">1</span>{{localize "eon.wizard.stegRollpersonen"}}</div>
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-step-placeholder"></span>
+            <label class="eon-ccw-label" for="ccw_actor_name">{{localize "eon.sheets.actor.namn"}}</label>
+            <input type="text" id="ccw_actor_name" name="ccw_actor_name" value="{{actorName}}" />
+          </div>
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-step-placeholder"></span>
+            <label class="eon-ccw-label" for="ccw_koncept">{{localize "eon.sheets.actor.koncept"}}</label>
+            <input type="text" id="ccw_koncept" name="ccw_koncept" value="{{wizardDraft.koncept}}" />
+          </div>
+        </div>
+        <div class="eon-ccw-section">
+          <div class="eon-ccw-section-title">{{localize "eon.wizard.stegVal26"}}</div>
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-step-num">2</span><label class="eon-ccw-label" for="ccw_hemland">{{localize "eon.sheets.actor.hemland"}}</label>
+            <input type="text" id="ccw_hemland" name="ccw_hemland" value="{{wizardDraft.hemland}}" />
+          </div>
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-step-num">3</span><label class="eon-ccw-label" for="ccw_bakgrund">{{localize "eon.sheets.nav.bio"}}</label>
+            <input type="text" id="ccw_bakgrund" name="ccw_bakgrund" value="{{wizardDraft.bakgrund}}" />
+          </div>
+          <input type="hidden" name="ccw_har_kulturfolkslag" value="{{#if wizardDraft.harKulturfolkslag}}1{{else}}0{{/if}}" />
+          <input type="hidden" name="ccw_folk_valfri_pool" value="{{folkValfriaPoolCsv}}" />
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-step-num">4</span><label class="eon-ccw-label" for="ccw_folkslag">{{localize "eon.sheets.actor.folkslag"}}</label>
+            <select name="ccw_folkslag" id="ccw_folkslag">
+                {{{folkslagOptionsHtml}}}
+            </select>
+          </div>
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-step-placeholder"></span><label class="eon-ccw-label" for="ccw_kulturfolkslag">{{localize "eon.sheets.actor.kulturfolkslag"}}</label>
+            <select name="ccw_kulturfolkslag" id="ccw_kulturfolkslag" {{#unless kulturfolkslagSelectEnabled}}disabled{{/unless}}>
+                {{{kulturfolkslagOptionsHtml}}}
+            </select>
+          </div>
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-step-placeholder"></span>
+            <span class="eon-ccw-label" aria-hidden="true"></span>
+            <p class="eon-ccw-hint eon-ccw-hint--in-field-column">{{localize "eon.wizard.folkKulturfolkslagHint"}}</p>
+          </div>
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-step-num">5</span><label class="eon-ccw-label" for="ccw_religion">{{localize "eon.sheets.actor.religion"}}</label>
+            <input type="text" id="ccw_religion" name="ccw_religion" value="{{wizardDraft.religion}}" />
+          </div>
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-step-placeholder"></span>
+            <span class="eon-ccw-label" aria-hidden="true"></span>
+            <p class="eon-ccw-hint eon-ccw-hint--in-field-column">{{localize "eon.wizard.doktrinRaderHint"}}</p>
+          </div>
+          {{#each doktrinRaderRows}}
+            <div class="eon-ccw-row">
+              <span class="eon-ccw-step-placeholder"></span>
+              <label class="eon-ccw-label" for="ccw_doktrin_{{index}}_beskrivning">{{localize "eon.sheets.actor.doktrinRad"}}</label>
+              <input type="text" id="ccw_doktrin_{{index}}_beskrivning" name="ccw_doktrin_{{index}}_beskrivning" value="{{beskrivning}}" />
+              <button type="button" class="eon-ccw-icon-btn eon-ccw-doktrin-del" data-index="{{index}}" title="{{localize 'eon.sheets.actor.taBortDoktrinRad'}}" aria-label="{{localize 'eon.sheets.actor.taBortDoktrinRad'}}"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+          {{/each}}
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-step-placeholder"></span>
+            <span class="eon-ccw-label" aria-hidden="true"></span>
+            <button type="button" class="eon-ccw-doktrin-add">{{localize "eon.sheets.actor.laggTillDoktrinRad"}}</button>
+          </div>
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-step-num">6</span><label class="eon-ccw-label" for="ccw_arketyp">{{localize "eon.sheets.actor.arketyp"}}</label>
+            <input type="text" id="ccw_arketyp" name="ccw_arketyp" value="{{wizardDraft.arketyp}}" />
+          </div>
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-step-placeholder"></span><label class="eon-ccw-label" for="ccw_varv">{{localize "eon.sheets.actor.varv"}}</label>
+            <input type="text" id="ccw_varv" name="ccw_varv" value="{{wizardDraft.varv}}" />
+          </div>
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-step-placeholder"></span><label class="eon-ccw-label" for="ccw_miljo">{{localize "eon.sheets.actor.miljo"}}</label>
+            <input type="text" id="ccw_miljo" name="ccw_miljo" value="{{wizardDraft.miljo}}" />
+          </div>
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-step-placeholder"></span><label class="eon-ccw-label" for="ccw_levnadsstandard">{{localize "eon.sheets.actor.levnadsstandard"}}</label>
+            <input type="text" id="ccw_levnadsstandard" name="ccw_levnadsstandard" value="{{wizardDraft.levnadsstandard}}" />
+          </div>
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-step-placeholder"></span><label class="eon-ccw-label" for="ccw_startkapital">{{localize "eon.sheets.actor.startkapital"}}</label>
+            <input type="text" id="ccw_startkapital" name="ccw_startkapital" value="{{wizardDraft.startkapital}}" />
+          </div>
+        </div>
+        <div class="eon-ccw-section">
+          <div class="eon-ccw-section-title">{{localize "eon.sheets.actor.egenskaper"}}</div>
+          <p class="eon-ccw-hint">{{localize "eon.wizard.egenskaperFolkslagHint"}}</p>
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-step-placeholder"></span>
+          </div>
+          <div class="eon-ccw-subsection-title">{{localize "eon.wizard.folkEgenskaperObligatoriska"}}</div>
+          <div class="eon-ccw-folk-egenskaper-list">
+            {{#each folkEgenskapRows}}
+            <div class="eon-ccw-folk-egenskap-row">
+              <div class="eon-ccw-folk-egenskap-namn">{{label}}</div>
+              <prose-mirror name="{{editFieldName}}" value="{{beskrivning}}" toggled compact>{{{beskrivningDisplay}}}</prose-mirror>
+            </div>
+            {{else}}
+            <p class="eon-ccw-muted">{{localize "eon.wizard.folkEgenskaperIngenFolkslag"}}</p>
+            {{/each}}
+          </div>
+          <div class="eon-ccw-subsection-title">{{localize "eon.wizard.folkEgenskaperValfria"}}</div>
+          <p class="eon-ccw-hint">{{localize "eon.wizard.folkValfriaHint"}}</p>
+          <div class="eon-ccw-folk-egenskaper-list eon-ccw-folk-valfria-checks">
+            {{#each folkValfriaRows}}
+            <div class="eon-ccw-folk-egenskap-row eon-ccw-folk-egenskap-row--valfri">
+              <label class="eon-ccw-folk-valfri-label">
+                <input type="checkbox" name="ccw_valfri" value="{{uuid}}" {{#if valfriChecked}}checked{{/if}} />
+                <span class="eon-ccw-folk-egenskap-namn">{{label}}</span>
+              </label>
+              {{#if showProseMirror}}
+              <prose-mirror name="{{editFieldName}}" value="{{beskrivning}}" toggled compact>{{{beskrivningDisplay}}}</prose-mirror>
+              {{else}}
+              <div class="eon-ccw-folk-egenskap-besk eon-ccw-folk-beskrivning-readonly">{{{beskrivningDisplay}}}</div>
+              {{/if}}
+            </div>
+            {{else}}
+            <p class="eon-ccw-muted">{{localize "eon.wizard.folkValfriaInga"}}</p>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if tabHandelser}}
+      <div class="eon-ccw-panel">
+        <div class="eon-ccw-section">
+          <div class="eon-ccw-section-title">{{localize "eon.wizard.handelseResultatRubrik"}}</div>
+          <div class="eon-ccw-datagrid eon-ccw-datagrid--handelse">
+            <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--head">
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-typ">{{localize "eon.sheets.actor.tabell"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-hash">{{localize "eon.wizard.handelseResultatNummer"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-beskrivning">{{localize "eon.sheets.actor.anteckning"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-actions" aria-hidden="true"></div>
+            </div>
+            {{#each handelseResultatRows}}
+            <div class="eon-ccw-datagrid__row">
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-typ">{{{tabellOptionsHtml}}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-hash"><input type="text" name="ccw_hr_{{index}}_num" value="{{nummer}}" /></div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-beskrivning"><input type="text" name="ccw_hr_{{index}}_anteckning" value="{{anteckning}}" /></div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-actions">
+                <button type="button" class="eon-ccw-icon-btn" data-action="ccwHandelseRemoveRow" data-handelse-index="{{index}}" title="{{localize 'eon.wizard.handelseTaBortRad'}}" aria-label="{{localize 'eon.wizard.handelseTaBortRad'}}"><i class="icon fa-solid fa-trash-can"></i></button>
+              </div>
+            </div>
+            {{/each}}
+          </div>
+          <div class="eon-ccw-handelse-add-row">
+            <button type="button" class="eon-ccw-btn-handelse-add" data-action="ccwHandelseAddRow">{{localize "eon.wizard.handelseLaggTillRad"}}</button>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if tabGrundegenskaper}}
+      <div class="eon-ccw-panel">
+        <div class="eon-ccw-section">
+          <div class="eon-ccw-section-title"><span class="eon-ccw-step-num">8</span>{{localize "eon.wizard.grundegenskaperFullRubrik"}}</div>
+          <p class="eon-ccw-hint">{{localize "eon.wizard.grundegenskaperFullHint"}}</p>
+          <div class="eon-ccw-datagrid eon-ccw-datagrid--attr">
+            <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--head">
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-name">{{localize "eon.sheets.item.attribut"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-grund">{{localize "eon.sheets.actor.grund"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-grund">{{localize "eon.sheets.item.bonus"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-totalt">{{localize "eon.sheets.actor.totalt"}}</div>
+            </div>
+            {{#each harleddaRowsT8}}
+            <div class="eon-ccw-datagrid__row">
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-name">{{label}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-grund"><input type="number" class="eon-ccw-narrow eon-ccw-harledd-grund-mirror" name="ccw_t8_attr_{{key}}_g" value="{{grund}}" data-dtype="Number" readonly tabindex="-1" title="{{localize 'eon.wizard.harleddGrundSpegladHint'}}" aria-label="{{localize 'eon.sheets.actor.grund'}}" /></div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-grund">
+                <div class="eon-ccw-num-tiny-stepper eon-ccw-num-stepper--narrow" role="group">
+                  <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_t8_attr_{{key}}_b" data-ccw-step-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+                  <input type="number" class="eon-ccw-narrow" name="ccw_t8_attr_{{key}}_b" value="{{bonus}}" step="1" data-dtype="Number" />
+                  <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_t8_attr_{{key}}_b" data-ccw-step-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+                </div>
+              </div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-totalt"><span class="eon-ccw-harledd-totalt-display" data-ccw-harledd-totalt="{{key}}">{{totaltDisplay}}</span></div>
+            </div>
+            {{/each}}
+          </div>
+          <p class="eon-ccw-hint">{{{localize "eon.wizard.attributFordelningHint"}}}</p>
+          <div class="eon-ccw-subsection-title">{{localize "eon.sheets.actor.avtrubbning"}}</div>
+          <div class="eon-ccw-row">
+            <label class="eon-ccw-label">{{localize "eon.sheets.actor.avtrubbningValfriKategori"}}</label>
+            <div class="eon-ccw-num-tiny-stepper eon-ccw-num-stepper--narrow" role="group">
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_avt_valfri" data-ccw-step-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+              <input type="number" class="eon-ccw-narrow" name="ccw_avt_valfri" value="{{wizardDraft.avtrubbning.valfriKategori}}" data-dtype="Number" />
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_avt_valfri" data-ccw-step-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+            </div>
+          </div>
+          <div class="eon-ccw-row">
+            <label class="eon-ccw-label">{{localize "eon.sheets.actor.utsatthet"}}</label>
+            <div class="eon-ccw-num-tiny-stepper eon-ccw-num-stepper--narrow" role="group">
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_avt_utsatthet" data-ccw-step-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+              <input type="number" class="eon-ccw-narrow" name="ccw_avt_utsatthet" value="{{wizardDraft.avtrubbning.utsatthet}}" data-dtype="Number" />
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_avt_utsatthet" data-ccw-step-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+            </div>
+          </div>
+          <div class="eon-ccw-row">
+            <label class="eon-ccw-label">{{localize "eon.sheets.actor.vald"}}</label>
+            <div class="eon-ccw-num-tiny-stepper eon-ccw-num-stepper--narrow" role="group">
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_avt_vald" data-ccw-step-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+              <input type="number" class="eon-ccw-narrow" name="ccw_avt_vald" value="{{wizardDraft.avtrubbning.vald}}" data-dtype="Number" />
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_avt_vald" data-ccw-step-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+            </div>
+          </div>
+          <div class="eon-ccw-row">
+            <label class="eon-ccw-label">{{localize "eon.sheets.actor.overnaturligt"}}</label>
+            <div class="eon-ccw-num-tiny-stepper eon-ccw-num-stepper--narrow" role="group">
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_avt_over" data-ccw-step-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+              <input type="number" class="eon-ccw-narrow" name="ccw_avt_over" value="{{wizardDraft.avtrubbning.overnaturligt}}" data-dtype="Number" />
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_avt_over" data-ccw-step-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if tabFardigheter}}
+      <div class="eon-ccw-panel">
+        <div class="eon-ccw-section">
+          <div class="eon-ccw-section-title"><span class="eon-ccw-step-num">9</span>{{localize "eon.wizard.fardigheterRubrik"}}</div>
+          <p class="eon-ccw-hint">{{localize "eon.wizard.fardigheterHintFordelning"}}</p>
+          <div class="eon-ccw-fardighet-grupp eon-ccw-fardighet-grupp--valfria-enheter">
+            <div class="eon-ccw-fardighet-grupp__head">
+              <span class="eon-ccw-fardighet-grupp__label">{{localize "eon.wizard.fardighetsenheterValfriaUtomFormagor"}}</span>
+              <span class="eon-ccw-fardighet-grupp__pool" data-ccw-fardighet-pool="valfria">{{localize "eon.wizard.fardighetPool"}}: <strong data-ccw-fardighet-pool-value>{{wizardDraft.enheter.valfria}}</strong></span>
+            </div>
+          </div>
+          {{#each fardighetFordelningSections}}
+          <div class="eon-ccw-fardighet-grupp">
+            <div class="eon-ccw-fardighet-grupp__head">
+              <span class="eon-ccw-fardighet-grupp__label">{{label}}</span>
+              <span class="eon-ccw-fardighet-grupp__pool" data-ccw-fardighet-pool="{{gruppKey}}">{{localize "eon.wizard.fardighetPool"}}: <strong data-ccw-fardighet-pool-value>{{pool}}</strong></span>
+            </div>
+            {{#if isOvrigWizardTyp}}
+            <div class="eon-ccw-datagrid eon-ccw-datagrid--fardighet-fordelning eon-ccw-datagrid--fardighet-ovrig-typer">
+              <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--head">
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-fardighet">{{localize "eon.wizard.fardighetKolumnFardighet"}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-fardighet-poang">{{localize "eon.wizard.fardighetKolumnPoang"}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-fardighet-slutligt6" title="{{localize 'eon.wizard.fardighetSlutligT6Hint'}}">{{localize "eon.wizard.fardighetKolumnSlutligT6"}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-fardighet-actions"></div>
+              </div>
+              {{#each rows}}
+              <div class="eon-ccw-datagrid__row">
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet">
+                  <input type="hidden" name="ccw_tf_{{../gruppKey}}_rf_{{index}}_item" value="{{itemId}}" />
+                  <input type="hidden" name="ccw_tf_{{../gruppKey}}_rf_{{index}}_grundvarde" value="0" data-dtype="Number" />
+                  {{#if isWizardCreatedFardighet}}
+                  <input type="text" class="eon-ccw-fardighet-ovrig-namn-input" name="ccw_tf_{{../gruppKey}}_rf_{{index}}_namn" value="{{itemNamePlain}}" />
+                  {{else}}
+                  <span class="eon-ccw-fardighet-ovrig-namn">{{itemLabelHtml}}</span>
+                  {{/if}}
+                </div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet-poang">
+                  <div class="eon-ccw-num-tiny-stepper eon-ccw-num-stepper--narrow" role="group">
+                    <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_tf_{{../gruppKey}}_rf_{{index}}_poang" data-ccw-step-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+                    <input type="number" class="eon-ccw-narrow" name="ccw_tf_{{../gruppKey}}_rf_{{index}}_poang" value="{{poang}}" data-dtype="Number" min="0" max="8" step="1" />
+                    <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_tf_{{../gruppKey}}_rf_{{index}}_poang" data-ccw-step-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+                  </div>
+                </div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet-slutligt6 eon-ccw-datagrid__cell--readonly" data-ccw-fardighet-slutlig-t6 data-ccw-tf-g="{{../gruppKey}}" data-ccw-tf-i="{{index}}" title="{{localize 'eon.wizard.fardighetSlutligT6Hint'}}">{{slutligT6Display}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet-actions">
+                  <button type="button" class="eon-ccw-icon-btn" data-action="ccwFardighetRemoveRow" data-ccw-fardighet-grupp="{{../gruppKey}}" data-ccw-fardighet-index="{{index}}" title="{{localize 'eon.wizard.fardighetTaBortRad'}}" aria-label="{{localize 'eon.wizard.fardighetTaBortRad'}}"><i class="icon fa-solid fa-trash-can"></i></button>
+                </div>
+              </div>
+              {{/each}}
+            </div>
+            {{else}}
+            <div class="eon-ccw-datagrid eon-ccw-datagrid--fardighet-fordelning eon-ccw-datagrid--fardighet-med-installningar">
+              <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--head">
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-fardighet">{{localize "eon.wizard.fardighetKolumnFardighet"}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-fardighet-grundvarde">{{localize "eon.wizard.fardighetKolumnGrundvarde"}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-fardighet-poang">{{localize "eon.wizard.fardighetKolumnPoang"}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-fardighet-slutligt6" title="{{localize 'eon.wizard.fardighetSlutligT6Hint'}}">{{localize "eon.wizard.fardighetKolumnSlutligT6"}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-fardighet-inst" title="{{localize 'eon.sheets.actor.talang'}}">{{localize "eon.sheets.actor.talang"}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-fardighet-inst" title="{{localize 'eon.sheets.actor.inkompetent'}}">{{localize "eon.sheets.actor.inkompetent"}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-fardighet-inst" title="{{localize 'eon.sheets.actor.blockering'}}">{{localize "eon.sheets.actor.blockering"}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-fardighet-actions"></div>
+              </div>
+              {{#each rows}}
+              <div class="eon-ccw-datagrid__row">
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet">
+                  {{#if showWizardMystikNamnInput}}
+                  <input type="hidden" name="ccw_tf_{{../gruppKey}}_rf_{{index}}_item" value="{{itemId}}" />
+                  <input type="text" class="eon-ccw-fardighet-ovrig-namn-input" name="ccw_tf_{{../gruppKey}}_rf_{{index}}_namn" value="{{itemNamePlain}}" />
+                  {{else}}
+                  {{{itemOptionsHtml}}}
+                  {{/if}}
+                </div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet-grundvarde"><input type="number" class="eon-ccw-narrow" name="ccw_tf_{{../gruppKey}}_rf_{{index}}_grundvarde" value="{{grundvarde}}" data-dtype="Number" min="0" max="{{#if inkompetent}}1{{else}}8{{/if}}" step="1" title="{{localize 'eon.wizard.fardighetGrundvardeHint'}}" /></div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet-poang">
+                  <div class="eon-ccw-num-tiny-stepper eon-ccw-num-stepper--narrow" role="group">
+                    <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_tf_{{../gruppKey}}_rf_{{index}}_poang" data-ccw-step-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+                    <input type="number" class="eon-ccw-narrow" name="ccw_tf_{{../gruppKey}}_rf_{{index}}_poang" value="{{poang}}" data-dtype="Number" min="0" max="8" step="1" {{#if blockering}}disabled title="{{localize 'eon.wizard.fardighetBlockeringIngaEnheter'}}"{{/if}} />
+                    <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_tf_{{../gruppKey}}_rf_{{index}}_poang" data-ccw-step-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+                  </div>
+                </div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet-slutligt6 eon-ccw-datagrid__cell--readonly" data-ccw-fardighet-slutlig-t6 data-ccw-tf-g="{{../gruppKey}}" data-ccw-tf-i="{{index}}" title="{{localize 'eon.wizard.fardighetSlutligT6Hint'}}">{{slutligT6Display}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet-inst eon-ccw-datagrid__cell--chk"><input type="checkbox" name="ccw_tf_{{../gruppKey}}_rf_{{index}}_talang" value="1" {{#if talang}}checked{{/if}} /></div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet-inst eon-ccw-datagrid__cell--chk"><input type="checkbox" name="ccw_tf_{{../gruppKey}}_rf_{{index}}_inkompetent" value="1" {{#if inkompetent}}checked{{/if}} /></div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet-inst eon-ccw-datagrid__cell--chk"><input type="checkbox" name="ccw_tf_{{../gruppKey}}_rf_{{index}}_blockering" value="1" {{#if blockering}}checked{{/if}} /></div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet-actions">
+                  <button type="button" class="eon-ccw-icon-btn" data-action="ccwFardighetRemoveRow" data-ccw-fardighet-grupp="{{../gruppKey}}" data-ccw-fardighet-index="{{index}}" title="{{localize 'eon.wizard.fardighetTaBortRad'}}" aria-label="{{localize 'eon.wizard.fardighetTaBortRad'}}"><i class="icon fa-solid fa-trash-can"></i></button>
+                </div>
+              </div>
+              {{/each}}
+            </div>
+            {{/if}}
+            <div class="eon-ccw-handelse-add-row">
+              <button type="button" class="eon-ccw-btn-handelse-add" data-action="ccwFardighetAddRow" data-ccw-fardighet-grupp="{{gruppKey}}">{{#if isOvrigWizardTyp}}{{localize "eon.wizard.fardighetSkapaFardighet"}}{{else}}{{localize "eon.wizard.fardighetLaggTillFardighet"}}{{/if}}</button>
+              {{#if isMystikFardighetGrupp}}
+              <button type="button" class="eon-ccw-btn-handelse-add" data-action="ccwFardighetCreateMystik" data-ccw-fardighet-grupp="{{gruppKey}}">{{localize "eon.wizard.fardighetSkapaFardighet"}}</button>
+              {{/if}}
+            </div>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if tabSprak}}
+      <div class="eon-ccw-panel">
+        <div class="eon-ccw-section">
+          <div class="eon-ccw-section-title"><span class="eon-ccw-step-num">10</span>{{localize "eon.wizard.sprakKontakterRubrik"}}</div>
+
+          <div class="eon-ccw-subsection-title">{{localize "eon.wizard.sprakListaRubrik"}}</div>
+          <p class="eon-ccw-hint">{{localize "eon.wizard.sprakListaRubrikHint"}}</p>
+
+          <div class="eon-ccw-fardighet-grupp">
+            <div class="eon-ccw-datagrid eon-ccw-datagrid--fardighet-fordelning eon-ccw-datagrid--fardighet-sprak">
+              <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--head">
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-fardighet">{{localize "eon.sheets.item.sprak"}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-fardighet-actions"></div>
+              </div>
+              {{#if sprakListaHarInget}}
+              <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--sprak-tom">
+                <div class="eon-ccw-datagrid__cell eon-ccw-muted">{{localize "eon.wizard.startSprakTom"}}</div>
+              </div>
+              {{else}}
+              {{#each sprakListaAllRows}}
+              {{#if isStartSprak}}
+              <div class="eon-ccw-datagrid__row">
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet"><span class="eon-ccw-sprak-lista-namn">{{startLabel}}</span></div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet-actions"></div>
+              </div>
+              {{else}}
+              <div class="eon-ccw-datagrid__row">
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet">{{{itemOptionsHtml}}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet-actions">
+                  <button type="button" class="eon-ccw-icon-btn" data-action="ccwSprakRemoveRow" data-ccw-sprak-index="{{index}}" title="{{localize 'eon.wizard.fardighetTaBortRad'}}" aria-label="{{localize 'eon.wizard.fardighetTaBortRad'}}"><i class="icon fa-solid fa-trash-can"></i></button>
+                </div>
+              </div>
+              {{/if}}
+              {{/each}}
+              {{/if}}
+            </div>
+            <div class="eon-ccw-handelse-add-row">
+              <button type="button" class="eon-ccw-btn-handelse-add" data-action="ccwSprakAddRow">{{localize "eon.wizard.sprakLaggTill"}}</button>
+            </div>
+          </div>
+
+          <div class="eon-ccw-fardighet-grupp eon-ccw-fardighet-grupp--kontakter">
+            <div class="eon-ccw-subsection-title">{{localize "eon.wizard.kretsarRubrik"}}</div>
+            <div class="eon-ccw-datagrid eon-ccw-datagrid--kontakt-rad">
+              <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--head">
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr">{{localize "eon.sheets.actor.namn"}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr">{{localize "eon.sheets.actor.anteckning"}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--kontakt-actions"></div>
+              </div>
+              {{#each kretsarRaderRows}}
+              <div class="eon-ccw-datagrid__row">
+                <div class="eon-ccw-datagrid__cell"><input type="text" name="ccw_kr_{{index}}_namn" value="{{namn}}" autocomplete="off" /></div>
+                <div class="eon-ccw-datagrid__cell"><input type="text" name="ccw_kr_{{index}}_anteckning" value="{{anteckning}}" autocomplete="off" /></div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--kontakt-actions">
+                  <button type="button" class="eon-ccw-icon-btn" data-action="ccwKretsRemoveRow" data-ccw-krets-index="{{index}}" title="{{localize 'eon.wizard.fardighetTaBortRad'}}" aria-label="{{localize 'eon.wizard.fardighetTaBortRad'}}"><i class="icon fa-solid fa-trash-can"></i></button>
+                </div>
+              </div>
+              {{/each}}
+            </div>
+            <div class="eon-ccw-handelse-add-row">
+              <button type="button" class="eon-ccw-btn-handelse-add" data-action="ccwKretsAddRow">{{localize "eon.wizard.kretsLaggTill"}}</button>
+            </div>
+          </div>
+
+          <div class="eon-ccw-fardighet-grupp eon-ccw-fardighet-grupp--kontakter">
+            <div class="eon-ccw-subsection-title">{{localize "eon.wizard.foljeslagareRubrik"}}</div>
+            <div class="eon-ccw-datagrid eon-ccw-datagrid--kontakt-rad">
+              <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--head">
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr">{{localize "eon.sheets.actor.namn"}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr">{{localize "eon.sheets.actor.anteckning"}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--kontakt-actions"></div>
+              </div>
+              {{#each foljeslagareRaderRows}}
+              <div class="eon-ccw-datagrid__row">
+                <div class="eon-ccw-datagrid__cell"><input type="text" name="ccw_fj_{{index}}_namn" value="{{namn}}" autocomplete="off" /></div>
+                <div class="eon-ccw-datagrid__cell"><input type="text" name="ccw_fj_{{index}}_anteckning" value="{{anteckning}}" autocomplete="off" /></div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--kontakt-actions">
+                  <button type="button" class="eon-ccw-icon-btn" data-action="ccwFoljeRemoveRow" data-ccw-folje-index="{{index}}" title="{{localize 'eon.wizard.fardighetTaBortRad'}}" aria-label="{{localize 'eon.wizard.fardighetTaBortRad'}}"><i class="icon fa-solid fa-trash-can"></i></button>
+                </div>
+              </div>
+              {{/each}}
+            </div>
+            <div class="eon-ccw-handelse-add-row">
+              <button type="button" class="eon-ccw-btn-handelse-add" data-action="ccwFoljeAddRow">{{localize "eon.wizard.foljeLaggTill"}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if tabKaraktarsdrag}}
+      <div class="eon-ccw-panel">
+        <div class="eon-ccw-section">
+          <div class="eon-ccw-section-title"><span class="eon-ccw-step-num">11</span>{{localize "eon.wizard.karaktarsdragRubrik"}}</div>
+          <p class="eon-ccw-hint">{{localize "eon.wizard.karaktarsdragHint"}}</p>
+          <div class="eon-ccw-datagrid eon-ccw-datagrid--kd eon-ccw-datagrid--karaktarsdrag-rad">
+            <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--head">
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--kd-roll">{{localize "eon.wizard.karaktarsdragRollKolumn"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--kd-namn">{{localize "eon.sheets.actor.karaktarsdragLabel"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--kd-niva">{{localize "eon.sheets.actor.niva1"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--kd-niva">{{localize "eon.sheets.actor.niva2"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--kd-niva">{{localize "eon.sheets.actor.niva3"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--kd-actions"></div>
+            </div>
+            {{#each wizardDraft.karaktarsdrag}}
+            <div class="eon-ccw-datagrid__row">
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--kd-roll eon-ccw-muted">
+                {{#if (eq @index 0)}}{{localize "eon.wizard.karaktarsdragPrimarOvers"}}{{else}}{{localize "eon.wizard.karaktarsdragSekundar"}}{{/if}}
+              </div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--kd-namn"><input type="text" name="ccw_kd_{{@index}}_namn" value="{{namn}}" autocomplete="off" /></div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--kd-niva"><input type="text" name="ccw_kd_{{@index}}_n1" value="{{niva1}}" autocomplete="off" /></div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--kd-niva"><input type="text" name="ccw_kd_{{@index}}_n2" value="{{niva2}}" autocomplete="off" /></div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--kd-niva"><input type="text" name="ccw_kd_{{@index}}_n3" value="{{niva3}}" autocomplete="off" /></div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--kd-actions">
+                {{#if (gt @index 1)}}
+                <button type="button" class="eon-ccw-icon-btn" data-action="ccwKaraktarsdragRemoveRow" data-ccw-kd-index="{{@index}}" title="{{localize 'eon.wizard.fardighetTaBortRad'}}" aria-label="{{localize 'eon.wizard.fardighetTaBortRad'}}"><i class="icon fa-solid fa-trash-can"></i></button>
+                {{/if}}
+              </div>
+            </div>
+            {{/each}}
+          </div>
+          <div class="eon-ccw-handelse-add-row">
+            <button type="button" class="eon-ccw-btn-handelse-add" data-action="ccwKaraktarsdragAddRow">{{localize "eon.wizard.karaktarsdragLaggTill"}}</button>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if tabNamnDetaljer}}
+      <div class="eon-ccw-panel">
+        <div class="eon-ccw-section">
+          <div class="eon-ccw-section-title"><span class="eon-ccw-step-num">12</span>{{localize "eon.wizard.namnDetaljerRubrik"}}</div>
+          <p class="eon-ccw-hint eon-ccw-hint--preline">{{localize "eon.wizard.namnDetaljerHint"}}</p>
+          <div class="eon-ccw-row">
+            <label class="eon-ccw-label" for="ccw_rollperson_namn">{{localize "eon.sheets.actor.namn"}}</label>
+            <input type="text" id="ccw_rollperson_namn" name="ccw_rollperson_namn" value="{{wizardDraft.rollpersonNamn}}" autocomplete="name" />
+          </div>
+          <div class="eon-ccw-row">
+            <label class="eon-ccw-label" for="ccw_alder">{{localize "eon.sheets.actor.alder"}}</label>
+            <input type="text" id="ccw_alder" name="ccw_alder" value="{{wizardDraft.alder}}" autocomplete="off" />
+          </div>
+          <div class="eon-ccw-row">
+            <label class="eon-ccw-label" for="ccw_kon">{{localize "eon.sheets.actor.kon"}}</label>
+            <input type="text" id="ccw_kon" name="ccw_kon" value="{{wizardDraft.kon}}" autocomplete="off" />
+          </div>
+          <div class="eon-ccw-row">
+            <label class="eon-ccw-label" for="ccw_hemort">{{localize "eon.sheets.actor.hemort"}}</label>
+            <input type="text" id="ccw_hemort" name="ccw_hemort" value="{{wizardDraft.hemort}}" autocomplete="off" />
+          </div>
+          <div class="eon-ccw-row">
+            <span class="eon-ccw-label" aria-hidden="true"></span>
+            <p class="eon-ccw-hint eon-ccw-hint--in-field-column">{{localize "eon.wizard.namnDetaljerHemortHint"}}</p>
+          </div>
+          <div class="eon-ccw-row">
+            <label class="eon-ccw-label" for="ccw_titel">{{localize "eon.sheets.actor.titel"}}</label>
+            <input type="text" id="ccw_titel" name="ccw_titel" value="{{wizardDraft.titel}}" autocomplete="off" />
+          </div>   
+          <div class="eon-ccw-row eon-ccw-row--vapenarm">
+            <label class="eon-ccw-label" for="ccw_vapenarm">{{localize "eon.sheets.actor.vapenarm"}}</label>
+            <select id="ccw_vapenarm" name="ccw_vapenarm" class="eon-ccw-select">
+              <option value="">{{localize "eon.wizard.vapenarmValj"}}</option>
+              <option value="hoger" {{#if (eq wizardDraft.vapenarm "hoger")}}selected{{/if}}>{{localize "eon.wizard.vapenarmVal_hoger"}}</option>
+              <option value="vanster" {{#if (eq wizardDraft.vapenarm "vanster")}}selected{{/if}}>{{localize "eon.wizard.vapenarmVal_vanster"}}</option>
+              <option value="annat" {{#if (eq wizardDraft.vapenarm "annat")}}selected{{/if}}>{{localize "eon.wizard.vapenarmVal_annat"}}</option>
+            </select>
+            <button type="button" class="eon-ccw-btn-handelse-add" data-action="ccwVapenarmSlumpa">{{localize "eon.wizard.vapenarmSlumpa"}}</button>
+          </div>
+          <div class="eon-ccw-row eon-ccw-row-stack">
+            <label class="eon-ccw-label" for="ccw_utseende">{{localize "eon.sheets.actor.utseende"}}</label>
+            <textarea id="ccw_utseende" name="ccw_utseende" rows="4">{{wizardDraft.utseende}}</textarea>
+          </div>
+          
+          <div class="eon-ccw-row eon-ccw-row-stack">
+            <label class="eon-ccw-label" for="ccw_relationer">{{localize "eon.sheets.actor.relationer"}}</label>
+            <textarea id="ccw_relationer" name="ccw_relationer" rows="4">{{wizardDraft.relationer}}</textarea>
+          </div>
+          <div class="eon-ccw-section-title">{{localize "eon.sheets.actor.anteckningar"}}</div>
+          <textarea id="ccw_detaljer" name="ccw_detaljer" rows="5">{{wizardDraft.detaljer}}</textarea>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if tabUtrustning}}
+      <div class="eon-ccw-panel">
+        <div class="eon-ccw-section">
+          <div class="eon-ccw-section-title"><span class="eon-ccw-step-num">13</span>{{localize "eon.sheets.nav.equipment"}}</div>
+          <p class="eon-ccw-hint">{{localize "eon.wizard.utrustningHint"}}</p>
+          <div class="eon-ccw-dropzone" data-ccw-drop-zone="utrustning">
+            Dra och släpp vapen eller utrustning hit.
+          </div>
+
+          <div class="eon-ccw-subsection-title">{{localize "eon.sheets.actor.vapen"}}</div>
+          <div class="eon-ccw-datagrid eon-ccw-datagrid--utrustning-lista">
+            <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--head">
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr">{{localize "eon.sheets.actor.namn"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--num">{{localize "eon.sheets.actor.antal"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--utrustning-actions"></div>
+            </div>
+            {{#if hasWeaponRows}}
+            {{#each weaponRows}}
+            <div class="eon-ccw-datagrid__row">
+              <div class="eon-ccw-datagrid__cell">{{name}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--num">
+                <div class="eon-ccw-antal-stepper" role="group">
+                  <button type="button" class="eon-ccw-icon-btn" data-action="ccwUtrustningStepCount" data-ccw-item-id="{{itemId}}" data-ccw-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+                  <span class="eon-ccw-antal-value">{{antal}}</span>
+                  <button type="button" class="eon-ccw-icon-btn" data-action="ccwUtrustningStepCount" data-ccw-item-id="{{itemId}}" data-ccw-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+                </div>
+              </div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--utrustning-actions">
+                <button type="button" class="eon-ccw-icon-btn" data-action="ccwUtrustningEditItem" data-ccw-item-id="{{itemId}}" title="{{localize 'eon.sheets.actor.editera'}}" aria-label="{{localize 'eon.sheets.actor.editera'}}"><i class="icon fa-solid fa-pen-to-square"></i></button>
+                <button type="button" class="eon-ccw-icon-btn" data-action="ccwUtrustningDeleteItem" data-ccw-item-id="{{itemId}}" title="{{localize 'eon.wizard.fardighetTaBortRad'}}" aria-label="{{localize 'eon.wizard.fardighetTaBortRad'}}"><i class="icon fa-solid fa-trash-can"></i></button>
+              </div>
+            </div>
+            {{/each}}
+            {{else}}
+            <div class="eon-ccw-datagrid__row">
+              <div class="eon-ccw-datagrid__cell eon-ccw-muted">Inga vapen tillagda.</div>
+              <div class="eon-ccw-datagrid__cell"></div>
+              <div class="eon-ccw-datagrid__cell"></div>
+            </div>
+            {{/if}}
+          </div>
+
+          <div class="eon-ccw-subsection-title">{{localize "eon.sheets.nav.armor"}}</div>
+          <div class="eon-ccw-datagrid eon-ccw-datagrid--utrustning-lista-utan-antal">
+            <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--head">
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr">{{localize "eon.sheets.actor.namn"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--utrustning-actions"></div>
+            </div>
+            {{#if hasArmorRows}}
+            {{#each armorRows}}
+            <div class="eon-ccw-datagrid__row">
+              <div class="eon-ccw-datagrid__cell">{{name}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--utrustning-actions">
+                <button type="button" class="eon-ccw-icon-btn" data-action="ccwUtrustningEditItem" data-ccw-item-id="{{itemId}}" title="{{localize 'eon.sheets.actor.editera'}}" aria-label="{{localize 'eon.sheets.actor.editera'}}"><i class="icon fa-solid fa-pen-to-square"></i></button>
+                <button type="button" class="eon-ccw-icon-btn" data-action="ccwUtrustningDeleteItem" data-ccw-item-id="{{itemId}}" title="{{localize 'eon.wizard.fardighetTaBortRad'}}" aria-label="{{localize 'eon.wizard.fardighetTaBortRad'}}"><i class="icon fa-solid fa-trash-can"></i></button>
+              </div>
+            </div>
+            {{/each}}
+            {{else}}
+            <div class="eon-ccw-datagrid__row">
+              <div class="eon-ccw-datagrid__cell eon-ccw-muted">Ingen rustning tillagd.</div>
+              <div class="eon-ccw-datagrid__cell"></div>
+            </div>
+            {{/if}}
+          </div>
+
+          <div class="eon-ccw-subsection-title">{{localize "eon.sheets.nav.equipment"}}</div>
+          <div class="eon-ccw-datagrid eon-ccw-datagrid--utrustning-lista">
+            <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--head">
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr">{{localize "eon.sheets.actor.namn"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--num">{{localize "eon.sheets.actor.antal"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--utrustning-actions"></div>
+            </div>
+            {{#if hasEquipmentRows}}
+            {{#each equipmentRows}}
+            <div class="eon-ccw-datagrid__row">
+              <div class="eon-ccw-datagrid__cell">{{name}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--num">
+                <div class="eon-ccw-antal-stepper" role="group">
+                  <button type="button" class="eon-ccw-icon-btn" data-action="ccwUtrustningStepCount" data-ccw-item-id="{{itemId}}" data-ccw-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+                  <span class="eon-ccw-antal-value">{{antal}}</span>
+                  <button type="button" class="eon-ccw-icon-btn" data-action="ccwUtrustningStepCount" data-ccw-item-id="{{itemId}}" data-ccw-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+                </div>
+              </div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--utrustning-actions">
+                <button type="button" class="eon-ccw-icon-btn" data-action="ccwUtrustningEditItem" data-ccw-item-id="{{itemId}}" title="{{localize 'eon.sheets.actor.editera'}}" aria-label="{{localize 'eon.sheets.actor.editera'}}"><i class="icon fa-solid fa-pen-to-square"></i></button>
+                <button type="button" class="eon-ccw-icon-btn" data-action="ccwUtrustningDeleteItem" data-ccw-item-id="{{itemId}}" title="{{localize 'eon.wizard.fardighetTaBortRad'}}" aria-label="{{localize 'eon.wizard.fardighetTaBortRad'}}"><i class="icon fa-solid fa-trash-can"></i></button>
+              </div>
+            </div>
+            {{/each}}
+            {{else}}
+            <div class="eon-ccw-datagrid__row">
+              <div class="eon-ccw-datagrid__cell eon-ccw-muted">Ingen utrustning tillagd.</div>
+              <div class="eon-ccw-datagrid__cell"></div>
+              <div class="eon-ccw-datagrid__cell"></div>
+            </div>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if tabMystik}}
+      <div class="eon-ccw-panel">
+        <div class="eon-ccw-section">
+          <div class="eon-ccw-section-title"><span class="eon-ccw-step-num">14</span>{{localize "eon.wizard.mystikRubrik"}}</div>
+          <p class="eon-ccw-hint">{{localize "eon.wizard.mystikHint"}}</p>
+          <div class="eon-ccw-row"><label class="eon-ccw-inline-cb"><input type="checkbox" name="ccw_mystik_omstopt" {{#if wizardDraft.mystikOmstopt}}checked{{/if}} /> {{localize "eon.wizard.omstopt"}}</label></div>
+          <div class="eon-ccw-row">
+            <label class="eon-ccw-label" for="ccw_mystik_antal">{{localize "eon.wizard.mysterierAntal"}}</label>
+            <div class="eon-ccw-antal-stepper">
+              <button type="button" class="eon-ccw-icon-btn" data-action="ccwMystikStepAntal" data-ccw-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">-</button>
+              <input type="number" class="eon-ccw-narrow" id="ccw_mystik_antal" name="ccw_mystik_antal" value="{{wizardDraft.mystikAntal}}" data-dtype="Number" />
+              <button type="button" class="eon-ccw-icon-btn" data-action="ccwMystikStepAntal" data-ccw-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+            </div>
+          </div>
+          <p class="eon-ccw-hint">{{localize "eon.wizard.mystikDraSlappHint"}}</p>
+          <div class="eon-ccw-dropzone" data-ccw-drop-zone="mystik">{{localize "eon.wizard.mystikDraHit"}}</div>
+
+          <div class="eon-ccw-list-title">{{localize "eon.config.slag.mysterium"}}</div>
+          <div class="eon-ccw-datagrid eon-ccw-datagrid--utrustning-lista-utan-antal">
+            <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--head">
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr">{{localize "eon.sheets.actor.namn"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr">{{localize "eon.sheets.actor.atgarder"}}</div>
+            </div>
+            {{#if hasMysterieRows}}
+            {{#each mysterieRows}}
+            <div class="eon-ccw-datagrid__row">
+              <div class="eon-ccw-datagrid__cell">{{name}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--utrustning-actions">
+                <button type="button" class="eon-ccw-icon-btn" data-action="ccwUtrustningEditItem" data-ccw-item-id="{{itemId}}" title="{{localize 'eon.sheets.actor.editera'}}" aria-label="{{localize 'eon.sheets.actor.editera'}}"><i class="icon fa-solid fa-pen-to-square"></i></button>
+                <button type="button" class="eon-ccw-icon-btn" data-action="ccwUtrustningDeleteItem" data-ccw-item-id="{{itemId}}" title="{{localize 'eon.wizard.fardighetTaBortRad'}}" aria-label="{{localize 'eon.wizard.fardighetTaBortRad'}}"><i class="icon fa-solid fa-trash-can"></i></button>
+              </div>
+            </div>
+            {{/each}}
+            {{else}}
+            <div class="eon-ccw-datagrid__row">
+              <div class="eon-ccw-datagrid__cell eon-ccw-muted">Inga mysterier tillagda.</div>
+              <div class="eon-ccw-datagrid__cell"></div>
+            </div>
+            {{/if}}
+          </div>
+
+          <div class="eon-ccw-list-title">{{localize "eon.sheets.actor.besvarjelseSheetLabel"}}</div>
+          <div class="eon-ccw-datagrid eon-ccw-datagrid--utrustning-lista-utan-antal">
+            <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--head">
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr">{{localize "eon.sheets.actor.namn"}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr">{{localize "eon.sheets.actor.atgarder"}}</div>
+            </div>
+            {{#if hasBesvarjelseRows}}
+            {{#each besvarjelseRows}}
+            <div class="eon-ccw-datagrid__row">
+              <div class="eon-ccw-datagrid__cell">{{name}}</div>
+              <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--utrustning-actions">
+                <button type="button" class="eon-ccw-icon-btn" data-action="ccwUtrustningEditItem" data-ccw-item-id="{{itemId}}" title="{{localize 'eon.sheets.actor.editera'}}" aria-label="{{localize 'eon.sheets.actor.editera'}}"><i class="icon fa-solid fa-pen-to-square"></i></button>
+                <button type="button" class="eon-ccw-icon-btn" data-action="ccwUtrustningDeleteItem" data-ccw-item-id="{{itemId}}" title="{{localize 'eon.wizard.fardighetTaBortRad'}}" aria-label="{{localize 'eon.wizard.fardighetTaBortRad'}}"><i class="icon fa-solid fa-trash-can"></i></button>
+              </div>
+            </div>
+            {{/each}}
+            {{else}}
+            <div class="eon-ccw-datagrid__row">
+              <div class="eon-ccw-datagrid__cell eon-ccw-muted">Inga besvärjelser tillagda.</div>
+              <div class="eon-ccw-datagrid__cell"></div>
+            </div>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+
+    <footer class="eon-ccw-footer">
+      <button type="button" class="eon-ccw-btn secondary" data-action="ccwLater">{{localize "eon.dialogs.fortsattSenare"}}</button>
+      <button type="button" class="eon-ccw-btn primary" data-action="ccwFinish">{{localize "eon.dialogs.slutfor"}}</button>
+    </footer>
+  </div>
+</div>

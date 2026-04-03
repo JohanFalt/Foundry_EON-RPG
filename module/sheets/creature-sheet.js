@@ -88,7 +88,8 @@ export default class EonCreatureSheet extends foundry.appv1.sheets.ActorSheet {
             }
         }
 
-        data.actor.system.listdata.fardigheter = data.actor.system.listdata.fardigheter.sort((a, b) => a.name.localeCompare(b.name));
+        const skillDisplayName = (name) => name && game.i18n.has(name) ? game.i18n.localize(name) : (name || "");
+        data.actor.system.listdata.fardigheter = data.actor.system.listdata.fardigheter.sort((a, b) => skillDisplayName(a.name).localeCompare(skillDisplayName(b.name)));
         data.actor.system.listdata.vapen.narstrid = data.actor.system.listdata.vapen.narstrid.sort((a, b) => a.name.localeCompare(b.name));
         data.actor.system.listdata.vapen.avstand = data.actor.system.listdata.vapen.avstand.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -227,7 +228,7 @@ export default class EonCreatureSheet extends foundry.appv1.sheets.ActorSheet {
 			return;
         }
         
-		ui.notifications.error("Slag saknar funktion");
+		ui.notifications.error(game.i18n.localize("eon.messages.slagSaknarFunktion"));
 
         return;
 	}
@@ -344,7 +345,7 @@ export default class EonCreatureSheet extends foundry.appv1.sheets.ActorSheet {
         const itemid = await ItemHelper.CreateItem(this.actor, event);
 
 		if (!itemid) {
-            ui.notifications.error("Typen som skall skapas saknar funktion");
+            ui.notifications.error(game.i18n.localize("eon.messages.typSaknarFunktion"));
         }
         else {
             const item = await this.actor.getEmbeddedDocument("Item", itemid);

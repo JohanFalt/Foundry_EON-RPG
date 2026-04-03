@@ -96,8 +96,8 @@ export class CombatHelper {
 
         if (alreadyRolledThisRound) {
             const replace = await Dialog.confirm({
-                title: "Slå initiativ",
-                content: "<p>Du har redan slagit initiativ. Vill du ersätta det existerande värdet?</p>",
+                title: game.i18n.localize("eon.dialogs.slaInitiativ"),
+                content: "<p>" + game.i18n.localize("eon.dialogs.ersattaInitiativ") + "</p>",
                 defaultYes: false
             });
             if (!replace) return null;

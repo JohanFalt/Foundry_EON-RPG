@@ -9,6 +9,7 @@
         "types": [
             "Egenskap",
             "Folkslag",            
+            "Folkslag5",
             "Färdighet",
             "Språk",
             "Mysterie",
@@ -24,6 +25,7 @@
         ],
         "Egenskap": {},
         "Folkslag": {},
+        "Folkslag5": {},
         "Färdighet": {},
         "Språk": {},
         "Mysterie": {},

@@ -21,6 +21,7 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		});
 
 		options.dragDrop.push({ dragSelector: ".activity[data-activity-id]", dropSelector: "form" });
+		options.dragDrop.push({ dragSelector: "[data-drag][data-egenskap-list]", dropSelector: "[data-droparea]" });
 
 		return options;
 	}
@@ -52,9 +53,9 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 
 	/** @override */
 	get title() {
-		let title = this.item.name;
-
-		return "Editera " + title.toLowerCase();
+		//const title = game.i18n.has(this.item.name) ? game.i18n.localize(this.item.name) : this.item.name;
+		//return "Editera " + title.toLowerCase();
+		return game.i18n.localize("eon.sheets.actor.editera") + " " + game.i18n.localize(this.item.name).toLowerCase();
 	}
 
 	/** @override */
@@ -181,6 +182,7 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 
 			if (this.item.type.toLowerCase() == "färdighet") {
 				data.hasExperience = false;
+				data.nameIsI18nKey = game.i18n.has(this.item.name);
 
 				//if (this.item.actor.type.toLowerCase().replace(" ", "") == "rollperson") {
 				if (this.item.system.installningar.eon === "eon4") {
@@ -231,13 +233,17 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 			if (data.system) {
 				data.system.belastning = data.item.system.belastning;
 			}
-
+			// Rustningsmaterial från config: forsvar5 för Eon 5, annars forsvar
 			const isEon5 = this.item.actor?.type?.toLowerCase().replace(" ", "") === "rollperson5"
 				|| this.item.system?.installningar?.eon === "eon5"
 				|| CONFIG.EON.settings?.bookEon === "eon5";
 			data.rustningsmaterial = (isEon5 ? CONFIG.EON?.forsvar5?.rustningsmaterial : CONFIG.EON?.forsvar?.rustningsmaterial) ?? {};
 		}
 
+		console.log(data.item.type);
+		console.log(data.item);
+		console.log(data.EON);
+		
 		return data;
 	}
 
@@ -325,10 +331,60 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 			.change(this._onReductionChange.bind(this));
 	}
 
+	/** @override - set custom drag data when dragging an ancestry property row (folkslag5) */
+	_onDragStart(event) {
+		const row = event.target?.closest?.("[data-drag][data-egenskap-list]");
+		if (row && this.item.type.toLowerCase().replace(" ", "") === "folkslag5") {
+			const sourceList = row.dataset.egenskapList;
+			const sourceKey = parseInt(row.dataset.egenskapKey, 10);
+			if (!Number.isNaN(sourceKey) && ["egenskaper", "kulturegenskaper", "valfriaegenskaper"].includes(sourceList)) {
+				event.dataTransfer.setData("text/plain", JSON.stringify({
+					type: "EonAncestryProperty",
+					documentId: this.item.id,
+					sourceList,
+					sourceKey
+				}));
+				event.dataTransfer.effectAllowed = "move";
+				return;
+			}
+		}
+		super._onDragStart(event);
+	}
+
 	/** @inheritDoc 
 	* När man släpper ett Item på det öppna Item, t ex släpper en egenskap på ett vapen eller ett folkslag
 	*/
 	async _onDrop(event) {
+		// Handle internal drag: move egenskap between Medfödda / Kulturella / Valfria (folkslag5)
+		if (this.item.type.toLowerCase().replace(" ", "") === "folkslag5") {
+			try {
+				const raw = event.dataTransfer.getData("text/plain");
+				const data = JSON.parse(raw);
+				if (data.type === "EonAncestryProperty" && data.documentId === this.item.id) {
+					const dropArea = event.target.closest("[data-droparea]");
+					if (dropArea) {
+						const targetArea = dropArea.dataset.droparea;
+						const targetList = { medfodd: "egenskaper", kulturell: "kulturegenskaper", valfri: "valfriaegenskaper" }[targetArea];
+						if (targetList && data.sourceList) {
+							const itemData = foundry.utils.duplicate(this.item);
+							const sourceArr = itemData.system[data.sourceList];
+							if (sourceArr && data.sourceKey >= 0 && data.sourceKey < sourceArr.length) {
+								const [moved] = sourceArr.splice(data.sourceKey, 1);
+								if (moved) {
+									itemData.system[targetList].push(moved);
+									await this.item.update(itemData);
+									this.render();
+									return;
+								}
+							}
+						}
+					}
+				}
+			} catch (_e) {
+				// not our drag data, fall through to Item drop
+			}
+		}
+
 		// Try to extract the data
 		const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
 		let found = false;
@@ -345,7 +401,7 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 				found = true;
 			}
 		}
-		if (this.item.type.toLowerCase() == "folkslag") {
+		if ((this.item.type.toLowerCase() == "folkslag") || (this.item.type.toLowerCase().replace(" ", "") == "folkslag5")) {
 			item = await Item.implementation.fromDropData(data);
 
 			if ((item.type.toLowerCase() == "egenskap") && (item.system.installningar.folkslag)) {
@@ -358,22 +414,30 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 
 		if (found) {
 			if (item.type.toLowerCase() == "egenskap") {
-				let index = this.item.system.egenskaper.findIndex(e => e.uuid === item.uuid);
+				const isFolkslag5 = this.item.type.toLowerCase().replace(" ", "") === "folkslag5";
+				const list5 = isFolkslag5 ? (this.item.system.egenskaper || [])
+					.concat(this.item.system.kulturegenskaper || [])
+					.concat(this.item.system.valfriaegenskaper || []) : this.item.system.egenskaper;
+				let index = list5.findIndex(e => e.uuid === item.uuid);
 
 				if (index > -1) return;
 
 				let egenskap = {
 					uuid: item.uuid,
 					_id: item._id,
-					label: item.name, 
-					namn: item.system.id, 
-					varde: item.system.niva, 
+					label: item.name,
+					namn: item.system.id,
+					varde: item.system.niva,
 					beskrivning: item.system.beskrivning,
 					harniva: item.system.installningar.harniva
 				};
-
 				itemData = foundry.utils.duplicate(this.item);
-				itemData.system.egenskaper.push(egenskap);
+				if (isFolkslag5) {
+					if (!Array.isArray(itemData.system.valfriaegenskaper)) itemData.system.valfriaegenskaper = [];
+					itemData.system.valfriaegenskaper.push(egenskap);
+				} else {
+					itemData.system.egenskaper.push(egenskap);
+				}
 			}
 			if (item.type.toLowerCase() == "språk") {
 				let index = this.item.system.sprak.findIndex(e => e.uuid === item.uuid);
@@ -589,30 +653,22 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 				this.render();
 				return;
 			}
-			if ((type == "moment") || (type == "ritual") || (type == "egenskaper") || (type == "sprak")) {
+			if ((type == "moment") || (type == "ritual") || (type == "egenskaper") || (type == "kulturegenskaper") || (type == "valfriaegenskaper") || (type == "sprak")) {
 				const itemData = foundry.utils.duplicate(this.item);
-				itemData.system[type].splice(key, 1);
-				await this.item.update(itemData);
-	
+				if (Array.isArray(itemData.system[type])) {
+					itemData.system[type].splice(key, 1);
+					await this.item.update(itemData);
+				}
 				this.render();
 				return;
 			}
-			// if (type == "ritual") {
-			// 	const itemData = foundry.utils.duplicate(this.item);
-			// 	itemData.system[type].splice(key, 1);
-
-			// 	await this.item.update(itemData);
-	
-			// 	this.render();
-			// 	return;
-			// }
 						
 			return;
 		}    
 		
 		const itemid = dataset.itemid;
 		const item = await this.actor.getEmbeddedDocument("Item", itemid);
-		const namn = item.name;
+		const namn = item ? (game.i18n.has(item.name) ? game.i18n.localize(item.name) : item.name) : "";
 
         if (!item) {
             return;
@@ -621,7 +677,7 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		// gäller item i sig
         const performDelete = await new Promise((resolve) => {
             Dialog.confirm({
-                title: "Tar bort " + namn,
+                title: game.i18n.localize("eon.dialogs.tarBort") + " " + namn,
                 yes: () => resolve(true),
                 no: () => resolve(false),
                 content: "Är du säker du vill ta bort " + namn,
@@ -811,10 +867,6 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		const dataset = element.dataset;
 		const itemData = foundry.utils.duplicate(this.item);
 
-		itemData.system.installningar.lattlard = false;
-		itemData.system.installningar.svarlard = false;
-		itemData.system.installningar.normal = true;
-
 		if (itemData.system.installningar.eon === "eon4") {
 			itemData.system.installningar.lattlard = false;
 			itemData.system.installningar.svarlard = false;
@@ -882,7 +934,7 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		const itemData = foundry.utils.duplicate(this.item);		
 
 		if (dataset.dtype.toLowerCase() == "boolean") {
-			const fields = dataset.field.split(".");
+			const fields = dataset.field.split(".");			
 
 			if (fields.length == 1) {
 				const value = itemData.system[fields[0]];
@@ -927,55 +979,6 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		await this.item.update(itemData);
 		this.render();
 	}
-
-	// async _setVapenEgenhet(event) {
-	// 	event.preventDefault();
-	// 	const element = event.currentTarget;
-	// 	const parent = $(element.parentNode);
-	// 	const el = parent.closest(".property-area"); 
-
-	// 	const properties = [];
-
-	// 	el.find(".weapon-property").each(function () {
-	// 		if ($(this).is(':checked')) {
-	// 			const sibling = $(this).parent().siblings();
-	// 			let newPropery;
-
-	// 			// Om ruta för nivå av egenskap finns
-	// 			if (sibling.length > 0) {
-	// 				let value = 0;
-
-	// 				if (sibling[0].children.length > 0) {
-	// 					if (Number.isInteger(parseInt(sibling[0].children[0].value))) {
-	// 						value = parseInt(sibling[0].children[0].value);
-	// 					}
-	// 					else {
-	// 						ui.notifications.warn("Egenskapsvärdet måste vara ett heltal.");
-	// 					}
-	// 				}
-
-	// 				newPropery = {
-	// 					namn: this.value,
-	// 					varde: value
-	// 				}				
-	// 			}
-	// 			else {
-	// 				newPropery = {
-	// 					namn: this.value,
-	// 					varde: 0
-	// 				}
-	// 			}
-
-	// 			properties.push(newPropery);
-	// 		}
-	// 	});
-
-	// 	const itemData = foundry.utils.duplicate(this.item);
-	// 	itemData.system.egenskaper = properties;
-	// 	await this.item.update(itemData);
-
-	// 	this.render();
-	// }
 
 	async _setMysterieMoment(event) {
 		event.preventDefault();
@@ -1094,7 +1097,7 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 			const currencyData = CONFIG.EON.datavaluta.valuta[selectedCurrencyName.toLowerCase()];
 			
 			if (!currencyData) {
-				ui.notifications.error("Valutan hittades inte");
+				ui.notifications.error(game.i18n.localize("eon.messages.valutanHittadesInte"));
 				return;
 			}
 			
@@ -1132,14 +1135,14 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 				const rustningsmaterial = isEon5 ? CONFIG.EON?.forsvar5?.rustningsmaterial : CONFIG.EON?.forsvar?.rustningsmaterial;
 				const rustning = rustningsmaterial?.[rustningsmall];
 				if (!rustning) {
-					ui.notifications.warn("Rustningsmaterial hittades inte.");
+					ui.notifications.warn(game.i18n.localize("eon.messages.rustningsmaterialSaknas") || "Rustningsmaterial hittades inte.");
 					return;
 				}
 
 				hugg = rustning.hugg;
 				kross = rustning.kross;
 				stick = rustning.stick;
-				belastning = rustning.belastning * CONFIG.EON.kroppsdelsfaktor[kroppsdel];
+				belastning = rustning.belastning * game.EON.CONFIG.kroppsdelsfaktor[kroppsdel];
 				namn = rustning.namn;
 			}
 
@@ -1155,10 +1158,10 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 				itemData.system.belastning += del.belastning;
 				if (del.material != "") {
 					if (itemData.system.tacker == "") {
-						itemData.system.tacker = del.namn;
+						itemData.system.tacker = game.i18n.localize(del.namn);
 					}
 					else {
-						itemData.system.tacker += ", " + del.namn.toLowerCase();
+						itemData.system.tacker += ", " + game.i18n.localize(del.namn).toLowerCase();
 					}					
 				}
 			}
@@ -1168,32 +1171,6 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 
 			return;
 		}
-
-		// if (source == "equipment") {
-		// 	const typ = this.item.system.grupp;
-		// 	const utrustningmall = element.value;
-		// 	const equipmentData = (this.actor && this.actor.type.toLowerCase().replace(" ", "") === "rollperson5" && game.EON.utrustning5) ? game.EON.utrustning5.utrustning5 : game.EON.utrustning;
-		// 	const utrustning = equipmentData[typ] && equipmentData[typ][utrustningmall];
-		// 	if (!utrustning) return;
-
-		// 	const itemData = foundry.utils.duplicate(this.item);
-		// 	itemData.name = utrustning.namn;			
-		// 	itemData.system.mall = utrustningmall;
-		// 	itemData.system.grupp = typ;
-		// 	itemData.system.vikt = utrustning.vikt;
-		// 	itemData.system.pris = utrustning.pris;
-
-		// 	if (utrustning.installningar?.behallare) {
-		// 		itemData.system.installningar.behallare = utrustning.installningar.behallare;
-		// 		itemData.system.volym.enhet = utrustning.volym.enhet;
-		// 		itemData.system.volym.antal = utrustning.volym.antal;
-		// 		itemData.system.volym.max = utrustning.volym.max;
-		// 	}
-		// 	await this.item.update(itemData);
-		// 	this.render();
-
-		// 	return;
-		// }
 
 		if (source == "moment") {
 			await this._setMysterieMoment(event);
@@ -1221,12 +1198,13 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 			return;
 		}
 
-		ui.notifications.error("Saknar _onsheetChange source typ");
+		ui.notifications.error(game.i18n.localize("eon.messages.saknarOnsheetChangeSource"));
 	}
 
 	async _onSkillImprove(event) {
 		event.preventDefault();
 
+		const itemDisplayName = game.i18n.has(this.item.name) ? game.i18n.localize(this.item.name) : this.item.name;
 		const itemData = foundry.utils.duplicate(this.item);
 		const roll = new DiceRollContainer(this.actor, game.EON.CONFIG);
 		
@@ -1236,17 +1214,19 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 									 itemData.system.hantverk;
 
 		let improveThreshold;
+
 		if (isEffectivelyLattlard && !itemData.system.installningar.lattlard) {
 			const originalLattlard = itemData.system.installningar.lattlard;
 			itemData.system.installningar.lattlard = true;
 			improveThreshold = CalculateHelper.CalculateImproveDifficulty(this.actor, itemData);
 			itemData.system.installningar.lattlard = originalLattlard;
-		} else {
+		} 
+		else {
 			improveThreshold = CalculateHelper.CalculateImproveDifficulty(this.actor, itemData);
 		}
 
 		roll.typeroll = CONFIG.EON.slag.fardighet;
-		roll.action = `Förbättringsslag ${itemData.name}`;
+		roll.action = `Förbättringsslag ${itemDisplayName}`;
 		roll.number = itemData.system.varde.tvarde;
 		roll.bonus = itemData.system.varde.bonus;
 		roll.svarighet = parseInt(improveThreshold);
@@ -1274,13 +1254,13 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 						const oldValueStr = formatSkillValue(oldTvarde, oldBonus);
 						const newValueStr = formatSkillValue(newTvarde, newBonus);
 						
-						improvementMessage = `Färdigheten <b>${this.item.name}</b> har förbättrats från ${oldValueStr} till ${newValueStr}!<br>
+						improvementMessage = `Färdigheten <b>${itemDisplayName}</b> har förbättrats från ${oldValueStr} till ${newValueStr}!<br>
 											 Fyra erfarenhetspoäng har förbrukats.`;
 					} else {
 						improvementMessage = `Ett fel uppstod när färdigheten skulle förbättras.`;
 					}
 				} else {
-					improvementMessage = `För att förbättra färdigheten <b>${this.item.name}</b> från 0 till 2T6 krävs 4 erfarenhetspoäng.`;
+					improvementMessage = `För att förbättra färdigheten <b>${itemDisplayName}</b> från 0 till 2T6 krävs 4 erfarenhetspoäng.`;
 				}
 			} else {
 				await this.actor.update({
@@ -1296,13 +1276,13 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 						const newValueStr = formatSkillValue(newTvarde, newBonus);
 
 						improvementMessage = `Tärningsslaget (${total}) är <b>högre</b> än svårighetsgraden (${improveThreshold}).<br>
-											Färdigheten <b>${this.item.name}</b> ökade från ${oldValueStr} till ${newValueStr}.`;
+											Färdigheten <b>${itemDisplayName}</b> ökade från ${oldValueStr} till ${newValueStr}.`;
 					} else {
-						improvementMessage = `Kunde inte hitta färdigheten <b>${this.item.name}</b> för att förbättra.`;
+						improvementMessage = `Kunde inte hitta färdigheten <b>${itemDisplayName}</b> för att förbättra.`;
 					}
 				} else {
 					improvementMessage = `Tärningsslaget (${total}) är <b>lägre</b> än svårighetsgraden (${improveThreshold}).<br>
-										Färdigheten <b>${this.item.name}</b> förbättrades inte.`;
+										Färdigheten <b>${itemDisplayName}</b> förbättrades inte.`;
 				}
 				improvementMessage += `<br>En erfarenhetspoäng har förbrukats.`;
 			}

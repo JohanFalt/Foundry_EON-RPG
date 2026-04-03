@@ -55,9 +55,11 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/items/parts/items-missile-weapon-data.html",
 		"systems/eon-rpg/templates/items/parts/items-defence-weapon-data.html",
 		"systems/eon-rpg/templates/items/parts/items-ancestry-data.html",
-		
+		"systems/eon-rpg/templates/items/parts/items-ancestry-data5.html",
+
 		"systems/eon-rpg/templates/items/parts/items-weapon-property.html",
 		"systems/eon-rpg/templates/items/parts/items-ancestry-property.html",
+		"systems/eon-rpg/templates/items/parts/items-ancestry-property5.html",
 
 		"systems/eon-rpg/templates/items/parts/items-faith-data.html",
 		"systems/eon-rpg/templates/items/parts/items-faith-skills.html",
@@ -69,6 +71,7 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/items/valuta-sheet.html",
 		"systems/eon-rpg/templates/combat/eon-combat-tracker.html",
 		"systems/eon-rpg/templates/combat/eon-combatant-portrait.html",
+		"systems/eon-rpg/templates/wizard/character-creation-wizard.hbs",
     ];
 
     /* Load the template parts
@@ -278,6 +281,13 @@ export async function Setup() {
 // }
 
 export const RegisterHandlebarsHelpers = function () {
+	// Ensure localize is available for all Handlebars templates (e.g. ApplicationV2 combat tracker).
+	// Foundry may use a different Handlebars instance; this makes the global one consistent.
+	if (!Handlebars.helpers.localize) {
+		Handlebars.registerHelper("localize", function (key) {
+			return typeof game !== "undefined" && game.i18n ? game.i18n.localize(key) : key;
+		});
+	}
 
 	function isEmpty(value) {
 		if ((value == "") || (value == undefined)) {
@@ -336,19 +346,6 @@ export const RegisterHandlebarsHelpers = function () {
 		return dice;
 	});
 
-	// hämtar en särskild färdighets namn
-	Handlebars.registerHelper("getSkillname", function(actor, grupp, skill) {
-		if (actor.type.toLowerCase() === "rollperson") {
-			return game.EON.fardigheter[grupp][skill].namn;
-		}
-		else if (actor.type.toLowerCase() === "rollperson5") {
-			return game.EON.fardigheter5[grupp][skill].namn;
-		}		
-		else {
-			return game.EON.fardigheter[grupp][skill].namn;
-		}
-	});
-
 	Handlebars.registerHelper("skillDisplayShort", function(fardighet) {	
 		let name = "";
 
@@ -376,6 +373,21 @@ export const RegisterHandlebarsHelpers = function () {
 		}	
 
 		return name;
+	});
+
+	// hämtar en särskild färdighets namn (lokaliserat)
+	Handlebars.registerHelper("getSkillname", function(actor, grupp, skill) {
+		let namn = "";
+		if (actor.type.toLowerCase() === "rollperson") {
+			namn = game.EON.fardigheter?.[grupp]?.[skill]?.namn;
+		}
+		else if (actor.type.toLowerCase() === "rollperson5") {
+			namn = game.EON.fardigheter5?.[grupp]?.[skill]?.namn;
+		}
+		else {
+			namn = game.EON.fardigheter?.[grupp]?.[skill]?.namn;
+		}
+		return namn ? (game.i18n.has(namn) ? game.i18n.localize(namn) : namn) : skill || "";
 	});
 
 	// hämtar en särskild färdighets namn
@@ -406,11 +418,11 @@ export const RegisterHandlebarsHelpers = function () {
 						skillName = CONFIG.EON.fardigheter?.[moment.grupp]?.[moment.fardighet]?.namn;
 					}
 				}
-				else if (actor.system.installningar.eon === "eon4") {
-					// First try to get from game.EON.fardigheter
+				else if (actor.system.installningar.eon === "eon5") {
+					// First try to get from game.EON.fardigheter5
 					skillName = game.EON.fardigheter5?.[moment.grupp]?.[moment.fardighet]?.namn;
 					
-					// If not found, try CONFIG.EON.fardigheter
+					// If not found, try CONFIG
 					if (!skillName) {
 						skillName = CONFIG.EON.fardigheter?.[moment.grupp]?.[moment.fardighet]?.namn;
 					}
@@ -421,10 +433,11 @@ export const RegisterHandlebarsHelpers = function () {
 					skillName = moment.fardighet;
 				}
 
+				const displayName = skillName && game.i18n.has(skillName) ? game.i18n.localize(skillName) : skillName;
 				if (oversatt !== "") {
 					oversatt += ", ";
 				}
-				oversatt += skillName;
+				oversatt += displayName;
 			}
 		}
 		catch (error) {
@@ -452,7 +465,8 @@ export const RegisterHandlebarsHelpers = function () {
 			}			
 		}
 
-		lista.sort((a, b) => a.name.localeCompare(b.name));
+		const getSkillDisplayName = (name) => name && game.i18n.has(name) ? game.i18n.localize(name) : (name || "");
+		lista.sort((a, b) => getSkillDisplayName(a.name).localeCompare(getSkillDisplayName(b.name)));
 
 		return lista;
 	});
@@ -468,15 +482,15 @@ export const RegisterHandlebarsHelpers = function () {
 		let icon = "";
 		let text = "";
 		if (skada == "stick") {
-			text = "Stick";
+			text = game.i18n.localize("eon.config.vapenskador.stick");
 			icon = "skada_stick";
 		}
 		if (skada == "kross") {
 			icon = "skada_kross";
-			text = "Kross";
+			text = game.i18n.localize("eon.config.vapenskador.kross");
 		}
 		if (skada == "hugg") {
-			text = "Hugg";
+			text = game.i18n.localize("eon.config.vapenskador.hugg");
 			icon = "skada_hugg";
 		}
 
@@ -590,8 +604,16 @@ export const RegisterHandlebarsHelpers = function () {
 
 	// hämtar ett attribut med egenskaper
 	Handlebars.registerHelper("getActorAttribute", function(actor, typ, key) {
+		if (actor.system[typ][key].totalt == undefined) {
+			return actor.system[typ][key];
+		}
+
 		return actor.system[typ][key].totalt;
 	});	
+
+	Handlebars.registerHelper("getAncestryAttributeValue", function(item, typ) {
+		return item.system.attribut[typ];
+	});		
 
 	// hämtar ett attributs kortnamn
 	Handlebars.registerHelper("getAttributeShortName", function(attribut, withdiv = true) {
@@ -600,10 +622,10 @@ export const RegisterHandlebarsHelpers = function () {
 		}
 
 		if (withdiv) {
-			return '<div class="skill-short">('+CONFIG.EON.grundegenskaper[attribut].kort+')</div>';
+			return '<div class="skill-short">('+game.i18n.localize(CONFIG.EON.grundegenskaper[attribut].kort)+')</div>';
 		}
 		else {
-			return '('+CONFIG.EON.grundegenskaper[attribut].kort+')';
+			return '('+game.i18n.localize(CONFIG.EON.grundegenskaper[attribut].kort)+')';
 		}		
 	});
 
@@ -631,8 +653,8 @@ export const RegisterHandlebarsHelpers = function () {
 			if (list != "") {
 				list = list + ", ";
 			}
-
-			list = list + skillList.mystik[skill.fardighet].namn;
+			const namn = skillList.mystik[skill.fardighet].namn;
+			list = list + (namn && game.i18n.has(namn) ? game.i18n.localize(namn) : namn);
 
 			if (skill.huvud) {
 				list = list + "*";
@@ -654,7 +676,7 @@ export const RegisterHandlebarsHelpers = function () {
 				return `${spell.system.omfang.antal} ${spell.system.omfang.text}`;
 			}
 			else {
-				return CONFIG.EON.magi.omradesomfang[spell.system.omfang.yta];
+				return game.i18n.localize(CONFIG.EON.magi.omradesomfang[spell.system.omfang.yta]);
 			}
 		}
 		if (property == "rackvidd") {
@@ -662,23 +684,23 @@ export const RegisterHandlebarsHelpers = function () {
 				return `${spell.system.rackvidd.antal} ${spell.system.rackvidd.text}`;
 			}
 			else {
-				return CONFIG.EON.magi.rackvidd[spell.system.rackvidd.stracka];
+				return game.i18n.localize(CONFIG.EON.magi.rackvidd[spell.system.rackvidd.stracka]);
 			}
 		}
 		if (property == "varaktighet") {
 			if (spell.system.varaktighet.tid == 0) {
 				if (spell.system.varaktighet.koncentration) {
-					return "Koncentration";
+					return game.i18n.localize("eon.config.magi.varaktighet.koncentration");
 				}
 				if (spell.system.varaktighet.momentan) {
-					return "Momentan";
+					return game.i18n.localize("eon.config.magi.varaktighet.momentan");
 				}
 				if (spell.system.varaktighet.immanent) {
-					return "Immanent";
+					return game.i18n.localize("eon.config.magi.varaktighet.immanent");
 				}
 			}
 			else {
-				return CONFIG.EON.magi.varaktighet[spell.system.varaktighet.tid];
+				return game.i18n.localize(CONFIG.EON.magi.varaktighet[spell.system.varaktighet.tid]);
 			}
 		}
 	});
@@ -725,92 +747,10 @@ export const RegisterHandlebarsHelpers = function () {
 	});
 
 	Handlebars.registerHelper("getBodypart", function(nr, config) {
-		let text = "";
-		let bodynr = parseInt(nr);
-
-		switch (bodynr) {
-			case 1:
-				text = "Ansikte";
-				break;
-			case 2:
-				text = "Skalle";
-				break;
-			case 3:
-				text = "Hals";
-				break;
-			case 4:
-				text = "Bröstkorg";
-				break;
-			case 5:
-				text = "Mage";
-				break;
-			case 6:
-				text = "Underliv";
-				break;
-			case 7:
-				text = "Skuldra (V)";
-				break;
-			case 8:
-				text = "Skuldra (H)";
-				break;
-			case 9:
-				text = "Överarm (V)";
-				break;
-			case 10:
-				text = "Överarm (H)";
-				break;
-			case 11:
-				text = "Armbåge (V)";
-				break;
-			case 12:
-				text = "Armbåde (H)";
-				break;
-			case 13:
-				text = "Underarm (V)";
-				break;
-			case 14:
-				text = "Underarm (H)";
-				break;
-			case 15:
-				text = "Hand (V)";
-				break;
-			case 16:
-				text = "Hand (H)";
-				break;
-			case 17:
-				text = "Höft (V)";
-				break;
-			case 18:
-				text = "Höft (H)";
-				break;
-			case 19:
-				text = "Lår (V)";
-				break;
-			case 20:
-				text = "Lår (H)";
-				break;
-			case 21:
-				text = "Knä (V)";
-				break;
-			case 22:
-				text = "Knä (H)";
-				break;
-			case 23:
-				text = "Vad (V)";
-				break;
-			case 24:
-				text = "Vad (H)";
-				break;
-			case 25:
-				text = "Fot (V)";
-				break;
-			case 26:
-				text = "Fot (H)";
-				break;
-			default:
-		}
-
-		return text;
+		const bodynr = parseInt(nr);
+		const key = `eon.bodyparts.${bodynr}`;
+		const localized = game.i18n.localize(key);
+		return localized !== key ? localized : "";
 	});
 
 	Handlebars.registerHelper("getArmorType", function(armor, actorOrEon5) {
@@ -1097,11 +1037,6 @@ export const RegisterHandlebarsHelpers = function () {
 		const sheet = options.data.root.sheet;
 		return sheet?.sortState?.[listKey]?.key === key;
 	});
-
-	// Handlebars.registerHelper('isSortedAsc', function(listKey, key, options) {
-	// 	const sheet = options.data.root.sheet;
-	// 	return sheet?.sortState?.[listKey]?.key === key && sheet.sortState[listKey].asc;
-	// });
 
 	Handlebars.registerHelper('isSortedAsc', function(listName, key, options) {
 		const sortState = options.data.root.sheet?.sortState?.[listName];

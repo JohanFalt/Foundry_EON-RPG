@@ -2,11 +2,11 @@
     <div>
         <div class="item-row headline item-listrow">
             <div class="item-listbox weapon-icon">
-                <a class="item-create" title="Lägg till färdighet" data-type="färdighet">
+                <a class="item-create" title="{{localize 'eon.sheets.actor.laggTillFardighet'}}" data-type="färdighet">
                     <i class="fa-solid fa-square-plus green"></i>
                 </a>
             </div>
-            <div class="item-listbox">Färdigheter</div>
+            <div class="item-listbox">{{localize "eon.sheets.actor.fardigheter"}}</div>
         </div>
     </div>
 
@@ -15,14 +15,14 @@
             <div class="vrollable caption normalskill" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div>                     
             <div class="dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
             <div class="pointer skill-icon">
-                <a class="item-edit" title="Editera färdighet" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
+                <a class="item-edit" title="{{localize 'eon.sheets.actor.editeraFardighet'}}" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
             </div>
         </div>
     {{/each}}
 
     <div>
         <div class="item-row headline item-listrow">
-            <div class="item-listbox">Försvar</div>
+            <div class="item-listbox">{{localize "eon.dialogs.forsvar"}}</div>
         </div>
     </div>
 
@@ -30,7 +30,7 @@
         <div class="vrollable caption normalskill" data-source="attribute" data-type="skada" data-key="forsvar" title="{{{actor.system.skada.forsvar.beskrivning}}}">{{actor.system.skada.forsvar.namn}}</div>                     
         <div class="dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue actor.system.skada.forsvar.totalt}}</div>
         <div class="skill-icon">
-            <a class="item-edit" title="Editera försvar" data-type="skada" data-attribute="forsvar">
+            <a class="item-edit" title="{{localize 'eon.sheets.actor.editeraForsvar'}}" data-type="skada" data-attribute="forsvar">
                 <i class="icon fa-solid fa-pen-to-square"></i>
             </a>
         </div>

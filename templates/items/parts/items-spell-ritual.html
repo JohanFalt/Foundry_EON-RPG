@@ -1,27 +1,27 @@
 <div class="item-box" style="width: 530px;">
 
-    <div class="large-headline">Ritualer</div>    
+    <div class="large-headline">{{localize "eon.sheets.item.ritualer"}}</div>    
 
     <div class="headline headline-background item-row item-listrow">
         <div class="item-listbox weapon-icon">
-            <a class="item-create" title="Lägg till ritual" data-type="ritual">
+            <a class="item-create" title="{{localize 'eon.sheets.item.laggTillRitual'}}" data-type="ritual">
                 <i class="fa-solid fa-square-plus green"></i>
             </a>
         </div>
-        <div class="item-listbox" style="width: 120px;">Namn</div>
-        <div class="item-listbox centerText" style="width: 75px;">Bonus</div>
-        <div class="item-listbox centerText" style="width: 75px;">Övertag</div>
-        <div class="item-listbox centerText" style="width: 50px;">Kost.</div>        
-        <div class="item-listbox centerText" style="width: 50px;">Tid</div>
-        <div>Moment</div>
+        <div class="item-listbox" style="width: 120px;">{{localize "eon.sheets.item.namn"}}</div>
+        <div class="item-listbox centerText" style="width: 75px;">{{localize "eon.sheets.item.bonus"}}</div>
+        <div class="item-listbox centerText" style="width: 75px;">{{localize "eon.sheets.item.overtag"}}</div>
+        <div class="item-listbox centerText" style="width: 50px;">{{localize "eon.sheets.item.ritualKostnadKort"}}</div>        
+        <div class="item-listbox centerText" style="width: 50px;">{{localize "eon.sheets.item.tid"}}</div>
+        <div>{{localize "eon.sheets.item.moment"}}</div>
     </div>
 
     {{#each item.system.ritual as |item key|}}
         <div class="item-row {{#if item.editera}}highlighted{{/if}} item-listrow">
             {{#if item.editera}}
-                <div class="item-listbox weapon-icon"><a class="item-save" title="Spara ritual" data-source="ritual" data-itemid="{{key}}"><i class="icon fa-solid fa-sd-card"></i></a></div>
+                <div class="item-listbox weapon-icon"><a class="item-save" title="{{localize 'eon.sheets.item.sparaRitual'}}" data-source="ritual" data-itemid="{{key}}"><i class="icon fa-solid fa-sd-card"></i></a></div>
             {{else}}
-                <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera ritual" data-source="ritual" data-itemid="{{key}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+                <div class="item-listbox weapon-icon"><a class="item-edit" title="{{localize 'eon.sheets.item.editeraRitual'}}" data-source="ritual" data-itemid="{{key}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             {{/if}}
             <div class="item-listbox" style="width: 120px;" title="{{item.namn}}">{{shorten item.namn 20 false}}</div>
             <div class="item-listbox centerText" style="width: 75px;">{{item.bonus}}</div>
@@ -31,7 +31,7 @@
             {{#if hasActor}}
                 <div title="item-listbox {{getSkillnameRitualList ../actor item.moment}}">{{shorten (getSkillnameRitualList ../actor item.moment) 10 false}}</div>
             {{/if}}
-            <div class="item-listbox pointer red item-delete" title="Ta bort ritual" data-type="ritual" data-key="{{key}}" style="flex-grow: 1; text-align: right;"><i class="icon fa-solid fa-trash-can"></i></div>
+            <div class="item-listbox pointer red item-delete" title="{{localize 'eon.sheets.item.taBortRitual'}}" data-type="ritual" data-key="{{key}}" style="flex-grow: 1; text-align: right;"><i class="icon fa-solid fa-trash-can"></i></div>
         </div>
     {{/each}}
 
@@ -40,29 +40,29 @@
 {{#if (propertyTrueInList item.system.ritual "editera")}}
     <div class="item-box" style="width: 400px;">
         <div class="floating-label-group">
-            <input class="text-value editable skill-label inputdata ritual-fields" type="text" id="ritual.namn" value="{{getListProperty item.system.ritual this.selectedRitual 'namn'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
-            <span class="floating-label">Namn</span>
+            <input class="text-value editable   inputdata ritual-fields" type="text" id="ritual.namn" value="{{getListProperty item.system.ritual this.selectedRitual 'namn'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
+            <span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
         </div>
 
         <div class="item-row" style="padding-top: 5px;">
             <div class="floating-label-group" style="width: 75px;">
-                <input class="skill-label editable inputdata" style="height: 26px;line-height: 26px;" type="text" id="ritual.bonus" value="{{getListProperty item.system.ritual this.selectedRitual 'bonus'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
-                <span class="floating-label ritual-label">Bonus</span>
+                <input class="  editable inputdata" style="height: 26px;line-height: 26px;" type="text" id="ritual.bonus" value="{{getListProperty item.system.ritual this.selectedRitual 'bonus'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
+                <span class="floating-label ritual-label">{{localize "eon.sheets.item.bonus"}}</span>
             </div>
 
             <div class="floating-label-group" style="width: 75px;margin-left: 3px;">
-                <input class="skill-label editable inputdata" style="height: 26px;line-height: 26px;" type="text" id="ritual.overtag" value="{{getListProperty item.system.ritual this.selectedRitual 'overtag'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
-                <span class="floating-label ritual-label">Övertag</span>
+                <input class="  editable inputdata" style="height: 26px;line-height: 26px;" type="text" id="ritual.overtag" value="{{getListProperty item.system.ritual this.selectedRitual 'overtag'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
+                <span class="floating-label ritual-label">{{localize "eon.sheets.item.overtag"}}</span>
             </div>
 
             <div class="floating-label-group" style="width: 75px;margin-left: 3px;">
-                <input class="skill-label editable inputdata" style="height: 26px;line-height: 26px;" type="text" id="ritual.kostnad" value="{{getListProperty item.system.ritual this.selectedRitual 'kostnad'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
-                <span class="floating-label ritual-label">Kostnad (silver)</span>
+                <input class="  editable inputdata" style="height: 26px;line-height: 26px;" type="text" id="ritual.kostnad" value="{{getListProperty item.system.ritual this.selectedRitual 'kostnad'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
+                <span class="floating-label ritual-label">{{localize "eon.sheets.item.kostnadSilver"}}</span>
             </div>
 
             <div class="floating-label-group" style="width: 75px;margin-left: 3px;">
-                <input class="skill-label editable inputdata" style="height: 26px;line-height: 26px;" type="text" id="ritual.tid" value="{{getListProperty item.system.ritual this.selectedRitual 'tid'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
-                <span class="floating-label ritual-label">Tidsåtgång</span>
+                <input class="  editable inputdata" style="height: 26px;line-height: 26px;" type="text" id="ritual.tid" value="{{getListProperty item.system.ritual this.selectedRitual 'tid'}}" data-source="ritual" data-dtype="String" autocomplete="off" autofocus required />
+                <span class="floating-label ritual-label">{{localize "eon.sheets.item.tidsatgang"}}</span>
             </div>
         </div>        
     </div>
@@ -70,30 +70,30 @@
     <div class="item-box" style="width: 400px;">
         <div class="headline item-row item-listrow">
             <div class="item-listbox weapon-icon">
-                <a class="item-create" title="Lägg till moment" data-source="ritual" data-type="moment">
+                <a class="item-create" title="{{localize 'eon.sheets.item.laggTillMoment'}}" data-source="ritual" data-type="moment">
                     <i class="fa-solid fa-square-plus green"></i>
                 </a>
             </div>
-            <div class="item-listbox">Moment</div>
+            <div class="item-listbox">{{localize "eon.sheets.item.moment"}}</div>
         </div>
 
         {{#each (getListProperty item.system.ritual this.selectedRitual "moment") as |item key|}}
             <div class="item-row" style="line-height: 25px; width:100%;padding-top: 5px;">
                 <div style="width: 150px;">
                     <select class="inputdata" id="ritual.momentgrupp_{{key}}" data-source="ritual" data-key="{{key}}" style="width: 140px;">
-                        <option>- Välj -</option>
+                        <option>{{localize "eon.sheets.item.valjOption"}}</option>
                         {{selectOptions ../EON.CONFIG.fardighetgrupper selected=item.grupp}}
                     </select>
                 </div>
                 <div style="width: 150px;">
                     <select class="inputdata" id="ritual.moment_{{key}}" data-source="ritual" data-key="{{key}}" style="width: 140px;">
-                        <option>- Välj -</option>
+                        <option>{{localize "eon.sheets.item.valjOption"}}</option>
                         {{#if item.grupp}}
                             {{selectOptions (getActorSkillGroup ../EON.fardigheter item.grupp) selected=item.fardighet valueAttr="namn" keyAttr="key"}}
                         {{/if}}
                     </select>
                 </div> 
-                <div class="pointer red item-delete" title="Ta bort moment" data-source="ritual" data-type="moment" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
+                <div class="pointer red item-delete" title="{{localize 'eon.sheets.item.taBortMoment'}}" data-source="ritual" data-type="moment" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
             </div>
         {{/each}}
     </div>

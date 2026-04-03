@@ -2,7 +2,7 @@ export const datafardigheter = {
     "fardigheter":{
         "strid": {
             "armborst": {
-                "namn": "Armborst",
+                "namn": "eon.config.fardigheter.armborst",
                 "referens": "s128",
                 "attribut": "uppfattning",
                 "grund": {
@@ -11,7 +11,7 @@ export const datafardigheter = {
                 }
             },
             "bage": {
-                "namn": "Båge",
+                "namn": "eon.config.fardigheter.bage",
                 "referens": "s128",
                 "attribut": "uppfattning",
                 "grund": {
@@ -20,7 +20,7 @@ export const datafardigheter = {
                 }
             },
             "dolk": {
-                "namn": "Dolk",
+                "namn": "eon.config.fardigheter.dolk",
                 "referens": "s128",
                 "attribut": "rorlighet",
                 "grund": {
@@ -29,7 +29,7 @@ export const datafardigheter = {
                 }
             },
             "kastvapen": {
-                "namn": "Kastvapen",
+                "namn": "eon.config.fardigheter.kastvapen",
                 "referens": "s128",
                 "attribut": "uppfattning",
                 "grund": {
@@ -38,7 +38,7 @@ export const datafardigheter = {
                 }
             },
             "klubba": {
-                "namn": "Klubba",
+                "namn": "eon.config.fardigheter.klubba",
                 "referens": "s128",
                 "attribut": "styrka",
                 "grund": {
@@ -47,7 +47,7 @@ export const datafardigheter = {
                 }
             },
             "kedjevapen": {
-                "namn": "Kedjevapen",
+                "namn": "eon.config.fardigheter.kedjevapen",
                 "referens": "s128",
                 "attribut": "rorlighet",
                 "grund": {
@@ -56,7 +56,7 @@ export const datafardigheter = {
                 }
             },
             "skold": {
-                "namn": "Sköld",
+                "namn": "eon.config.fardigheter.skold",
                 "referens": "s128",
                 "attribut": "rorlighet",
                 "grund": {
@@ -65,7 +65,7 @@ export const datafardigheter = {
                 }
             },
             "slagsmal": {
-                "namn": "Slagsmål",
+                "namn": "eon.config.fardigheter.slagsmal",
                 "referens": "s128",
                 "attribut": "styrka",
                 "grund": {
@@ -74,7 +74,7 @@ export const datafardigheter = {
                 }
             },
             "spjut": {
-                "namn": "Spjut",
+                "namn": "eon.config.fardigheter.spjut",
                 "referens": "s128",
                 "attribut": "rorlighet",
                 "grund": {
@@ -83,7 +83,7 @@ export const datafardigheter = {
                 }
             },
             "stav": {
-                "namn": "Stav",
+                "namn": "eon.config.fardigheter.stav",
                 "referens": "s128",
                 "attribut": "rorlighet",
                 "grund": {
@@ -92,7 +92,7 @@ export const datafardigheter = {
                 }
             },
             "svard": {
-                "namn": "Svärd",
+                "namn": "eon.config.fardigheter.svard",
                 "referens": "s128",
                 "attribut": "rorlighet",
                 "grund": {
@@ -101,7 +101,7 @@ export const datafardigheter = {
                 }
             },
             "yxa": {
-                "namn": "Yxa",
+                "namn": "eon.config.fardigheter.yxa",
                 "referens": "s128",
                 "attribut": "styrka",
                 "grund": {
@@ -112,7 +112,7 @@ export const datafardigheter = {
         },
         "rorelse": {
             "dansa": {
-                "namn": "Dansa",
+                "namn": "eon.config.fardigheter.dansa",
                 "referens": "s126",
                 "attribut": "rorlighet",
                 "grund": {
@@ -121,7 +121,7 @@ export const datafardigheter = {
                 }
             },
             "fingerfardighet": {
-                "namn": "Fingerfärdighet",
+                "namn": "eon.config.fardigheter.fingerfardighet",
                 "referens": "s126",
                 "attribut": "rorlighet",
                 "grund": {
@@ -130,7 +130,7 @@ export const datafardigheter = {
                 }
             },
             "gomma": {
-                "namn": "Gömma",
+                "namn": "eon.config.fardigheter.gomma",
                 "referens": "s126",
                 "attribut": "psyke",
                 "grund": {
@@ -139,7 +139,7 @@ export const datafardigheter = {
                 }
             },
             "hoppa": {
-                "namn": "Hoppa",
+                "namn": "eon.config.fardigheter.hoppa",
                 "referens": "s126",
                 "attribut": "rorlighet",
                 "grund": {
@@ -148,7 +148,7 @@ export const datafardigheter = {
                 }
             },
             "klattra": {
-                "namn": "Klättra",
+                "namn": "eon.config.fardigheter.klattra",
                 "referens": "s126",
                 "attribut": "rorlighet",
                 "grund": {
@@ -157,7 +157,7 @@ export const datafardigheter = {
                 }
             },
             "lasdyrkning": {
-                "namn": "Låsdyrkning",
+                "namn": "eon.config.fardigheter.lasdyrkning",
                 "referens": "s126",
                 "attribut": "psyke",
                 "grund": {
@@ -166,7 +166,7 @@ export const datafardigheter = {
                 }
             },
             "simma": {
-                "namn": "Simma",
+                "namn": "eon.config.fardigheter.simma",
                 "referens": "s126",
                 "attribut": "talighet",
                 "grund": {
@@ -175,7 +175,7 @@ export const datafardigheter = {
                 }
             },
             "smyga": {
-                "namn": "Smyga",
+                "namn": "eon.config.fardigheter.smyga",
                 "referens": "s126",
                 "attribut": "rorlighet",
                 "grund": {
@@ -184,7 +184,7 @@ export const datafardigheter = {
                 }
             },
             "undvika": {
-                "namn": "Undvika",
+                "namn": "eon.config.fardigheter.undvika",
                 "referens": "s126",
                 "attribut": "rorlighet",
                 "grund": {
@@ -196,7 +196,7 @@ export const datafardigheter = {
         },
         "mystik": {
             "cermoni": {
-                "namn": "Cermoni",
+                "namn": "eon.config.fardigheter.cermoni",
                 "referens": "s125",
                 "attribut": "visdom",
                 "grund": {
@@ -205,7 +205,7 @@ export const datafardigheter = {
                 }
             },
             "fornimma": {
-                "namn": "Förnimma",
+                "namn": "eon.config.fardigheter.fornimma",
                 "referens": "s125",
                 "attribut": "visdom",
                 "grund": {
@@ -214,7 +214,7 @@ export const datafardigheter = {
                 }
             },
             "forvranga": {
-                "namn": "Förvränga",
+                "namn": "eon.config.fardigheter.forvranga",
                 "referens": "s125",
                 "attribut": "visdom",
                 "grund": {
@@ -223,7 +223,7 @@ export const datafardigheter = {
                 }
             },
             "harmonisera": {
-                "namn": "Harmonisera",
+                "namn": "eon.config.fardigheter.harmonisera",
                 "referens": "Magi s91",
                 "attribut": "visdom",
                 "grund": {
@@ -232,7 +232,7 @@ export const datafardigheter = {
                 }
             },
             "kanalisera": {
-                "namn": "Kanalisera",
+                "namn": "eon.config.fardigheter.kanalisera",
                 "referens": "s125",
                 "attribut": "visdom",
                 "grund": {
@@ -243,7 +243,7 @@ export const datafardigheter = {
         },
         "social": {
             "argumentera": {
-                "namn": "Argumentera",
+                "namn": "eon.config.fardigheter.argumentera",
                 "referens": "s127",
                 "attribut": "psyke",
                 "grund": {
@@ -252,7 +252,7 @@ export const datafardigheter = {
                 }
             },
             "berattarkonst": {
-                "namn": "Berättarkonst",
+                "namn": "eon.config.fardigheter.berattarkonst",
                 "referens": "s127",
                 "attribut": "utstralning",
                 "grund": {
@@ -261,7 +261,7 @@ export const datafardigheter = {
                 }
             },
             "charm": {
-                "namn": "Charm",
+                "namn": "eon.config.fardigheter.charm",
                 "referens": "s127",
                 "attribut": "utstralning",
                 "grund": {
@@ -270,7 +270,7 @@ export const datafardigheter = {
                 }
             },
             "dupera": {
-                "namn": "Dupera",
+                "namn": "eon.config.fardigheter.dupera",
                 "referens": "s127",
                 "attribut": "utstralning",
                 "grund": {
@@ -279,7 +279,7 @@ export const datafardigheter = {
                 }
             },
             "genomskada": {
-                "namn": "Genomskåda",
+                "namn": "eon.config.fardigheter.genomskada",
                 "referens": "s127",
                 "attribut": "psyke",
                 "grund": {
@@ -288,7 +288,7 @@ export const datafardigheter = {
                 }
             },
             "hovliv": {
-                "namn": "Hovliv",
+                "namn": "eon.config.fardigheter.hovliv",
                 "referens": "s127",
                 "attribut": "psyke",
                 "grund": {
@@ -297,7 +297,7 @@ export const datafardigheter = {
                 }
             },
             "injaga": {
-                "namn": "Injaga fruktan",
+                "namn": "eon.config.fardigheter.injaga",
                 "referens": "s127",
                 "attribut": "psyke",
                 "grund": {
@@ -306,7 +306,7 @@ export const datafardigheter = {
                 }
             },
             "ledarskap": {
-                "namn": "Ledarskap",
+                "namn": "eon.config.fardigheter.ledarskap",
                 "referens": "s127",
                 "attribut": "utstralning",
                 "grund": {
@@ -315,7 +315,7 @@ export const datafardigheter = {
                 }
             },
             "skumraskaffarer": {
-                "namn": "Skumraskaffärer",
+                "namn": "eon.config.fardigheter.skumraskaffarer",
                 "referens": "s127",
                 "attribut": "psyke",
                 "grund": {
@@ -324,7 +324,7 @@ export const datafardigheter = {
                 }
             },
             "spel": {
-                "namn": "Spel & dobbel",
+                "namn": "eon.config.fardigheter.spel",
                 "referens": "s128",
                 "attribut": "psyke",
                 "grund": {
@@ -333,7 +333,7 @@ export const datafardigheter = {
                 }
             },
             "sang": {
-                "namn": "Sång & musik",
+                "namn": "eon.config.fardigheter.sang",
                 "referens": "s128",
                 "attribut": "utstralning",
                 "grund": {
@@ -344,7 +344,7 @@ export const datafardigheter = {
         },
         "kunskap": {
             "filosofi": {
-                "namn": "Filosofi",
+                "namn": "eon.config.fardigheter.filosofi",
                 "referens": "s124",
                 "attribut": "visdom",
                 "grund": {
@@ -353,7 +353,7 @@ export const datafardigheter = {
                 }
             },
             "geografi": {
-                "namn": "Geografi",
+                "namn": "eon.config.fardigheter.geografi",
                 "referens": "s124",
                 "attribut": "visdom",
                 "grund": {
@@ -362,7 +362,7 @@ export const datafardigheter = {
                 }
             },
             "gifter": {
-                "namn": "Gifter & droger",
+                "namn": "eon.config.fardigheter.gifter",
                 "referens": "s124",
                 "attribut": "visdom",
                 "grund": {
@@ -371,7 +371,7 @@ export const datafardigheter = {
                 }
             },
             "handel": {
-                "namn": "Handel",
+                "namn": "eon.config.fardigheter.handel",
                 "referens": "s124",
                 "attribut": "visdom",
                 "grund": {
@@ -380,7 +380,7 @@ export const datafardigheter = {
                 }
             },
             "historia": {
-                "namn": "Historia",
+                "namn": "eon.config.fardigheter.historia",
                 "referens": "s124",
                 "attribut": "visdom",
                 "grund": {
@@ -389,7 +389,7 @@ export const datafardigheter = {
                 }
             },
             "kalkylera": {
-                "namn": "Kalkylera",
+                "namn": "eon.config.fardigheter.kalkylera",
                 "referens": "s124",
                 "attribut": "visdom",
                 "grund": {
@@ -398,7 +398,7 @@ export const datafardigheter = {
                 }
             },
             "kirurgi": {
-                "namn": "Kirurgi",
+                "namn": "eon.config.fardigheter.kirurgi",
                 "referens": "s124",
                 "attribut": "visdom",
                 "grund": {
@@ -407,7 +407,7 @@ export const datafardigheter = {
                 }
             },
             "krigforing": {
-                "namn": "Krigföring",
+                "namn": "eon.config.fardigheter.krigforing",
                 "referens": "s124",
                 "attribut": "visdom",
                 "grund": {
@@ -416,7 +416,7 @@ export const datafardigheter = {
                 }
             },
             "kulturkannedom": {
-                "namn": "Kulturkännedom",
+                "namn": "eon.config.fardigheter.kulturkannedom",
                 "referens": "s124",
                 "attribut": "visdom",
                 "grund": {
@@ -425,7 +425,7 @@ export const datafardigheter = {
                 }
             },
             "lagkunskap": {
-                "namn": "Lagkunskap",
+                "namn": "eon.config.fardigheter.lagkunskap",
                 "referens": "s125",
                 "attribut": "visdom",
                 "grund": {
@@ -434,7 +434,7 @@ export const datafardigheter = {
                 }
             },
             "lakekonst": {
-                "namn": "Läkekonst",
+                "namn": "eon.config.fardigheter.lakekonst",
                 "referens": "s125",
                 "attribut": "visdom",
                 "grund": {
@@ -443,7 +443,7 @@ export const datafardigheter = {
                 }
             },
             "ockultism": {
-                "namn": "Ockultism",
+                "namn": "eon.config.fardigheter.ockultism",
                 "referens": "s125",
                 "attribut": "visdom",
                 "grund": {
@@ -452,7 +452,7 @@ export const datafardigheter = {
                 }
             },
             "teologi": {
-                "namn": "Teologi",
+                "namn": "eon.config.fardigheter.teologi",
                 "referens": "s125",
                 "attribut": "visdom",
                 "grund": {
@@ -461,7 +461,7 @@ export const datafardigheter = {
                 }
             },
             "teoretiskmagi": {
-                "namn": "Teoretisk magi",
+                "namn": "eon.config.fardigheter.teoretiskmagi",
                 "referens": "s125",
                 "attribut": "visdom",
                 "grund": {
@@ -470,7 +470,7 @@ export const datafardigheter = {
                 }
             },
             "undervisa": {
-                "namn": "Undervisa",
+                "namn": "eon.config.fardigheter.undervisa",
                 "referens": "s125",
                 "attribut": "visdom",
                 "grund": {
@@ -481,7 +481,7 @@ export const datafardigheter = {
         },
         "vildmark": {
             "genomsoka": {
-                "namn": "Genomsöka",
+                "namn": "eon.config.fardigheter.genomsoka",
                 "referens": "s129",
                 "attribut": "uppfattning",
                 "grund": {
@@ -490,7 +490,7 @@ export const datafardigheter = {
                 }
             },
             "jakt": {
-                "namn": "Jakt & fiske",
+                "namn": "eon.config.fardigheter.jakt",
                 "referens": "s129",
                 "attribut": "psyke",
                 "grund": {
@@ -499,7 +499,7 @@ export const datafardigheter = {
                 }
             },
             "koravagn": {
-                "namn": "Köra vagn",
+                "namn": "eon.config.fardigheter.koravagn",
                 "referens": "s129",
                 "attribut": "rorlighet",
                 "grund": {
@@ -508,7 +508,7 @@ export const datafardigheter = {
                 }
             },
             "marsch": {
-                "namn": "Marsch",
+                "namn": "eon.config.fardigheter.marsch",
                 "referens": "s129",
                 "attribut": "talighet",
                 "grund": {
@@ -517,7 +517,7 @@ export const datafardigheter = {
                 }
             },
             "naturlara": {
-                "namn": "Naturlära",
+                "namn": "eon.config.fardigheter.naturlara",
                 "referens": "s129",
                 "attribut": "psyke",
                 "grund": {
@@ -526,7 +526,7 @@ export const datafardigheter = {
                 }
             },
             "navigation": {
-                "namn": "Navigation",
+                "namn": "eon.config.fardigheter.navigation",
                 "referens": "s129",
                 "attribut": "psyke",
                 "grund": {
@@ -535,7 +535,7 @@ export const datafardigheter = {
                 }
             },
             "orientering": {
-                "namn": "Orientering",
+                "namn": "eon.config.fardigheter.orientering",
                 "referens": "s129",
                 "attribut": "psyke",
                 "grund": {
@@ -544,7 +544,7 @@ export const datafardigheter = {
                 }
             },
             "rida": {
-                "namn": "Rida",
+                "namn": "eon.config.fardigheter.rida",
                 "referens": "s129",
                 "attribut": "psyke",
                 "grund": {
@@ -553,7 +553,7 @@ export const datafardigheter = {
                 }
             },
             "sjomannaskap": {
-                "namn": "Sjömannaskap",
+                "namn": "eon.config.fardigheter.sjomannaskap",
                 "referens": "s129",
                 "attribut": "psyke",
                 "grund": {
@@ -562,7 +562,7 @@ export const datafardigheter = {
                 }
             },
             "speja": {
-                "namn": "Speja",
+                "namn": "eon.config.fardigheter.speja",
                 "referens": "s129",                
                 "attribut": "uppfattning",
                 "grund": {
@@ -571,7 +571,7 @@ export const datafardigheter = {
                 }
             },
             "spara": {
-                "namn": "Spåra",
+                "namn": "eon.config.fardigheter.spara",
                 "referens": "s129",
                 "attribut": "uppfattning",
                 "grund": {
@@ -580,7 +580,7 @@ export const datafardigheter = {
                 }
             },
             "vildmarksvana": {
-                "namn": "Vildmarksvana",
+                "namn": "eon.config.fardigheter.vildmarksvana",
                 "referens": "s129",
                 "attribut": "psyke",
                 "grund": {
@@ -597,117 +597,104 @@ export const data5fardigheter = {
     "fardigheter5":{
         "strid": {
             "armborst": {
-                "namn": "Armborst",
+                "namn": "eon.config.fardigheter.armborst",
                 "referens": "",
-                "attribut": "uppfattning",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "blasror": {
-                "namn": "Blåsrör",
+                "namn": "eon.config.fardigheter.blasror",
                 "referens": "",
-                "attribut": "uppfattning",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "bage": {
-                "namn": "Båge",
+                "namn": "eon.config.fardigheter.bage",
                 "referens": "",
-                "attribut": "uppfattning",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "dolk": {
-                "namn": "Dolk",
+                "namn": "eon.config.fardigheter.dolk",
                 "referens": "",
-                "attribut": "rorlighet",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "kastvapen": {
-                "namn": "Kastvapen",
+                "namn": "eon.config.fardigheter.kastvapen",
                 "referens": "",
-                "attribut": "uppfattning",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "klubba": {
-                "namn": "Klubba",
+                "namn": "eon.config.fardigheter.klubba",
                 "referens": "",
-                "attribut": "styrka",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "kedjevapen": {
-                "namn": "Kedjevapen",
+                "namn": "eon.config.fardigheter.kedjevapen",
                 "referens": "",
-                "attribut": "rorlighet",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "skold": {
-                "namn": "Sköld",
+                "namn": "eon.config.fardigheter.skold",
                 "referens": "",
-                "attribut": "rorlighet",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "slagsmal": {
-                "namn": "Slagsmål",
+                "namn": "eon.config.fardigheter.slagsmal",
                 "referens": "",
-                "attribut": "styrka",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "spjut": {
-                "namn": "Spjut",
+                "namn": "eon.config.fardigheter.spjut",
                 "referens": "",
-                "attribut": "rorlighet",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "stav": {
-                "namn": "Stav",
+                "namn": "eon.config.fardigheter.stav",
                 "referens": "",
-                "attribut": "rorlighet",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "svard": {
-                "namn": "Svärd",
+                "namn": "eon.config.fardigheter.svard",
                 "referens": "",
-                "attribut": "rorlighet",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "yxa": {
-                "namn": "Yxa",
+                "namn": "eon.config.fardigheter.yxa",
                 "referens": "",
-                "attribut": "styrka",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
@@ -716,81 +703,72 @@ export const data5fardigheter = {
         },
         "rorelse": {
             "dansa": {
-                "namn": "Dansa",
+                "namn": "eon.config.fardigheter.dansa",
                 "referens": "",
-                "attribut": "rorlighet",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "fingerfardighet": {
-                "namn": "Fingerfärdighet",
+                "namn": "eon.config.fardigheter.fingerfardighet",
                 "referens": "",
-                "attribut": "rorlighet",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "gomma": {
-                "namn": "Gömma",
+                "namn": "eon.config.fardigheter.gomma",
                 "referens": "",
-                "attribut": "psyke",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "hoppa": {
-                "namn": "Hoppa",
+                "namn": "eon.config.fardigheter.hoppa",
                 "referens": "",
-                "attribut": "rorlighet",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "klattra": {
-                "namn": "Klättra",
+                "namn": "eon.config.fardigheter.klattra",
                 "referens": "s175",
-                "attribut": "rorlighet",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "marsch": {
-                "namn": "Marsch",
+                "namn": "eon.config.fardigheter.marsch",
                 "referens": "",
-                "attribut": "talighet",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "simma": {
-                "namn": "Simma",
+                "namn": "eon.config.fardigheter.simma",
                 "referens": "",
-                "attribut": "talighet",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "smyga": {
-                "namn": "Smyga",
+                "namn": "eon.config.fardigheter.smyga",
                 "referens": "",
-                "attribut": "rorlighet",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "undvika": {
-                "namn": "Undvika",
+                "namn": "eon.config.fardigheter.undvika",
                 "referens": "",
-                "attribut": "rorlighet",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
@@ -800,45 +778,40 @@ export const data5fardigheter = {
         },
         "mystik": {
             "cermoni": {
-                "namn": "Cermoni",
+                "namn": "eon.config.fardigheter.cermoni",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "fornimma": {
-                "namn": "Förnimma",
+                "namn": "eon.config.fardigheter.fornimma",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "forvranga": {
-                "namn": "Förvränga",
+                "namn": "eon.config.fardigheter.forvranga",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "harmonisera": {
-                "namn": "Harmonisera",
+                "namn": "eon.config.fardigheter.harmonisera",
                 "referens": "Magi s91",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "kanalisera": {
-                "namn": "Kanalisera",
+                "namn": "eon.config.fardigheter.kanalisera",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
@@ -847,108 +820,96 @@ export const data5fardigheter = {
         },
         "social": {
             "argumentera": {
-                "namn": "Argumentera",
+                "namn": "eon.config.fardigheter.argumentera",
                 "referens": "",
-                "attribut": "psyke",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "berattarkonst": {
-                "namn": "Berättarkonst",
+                "namn": "eon.config.fardigheter.berattarkonst",
                 "referens": "",
-                "attribut": "utstralning",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "charm": {
-                "namn": "Charm",
+                "namn": "eon.config.fardigheter.charm",
                 "referens": "",
-                "attribut": "utstralning",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "dupera": {
-                "namn": "Dupera",
+                "namn": "eon.config.fardigheter.dupera",
                 "referens": "",
-                "attribut": "utstralning",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "genomskada": {
-                "namn": "Genomskåda",
+                "namn": "eon.config.fardigheter.genomskada",
                 "referens": "",
-                "attribut": "psyke",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "handel": {
-                "namn": "Handel",
+                "namn": "eon.config.fardigheter.handel",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "hovliv": {
-                "namn": "Hovliv",
+                "namn": "eon.config.fardigheter.hovliv",
                 "referens": "",
-                "attribut": "psyke",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "injaga": {
-                "namn": "Injaga fruktan",
+                "namn": "eon.config.fardigheter.injaga",
                 "referens": "",
-                "attribut": "psyke",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "ledarskap": {
-                "namn": "Ledarskap",
+                "namn": "eon.config.fardigheter.ledarskap",
                 "referens": "",
-                "attribut": "utstralning",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "skumraskaffarer": {
-                "namn": "Skumraskaffärer",
+                "namn": "eon.config.fardigheter.skumraskaffarer",
                 "referens": "",
-                "attribut": "psyke",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "spel": {
-                "namn": "Spel & dobbel",
+                "namn": "eon.config.fardigheter.spel",
                 "referens": "",
-                "attribut": "psyke",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "sang": {
-                "namn": "Sång & musik",
+                "namn": "eon.config.fardigheter.sang",
                 "referens": "",
-                "attribut": "utstralning",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
@@ -957,27 +918,24 @@ export const data5fardigheter = {
         },
         "kunskap": {
             "filosofi": {
-                "namn": "Filosofi",
+                "namn": "eon.config.fardigheter.filosofi",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "geografi": {
-                "namn": "Geografi",
+                "namn": "eon.config.fardigheter.geografi",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "gifter": {
-                "namn": "Gifter & droger",
+                "namn": "eon.config.fardigheter.gifter",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
@@ -985,90 +943,80 @@ export const data5fardigheter = {
             },
             
             "historia": {
-                "namn": "Historia",
+                "namn": "eon.config.fardigheter.historia",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "kalkylera": {
-                "namn": "Kalkylera",
+                "namn": "eon.config.fardigheter.kalkylera",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "krigforing": {
-                "namn": "Krigföring",
+                "namn": "eon.config.fardigheter.krigforing",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "kulturkannedom": {
-                "namn": "Kulturkännedom",
+                "namn": "eon.config.fardigheter.kulturkannedom",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "lagkunskap": {
-                "namn": "Lagkunskap",
+                "namn": "eon.config.fardigheter.lagkunskap",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "lakekonst": {
-                "namn": "Läkekonst",
+                "namn": "eon.config.fardigheter.lakekonst",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "ockultism": {
-                "namn": "Ockultism",
+                "namn": "eon.config.fardigheter.ockultism",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "teologi": {
-                "namn": "Teologi",
+                "namn": "eon.config.fardigheter.teologi",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "teoretiskmagi": {
-                "namn": "Teoretisk magi",
+                "namn": "eon.config.fardigheter.teoretiskmagi",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "undervisa": {
-                "namn": "Undervisa",
+                "namn": "eon.config.fardigheter.undervisa",
                 "referens": "",
-                "attribut": "visdom",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
@@ -1077,81 +1025,72 @@ export const data5fardigheter = {
         },
         "vildmark": {
             "genomsoka": {
-                "namn": "Genomsöka",
+                "namn": "eon.config.fardigheter.genomsoka",
                 "referens": "",
-                "attribut": "uppfattning",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "jakt": {
-                "namn": "Jakt & fiske",
+                "namn": "eon.config.fardigheter.jakt",
                 "referens": "",
-                "attribut": "psyke",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "naturlara": {
-                "namn": "Naturlära",
+                "namn": "eon.config.fardigheter.naturlara",
                 "referens": "",
-                "attribut": "psyke",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "orientering": {
-                "namn": "Orientering",
+                "namn": "eon.config.fardigheter.orientering",
                 "referens": "",
-                "attribut": "psyke",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "rida": {
-                "namn": "Rida",
+                "namn": "eon.config.fardigheter.rida",
                 "referens": "",
-                "attribut": "psyke",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "sjomannaskap": {
-                "namn": "Sjömannaskap",
+                "namn": "eon.config.fardigheter.sjomannaskap",
                 "referens": "",
-                "attribut": "psyke",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0
                 }
             },
             "speja": {
-                "namn": "Speja",
-                "referens": "",                
-                "attribut": "uppfattning",
+                "namn": "eon.config.fardigheter.speja",
+                "referens": "",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "spara": {
-                "namn": "Spåra",
+                "namn": "eon.config.fardigheter.spara",
                 "referens": "",
-                "attribut": "uppfattning",
                 "grund": {
                     "tvarde": 2,
                     "bonus": 0
                 }
             },
             "vildmarksvana": {
-                "namn": "Vildmarksvana",
+                "namn": "eon.config.fardigheter.vildmarksvana",
                 "referens": "",
-                "attribut": "psyke",
                 "grund": {
                     "tvarde": 0,
                     "bonus": 0

@@ -1,15 +1,42 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export class DialogMigrationWizard extends HandlebarsApplicationMixin(ApplicationV2) {
-    constructor(messages, readMessageSetting = null) {
+    constructor(messages, readMessageSetting = null, onCloseCallback = null) {
         super();
         this.messages = messages || [];
         this.currentPageIndex = 0;
         this.readMessageSetting = readMessageSetting;
         this.dontShowAgainChecked = false;
+        this._onCloseCallback = onCloseCallback;
+        this._closeCallbackFired = false;
         
         // Set localized title
         this.options.window.title = "Information";
+    }
+
+    /** @override - Anropa callback när dialogen stängs (för att visa nästa wizard i kedja) */
+    async close(options = {}) {
+        if (!this._closeCallbackFired && this._onCloseCallback) {
+            this._closeCallbackFired = true;
+            this._onCloseCallback();
+        }
+        return super.close(options);
+    }
+
+    /** @override - Defer position so DOM is in place (avoids offsetWidth null in Foundry's _updatePosition) */
+    setPosition(options = {}) {
+        const doSetPosition = async () => {
+            try {
+                await super.setPosition(options);
+            } catch (err) {
+                if (err?.message?.includes("offsetWidth")) {
+                    setTimeout(() => this.setPosition(options), 50);
+                } else {
+                    throw err;
+                }
+            }
+        };
+        requestAnimationFrame(() => requestAnimationFrame(doSetPosition));
     }
 
     static DEFAULT_OPTIONS = {

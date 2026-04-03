@@ -89,7 +89,7 @@ export default class classDialogHelper {
             const buttons = {
                 submit: {
                     icon: '<i class="fas fa-check"></i>',
-                    label: 'Skicka',
+                    label: game.i18n.localize("eon.dialogs.skicka"),
                     callback: async (html) => {
                         let value = html.find('#numberValue')[0].value;
                         let formula = "1d10";
@@ -108,7 +108,7 @@ export default class classDialogHelper {
 
             // Display the dialog
             new Dialog({
-                title: 'Slå för vändning',
+                title: game.i18n.localize("eon.dialogs.slaForVandning"),
                 content: template,
                 buttons,
                 default: 'submit'

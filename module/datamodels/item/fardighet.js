@@ -24,7 +24,7 @@ export default class EonFardighet extends basforemal {
             normal: new fields.BooleanField({initial: true}),
             talang: new fields.BooleanField({initial: false}),
             inkompetent: new fields.BooleanField({initial: false}),
-            blockering: new fields.BooleanField({initial: false})
+            blockering: new fields.BooleanField({initial: false})            
         });
 
         schema.expertis = new fields.BooleanField({initial: false});

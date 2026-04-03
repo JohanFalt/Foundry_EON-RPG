@@ -1,32 +1,32 @@
-<div class="large-headline">Moment</div>    
+<div class="large-headline">{{localize "eon.sheets.item.moment"}}</div>    
 
 <div class="headline item-row item-listrow">
-    <div class="item-listbox pointer item-create weapon-icon" title="Lägg till moment" data-type="moment" style="margin-left: 5px; margin-right: 5px;"><i class="fa-solid fa-square-plus green"></i></div>
-    <div class="item-listbox" style="width: 150px;">Färdighet</div>
-    <div class="item-listbox" style="width: 100px;">Svårighet</div>
-    <div class="item-listbox" style="width: 100px;">Tid</div>
+    <div class="item-listbox pointer item-create weapon-icon" title="{{localize 'eon.sheets.item.laggTillMoment'}}" data-type="moment" style="margin-left: 5px; margin-right: 5px;"><i class="fa-solid fa-square-plus green"></i></div>
+    <div class="item-listbox" style="width: 150px;">{{localize "eon.sheets.item.fardighet"}}</div>
+    <div class="item-listbox" style="width: 100px;">{{localize "eon.sheets.actor.svarighet"}}</div>
+    <div class="item-listbox" style="width: 100px;">{{localize "eon.sheets.item.varaktighet"}}</div>
 </div>
 
 {{#each item.system.moment as |item key|}}
     <div class="item-row item-listrow">
-        <div class="item-listbox"><input class="weapon-icon pointer item-active" type="checkbox" id="object.huvud_{{key}}" title="Huvudmomentet" value="{{item.huvud}}" data-source="moment" data-key="{{key}}" data-egenskap="huvud" {{isChecked item.huvud}} /></div>
+        <div class="item-listbox"><input class="weapon-icon pointer item-active" type="checkbox" id="object.huvud_{{key}}" title="{{localize 'eon.sheets.item.huvudmomentet'}}" value="{{item.huvud}}" data-source="moment" data-key="{{key}}" data-egenskap="huvud" {{isChecked item.huvud}} /></div>
         <div class="item-listbox" style="width: 150px;">
 
             {{#if (eq item.system.installningar.eon "eon4")}}
                 <select class="inputdata" id="object.fardighet_{{key}}" data-source="moment" data-key="{{key}}" data-egenskap="fardighet" style="width: 140px;">
-                    <option>- Välj -</option>
+                    <option>{{localize "eon.sheets.item.valjOption"}}</option>
                     {{#select item.fardighet}}
                         {{#each ../EON.fardigheter.mystik as |fardighet key|}}
-                            <option value="{{key}}">{{fardighet.namn}}</option>
+                            <option value="{{key}}">{{localize fardighet.namn}}</option>
                         {{/each}}
                     {{/select}}
                 </select>
             {{else}}
                 <select class="inputdata" id="object.fardighet_{{key}}" data-source="moment" data-key="{{key}}" data-egenskap="fardighet" style="width: 140px;">
-                    <option>- Välj -</option>
+                    <option>{{localize "eon.sheets.item.valjOption"}}</option>
                     {{#select item.fardighet}}
                         {{#each ../EON.fardigheter5.mystik as |fardighet key|}}
-                            <option value="{{key}}">{{fardighet.namn}}</option>
+                            <option value="{{key}}">{{localize fardighet.namn}}</option>
                         {{/each}}
                     {{/select}}
                 </select>
@@ -34,19 +34,19 @@
         </div>        
         <div class="item-listbox" style="width: 100px;"><input class="inputdata" type="text" value="{{item.svarighet}}" id="object.svarighet_{{key}}" data-source="moment"data-key="{{key}}" data-egenskap="svarighet" style="width: 90px;" /></div>
         <div class="item-listbox" style="width: 100px;"><input class="inputdata" type="text" value="{{item.tid}}" id="object.tid_{{key}}" data-source="moment"data-key="{{key}}" data-egenskap="tid" style="width: 90px;" /></div>
-        <div class="item-listbox pointer red item-delete" title="Ta bort moment" data-type="moment" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
+        <div class="item-listbox pointer red item-delete" title="{{localize 'eon.sheets.item.taBortMoment'}}" data-type="moment" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
     </div>
 {{/each}}
 
 <div class="clear">
     <div class="pullLeft two-column">
-        <div class="large-headline textbox-headline">Mirakel</div>
+        <div class="large-headline textbox-headline">{{localize "eon.sheets.item.mirakel"}}</div>
         <div class="tall-editor-box">
             {{editor enrichedMirakel target="system.mirakel" button=true owner=owner editable=true}}
         </div>
     </div> 
     <div class="pullLeft two-column">
-        <div class="large-headline textbox-headline">Cermoni</div>
+        <div class="large-headline textbox-headline">{{localize "eon.sheets.item.cermoni"}}</div>
         <div class="tall-editor-box">
             {{editor enrichedCermoni target="system.cermoni" button=true owner=owner editable=true}}
         </div>

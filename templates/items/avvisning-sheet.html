@@ -11,17 +11,17 @@
 				<div class="pullLeft" style="min-width: 270px;">
 					<div class="item-property-area floating-label-group">
 						<input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
-						<span class="floating-label">Namn</span>
+						<span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
 					</div>
 
 					<div class="item-property-area floating-label-group">
 						<input class="text-value editable" name="system.magnitud" type="text" value="{{item.system.magnitud}}" data-dtype="Number" autofocus required />
-						<span class="floating-label">Magnitud</span>
+						<span class="floating-label">{{localize "eon.sheets.item.magnitud"}}</span>
 					</div>
 					
 					<div class="item-property-area floating-label-group">
 						<input class="text-value editable" name="system.referens" type="text" value="{{item.system.referens}}" data-dtype="String" autofocus required />
-						<span class="floating-label">Referens</span>
+						<span class="floating-label">{{localize "eon.sheets.item.referens"}}</span>
 					</div>
 				</div>
 
@@ -30,14 +30,14 @@
                         <div class="pointer red item-delete large-icon" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
                     {{/if}}     
                     
-                    <div class="information-area top-sidetext">AVVISNING</div>
+                    <div class="information-area top-sidetext">{{localize "eon.sheets.item.avvisningSheetLabel"}}</div>
                 </div>
 			</div>	
 		</header>
 		
 		<section class="item-body">
 			<div>
-				<div class="large-headline">Beskrivning</div>
+				<div class="large-headline">{{localize "eon.sheets.item.beskrivning"}}</div>
 				<div class="small-editor-box">
 					{{editor enrichedBeskrivning target="system.beskrivning" button=true owner=owner editable=true}}
 				</div>

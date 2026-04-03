@@ -3,6 +3,7 @@ export {default as Eon5Rollperson} from "./actor/rollperson5.js";
 export {default as EonVarelse} from "./actor/varelse.js";
 
 export {default as EonFolkslag} from "./item/folkslag.js";
+export {default as Eon5Folkslag} from "./item/folkslag5.js";
 
 export {default as EonFardighet} from "./item/fardighet.js";
 export {default as EonSprak} from "./item/sprak.js";

@@ -1,15 +1,3 @@
-2026/03/05-09:09:27.599 12a8 Recovering log #421
-2026/03/05-09:09:27.860 12a8 Delete type=0 #421
-2026/03/05-09:09:27.861 12a8 Delete type=3 #419
-2026/03/05-12:42:04.666 5c90 Level-0 table #426: started
-2026/03/05-12:42:04.756 5c90 Level-0 table #426: 26018 bytes OK
-2026/03/05-12:42:04.863 5c90 Delete type=0 #424
-2026/03/05-12:42:05.020 5c90 Manual compaction at level-0 from '!folders!1h40xCgkxDXbsmyB' @ 72057594037927935 : 1 .. '!items!ry2nsFUtizxILH42' @ 0 : 0; will stop at (end)
-2026/03/05-12:42:05.458 5c90 Manual compaction at level-1 from '!folders!1h40xCgkxDXbsmyB' @ 72057594037927935 : 1 .. '!items!ry2nsFUtizxILH42' @ 0 : 0; will stop at '!items!ry2nsFUtizxILH42' @ 668 : 1
-2026/03/05-12:42:05.458 5c90 Compacting 1@1 + 1@2 files
-2026/03/05-12:42:05.820 5c90 Generated table #427@1: 42 keys, 27462 bytes
-2026/03/05-12:42:05.820 5c90 Compacted 1@1 + 1@2 files => 27462 bytes
-2026/03/05-12:42:06.283 5c90 compacted to: files[ 0 0 1 0 0 0 0 ]
-2026/03/05-12:42:06.284 5c90 Delete type=2 #418
-2026/03/05-12:42:06.284 5c90 Delete type=2 #426
-2026/03/05-12:42:06.513 5c90 Manual compaction at level-1 from '!items!ry2nsFUtizxILH42' @ 668 : 1 .. '!items!ry2nsFUtizxILH42' @ 0 : 0; will stop at (end)
+2026/04/03-09:39:58.172 3d7c Recovering log #528
+2026/04/03-09:39:58.368 3d7c Delete type=0 #528
+2026/04/03-09:39:58.368 3d7c Delete type=3 #527

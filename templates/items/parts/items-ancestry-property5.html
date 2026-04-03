@@ -1,0 +1,67 @@
+<div class="item-headline headline ancestry-property-section-title">{{localize "eon.sheets.item.medfoddaEgenskaper"}}</div>
+    <div class="item-section ancestry-property-droparea" data-droparea="medfodd" style="overflow-y: auto;">
+        <div class="ancestry-property-scroll">
+            <div class="item-row headline ancestry-property-header">
+                <div class="ancestry-col-grip" aria-hidden="true"></div>
+                <div class="ancestry-col-namn">{{localize "eon.sheets.item.namn"}}</div>
+                <div class="ancestry-col-beskrivning">{{localize "eon.sheets.item.beskrivning"}}</div>
+                <div class="ancestry-col-actions" aria-hidden="true"></div>
+            </div>
+
+        {{#each item.system.egenskaper as |egenskap key|}}
+            <div class="item-row ancestry-property-row" data-drag="true" data-egenskap-list="egenskaper" data-egenskap-key="{{key}}">
+                <div class="ancestry-col-grip width-iconbox draggable"><i class="icon fa-solid fa-grip-vertical"></i></div>
+                <div class="ancestry-col-namn">{{egenskap.label}}</div>
+                <div class="ancestry-col-beskrivning">{{{egenskap.beskrivning}}}</div>
+                <div class="ancestry-col-actions pointer red item-delete" data-type="egenskaper" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
+            </div>
+        {{/each}}
+    </div>
+</div>
+
+<div class="item-headline headline ancestry-property-section-title">{{localize "eon.sheets.item.kulturellaEgenskaper"}}</div>
+    <div class="item-section ancestry-property-droparea" data-droparea="kulturell" style="overflow-y: auto;">
+        <div class="ancestry-property-scroll">
+            <div class="item-row headline ancestry-property-header">
+                <div class="ancestry-col-grip" aria-hidden="true"></div>
+                <div class="ancestry-col-namn">{{localize "eon.sheets.item.namn"}}</div>
+                <div class="ancestry-col-beskrivning">{{localize "eon.sheets.item.beskrivning"}}</div>
+                <div class="ancestry-col-actions" aria-hidden="true"></div>
+            </div>
+
+        {{#each item.system.kulturegenskaper as |egenskap key|}}
+            <div class="item-row ancestry-property-row" data-drag="true" data-egenskap-list="kulturegenskaper" data-egenskap-key="{{key}}">
+                <div class="ancestry-col-grip width-iconbox draggable"><i class="icon fa-solid fa-grip-vertical"></i></div>
+                <div class="ancestry-col-namn">{{egenskap.label}}</div>
+                <div class="ancestry-col-beskrivning">{{{egenskap.beskrivning}}}</div>
+                <div class="ancestry-col-actions pointer red item-delete" data-type="kulturegenskaper" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
+            </div>
+        {{/each}}
+    </div>
+</div>
+
+<div class="item-headline headline ancestry-property-section-title">{{localize "eon.sheets.item.valfriaEgenskaper"}}</div>
+    <div class="item-section ancestry-property-droparea" data-droparea="valfri" style="overflow-y: auto;">
+        <div class="ancestry-property-scroll">
+            <div class="item-row headline ancestry-property-header">
+                <div class="ancestry-col-grip" aria-hidden="true"></div>
+                <div class="ancestry-col-namn">{{localize "eon.sheets.item.namn"}}</div>
+                <div class="ancestry-col-beskrivning">{{localize "eon.sheets.item.beskrivning"}}</div>
+                <div class="ancestry-col-actions" aria-hidden="true"></div>
+            </div>
+
+        {{#each item.system.valfriaegenskaper as |egenskap key|}}
+            <div class="item-row ancestry-property-row" data-drag="true" data-egenskap-list="valfriaegenskaper" data-egenskap-key="{{key}}">
+                <div class="ancestry-col-grip width-iconbox draggable"><i class="icon fa-solid fa-grip-vertical"></i></div>
+                <div class="ancestry-col-namn">{{egenskap.label}}</div>
+                <div class="ancestry-col-beskrivning">{{{egenskap.beskrivning}}}</div>
+                <div class="ancestry-col-actions pointer red item-delete" data-type="valfriaegenskaper" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
+            </div>
+        {{/each}}
+    </div>
+</div>
+
+<div class="information-area information-box" style="width: auto;">
+    <p>{{localize "eon.sheets.info.laggTillEgenhetFolkslag"}}</p>
+    <p>{{localize "eon.sheets.info.laggTillEgenhetFolkslagDraKategorier"}}</p>
+</div>

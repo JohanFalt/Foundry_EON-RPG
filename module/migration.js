@@ -377,90 +377,102 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
     let partMessage = "";
     let futureMessage = "";    
 
-    if (await CompareVersion(installedVersion, '4.0.0', isDemo)) {
+    // if (await CompareVersion(installedVersion, '4.0.0', isDemo)) {
+    //     headMessage += `
+    //     <p><ul style="margin-top: 0">
+    //         <li>Stöd för Foundry v13</li>
+    //         <li>Eon 5 rollformulär</li>
+    //         <li>Tillägg till Eon IV kompendium:<br />
+    //             Utrustning<br />
+    //             Folkslag<br />
+    //             Folkslags egenskaper<br />
+    //             Språk
+    //         </li>
+    //         <li>Dra föremål mellan rollformulär</li>
+    //         <li>Väskor och behållare</li>
+    //         <li>Manuell sortering av Utrustningslistan på namn och typ.</li>
+    //         <li>Folkslag lagrar nu de egenskaper som folkslaget har samt de språk de talar. Dessa läggs till automatiskt till formuläret när Folkslaget läggs till.</li>
+    //         <li>I lite mer detalj: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/8?closed=1">v4.0</a></li>
+    //     </ul></p>     
+    //     `;
+    //     partMessage += `
+    //     <h4>Eon 5 rollformulär</h4>  
+    //     <p>Lagt till en beta-version av ett nytt Eon 5 rollformulär, finns också en världsinställning vilken version av Eon man spelar som fasställer vilken typ av Rollformulär (bl a) som är förvalt när man skapar en ny Actor.</p>
+
+    //     <h4>Dra föremål mellan rollformulär</h4>
+    //     <p>Man kan nu dra utrustning, vapen, rustningar och förvaringsutrustning mellan rollformulärer. Dessa läggs då till på det nya formuläret och tas bort från det ursprungliga. Fungerar mellan Eon 4 och Eon 5 rollformuläret.</p>
+
+    //     <h4>Väskor och behållare</h4>
+    //     <p>Man kan sätta en utrustning så den blir Förvaring, alltså en behållare att lägga annan utrustning i. Detta gör man med drag and drop. Du sätter egenskapen Förvaring på föremålet du vill ha som förvaring därefter drar den utrustning du vill förvara i den till den.</p>
+    //     `;
+    // }
+
+    // if (await CompareVersion(installedVersion, '5.0.0', isDemo)) {
+    //     headMessage += `
+    //     <p><ul style="margin-top: 0">
+    //         <li>Skapat ett Eon V kompendium</li>
+    //         <li>Tillägg till Eon V kompendium:<br />
+    //             Nästridsvapen<br />
+    //             Avståndsvapen<br />
+    //             Sköldar
+    //         </li>
+    //         <li>Skapat en intern stridsmodul för att hantera turordning i strid. Denna är i beta för närvarande.</li>
+    //     </ul></p>     
+    //     `;
+    //     partMessage += `
+    //     <h4>Eon stridsmodul</h4>  
+    //     <p>Denna modulen hanterar turordningen i strid. Den är för närvarande i beta och kan användas som ett alternativ till Foundrys inbyggda stridsmodul.</p>
+    //     `;
+    // }
+
+    // if (await CompareVersion(installedVersion, '5.1.0', isDemo)) {
+    //      partMessage += `
+    //      <p>
+    //          <p>Uppdaterade Eon 5 kompendiumet och lade till Utrustning.</p>
+    //          <p>Uppdaterat utseendet på Stridshanteraren, ikonknappar och mer kompakt utseende.</p>
+    //          <p>Rättade några föremål i Eon 4 kompendiumet.</p>             
+    //          <p>Fixat några darkmode fel.</p>
+    //      </p>           
+    //      `;
+    // }
+
+    if (await CompareVersion(installedVersion, '5.2.0', isDemo)) {
         headMessage += `
         <p><ul style="margin-top: 0">
-            <li>Stöd för Foundry v13</li>
-            <li>Eon 5 rollformulär</li>
-            <li>Tillägg till Eon IV kompendium:<br />
-                Utrustning<br />
-                Folkslag<br />
-                Folkslags egenskaper<br />
-                Språk
-            </li>
-            <li>Dra föremål mellan rollformulär</li>
-            <li>Väskor och behållare</li>
-            <li>Manuell sortering av Utrustningslistan på namn och typ.</li>
-            <li>Folkslag lagrar nu de egenskaper som folkslaget har samt de språk de talar. Dessa läggs till automatiskt till formuläret när Folkslaget läggs till.</li>
-            <li>I lite mer detalj: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/8?closed=1">v4.0</a></li>
-        </ul></p>     
-        `;
-        partMessage += `
-        <h4>Eon 5 rollformulär</h4>  
-        <p>Lagt till en beta-version av ett nytt Eon 5 rollformulär, finns också en världsinställning vilken version av Eon man spelar som fasställer vilken typ av Rollformulär (bl a) som är förvalt när man skapar en ny Actor.</p>
-
-        <h4>Dra föremål mellan rollformulär</h4>
-        <p>Man kan nu dra utrustning, vapen, rustningar och förvaringsutrustning mellan rollformulärer. Dessa läggs då till på det nya formuläret och tas bort från det ursprungliga. Fungerar mellan Eon 4 och Eon 5 rollformuläret.</p>
-
-        <h4>Väskor och behållare</h4>
-        <p>Man kan sätta en utrustning så den blir Förvaring, alltså en behållare att lägga annan utrustning i. Detta gör man med drag and drop. Du sätter egenskapen Förvaring på föremålet du vill ha som förvaring därefter drar den utrustning du vill förvara i den till den.</p>
-        `;
-    }
-
-    if (await CompareVersion(installedVersion, '5.0.0', isDemo)) {
-        headMessage += `
-        <p><ul style="margin-top: 0">
-            <li>Skapat ett Eon V kompendium</li>
+            <li>Översättning till engelska</li
+            <li>Lagt till Hjälpformuläret från Eon 5 vid skapande av rollperson</li>
             <li>Tillägg till Eon V kompendium:<br />
-                Nästridsvapen<br />
-                Avståndsvapen<br />
-                Sköldar
+                Folkslag<br />
+                Folkslagsegenskaper<br />
+                Språk<br />
+                Utrustningspaket under Utrustning/paket
             </li>
-            <li>Skapat en intern stridsmodul för att hantera turordning i strid. Denna är i beta för närvarande.</li>
+            
         </ul></p>     
         `;
         partMessage += `
-        <h4>Eon stridsmodul</h4>  
-        <p>Denna modulen hanterar turordningen i strid. Den är för närvarande i beta och kan användas som ett alternativ till Foundrys inbyggda stridsmodul.</p>
+        <h4>Eon 5 Hjälpformulär</h4>  
+        <p>Denna modulen startar upp när ett Eon 5 rollformulär skapas.</p>
+        <h4>Engelsk översättning</h4>  
+        <p>Systemet finns nu på engelska, vilket språk (svenska/engelska) man vill använda bestämmer respektive användare i Foundry inställningarna.</p>
         `;
-    }
+    }    
 
-    if (await CompareVersion(installedVersion, '5.1.3', isDemo)) {
-         partMessage += `
-         <p>
-            <p>Eon 5 - Övriga färdigheter saknade valet förmåga.</p>
-            <p>Eon 5 - Färdigheter saknade talang, inkompetent och blockering.</p>
-            <p>Översättningsfel i Bakgrundsfliken.</p>
-         </p>           
-         `;
-    }
-
-    if (await CompareVersion(installedVersion, '5.1.2', isDemo)) {
-         partMessage += `
-         <p>
-             <p>Visualiserar nu folkslagsegenskaper i Bakgrundsfliken i Eon 5.</p>
-         </p>           
-         `;
-    }
+    // if (await CompareVersion(installedVersion, '5.1.2', isDemo)) {
+    //      partMessage += `
+    //      <p>
+    //          <p>Visualiserar nu folkslagsegenskaper i Bakgrundsfliken i Eon 5.</p>
+    //      </p>           
+    //      `;
+    // }
 	
-	if (await CompareVersion(installedVersion, '5.1.1', isDemo)) {
-         partMessage += `
-         <p>
-             <p>Ett fel hittades där man inte kunde hantera rustningar korrekt.</p>
-         </p>           
-         `;
-    }
-
-    if (await CompareVersion(installedVersion, '5.1.0', isDemo)) {
-         partMessage += `
-         <p>
-             <p>Uppdaterade Eon 5 kompendiumet och lade till Utrustning.</p>
-             <p>Uppdaterat utseendet på Stridshanteraren, ikonknappar och mer kompakt utseende.</p>
-             <p>Rättade några föremål i Eon 4 kompendiumet.</p>             
-             <p>Fixat några darkmode fel.</p>
-         </p>           
-         `;
-    }
+    // if (await CompareVersion(installedVersion, '5.1.1', isDemo)) {
+    //      partMessage += `
+    //      <p>
+    //          <p>Ett fel hittades där man inte kunde hantera rustningar korrekt.</p>
+    //      </p>           
+    //      `;
+    // }    
 
     // if (await CompareVersion(installedVersion, '4.0.5', isDemo)) {
     //     partMessage += `

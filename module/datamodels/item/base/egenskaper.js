@@ -1,5 +1,4 @@
 const fields = foundry.data.fields;
-const valueInteger = {required: true, nullable: false, integer: true, initial: 0, min: 0};
 
 const egenskaper = () => [
     new fields.SchemaField({

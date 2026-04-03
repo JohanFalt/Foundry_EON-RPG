@@ -70,3 +70,107 @@
   max-height: 230px;
 }
 
+/*
+ * Foundry 13+ använder <prose-mirror> för {{editor}} — kärnans CSS sätter ofta annan bakgrund än input/select.
+ * Samma färg som .eon-theme-light.EON input/select (eon-main); !important mot Foundry default.
+ */
+.eon-theme-light.EON .editor-box prose-mirror,
+.eon-theme-light.EON .small-editor-box prose-mirror,
+.eon-theme-light.EON .tall-editor-box prose-mirror {
+  background-color: var(--eon-back-color-inputs) !important;
+}
+
+.eon-theme-dark.EON .editor-box prose-mirror,
+.eon-theme-dark.EON .small-editor-box prose-mirror,
+.eon-theme-dark.EON .tall-editor-box prose-mirror {
+  background-color: var(--eon-back-color-inputs-dark) !important;
+}
+
+.eon-theme-light.EON .editor-box prose-mirror .editor,
+.eon-theme-light.EON .editor-box prose-mirror .editor.prosemirror,
+.eon-theme-light.EON .small-editor-box prose-mirror .editor.prosemirror,
+.eon-theme-light.EON .tall-editor-box prose-mirror .editor.prosemirror {
+  border-radius: 3px;
+  border: 1px solid var(--eon-border-color);
+  color: var(--eon-text-normal-color);
+  background-color: var(--eon-back-color-inputs) !important;
+}
+
+.eon-theme-dark.EON .editor-box prose-mirror .editor,
+.eon-theme-dark.EON .editor-box prose-mirror .editor.prosemirror,
+.eon-theme-dark.EON .small-editor-box prose-mirror .editor.prosemirror,
+.eon-theme-dark.EON .tall-editor-box prose-mirror .editor.prosemirror {
+  border-radius: 3px;
+  border: 1px solid var(--eon-border-color-dark);
+  color: var(--eon-text-normal-color-dark);
+  background-color: var(--eon-back-color-inputs-dark) !important;
+}
+
+.eon-theme-light.EON .editor-box prose-mirror .editor-content,
+.eon-theme-light.EON .editor-box prose-mirror .ProseMirror,
+.eon-theme-light.EON .small-editor-box prose-mirror .editor-content,
+.eon-theme-light.EON .small-editor-box prose-mirror .ProseMirror,
+.eon-theme-light.EON .tall-editor-box prose-mirror .editor-content,
+.eon-theme-light.EON .tall-editor-box prose-mirror .ProseMirror {
+  background-color: var(--eon-back-color-inputs) !important;
+}
+
+.eon-theme-dark.EON .editor-box prose-mirror .editor-content,
+.eon-theme-dark.EON .editor-box prose-mirror .ProseMirror,
+.eon-theme-dark.EON .small-editor-box prose-mirror .editor-content,
+.eon-theme-dark.EON .small-editor-box prose-mirror .ProseMirror,
+.eon-theme-dark.EON .tall-editor-box prose-mirror .editor-content,
+.eon-theme-dark.EON .tall-editor-box prose-mirror .ProseMirror {
+  background-color: var(--eon-back-color-inputs-dark) !important;
+}
+
+.eon-theme-light.EON .editor-box prose-mirror .editor {
+  min-height: 200px;
+  max-height: 210px;
+}
+
+.eon-theme-light.EON .editor-box prose-mirror .editor .editor-content,
+.eon-theme-light.EON .editor-box prose-mirror .editor .ProseMirror {
+  min-height: 200px;
+  max-height: 210px;
+}
+
+.eon-theme-light.EON .small-editor-box prose-mirror .editor {
+  min-height: 150px;
+  max-height: 160px;
+}
+
+.eon-theme-light.EON .small-editor-box prose-mirror .editor .editor-content,
+.eon-theme-light.EON .small-editor-box prose-mirror .editor .ProseMirror {
+  min-height: 150px;
+  max-height: 160px;
+}
+
+.eon-theme-light.EON .tall-editor-box prose-mirror .editor {
+  min-height: 220px;
+  max-height: 230px;
+}
+
+.eon-theme-light.EON .tall-editor-box prose-mirror .editor .editor-content,
+.eon-theme-light.EON .tall-editor-box prose-mirror .editor .ProseMirror {
+  min-height: 220px;
+  max-height: 230px;
+}
+
+.eon-theme-dark.EON .editor-box prose-mirror .editor,
+.eon-theme-dark.EON .small-editor-box prose-mirror .editor,
+.eon-theme-dark.EON .tall-editor-box prose-mirror .editor {
+  min-height: 200px;
+  max-height: 210px;
+}
+
+.eon-theme-dark.EON .small-editor-box prose-mirror .editor {
+  min-height: 150px;
+  max-height: 160px;
+}
+
+.eon-theme-dark.EON .tall-editor-box prose-mirror .editor {
+  min-height: 220px;
+  max-height: 230px;
+}
+

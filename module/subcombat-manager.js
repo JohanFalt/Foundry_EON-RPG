@@ -33,18 +33,18 @@ export class SubcombatManager {
         const flags = this._flags(combatant);
         const actorPhase = flags.phase ?? "";
         if (actorPhase !== "initiative_close") {
-            ui.notifications.warn("Delstrid kan bara bekräftas i närstridsfas.");
+            ui.notifications.warn(game.i18n.localize("eon.messages.delstridBaraNarstrid"));
             return null;
         }
 
         if (combatant.defeated) {
-            ui.notifications.warn("Besegrad/ute kan inte bekräfta delstrid.");
+            ui.notifications.warn(game.i18n.localize("eon.messages.besegradKanInteBekrafta"));
             return null;
         }
 
         const targetIds = [...new Set((flags.pendingSubcombatTargets ?? []).filter(Boolean))];
         if (!targetIds.length) {
-            ui.notifications.warn("Välj minst en motståndare för delstrid.");
+            ui.notifications.warn(game.i18n.localize("eon.messages.valjMinstEnMotstandare"));
             return null;
         }
 
@@ -72,7 +72,7 @@ export class SubcombatManager {
 
         const totalMembers = members.size;
         if (totalMembers > 5) {
-            ui.notifications.warn("Delstrid tillåter max 4 mot 1 (max 5 deltagare).");
+            ui.notifications.warn(game.i18n.localize("eon.messages.delstridMax4mot1"));
             return null;
         }
 

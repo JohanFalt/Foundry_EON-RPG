@@ -36,7 +36,7 @@
 
     --eon-line-height-default: 23px;
     --eon-row-height-default: 25px;
-    --eon-line-height-floattext: 25px;
+    --eon-line-height-floattext: 30px;
 
     --eon-sheet-background-color: url('../assets/img/graphics/background.jpg');
     --eon-sheet-background-color-dark: black;
@@ -106,7 +106,8 @@
 }
 
 .EON.itemsheet.vapen:not(.minimized),
-.EON.itemsheet.folkslag:not(.minimized) {
+.EON.itemsheet.folkslag:not(.minimized),
+.EON.itemsheet.folkslag5:not(.minimized) {
     min-width: 700px;
     max-width: 700px;
     width: 700px;
@@ -219,6 +220,20 @@
 .EON input[type="number"],
 .EON select {
     width: 98%;
+}
+
+.EON span.resource-value.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+.eon-theme-light.EON .resource-box .resource-value.disabled {
+    background: var(--eon-back-readonly-color-inputs);
+    background-color: var(--eon-back-readonly-color-inputs);
+}
+.eon-theme-dark.EON .resource-box .resource-value.disabled {
+    background: var(--eon-back-readonly-color-inputs-dark);
+    background-color: var(--eon-back-readonly-color-inputs-dark);
 }
 
 .eon-theme-light.EON span.resource-value,
@@ -779,6 +794,187 @@
     font-size: var(--eon-font-large18);
 }
 
+/* Folkslag-item: flikar längst ner i dialogen (flex), scroll bara i innehållsdelen */
+.EON.itemsheet .window-content:has(.ancestry-folkslag-sheet) {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+    flex: 1 1 auto;
+    height: 100%;
+}
+
+.EON.itemsheet .window-content:has(.ancestry-folkslag-sheet) form {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.EON.itemsheet .sheet-item.ancestry-folkslag-sheet {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.EON.itemsheet .ancestry-folkslag-sheet .sheet-header.item-top {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 12px;
+}
+
+.EON.itemsheet .item-body.ancestry-item-footer {
+    flex: 0 0 auto;
+    position: relative;
+    width: 100%;
+    margin-bottom: 5px;
+    margin-top: 0;
+    z-index: 2;
+    padding-top: 8px;
+    box-sizing: border-box;
+    box-shadow: 0 -6px 12px rgba(0, 0, 0, 0.12);
+}
+
+.eon-theme-light.EON.itemsheet .item-body.ancestry-item-footer {
+    background-color: var(--eon-information-background);
+}
+
+.eon-theme-dark.EON.itemsheet .item-body.ancestry-item-footer {
+    background-color: var(--eon-information-background-dark);
+}
+
+.eon-theme-light.EON.itemsheet .item-body.ancestry-item-footer .headlineTabs {
+    background-color: var(--eon-information-background);
+}
+
+.eon-theme-dark.EON.itemsheet .item-body.ancestry-item-footer .headlineTabs {
+    background-color: var(--eon-information-background-dark);
+}
+
+/* Folkslag Eon 5: tabellrader namn / beskrivning i linje */
+.EON.itemsheet .ancestry-property-scroll {
+    max-height: 300px;
+}
+
+.EON.itemsheet .ancestry-property-section-title {
+    width: auto;
+}
+
+.EON.itemsheet .ancestry-property-header,
+.EON.itemsheet .ancestry-property-row {
+    display: grid;
+    grid-template-columns: 28px minmax(7rem, 9.375rem) 1fr 2rem;
+    column-gap: 0.5rem;
+    align-items: start;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.EON.itemsheet .ancestry-property-header {
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.EON.itemsheet .ancestry-property-row {
+    margin-bottom: 4px;
+}
+
+.EON.itemsheet .ancestry-col-grip {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 2px;
+}
+
+.EON.itemsheet .ancestry-col-namn {
+    line-height: var(--eon-line-height-default);
+    word-break: break-word;
+}
+
+.EON.itemsheet .ancestry-col-beskrivning {
+    min-width: 0;
+    line-height: var(--eon-line-height-default);
+}
+
+/* Rich text från kompendium: första blocket ska inte hamna under namn-raden */
+.EON.itemsheet .ancestry-col-beskrivning > :first-child {
+    margin-top: 0;
+}
+
+.EON.itemsheet .ancestry-col-beskrivning p {
+    margin: 0 0 0.35em 0;
+}
+
+.EON.itemsheet .ancestry-col-beskrivning p:last-child {
+    margin-bottom: 0;
+}
+
+.EON.itemsheet .ancestry-col-actions {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 2px;
+}
+
+.EON.itemsheet .width-iconbox {
+    width: 28px;
+    min-width: 28px;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+/* Folkslag Eon 5: värde-flik layout */
+.EON.itemsheet .ancestry-data5-root {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px;
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+}
+
+.EON.itemsheet .ancestry-data5-main {
+    flex: 1 1 280px;
+    min-width: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.EON.itemsheet .ancestry-data5-sprak-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.EON.itemsheet .ancestry-data5-sprak-namn {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 220px;
+    line-height: var(--eon-line-height-default);
+}
+
+.EON.itemsheet .ancestry-data5-sprak-actions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
 /* Rutor / cirklar */
 
 .EON .locked .resource-circle {
@@ -943,7 +1139,7 @@
 
 .EON.rollperson input.text-value {   
     text-align: left;
-    padding: 12px 5px;
+    /* padding: 12px 5px; */
     box-sizing: border-box; 
 }
 
@@ -961,7 +1157,8 @@
     width: 75%;
     position: relative;
     left: 2px;
-    padding: 5px;
+    /* padding: 5px; */
+    padding-left: 0px;
 }
 
 .EON.itemsheet .dual-box {   
@@ -1019,7 +1216,7 @@ input.skill-value {
 }
 
 .EON .bio {
-    margin-bottom: 3px;
+    margin-bottom: 8px;
 }
 
 .EON .skill-headline.headline {
@@ -1131,7 +1328,7 @@ input.skill-value {
 
 .EON.itemsheet input.text-value {
     width: 75%;
-    padding: 12px 5px;
+    /* padding: 12px 5px; */
     box-sizing: border-box;
 }
 
@@ -1144,6 +1341,10 @@ input.skill-value {
     line-height: 28px;
     width: 150px;
     height: 30px;
+}
+
+.EON.itemsheet .item-headline.ancestry-property-section-title {
+    width: 400px;
 }
 
 .EON.itemsheet .item-property-area {
@@ -1228,16 +1429,16 @@ input.skill-value {
     pointer-events: none;
     font-family: var(--eon-main-headline-norm);
     font-size: var(--eon-box-headline-size);
-    top: -1px;
-    left: 5px;
+    top: -8px;
+    left: 8px;
     transition: all 0.2s ease;
     opacity: 1;
 }
-.floating-label-group .floating-label.skill-label {
-    top: -8px;
-}
 .floating-label-group .floating-label.text-label {
     top: -7px;
+}
+.EON .item-property-area.floating-label-group .floating-label {
+    top: 0px;
 }
 .floating-label-group .floating-label.ritual-label {
     top: 0px;
@@ -1261,9 +1462,6 @@ input.skill-value {
   padding-left: 7px;
   padding-top: 6px;
   height: var(--eon-line-height-floattext);
-}
-.floating-label-group input.skill-label {
-    height: var(--eon-line-height-default);
 }
 
 /* Dialogs */

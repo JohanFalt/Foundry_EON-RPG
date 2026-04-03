@@ -14,73 +14,73 @@
 </div>
 
 <div class="pullLeft" style="min-width: 270px;">
-    <div class="item-property-area   floating-label-group">
+    <div class="item-property-area floating-label-group">
         <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
-        <span class="floating-label">Namn</span>
+        <span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
     </div>
     
-    <div class="item-property-area   floating-label-group">
+    <div class="item-property-area floating-label-group">
         <input class="attribute-value editable" name="system.langd" type="text" value="{{item.system.langd}}" data-dtype="Number" />
-        <span class="floating-label">Längd (cm)</span>
+        <span class="floating-label">{{localize "eon.sheets.item.langdCm"}}</span>
     </div>
 
-    <div class="item-property-area   floating-label-group">
+    <div class="item-property-area floating-label-group">
         <input class="attribute-value editable" name="system.vikt" type="text" value="{{item.system.vikt}}" data-dtype="Number" />
-        <span class="floating-label">Vikt (kg)</span>
+        <span class="floating-label">{{localize "eon.sheets.item.viktKg"}}</span>
     </div>
 
-    <div class="item-property-area   floating-label-group ">
+    <div class="item-property-area floating-label-group ">
         <input class="attribute-value editable" name="system.pris" type="text" value="{{item.system.pris}}" data-dtype="Number" />
-        <span class="floating-label">Pris (silver)</span>
+        <span class="floating-label">{{localize "eon.sheets.item.prisSilver"}}</span>
     </div>
 
     {{#if this.showTraffa}} 
         <div class="item-row">
-            <div class="headline-checkbox headline">Träffa</div>
+            <div class="headline-checkbox headline">{{localize "eon.sheets.actor.traffa"}}</div>
             <div class="dice-value   tic pointer" data-property="traffa">{{getDiceValue item.system.traffa}}</div>
         </div>
     {{/if}}
     
-    <div class="item-property-area   floating-label-group">
+    <div class="item-property-area floating-label-group">
         <select class="text-value" name="system.rackvidd">
-            <option value="">- Välj -</option>
+            <option value="">{{localize "eon.sheets.item.valjOption"}}</option>
             {{#select item.system.rackvidd}}
                 {{#each EON.CONFIG.vapenavstand as |vapenavstand key|}}
-                    <option value="{{key}}">{{vapenavstand.namn}}</option>
+                    <option value="{{key}}">{{localize vapenavstand.namn}}</option>
                 {{/each}}
             {{/select}}
         </select>
-        <span class="floating-label">Räckvidd</span>
+        <span class="floating-label">{{localize "eon.sheets.actor.rackvidd"}}</span>
     </div>    
 
     <div class="item-property-area" style="display: flex; flex-direction: row;">
 
         <div class="floating-label-group ">
             <div class="dice-value   tic pointer" data-property="skada" style="margin-left: 2px;">{{getDiceValue item.system.skada}}</div>
-            <span class="floating-label">Skada</span>
+            <span class="floating-label">{{localize "eon.sheets.actor.skada"}}</span>
         </div>
 
-        <div class="dual-box   floating-label-group">
+        <div class="dual-box floating-label-group">
             <select class="text-value" name="system.skadetyp">
-                <option value="">- Välj -</option>
+                <option value="">{{localize "eon.sheets.item.valjOption"}}</option>
                 {{#select item.system.skadetyp}}
                     {{#each EON.CONFIG.vapenskador as |skadetyp key|}}
-                        <option value="{{key}}">{{skadetyp}}</option>
+                        <option value="{{key}}">{{localize skadetyp}}</option>
                     {{/each}}
                 {{/select}}
             </select>
-            <span class="floating-label">Skadetyp</span>
+            <span class="floating-label">{{localize "eon.sheets.item.skadetyp"}}</span>
         </div>
     </div>                    
 
     <div class="item-property-area clear">
-        <div class="pullLeft" style="width: 100px;">1H</div>
+        <div class="pullLeft" style="width: 100px;">{{localize "eon.sheets.item.enHand"}}</div>
         <div class="pullLeft"><input class="item-active" name="system.enhand.aktiv" type="checkbox" data-property="enhand" {{isChecked item.system.enhand.aktiv}} data-dtype="String" /></div>
         <div class="pullLeft dice-value   tic pointer" data-property="enhand">{{getDiceValue item.system.enhand}}</div>
     </div>
 
     <div class="item-property-area clear">
-        <div class="pullLeft" style="width: 100px;">2H</div>
+        <div class="pullLeft" style="width: 100px;">{{localize "eon.sheets.item.tvaHand"}}</div>
         <div class="pullLeft"><input class="item-active" name="system.tvahand.aktiv" type="checkbox" data-property="tvahand" {{isChecked item.system.tvahand.aktiv}} data-dtype="String" /></div>
         <div class="pullLeft dice-value   tic pointer" data-property="tvahand">{{getDiceValue item.system.tvahand}}</div>
     </div>  

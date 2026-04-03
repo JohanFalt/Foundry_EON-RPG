@@ -9,26 +9,35 @@
 				</div>
 
 				<div class="item-column" style="min-width: 270px;">
-					<div class="item-property-area   floating-label-group">
+					<div class="item-property-area floating-label-group">
 						<input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
-						<span class="floating-label">Namn</span>
+						<span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
 					</div>
 
-					<div class="item-property-area   floating-label-group">
+					<div class="item-property-area floating-label-group">
 						<input class="text-value editable" type="text" name="system.referens" value="{{item.system.referens}}" data-dtype="String" autocomplete="off" autofocus required />
-						<span class="floating-label">Referens</span>
+						<span class="floating-label">{{localize "eon.sheets.item.referens"}}</span>
 					</div>
 
 					<div class="item-row">
-						<div class="headline-checkbox">Talar med brytning</div>
+						<div class="headline-checkbox">{{localize "eon.sheets.item.endastTalsprak"}}</div>
+						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="endasttal" {{isChecked item.system.endasttal}} data-dtype="Boolean" /></div>
+					</div>
+					<div class="item-row">
+						<div class="headline-checkbox">{{localize "eon.sheets.item.endastSkriftsprak"}}</div>
+						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="endastskrift" {{isChecked item.system.endastskrift}} data-dtype="Boolean" /></div>
+					</div>
+
+					<div class="item-row">
+						<div class="headline-checkbox">{{localize "eon.sheets.actor.talarMedBrytning"}}</div>
 						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="talabrytning" {{isChecked item.system.talabrytning}} data-dtype="Boolean" /></div>
 					</div>
 					<div class="item-row">
-						<div class="headline-checkbox">Talar flytande</div>
+						<div class="headline-checkbox">{{localize "eon.sheets.actor.talarFlytande"}}</div>
 						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="talaflytande" {{isChecked item.system.talaflytande}} data-dtype="Boolean" /></div>
 					</div>   
 					<div class="item-row">
-						<div class="headline-checkbox">Kan läsa och skriva</div>
+						<div class="headline-checkbox">{{localize "eon.sheets.actor.kanLasaochSkriva"}}</div>
 						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="lasaskriva" {{isChecked item.system.lasaskriva}} data-dtype="Boolean" /></div>
 					</div>
      
@@ -40,7 +49,7 @@
 							<div class="pointer red item-delete large-icon" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
 						{{/if}}
 					{{/if}}
-					<div class="information-area top-sidetext">SPRÅK</div>
+					<div class="information-area top-sidetext">{{localize "eon.sheets.item.sprakSheetLabel"}}</div>
 				</div>
 			</div>
 		</header>

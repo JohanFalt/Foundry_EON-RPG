@@ -28,13 +28,13 @@
             {{#each data.system.settings}} 
                 {{> settingPart}} 
             {{else}}
-                <p>None</p>
+                <p>{{localize "eon.dialogs.ingen"}}</p>
             {{/each}}
         </div>
     </section>
 
     <footer class="sheet-footer flexrow">
-        <button type="submit" name="submit"><i class="far fa-save"></i>Spara</button>
+        <button type="submit" name="submit"><i class="far fa-save"></i>{{localize "eon.dialogs.spara"}}</button>
         <!-- <button type="button" name="reset"><i class="fas fa-undo"></i>{{localize "wod.dialog.reset"}}</button> -->
     </footer>
 </form>

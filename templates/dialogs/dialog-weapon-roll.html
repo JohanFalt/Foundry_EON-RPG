@@ -45,7 +45,7 @@
                             <div>Färdighetstärningar -1T6</div>
                             <div>Blir alltid anfallare, oavsett utfall</div>
                         {{else if (eq object.attacktype 'normal')}}
-                            <div>Lyckas försvara för att bli anfallare</div>
+                            <div>{{localize "eon.dialogs.lyckasForsvara"}}</div>
                         {{/if}}
                     </div>
                 {{/if}}
@@ -53,51 +53,51 @@
 
             <div class="dialog-area centerText">
                 <div class="clear">
-                    <button class="three-button pullLeft mode {{#if object.isattack}}active{{/if}}" data-type="attack">Anfall</button>
-                    <button class="three-button pullLeft mode {{#if object.isdamage}}active{{/if}}" data-type="damage">Skada</button>
+                    <button class="three-button pullLeft mode {{#if object.isattack}}active{{/if}}" data-type="attack">{{localize "eon.dialogs.anfall"}}</button>
+                    <button class="three-button pullLeft mode {{#if object.isdamage}}active{{/if}}" data-type="damage">{{localize "eon.dialogs.skada"}}</button>
                     {{#unless object.vapen.isRangedWeapon}}
-                        <button class="three-button pullLeft mode {{#if object.isdefence}}active{{/if}}" data-type="defence">Försvar</button>
+                        <button class="three-button pullLeft mode {{#if object.isdefence}}active{{/if}}" data-type="defence">{{localize "eon.dialogs.forsvar"}}</button>
                     {{/unless}}
                 </div>
 
                 <div id="attack_area" class="clear" style="height: 40px;">
                     {{#if object.isdamage}}
                         {{#if object.vapen.system.hugg.aktiv}}
-                            <button class="attacktype three-button pullLeft {{#if object.usehugg}}active{{/if}}" data-type="hugg">Hugg</button>
+                            <button class="attacktype three-button pullLeft {{#if object.usehugg}}active{{/if}}" data-type="hugg">{{localize "eon.config.vapenskador.hugg"}}</button>
                         {{/if}}
                         {{#if object.vapen.system.kross.aktiv}}
-                            <button class="attacktype three-button pullLeft {{#if object.usekross}}active{{/if}}" data-type="kross">Kross</button>
+                            <button class="attacktype three-button pullLeft {{#if object.usekross}}active{{/if}}" data-type="kross">{{localize "eon.config.vapenskador.kross"}}</button>
                         {{/if}}
                         {{#if object.vapen.system.stick.aktiv}}
-                            <button class="attacktype three-button pullLeft {{#if object.usestick}}active{{/if}}" data-type="stick">Stick</button>
+                            <button class="attacktype three-button pullLeft {{#if object.usestick}}active{{/if}}" data-type="stick">{{localize "eon.config.vapenskador.stick"}}</button>
                         {{/if}}
                     {{else}}  
                         {{#if object.isattack}}
                             {{#unless object.vapen.isRangedWeapon}}
                                 <button class="attacktype three-button pullLeft {{#if (or (not object.attacktype) (eq object.attacktype 'normal'))}}active{{/if}}" 
                                         data-type="normal" 
-                                        title="standard">Standard</button>
+                                        title="{{localize 'eon.dialogs.weaponRollStandardTitle'}}">{{localize 'eon.dialogs.weaponRollStandard'}}</button>
                                 <button class="attacktype three-button pullLeft {{#if (eq object.attacktype 'tungt')}}active{{/if}}" 
                                         data-type="tungt" 
-                                        title="Utmattning +2&#10;Skada +2T6&#10;Färdighetstärningar -1T6">Kraftfult</button>
+                                        title="{{localize 'eon.dialogs.weaponRollKraftfulltTitle'}}">{{localize 'eon.dialogs.weaponRollKraftfullt'}}</button>
                                 <button class="attacktype three-button pullLeft {{#if (eq object.attacktype 'snabbt')}}active{{/if}}" 
                                         data-type="snabbt" 
-                                        title="Utmattning +1&#10;Skada -1T6&#10;Färdighetstärningar +1T6">Snabbt</button>
+                                        title="{{localize 'eon.dialogs.weaponRollSnabbtTitle'}}">{{localize 'eon.dialogs.weaponRollSnabbt'}}</button>
                                 <button class="attacktype three-button pullLeft {{#if (eq object.attacktype 'grupp')}}active{{/if}}" 
                                         data-type="grupp" 
-                                        title="Utmattning +1&#10;Färdighetstärningar -1T6">Gruppanfall</button>
+                                        title="{{localize 'eon.dialogs.weaponRollGruppanfallTitle'}}">{{localize 'eon.dialogs.weaponRollGruppanfall'}}</button>
                             {{/unless}}
                         {{/if}}
                         {{#if object.isdefence}}
                             <button class="attacktype three-button pullLeft {{#if (or (not object.attacktype) (eq object.attacktype 'normal'))}}active{{/if}}" 
                                     data-type="normal" 
-                                    title="Utmattning +0&#10;Färdighetstärningar +0">Standard</button>
+                                    title="{{localize 'eon.dialogs.weaponRollStandardTitle'}}">{{localize 'eon.dialogs.weaponRollStandard'}}</button>
                             <button class="attacktype three-button pullLeft {{#if (eq object.attacktype 'defensivt')}}active{{/if}}" 
                                     data-type="defensivt" 
-                                    title="Utmattning +1&#10;Färdighetstärningar +1T6">Defensivt</button>
+                                    title="{{localize 'eon.dialogs.weaponRollDefensivtTitle'}}">{{localize 'eon.dialogs.weaponRollDefensivt'}}</button>
                             <button class="attacktype three-button pullLeft {{#if (eq object.attacktype 'kontring')}}active{{/if}}" 
                                     data-type="kontring" 
-                                    title="Utmattning +1&#10;Färdighetstärningar -1T6">Kontring</button>
+                                    title="{{localize 'eon.dialogs.weaponRollKontringTitle'}}">{{localize 'eon.dialogs.weaponRollKontring'}}</button>
                         {{/if}}
                     {{/if}}
                 </div>
@@ -109,8 +109,8 @@
 
                 <div>
                     <div class="clear centerText">
-                        <div class="pullLeft two-column headline">Bonus</div>
-                        <div class="pullLeft two-column headline">Avdrag</div>
+                        <div class="pullLeft two-column headline">{{localize "eon.dialogs.bonus"}}</div>
+                        <div class="pullLeft two-column headline">{{localize "eon.dialogs.avdrag"}}</div>
                     </div>            
                     <div class="dice-row">
                         <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="add" data-value="1T6">+ ob1T6</button>
@@ -142,8 +142,8 @@
 
                     <div style="margin-left: 205px;">
                         <div class="floating-label-group">
-                            <input id="difficulty" class="attribute-value skill-label" type="text" value="{{object.svarighet}}" disabled readonly />
-                            <span class="floating-label">Svårdighet</span>
+                            <input id="difficulty" class="attribute-value" type="text" value="{{object.svarighet}}" disabled readonly />
+                            <span class="floating-label">{{localize "eon.sheets.actor.svarighet"}}</span>
                         </div>
                     </div>
 
@@ -152,7 +152,7 @@
                             <button class="dialog-event-button eventbutton" title="{{this}}"style="width: 7%;" data-source="difficulty" data-value="{{this}}"><span>{{this}}</span></button>
                         {{/numFromLoop}}
                         <button class="dialog-event-button eventbutton" title="0"style="width: 7%;" data-source="difficulty" data-value="0"><span>0</span></button>
-                        <button class="dialog-event-button eventbutton" title="Rensa" style="width: 7%;" data-source="difficulty" data-value="clear"><span>...</span></button>
+                        <button class="dialog-event-button eventbutton" title="{{localize 'eon.dialogs.rensa'}}" style="width: 7%;" data-source="difficulty" data-value="clear"><span>...</span></button>
                     </div>
 
                 </div>
@@ -162,8 +162,8 @@
 
     <div>
         <div class="dice-row">
-            <button id="actionbutton" class="dialog-button four-column actionbutton">Rulla</button>
-            <button id="closeButton" class="dialog-button four-column closebutton">Stäng</button>
+            <button id="actionbutton" class="dialog-button four-column actionbutton">{{localize "eon.dialogs.rulla"}}</button>
+            <button id="closeButton" class="dialog-button four-column closebutton">{{localize "eon.dialogs.stang"}}</button>
         </div>        
     </div>
 

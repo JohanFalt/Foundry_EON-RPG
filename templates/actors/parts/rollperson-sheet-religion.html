@@ -1,6 +1,6 @@
 <div class="item-box three-column">
 
-    <div class="skill-headline headline">Mystikfärdigheter</div>
+    <div class="skill-headline headline">{{localize "eon.config.fardighetgrupper.mystik"}}</div>
 
     {{#each (getActorSkillGroup actor.system.listdata.fardigheter "mystik") as |fardighet key|}}
         <div class="item-listrow skill clear">
@@ -12,7 +12,7 @@
                     <div style="width: 8px; line-height: 18px;"><i class="fa-solid fa-sort-down red"></i></div>
                 {{/if}}
             </div>
-            <div class="vrollable pullLeft caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div> 
+            <div class="vrollable pullLeft caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{localize fardighet.name}}</div> 
                     
             <div class="pullLeft dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
             {{{getAttributeShortName fardighet.system.attribut}}}
@@ -23,29 +23,29 @@
 
 <div class="item-box">
 
-    <div class="large-headline">Mysterie</div>
+    <div class="large-headline">{{localize "eon.config.slag.mysterium"}}</div>
 
     <div class="headline headline-background item-row item-listrow">
         <div class="item-listbox weapon-icon">
-            <a class="item-create" title="Lägg till mysterie" data-type="mysterie">
+            <a class="item-create" title="{{localize 'eon.sheets.actor.laggTillMysterie'}}" data-type="mysterie">
                 <i class="fa-solid fa-square-plus green"></i>
             </a>
         </div>
-        <div class="item-listbox" style="width: 220px;">Namn</div>
-        <div class="item-listbox centerText" style="width: 100px;">Magnitud</div>
-        <div class="item-listbox" style="width: 90px;">Omfång</div>
-        <div class="item-listbox" style="width: 90px;">Räckvidd</div>
-        <div class="item-listbox" style="width: 100px;">Varaktighet</div>
-        <div class="item-listbox">Moment</div>
+        <div class="item-listbox" style="width: 220px;">{{localize "eon.sheets.item.namn"}}</div>
+        <div class="item-listbox centerText" style="width: 100px;">{{localize "eon.sheets.item.magnitud"}}</div>
+        <div class="item-listbox" style="width: 90px;">{{localize "eon.sheets.item.omfang"}}</div>
+        <div class="item-listbox" style="width: 90px;">{{localize "eon.sheets.actor.rackvidd"}}</div>
+        <div class="item-listbox" style="width: 100px;">{{localize "eon.sheets.item.varaktighet"}}</div>
+        <div class="item-listbox">{{localize "eon.sheets.item.moment"}}</div>
     </div>
 
     {{#each actor.system.listdata.religion.mysterie as |kraft key|}}
         <div class="item-row item-listrow">
-            <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera mysterie" data-source="mysterie" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="item-listbox weapon-icon"><a class="item-edit" title="{{localize 'eon.sheets.actor.editeraMysterie'}}" data-source="mysterie" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             {{#if (eq kraft.system.beskrivning "")}}
                 <div class="item-listbox weapon-icon"><i class="icon fa-regular fa-share"></i></div>
             {{else}}
-                <div class="item-listbox weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-share"></i></a></div>
+                <div class="item-listbox weapon-icon"><a class="item-send" title="{{localize 'eon.sheets.item.skickaBeskrivning'}}" data-source="description" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-share"></i></a></div>
             {{/if}}
             <div class="item-listbox active-icon"><input class="pointer item-active" name="kraft.system.installningar.aktiv" type="checkbox" data-itemid="{{kraft._id}}" data-property="aktiv" {{isChecked kraft.system.installningar.aktiv}} /></div>
             <div class="item-listbox vrollable" style="width: 170px;" data-source="mystery" data-itemid="{{kraft._id}}">{{kraft.name}}</div>
@@ -61,25 +61,25 @@
 
 <div class="item-box">
 
-    <div class="large-headline">Avvisning</div>
+    <div class="large-headline">{{localize "eon.sheets.actor.avvisningLabel"}}</div>
 
     <div class="headline headline-background item-row item-listrow">
         <div class="item-listbox weapon-icon">
-            <a class="item-create" title="Lägg till avvisning" data-type="avvisning">
+            <a class="item-create" title="{{localize 'eon.sheets.actor.laggTillAvvisning'}}" data-type="avvisning">
                 <i class="fa-solid fa-square-plus green"></i>
             </a>
         </div>
-        <div class="item-listbox" style="width: 190px;">Namn</div>
-        <div class="item-listbox centerText" style="width: 75px;">Magnitud</div>
+        <div class="item-listbox" style="width: 190px;">{{localize "eon.sheets.item.namn"}}</div>
+        <div class="item-listbox centerText" style="width: 75px;">{{localize "eon.sheets.item.magnitud"}}</div>
     </div>
 
     {{#each actor.system.listdata.religion.avvisning as |kraft key|}}
         <div class="item-row item-listrow">
-            <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera mysterie" data-source="mysterie" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="item-listbox weapon-icon"><a class="item-edit" title="{{localize 'eon.sheets.actor.editeraMysterie'}}" data-source="mysterie" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             {{#if (eq kraft.system.beskrivning "")}}
                 <div class="item-listbox weapon-icon"><i class="icon fa-regular fa-share"></i></div>
             {{else}}
-                <div class="item-listbox weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-share"></i></a></div>
+                <div class="item-listbox weapon-icon"><a class="item-send" title="{{localize 'eon.sheets.item.skickaBeskrivning'}}" data-source="description" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-share"></i></a></div>
             {{/if}}
             <div class="item-listbox" style="width: 170px;">{{kraft.name}}</div>
             <div class="item-listbox centerText" style="width: 75px;">{{kraft.system.magnitud}}</div>

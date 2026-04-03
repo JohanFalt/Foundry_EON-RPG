@@ -1,19 +1,19 @@
 <div class="eon-combat-track-root">
     <div class="eon-combat-track-hover-left" data-action="hover-zone">
         <div class="eon-combat-track-hover-inner">
-            <button type="button" class="eon-combat-track-roll-all" data-action="turn-menu-roll-all-initiative" title="Slå initiativ för alla"><i class="fa-solid fa-dice"></i></button>
-            <button type="button" class="eon-combat-track-prev" data-action="turn-menu-previous" title="Föregående deltagare"><i class="fa-solid fa-chevron-left"></i></button>
+            <button type="button" class="eon-combat-track-roll-all" data-action="turn-menu-roll-all-initiative" title="{{localize 'eon.combat.slaInitiativForAlla'}}"><i class="fa-solid fa-dice"></i></button>
+            <button type="button" class="eon-combat-track-prev" data-action="turn-menu-previous" title="{{localize 'eon.combat.foregaendeDeltagare'}}"><i class="fa-solid fa-chevron-left"></i></button>
         </div>
     </div>
     <div class="eon-combat-track-hover-right" data-action="hover-zone">
         <div class="eon-combat-track-hover-inner">
-            <button type="button" class="eon-combat-track-next" data-action="turn-menu-next" title="Nästa deltagare"><i class="fa-solid fa-chevron-right"></i></button>
+            <button type="button" class="eon-combat-track-next" data-action="turn-menu-next" title="{{localize 'eon.combat.nastaDeltagare'}}"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
     </div>
 
-    <div class="eon-combat-track-header">Runda {{roundLabel}}</div>
+    <div class="eon-combat-track-header">{{localize "eon.combat.runda"}} {{roundLabel}}</div>
     {{#unless allPhasesSelected}}
-    <div class="phase-gate-banner">Välj fas för alla combatants innan andra val blir tillgängliga.</div>
+    <div class="phase-gate-banner">{{localize "eon.combat.valjFasForst"}}</div>
     {{/unless}}
 
     {{#if hasCombatants}}
@@ -22,42 +22,42 @@
         <article class="eon-combatant-portrait {{#if isCurrentTurn}}is-current-turn{{/if}} {{#if isDefeated}}is-defeated{{/if}} {{#if showGroupSeparator}}has-group-separator{{/if}} {{#if isLastInRound}}is-last-in-round{{/if}}">
             <div class="portrait-header">
                 <div class="portrait-name">{{name}}</div>
-                <button type="button" data-action="toggle-defeated" data-combatant-id="{{id}}" class="portrait-defeated-btn {{#if isDefeated}}is-defeated{{/if}}" title="{{#if isDefeated}}Återställ (inte besegrad){{else}}Markera som besegrad/ute{{/if}}" aria-label="{{#if isDefeated}}Återställ{{else}}Markera besegrad{{/if}}"><i class="fa-solid fa-skull"></i></button>
+                <button type="button" data-action="toggle-defeated" data-combatant-id="{{id}}" class="portrait-defeated-btn {{#if isDefeated}}is-defeated{{/if}}" title="{{#if isDefeated}}{{localize 'eon.combat.aterstallInteBesegrad'}}{{else}}{{localize 'eon.combat.markeraBesegrad'}}{{/if}}" aria-label="{{#if isDefeated}}{{localize 'eon.combat.aterstall'}}{{else}}{{localize 'eon.combat.markeraBesegrad'}}{{/if}}"><i class="fa-solid fa-skull"></i></button>
             </div>
             <div class="portrait-and-phases">
                 <img class="portrait-image" src="{{img}}" alt="{{name}}" />
                 <div class="phase-icons">
-                    <button type="button" data-action="set-phase" data-combatant-id="{{id}}" data-phase="initiative_distance" class="{{#if isPhaseDistanceSelected}}is-selected{{/if}}" title="Avstånd" aria-label="Avstånd"><img src="systems/eon-rpg/assets/img/icons/bowman.svg" alt="Avstånd" /></button>
-                    <button type="button" data-action="set-phase" data-combatant-id="{{id}}" data-phase="initiative_close" class="{{#if isPhaseCloseSelected}}is-selected{{/if}}" title="Närstrid" aria-label="Närstrid"><img src="systems/eon-rpg/assets/img/icons/swordman.svg" alt="Närstrid" /></button>
-                    <button type="button" data-action="set-phase" data-combatant-id="{{id}}" data-phase="initiative_mystic" class="{{#if isPhaseMysticSelected}}is-selected{{/if}}" title="Mystik" aria-label="Mystik"><img src="systems/eon-rpg/assets/img/icons/magic-swirl.svg" alt="Mystik" /></button>
-                    <button type="button" data-action="set-phase" data-combatant-id="{{id}}" data-phase="initiative_other" class="{{#if isPhaseOtherSelected}}is-selected{{/if}}" title="Övrigt" aria-label="Övrigt"><img src="systems/eon-rpg/assets/img/icons/shrug.svg" alt="Övrigt" /></button>
+                    <button type="button" data-action="set-phase" data-combatant-id="{{id}}" data-phase="initiative_distance" class="{{#if isPhaseDistanceSelected}}is-selected{{/if}}" title="{{localize 'eon.config.combatPhases.initiative_distance.namn'}}" aria-label="{{localize 'eon.config.combatPhases.initiative_distance.namn'}}"><img src="systems/eon-rpg/assets/img/icons/bowman.svg" alt="{{localize 'eon.config.combatPhases.initiative_distance.namn'}}" /></button>
+                    <button type="button" data-action="set-phase" data-combatant-id="{{id}}" data-phase="initiative_close" class="{{#if isPhaseCloseSelected}}is-selected{{/if}}" title="{{localize 'eon.config.combatPhases.initiative_close.namn'}}" aria-label="{{localize 'eon.config.combatPhases.initiative_close.namn'}}"><img src="systems/eon-rpg/assets/img/icons/swordman.svg" alt="{{localize 'eon.config.combatPhases.initiative_close.namn'}}" /></button>
+                    <button type="button" data-action="set-phase" data-combatant-id="{{id}}" data-phase="initiative_mystic" class="{{#if isPhaseMysticSelected}}is-selected{{/if}}" title="{{localize 'eon.config.combatPhases.initiative_mystic.namn'}}" aria-label="{{localize 'eon.config.combatPhases.initiative_mystic.namn'}}"><img src="systems/eon-rpg/assets/img/icons/magic-swirl.svg" alt="{{localize 'eon.config.combatPhases.initiative_mystic.namn'}}" /></button>
+                    <button type="button" data-action="set-phase" data-combatant-id="{{id}}" data-phase="initiative_other" class="{{#if isPhaseOtherSelected}}is-selected{{/if}}" title="{{localize 'eon.config.combatPhases.initiative_other.namn'}}" aria-label="{{localize 'eon.config.combatPhases.initiative_other.namn'}}"><img src="systems/eon-rpg/assets/img/icons/shrug.svg" alt="{{localize 'eon.config.combatPhases.initiative_other.namn'}}" /></button>
                 </div>
             </div>
             <div class="portrait-meta-row">
                 {{#if showInitiativeButton}}
-                <button type="button" data-action="roll-initiative" data-combatant-id="{{id}}" {{#unless canRollInitiativeAction}}disabled{{/unless}} title="{{#if canRollInitiativeAction}}Slå initiativ{{else}}{{rollInitiativeDisabledReason}}{{/if}}" class="portrait-initiative-btn {{#if canRollInitiativeAction}}needs-roll{{/if}}" aria-label="Slå initiativ"><i class="fa-solid fa-dice"></i></button>
+                <button type="button" data-action="roll-initiative" data-combatant-id="{{id}}" {{#unless canRollInitiativeAction}}disabled{{/unless}} title="{{#if canRollInitiativeAction}}{{localize 'eon.dialogs.slaInitiativ'}}{{else}}{{rollInitiativeDisabledReason}}{{/if}}" class="portrait-initiative-btn {{#if canRollInitiativeAction}}needs-roll{{/if}}" aria-label="{{localize 'eon.dialogs.slaInitiativ'}}"><i class="fa-solid fa-dice"></i></button>
                 {{/if}}
                 <div class="portrait-meta">
-                    <span>Init: {{initiative}}</span>
-                    {{#if phaseLabel}}<span>Fas: {{phaseLabel}}</span>{{/if}}
-                    {{#if roleLabel}}<span>Delstrid - {{roleLabel}}</span>{{/if}}
-                    {{#if pendingTargetsCount}}<span>Valda motståndare: {{pendingTargetsCount}}</span>{{/if}}
+                    <span>{{localize "eon.combat.init"}}: {{initiative}}</span>
+                    {{#if phaseLabel}}<span>{{localize "eon.combat.fas"}}: {{phaseLabel}}</span>{{/if}}
+                    {{#if roleLabel}}<span>{{localize "eon.combat.delstrid"}} - {{roleLabel}}</span>{{/if}}
+                    {{#if pendingTargetsCount}}<span>{{localize "eon.combat.valdaMotstandare"}}: {{pendingTargetsCount}}</span>{{/if}}
                 </div>
             </div>
 
             {{#if showRoleActions}}
             <div class="action-row role-actions">
                 {{#if canSelectSubcombatTargets}}
-                <button type="button" data-action="select-subcombat-targets" data-combatant-id="{{id}}" title="{{selectSubcombatTargetsDisabledReason}}">Välj motståndare</button>
+                <button type="button" data-action="select-subcombat-targets" data-combatant-id="{{id}}" title="{{selectSubcombatTargetsDisabledReason}}">{{localize "eon.dialogs.valjMotstandare"}}</button>
                 {{/if}}
                 {{#if canConfirmSubcombat}}
-                <button type="button" data-action="confirm-subcombat" data-combatant-id="{{id}}">Bekräfta delstrid</button>
+                <button type="button" data-action="confirm-subcombat" data-combatant-id="{{id}}">{{localize "eon.dialogs.bekraftaDelstrid"}}</button>
                 {{/if}}
             </div>
             <div class="role-icons">
-                <button type="button" data-action="set-role" data-role="attacker" data-combatant-id="{{id}}" {{#unless canUseRoleActions}}disabled{{/unless}} class="{{#if isRoleAttackerSelected}}is-selected{{/if}}" title="Anfallare" aria-label="Anfallare"><img src="systems/eon-rpg/assets/img/icons/fist.svg" alt="Anfallare" /></button>
-                <button type="button" data-action="set-role" data-role="defender" data-combatant-id="{{id}}" {{#unless canUseRoleActions}}disabled{{/unless}} class="{{#if isRoleDefenderSelected}}is-selected{{/if}}" title="Försvarare" aria-label="Försvarare"><img src="systems/eon-rpg/assets/img/icons/shield.svg" alt="Försvarare" /></button>
-                <button type="button" data-action="leave-subcombat" data-combatant-id="{{id}}" {{#unless canLeaveSubcombat}}disabled{{/unless}} title="Lämna delstrid" aria-label="Lämna delstrid"><img src="systems/eon-rpg/assets/img/icons/cancel.svg" alt="Lämna delstrid" /></button>
+                <button type="button" data-action="set-role" data-role="attacker" data-combatant-id="{{id}}" {{#unless canUseRoleActions}}disabled{{/unless}} class="{{#if isRoleAttackerSelected}}is-selected{{/if}}" title="{{localize 'eon.dialogs.anfallare'}}" aria-label="{{localize 'eon.dialogs.anfallare'}}"><img src="systems/eon-rpg/assets/img/icons/fist.svg" alt="{{localize 'eon.dialogs.anfallare'}}" /></button>
+                <button type="button" data-action="set-role" data-role="defender" data-combatant-id="{{id}}" {{#unless canUseRoleActions}}disabled{{/unless}} class="{{#if isRoleDefenderSelected}}is-selected{{/if}}" title="{{localize 'eon.dialogs.forsvarare'}}" aria-label="{{localize 'eon.dialogs.forsvarare'}}"><img src="systems/eon-rpg/assets/img/icons/shield.svg" alt="{{localize 'eon.dialogs.forsvarare'}}" /></button>
+                <button type="button" data-action="leave-subcombat" data-combatant-id="{{id}}" {{#unless canLeaveSubcombat}}disabled{{/unless}} title="{{localize 'eon.dialogs.lamnaDelstrid'}}" aria-label="{{localize 'eon.dialogs.lamnaDelstrid'}}"><img src="systems/eon-rpg/assets/img/icons/cancel.svg" alt="{{localize 'eon.dialogs.lamnaDelstrid'}}" /></button>
             </div>
             {{/if}}
             {{#if isLastInRound}}
@@ -67,6 +67,6 @@
         {{/each}}
     </div>
     {{else}}
-    <div class="eon-combat-track-empty">Inga deltagare i aktiv encounter.</div>
+    <div class="eon-combat-track-empty">{{localize "eon.combat.ingaDeltagare"}}</div>
     {{/if}}
 </div>

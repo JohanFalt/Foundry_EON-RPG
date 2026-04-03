@@ -224,8 +224,9 @@ export default class EonActorSheet extends foundry.appv1.sheets.ActorSheet {
             // }            
         }
 
+        const skillDisplayName = (name) => name && game.i18n.has(name) ? game.i18n.localize(name) : (name || "");
         for (const grupp in CONFIG.EON.fardighetgrupper) {
-            data.actor.system.listdata.fardigheter[grupp] = data.actor.system.listdata.fardigheter[grupp].sort((a, b) => a.name.localeCompare(b.name));
+            data.actor.system.listdata.fardigheter[grupp] = data.actor.system.listdata.fardigheter[grupp].sort((a, b) => skillDisplayName(a.name).localeCompare(skillDisplayName(b.name)));
         }
 
         data.actor.system.listdata.utrustning.vapen.narstrid = data.actor.system.listdata.utrustning.vapen.narstrid.sort((a, b) => a.name.localeCompare(b.name));
@@ -286,7 +287,7 @@ export default class EonActorSheet extends foundry.appv1.sheets.ActorSheet {
             data.actor.system.berakning.belastning.totaltavdrag = CalculateHelper.BeraknaBelastningAvdrag(data.actor.system.berakning.belastning.rustning, actorData.system.installningar.eon);
         }
 
-        data.listData = SelectHelper.SetupActor(data.actor);
+        data.listData = SelectHelper.SetupActor(this.actor);
         data.enrichedBeskrivning = await foundry.applications.ux.TextEditor.implementation.enrichHTML(this.actor.system.bakgrund.beskrivning);
 
         // sortering
@@ -407,7 +408,7 @@ export default class EonActorSheet extends foundry.appv1.sheets.ActorSheet {
             //update = true;       
         }
         else if (droppedItem.type == "Folkslag") {
-            ui.notifications.warn(`Folkslag kan inte läggas till denna typ av Actor '${this.actor.type}'.`);
+            ui.notifications.warn(game.i18n.format("eon.messages.folkslagKanInteLaggasTill", { type: this.actor.type }));
             return false;
         }  
         
@@ -454,7 +455,7 @@ export default class EonActorSheet extends foundry.appv1.sheets.ActorSheet {
     async LaggtillFolkslag(droppedItem) {
         const performDelete = await new Promise((resolve) => {
             Dialog.confirm({
-                title: "Varning!",
+                title: game.i18n.localize("eon.dialogs.varning"),
                 yes: () => resolve(true),
                 no: () => resolve(false),
                 content: "Om du byter folkslag kommer alla ändringar du gjort på dina grundegenskaper, språk och egenskaper att nollställas enligt det nya folkslaget"
@@ -494,7 +495,7 @@ export default class EonActorSheet extends foundry.appv1.sheets.ActorSheet {
         await ItemHelper.AddAncestryProperty(this.actor, droppedItem);
         await ItemHelper.AddAncestryLanguage(this.actor, droppedItem);
 
-        ui.notifications.info(`Folkslag '${droppedItem.name}' tillagt på '${this.actor.name}'.`);
+        ui.notifications.info(game.i18n.format("eon.messages.folkslagTillagt", { item: droppedItem.name, actor: this.actor.name }));
 
         return true;
     }
@@ -541,7 +542,7 @@ export default class EonActorSheet extends foundry.appv1.sheets.ActorSheet {
 			return;
         }
         
-		ui.notifications.error("Slag saknar funktion");
+		ui.notifications.error(game.i18n.localize("eon.messages.slagSaknarFunktion"));
 
         return;
 	}
@@ -557,7 +558,7 @@ export default class EonActorSheet extends foundry.appv1.sheets.ActorSheet {
         const itemid = await ItemHelper.CreateItem(this.actor, event);
 
 		if (!itemid) {
-            ui.notifications.error("Typen som skall skapas saknar funktion");
+            ui.notifications.error(game.i18n.localize("eon.messages.typSaknarFunktion"));
         }
         else {
             const item = await this.actor.getEmbeddedDocument("Item", itemid);
@@ -713,7 +714,7 @@ export default class EonActorSheet extends foundry.appv1.sheets.ActorSheet {
         // gäller item i sig
         const performDelete = await new Promise((resolve) => {
             Dialog.confirm({
-                title: "Tar bort " + source,
+                title: game.i18n.localize("eon.dialogs.tarBort") + " " + source,
                 yes: () => resolve(true),
                 no: () => resolve(false),
                 content: "Är du säker du vill ta bort " + source,
@@ -814,7 +815,7 @@ export default class EonActorSheet extends foundry.appv1.sheets.ActorSheet {
                 this.render();
             }
             else {
-                ui.notifications.error("Datatypen ["+dataset.type+"] som skall ändras saknar funktion");
+                ui.notifications.error(game.i18n.format("eon.messages.datatypSaknarFunktion", { type: dataset.type }));
             }
 
             return;

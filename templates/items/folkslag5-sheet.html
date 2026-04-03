@@ -1,0 +1,41 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+	<div class="sheet-item ancestry-folkslag-sheet">
+
+		<header class="sheet-header item-top">	
+
+			<div class="item-row">
+                <div class="item-column" style="width: 600px;">
+                    <div class="tab" data-group="primary" data-tab="values">
+                        <div class="item-row">
+                            {{> "systems/eon-rpg/templates/items/parts/items-ancestry-data5.html"}}
+                        </div>
+                    </div>
+                    <div class="tab" data-group="primary" data-tab="property">
+                        {{> "systems/eon-rpg/templates/items/parts/items-ancestry-property5.html"}}
+                    </div>
+                    <div class="tab" data-group="primary" data-tab="description">
+                        {{> "systems/eon-rpg/templates/items/parts/items-description.html"}}
+                    </div>
+                </div>
+
+                <div class="pullLeft" style="flex-grow: 1; text-align: right;">
+                    {{#if hasActor}}
+                        <div class="pointer red item-delete large-icon" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
+                    {{/if}}     
+                    
+                    <div class="information-area top-sidetext">{{localize "eon.sheets.item.folkslagLabel"}}</div>
+                </div>
+            </div>            
+		</header>
+		
+		<section class="item-body ancestry-item-footer">
+
+            <div>
+                {{> "systems/eon-rpg/templates/items/parts/navigation-ancestry.html"}}
+            </div>
+
+		</section>
+
+	</div>
+</form>

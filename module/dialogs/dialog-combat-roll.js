@@ -422,13 +422,13 @@ export class DialogCombat extends foundry.applications.api.HandlebarsApplication
         const selectedOpponents = this._getSelectedOpponents();
         
         if (selectedOpponents.length === 0) {
-            ui.notifications.warn("Välj minst en motståndare!");
+            ui.notifications.warn(game.i18n.localize("eon.messages.valjMinstEnMotstandareDialog"));
             return;
         }
         
         let token = await canvas.tokens.placeables.find(t => t.document.actor._id === this.object.actorid);
         if (!token || !game.combat || !token.combatant) {
-            ui.notifications.error("Kunde inte hitta token eller combatant");
+            ui.notifications.error(game.i18n.localize("eon.messages.kundeInteHittaToken"));
             return;
         }
         
@@ -461,7 +461,7 @@ export class DialogCombat extends foundry.applications.api.HandlebarsApplication
             this.object.canroll = true;
             this.object.showOpponentSelection = false;
             
-            ui.notifications.info(`Delstrid skapad: ${this.actor.name} attackerar ${selectedOpponents.length} motståndare`);
+            ui.notifications.info(game.i18n.format("eon.messages.delstridSkapad", { actor: this.actor.name, count: selectedOpponents.length }));
             
             // Automatically roll initiative for attacker after subcombat is created
             await this._rollInitiativeAutomatically("initiative_close", token);
@@ -469,7 +469,7 @@ export class DialogCombat extends foundry.applications.api.HandlebarsApplication
             this.render();
         } catch (error) {
             console.error("Error creating subcombat:", error);
-            ui.notifications.error(`Kunde inte skapa delstrid: ${error.message}`);
+            ui.notifications.error(game.i18n.format("eon.messages.kundeInteSkapaDelstrid", { message: error.message }));
         }
     }
     
@@ -684,11 +684,11 @@ export class DialogCombat extends foundry.applications.api.HandlebarsApplication
 	   	}
 
         if (!foundToken) {
-            ui.notifications.error(`Kunde inte hitta ${this.actor.name} token`);
+            ui.notifications.error(game.i18n.format("eon.messages.kundeInteHittaTokenActor", { name: this.actor.name }));
             return;
         }
         if (!foundEncounter) {
-            ui.notifications.error(`Finns ingen startad strid i Foundry`);
+            ui.notifications.error(game.i18n.localize("eon.messages.finnsIngenStrid"));
             return;
         }
 
@@ -699,7 +699,7 @@ export class DialogCombat extends foundry.applications.api.HandlebarsApplication
         else if (this.object.isother) selectedPhase = "initiative_other";
 
         if (!selectedPhase) {
-            ui.notifications.warn("Välj en fas innan du slår initiativ!");
+            ui.notifications.warn(game.i18n.localize("eon.messages.valjFasInnanInitiativ"));
             return;
         }
 

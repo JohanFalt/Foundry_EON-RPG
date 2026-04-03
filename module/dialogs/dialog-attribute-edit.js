@@ -205,7 +205,7 @@ export class DialogAttributeEdit extends FormApplication {
             this.options.title = `${actor.name} - ${attribute.attributeKey}`;            
         }
         else {
-            this.options.title = `Editera ${attribute.attributeName.toLowerCase()}`;
+            this.options.title = game.i18n.localize("eon.sheets.actor.editera") + " " + game.i18n.localize(attribute.attributeName).toLowerCase();
         }
     }
 

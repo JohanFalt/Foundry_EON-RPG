@@ -90,7 +90,7 @@ export class WeaponRoll {
                 for (const fardighet of actor.system.listdata?.fardigheter?.strid) {
                     if (fardighet.system.id == item.system.grupp) {
                         this.actorAttribut = fardighet.system.varde;
-                        this.actorAttributNamn = fardighet.name;
+                        this.actorAttributNamn = game.i18n.has(fardighet.name) ? game.i18n.localize(fardighet.name) : fardighet.name;
                         break;
                     }
                 }     
@@ -101,7 +101,7 @@ export class WeaponRoll {
                 for (const fardighet of actor.system.listdata?.fardigheter) {
                     if (fardighet.system.id == item.system.grupp) {
                         this.actorAttribut = fardighet.system.varde;
-                        this.actorAttributNamn = fardighet.name;
+                        this.actorAttributNamn = game.i18n.has(fardighet.name) ? game.i18n.localize(fardighet.name) : fardighet.name;
                         break;
                     }
                 }     
@@ -811,7 +811,7 @@ export class DialogWeaponRoll extends FormApplication {
             roll.action = `Skadeslag ${this.object.vapennamn.toLowerCase()} (${attacktyp}${skadetyp})`;
         }
         else if (this.object.isdamage) {
-            ui.notifications.error("Du måste välja vilken skadetype du använder dig av innan du slår med tärningarna.");
+            ui.notifications.error(game.i18n.localize("eon.messages.valdSkadetype"));
             this.object.close = false;
             return;
         }
@@ -842,7 +842,7 @@ export class DialogWeaponRoll extends FormApplication {
             roll.action = `${defenseType} försvar med ${this.object.vapennamn.toLowerCase()}`;            
         }
         else {
-            ui.notifications.error("Du måste välja sättet du använder ditt vapen för innan du slår med tärningarna.");
+            ui.notifications.error(game.i18n.localize("eon.messages.valdVapenanvandning"));
             this.object.close = false;
             return;
         }        

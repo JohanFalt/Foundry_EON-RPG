@@ -1,10 +1,10 @@
-<div class="item-headline headline">Egenskaper</div>
+<div class="item-headline headline">{{localize "eon.sheets.actor.egenskaper"}}</div>
 <div class="item-section" style="overflow-y: auto; width: 600px;">
     <div style="max-height: 300px;">        
         <div class="item-row headline">
-            <div style="width: 150px;">Namn</div> 
-            <div class="centerText" style="width: 50px;">Nivå</div>
-            <div style="width: 200px;">Beskrivning</div>
+            <div style="width: 150px;">{{localize "eon.sheets.item.namn"}}</div> 
+            <div class="centerText" style="width: 50px;">{{localize "eon.sheets.actor.niva"}}</div>
+            <div style="width: 200px;">{{localize "eon.sheets.item.beskrivning"}}</div>
         </div>        
 
         {{#each item.system.egenskaper as |egenskap key|}}    
@@ -27,7 +27,7 @@
     
 </div>
 
-<div class="information-area information-box">För att lägga till en egenhet, dra den som skall användas från kompendiet (Föremål/Vapenegenskaper) eller skapa en egen.</div>
+<div class="information-area information-box">{{localize "eon.sheets.info.laggTillEgenhetVapen"}}</div>
 
 {{#if (gt listData.vapenegenskaper.length 0)}}
     <div class="item-section" style="margin-top: 20px;">

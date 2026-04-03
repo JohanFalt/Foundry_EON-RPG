@@ -6,44 +6,51 @@
             <div style="display: flex;">
                 <div class="pullLeft">
                     <img src="{{EON.CONFIG.ikoner.fardighet}}" class="item img-block" />
+                
+                    {{#if (eq item.system.installningar.eon "eon4")}}
+                        <div>{{localize "eon.sheets.item.eon4Kort"}}</div>
+                    {{else}}
+                        <div>{{localize "eon.sheets.item.eon5Kort"}}</div>
+                    {{/if}}
                 </div>
 
                 <div class="item-area pullLeft">
                     <div class="item-top">
-                        <div class="item-property-area   floating-label-group">
+                        <div class="item-property-area floating-label-group">
                             <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
-                            <span class="floating-label">Namn</span>
+                            <span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
                         </div>
 
-
-                        <div class="item-property-area   floating-label-group">
+                        <div class="item-property-area floating-label-group">
                             <input class="text-value editable" type="text" name="system.referens" value="{{item.system.referens}}" data-dtype="String" autocomplete="off" autofocus required />
-                            <span class="floating-label">Referens</span>
+                            <span class="floating-label">{{localize "eon.sheets.item.referens"}}</span>
                         </div>
 
                     </div>    
 
                     <div class="item-row">
-                        <div class="headline-checkbox">Folkslagsegenskap</div>
+                        <div class="headline-checkbox">{{localize "eon.sheets.item.folkslagsegenskap"}}</div>
                         <div><input class="modifiera-checkbox pointer" type="checkbox" data-type="installningar" data-key="folkslag" {{isChecked item.system.installningar.folkslag}} data-dtype="Boolean" /></div>
                     </div>
                     
                     <div class="item-row">
-                        <div class="headline-checkbox">Vapenegenskap</div>
+                        <div class="headline-checkbox">{{localize "eon.sheets.item.vapenegenskap"}}</div>
                         <div><input class="modifiera-checkbox pointer" type="checkbox" data-type="installningar" data-key="vapen" {{isChecked item.system.installningar.vapen}} data-dtype="Boolean" /></div>
                     </div>
+
+                    {{#if (eq item.system.installningar.vapen true)}}                        
         
-                    <div class="item-row">
-                        <div class="headline-checkbox">Har nivå</div>
-                        <div><input class="modifiera-checkbox pointer" type="checkbox" data-type="installningar" data-key="harniva" {{isChecked item.system.installningar.harniva}} data-dtype="Boolean" /></div>
-                    </div>
-
-                    {{#if (and item.system.installningar.vapen item.system.installningar.harniva)}}
-
-                        <div class="item-property-area   floating-label-group">
-                            <input class="text-value editable" type="text" name="system.system.niva" value="{{item.system.niva}}" data-dtype="Number" autocomplete="off" autofocus required />
-                            <span class="floating-label">Nivå</span>
+                        <div class="item-row">
+                            <div class="headline-checkbox">{{localize "eon.sheets.item.harNiva"}}</div>
+                            <div><input class="modifiera-checkbox pointer" type="checkbox" data-type="installningar" data-key="harniva" {{isChecked item.system.installningar.harniva}} data-dtype="Boolean" /></div>
                         </div>
+                    
+                        {{#if (eq item.system.installningar.harniva true)}}
+                            <div class="item-property-area floating-label-group">
+                                <input class="text-value editable" type="text" name="system.system.niva" value="{{item.system.niva}}" data-dtype="Number" autocomplete="off" autofocus required />
+                                <span class="floating-label">{{localize "eon.sheets.actor.niva"}}</span>
+                            </div>
+                        {{/if}}
 
                     {{/if}}
                 </div>	
@@ -54,7 +61,8 @@
 							<div class="pointer red item-delete large-icon" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
 						{{/if}}
 					{{/if}}
-					<div class="information-area top-sidetext">EGENSKAP</div>
+                    
+					<div class="information-area top-sidetext">{{localize "eon.sheets.item.egenskap"}}</div>
 				</div>
             </div>	
 			

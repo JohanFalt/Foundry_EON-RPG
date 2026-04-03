@@ -12,16 +12,16 @@
 
                 <div class="floating-label-group">
                     <input id="altvalue" type="text" value="{{object.varde}}" />
-                    <span class="floating-label">Namn</span>
+                    <span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
                 </div>       
 
-                <div class="information-area information-box">Här anger du det Skräddarsydda namnet och trycker sedan på Spara.</div>
+                <div class="information-area information-box">{{localize "eon.sheets.info.skraddarsyttNamnSpara"}}</div>
 
             </div>
 
             <div class="dice-row">
-                <button id="savebutton" class="dialog-button four-column savebutton">Spara</button>
-                <button id="closeButton" class="dialog-button four-column closebutton">Stäng</button>
+                <button id="savebutton" class="dialog-button four-column savebutton">{{localize "eon.dialogs.spara"}}</button>
+                <button id="closeButton" class="dialog-button four-column closebutton">{{localize "eon.dialogs.stang"}}</button>
             </div>       
 
         {{else}}
@@ -31,10 +31,10 @@
                     {{#if object.hasName}}
                         <div class="item-property-area floating-label-group" style="margin-bottom: 50px;">
                             <input class="text-value editable" type="text" name="object.namn" value="{{object.attributeName}}" data-dtype="String" autocomplete="off" autofocus required />
-                            <span class="floating-label">Namn</span>
+                            <span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
                         </div>
                     {{else}}
-                        <div class="large-main-headline">{{object.attributeName}}</div>
+                        <div class="large-main-headline">{{localize object.attributeName}}</div>
                     {{/if}}
 
                     {{#if object.hasLista}}
@@ -46,7 +46,7 @@
                             </div>
 
                             <div class="item-row headline" style="margin-top: 10px;">
-                                <div class="three-column centerText">Skada</div>
+                                <div class="three-column centerText">{{localize "eon.sheets.actor.skada"}}</div>
                                 <div class="three-column centerText">Utm.</div>
                                 <div class="three-column centerText">Vänd. (Ja/Nej)</div>
                             </div>
@@ -54,14 +54,14 @@
                             {{#each object.attributeList as | vandning key|}}
                                 <div class="item-row" style="line-height: 25px; height: 32px;">
                                     <div class="three-column centerText">{{vandning.skada}}</div>
-                                    <div class="three-column centerText"><input class="attribute-value editable skill-label skill-value" type="text" name="attribut.lista.{{key}}.utmattning" value="{{vandning.utmattning}}" style="width: 40px;" /></div>
+                                    <div class="three-column centerText"><input class="attribute-value editable   skill-value" type="text" name="attribut.lista.{{key}}.utmattning" value="{{vandning.utmattning}}" style="width: 40px;" /></div>
                                     {{#if (ne key 9)}}
                                         <div class="three-column centerText item-row">
                                             <div class="two-column pointer">
                                                 <a class="item-active" data-key="lista.{{key}}">{{#if vandning.vandning}}<i class="fa-solid fa-toggle-on green"></i>{{else}}<i class="fa-solid fa-toggle-off red"></i>{{/if}}</a>
                                             </div>
                                             <div class="two-column">
-                                                <input class="attribute-value editable skill-label skill-value" type="text" name="attribut.lista.{{key}}.bonus" value="{{vandning.bonus}}" style="width: 40px;" />
+                                                <input class="attribute-value editable   skill-value" type="text" name="attribut.lista.{{key}}.bonus" value="{{vandning.bonus}}" style="width: 40px;" />
                                             </div>                                        
                                         </div>
                                     {{else}}     
@@ -77,7 +77,7 @@
                     {{/if}}
 
                     {{#if object.hasDescription}}
-                        <div class="large-headline">Beskrivning</div>
+                        <div class="large-headline">{{localize "eon.sheets.item.beskrivning"}}</div>
                         <div class="editor-box">
                             {{editor object.attributeDescription target="attribut.beskrivning" button=true owner=owner editable=true}}
                         </div>
@@ -88,8 +88,8 @@
                     <div class="item-column">
 
                         <div class="headline item-row item-listrow">
-                            <div class="item-listbox pointer item-create weapon-icon" title="Lägg till bonus" data-type="bonus"><i class="fa-solid fa-square-plus green"></i></div>       
-                            <div class="item-listbox headline">Bonus</div>
+                            <div class="item-listbox pointer item-create weapon-icon" title="{{localize 'eon.dialogs.laggTillBonus'}}" data-type="bonus"><i class="fa-solid fa-square-plus green"></i></div>       
+                            <div class="item-listbox headline">{{localize "eon.sheets.item.bonus"}}</div>
                         </div>
 
                         <div class="bonus-list">
@@ -98,7 +98,7 @@
                                     <div>
                                         <div class="floating-label-group">
                                             <input class="inputdata" type="text" value="{{bonus.namn}}" id="object.name_{{key}}" data-key="{{key}}" />
-                                            <span class="floating-label">Namn</span>
+                                            <span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
                                         </div>
                                     </div>
 
@@ -110,7 +110,7 @@
                                         <div class="dice-value tic pointer" data-key="{{key}}">{{getDiceValue bonus}}</div>                                        
                                     {{/if}}
 
-                                    <div class="pointer red item-delete" title="Ta bort bonus" data-key="{{key}}">
+                                    <div class="pointer red item-delete" title="{{localize 'eon.dialogs.taBortBonus'}}" data-key="{{key}}">
                                         <i class="icon fa-solid fa-trash-can"></i>
                                     </div>
                                 </div>

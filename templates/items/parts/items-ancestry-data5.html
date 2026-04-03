@@ -1,0 +1,46 @@
+<div class="ancestry-data5-root">
+<div class="ancestry-data5-portrait" style="min-width: 110px;">
+    <img src="{{item.img}}" class="item img-block" />
+</div>
+
+<div class="item-column ancestry-data5-main">
+    <div class="item-column ancestry-data5-attributes" style="min-width: 270px;">
+        <div class="item-property-area floating-label-group">
+            <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
+            <span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
+        </div> 
+
+        <div class="item-property-area floating-label-group">
+            <select class="text-value editable" name="system.folkslag" >                                
+                <option value="">{{localize "eon.sheets.item.ingetOption"}}</option>
+                {{selectOptions EON.CONFIG.folkslag selected=item.system.folkslag localize=true}}
+            </select>
+            <span class="floating-label">{{localize "eon.sheets.actor.folkslag"}}</span>
+        </div> 
+
+        <div class="headline">
+            <div class="attribute-area">{{localize "eon.sheets.actor.attribut"}}</div>
+        </div>
+
+        {{#each EON.CONFIG.folkslag5attribut as |attribute key|}}   
+            <div class="item-property-area floating-label-group">
+                <input class="text-value editable" type="text" name="system.attribut.{{key}}" value="{{getAncestryAttributeValue ../item key}}" data-dtype="Number" autocomplete="off" autofocus required />
+                <span class="floating-label">{{localize attribute.namn}}</span>
+            </div>      
+        {{/each}}
+    </div>
+
+    <div class="item-column">
+        <div class="item-headline headline">{{localize "eon.sheets.item.sprak"}}</div>
+
+        {{#each item.system.sprak as |sprak key|}}    
+            <div class="item-row ancestry-data5-sprak-row">
+                <div class="ancestry-data5-sprak-namn">{{sprak.name}}</div>
+                <div class="ancestry-data5-sprak-actions pointer red item-delete" data-type="sprak" data-key="{{key}}"><i class="icon fa-solid fa-trash-can"></i></div>
+            </div>              
+        {{/each}}
+
+        <div class="information-area information-box">{{localize "eon.sheets.info.laggTillSprakKompendium"}}</div>
+    </div>
+</div>
+</div>

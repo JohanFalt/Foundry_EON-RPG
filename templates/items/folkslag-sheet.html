@@ -1,6 +1,6 @@
 <form class="{{cssClass}}" autocomplete="off">
 
-	<div class="sheet-item">
+	<div class="sheet-item ancestry-folkslag-sheet">
 
 		<header class="sheet-header item-top">	
 
@@ -24,12 +24,12 @@
                         <div class="pointer red item-delete large-icon" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
                     {{/if}}     
                     
-                    <div class="information-area top-sidetext">FOLKSLAG</div>
+                    <div class="information-area top-sidetext">{{localize "eon.sheets.item.folkslagLabel"}}</div>
                 </div>
             </div>            
 		</header>
 		
-		<section class="item-body" style="position: absolute; bottom: 0; width: 100%; margin-bottom: 5px;">
+		<section class="item-body ancestry-item-footer">
 
             <div>
                 {{> "systems/eon-rpg/templates/items/parts/navigation-ancestry.html"}}

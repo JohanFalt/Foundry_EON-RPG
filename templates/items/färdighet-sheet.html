@@ -9,72 +9,80 @@
 
 				<div class="item-column" style="min-width: 270px;">
 
-					<div class="item-property-area   floating-label-group">
+					
 						{{#if item.system.aspekt}}
-							<select class="text-value inputdata" name="system.id" data-source="aspekt">
-								<option value="">- Välj -</option>
-								{{selectOptions EON.CONFIG.aspekter selected=item.system.id}}
-							</select>
+							<div class="item-property-area floating-label-group">
+								<select class="text-value inputdata" name="system.id" data-source="aspekt">
+									<option value="">{{localize "eon.sheets.item.valjOption"}}</option>
+									{{selectOptions EON.CONFIG.aspekter selected=item.system.id localize=true}}
+								</select>
+								<span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
+							</div>
 						{{else}}
-							<input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
+							{{#if nameIsI18nKey}}
+								<span class="text-value" style="display: block; padding: 4px 0;">{{localize item.name}}</span>
+							{{else}}
+								<div class="item-property-area floating-label-group">
+									<input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
+									<span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
+								</div>
+							{{/if}}
 						{{/if}}
-						<span class="floating-label">Namn</span>
-					</div>
-
+						
 					{{#if (eq item.system.installningar.eon "eon4")}}
 
 						{{#if isPC}}
 
-							<div class="item-property-area   floating-label-group">
+							<div class="item-property-area floating-label-group">
 								<select class="text-value" name="system.attribut">
-									<option value="">- Välj -</option>
-									<option value="">- Inget attribut -</option>
-									{{selectOptions EON.CONFIG.grundegenskaper selected=item.system.attribut labelAttr="namn"}}
+									<option value="">{{localize "eon.sheets.item.valjOption"}}</option>
+									<option value="">{{localize "eon.sheets.item.ingetAttributOption"}}</option>
+									{{selectOptions EON.CONFIG.grundegenskaper selected=item.system.attribut labelAttr="namn" localize=true}}
 								</select>
-								<span class="floating-label">Attribut</span>
+								<span class="floating-label">{{localize "eon.sheets.item.attribut"}}</span>
 							</div>	
 
 						{{/if}}
 
 					{{/if}}
 
-					<div class="item-property-area   floating-label-group">
+					<div class="item-property-area floating-label-group">
 						<input class="text-value editable" name="system.referens" type="text" value="{{item.system.referens}}" data-dtype="String" />
-						<span class="floating-label">Referens</span>
+						<span class="floating-label">{{localize "eon.sheets.item.referens"}}</span>
 					</div>
 
-					<div class="item-row" title="För att höja/sänka sitt färdighetsvärde höger-eller vänsterklickar på rutan">
-						<div class="headline-checkbox">Färdighetsvärde</div>
+					<div class="item-row" title="{{localize 'eon.sheets.actor.hogerVansterklickFardighet'}}">
+						<div class="headline-checkbox">{{localize "eon.sheets.actor.fardighetsvarde"}}</div>
 						<div class="dice-value tic pointer" data-property="varde">{{getDiceValue item.system.varde}}</div>
 					</div>
 
-					<div class="information-area information-box">För att höja/sänka sitt färdighetsvärde höger-eller vänsterklickar på rutan.</div>
+					<div class="information-area information-box">{{localize "eon.sheets.info.fardighetVardeKlick"}}</div>
 
 					{{#if isPC}}
 						{{#unless (eq item.system.grupp "ovriga")}}
 							{{#if (eq item.system.installningar.eon "eon4")}}
 								<div class="item-row">
-									<div class="headline-checkbox">Lättlärd</div>
+									<div class="headline-checkbox">{{localize "eon.sheets.actor.lattlard"}}</div>
 									<div><input class="svarighet pointer" type="checkbox" data-value="L" {{isChecked item.system.installningar.lattlard}} data-dtype="String" /></div>
 								</div>
 					
 								<div class="item-row">
-									<div class="headline-checkbox">Svårlärd</div>
+									<div class="headline-checkbox">{{localize "eon.sheets.actor.svarlard"}}</div>
 									<div><input class="svarighet pointer" type="checkbox" data-value="S" {{isChecked item.system.installningar.svarlard}} data-dtype="String" /></div>
 								</div> 
 							{{else if (eq item.system.installningar.eon "eon5")}}
 								<div class="item-row">
-									<div class="headline-checkbox">Talang</div>
+									<div class="headline-checkbox">{{localize "eon.sheets.actor.talang"}}</div>
 									<div><input class="svarighet pointer" type="checkbox" data-value="T" {{isChecked item.system.installningar.talang}} data-dtype="String" /></div>
 								</div>
 					
 								<div class="item-row">
-									<div class="headline-checkbox">Inkompetent</div>
+									<div class="headline-checkbox">{{localize "eon.sheets.actor.inkompetent"}}</div>
 									<div><input class="svarighet pointer" type="checkbox" data-value="I" {{isChecked item.system.installningar.inkompetent}} data-dtype="String" /></div>
 								</div>
 
 								<div class="item-row">
-									<div class="headline-checkbox">Blockering</div>
+									<div class="headline-checkbox">{{localize "eon.sheets.actor.blockering"}}</div>
 									<div><input class="svarighet pointer" type="checkbox" data-value="B" {{isChecked item.system.installningar.blockering}} data-dtype="String" /></div>
 								</div>
 							{{/if}}
@@ -83,31 +91,30 @@
 
 					{{#if (eq item.system.grupp "mystik")}}
 						<div class="item-row">
-							<div class="headline-checkbox">Aspekt</div>
+							<div class="headline-checkbox">{{localize "eon.sheets.item.aspekt"}}</div>
 							<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.aspekt}} data-dtype="Boolean" data-field="aspekt" /></div>
 						</div>
 					{{/if}}
 					
 					{{#if (eq item.system.grupp "ovriga")}}
-						
 						<div class="item-row">
-							<div class="headline-checkbox">Expertis</div>
+							<div class="headline-checkbox">{{localize "eon.sheets.actor.expertis"}}</div>
 							<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.expertis}} data-dtype="Boolean" data-field="expertis" /></div>
-						</div> 
+						</div>  
 						{{#if (eq item.system.installningar.eon "eon5")}}
 							<div class="item-row">
-								<div class="headline-checkbox">Förmåga</div>
+								<div class="headline-checkbox">{{localize "eon.sheets.actor.formaga"}}</div>
 								<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.formaga}} data-dtype="Boolean" data-field="formaga" /></div>
 							</div>
 						{{/if}}
 						<div class="item-row">
-							<div class="headline-checkbox">Hantverk</div>
+							<div class="headline-checkbox">{{localize "eon.sheets.actor.hantverk"}}</div>
 							<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.hantverk}} data-dtype="Boolean" data-field="hantverk" /></div>
-						</div> 
+						</div>						
 						<div class="item-row">
-							<div class="headline-checkbox">Kännetecken</div>
+							<div class="headline-checkbox">{{localize "eon.sheets.actor.kannetecken"}}</div>
 							<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.kannetecken}} data-dtype="Boolean" data-field="kannetecken" /></div>
-						</div>
+						</div>						
 					{{/if}}		
 
 				</div>
@@ -118,7 +125,7 @@
 							<div class="pointer red item-delete large-icon" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
 						{{/if}}
 					{{/if}}
-					<div class="information-area top-sidetext">FÄRDIGHET</div>
+					<div class="information-area top-sidetext">{{localize "eon.sheets.actor.fardighetLabel"}}</div>
 				</div>
 
 			</div>
@@ -130,7 +137,7 @@
 			{{#if hasExperience}}
 				<div class="form-group">
 
-					<button class="dialog-button four-column skill-improve">Förbättra färdighet</button>
+					<button class="dialog-button four-column skill-improve">{{localize "eon.sheets.actor.forbattraFardighet"}}</button>
 				</div>
 			{{/if}}
 					

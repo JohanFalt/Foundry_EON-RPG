@@ -1,5 +1,17 @@
 import { eon } from "./config.js";
 import CreateHelper from "./create-helper.js";
+import {
+    CCW_EGENSKAP_SOURCE_UUID_FLAG,
+    CCW_FOLKSLAG_MANAGED_FLAG,
+    collectAllEgenskapRefsForFinish,
+    loadFolkslag5Doc,
+    normalizeEgenskapRefKey,
+    partitionFolkslagEgenskaper,
+    FOLKSLAGSEGENSKAPER5_PACK,
+    SPRAK5_PACK
+} from "./apps/folkslag-wizard-helper.js";
+
+const ITEM_FLAG_SCOPE = "eon-rpg";
 
 export default class ItemHelper {
 
@@ -23,7 +35,7 @@ export default class ItemHelper {
 
             if (skilltype == "sprak") {
                 itemData = {
-                    name: "Nytt språk",
+                    name: game.i18n.localize("eon.items.nyttSprak"),
                     type: "Språk",                
                     system: {
                         installningar: {
@@ -56,7 +68,7 @@ export default class ItemHelper {
             found = true;
 
             itemData = {
-                name: "Ny egenskap",
+                name: game.i18n.localize("eon.items.nyEgenskap"),
                 type: "Egenskap",                
                 system: {
                     installningar: {
@@ -73,7 +85,7 @@ export default class ItemHelper {
             found = true;
 
             itemData = {
-                name: "Nytt mysterie",
+                name: game.i18n.localize("eon.items.nyttMysterie"),
                 type: "Mysterie",                
                 system: {
                     installningar: {
@@ -90,7 +102,7 @@ export default class ItemHelper {
             found = true;
 
             itemData = {
-                name: "Ny avvisning",
+                name: game.i18n.localize("eon.items.nyAvvisning"),
                 type: "Avvisning",                
                 system: {
                     installningar: {
@@ -107,7 +119,7 @@ export default class ItemHelper {
             found = true;
 
             itemData = {
-                name: "Ny besvärjelse",
+                name: game.i18n.localize("eon.items.nyBesvarjelse"),
                 type: "Besvärjelse",                
                 system: {
                     installningar: {
@@ -130,7 +142,7 @@ export default class ItemHelper {
             found = true;
 
 			itemData = {
-                name: "Nytt närstridsvapen",
+                name: game.i18n.localize("eon.items.nyttNarstridsvapen"),
                 type: "Närstridsvapen",                
                 system: {
                     installningar: {
@@ -147,7 +159,7 @@ export default class ItemHelper {
             found = true;
 
 			itemData = {
-                name: "Nytt avståndsvapen",
+                name: game.i18n.localize("eon.items.nyttAvstandsvapen"),
                 type: "Avståndsvapen",
                 
                 system: {
@@ -165,7 +177,7 @@ export default class ItemHelper {
             found = true;
 
 			itemData = {
-                name: "Ny sköld",
+                name: game.i18n.localize("eon.items.nySkold"),
                 type: "Sköld",
                 
                 system: {
@@ -185,7 +197,7 @@ export default class ItemHelper {
             const kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, game.data.system.version);
 
 			itemData = {
-                name: "Ny rustning",
+                name: game.i18n.localize("eon.items.nyRustning"),
                 type: "Rustning",                
                 system: {
                     installningar: {
@@ -203,7 +215,7 @@ export default class ItemHelper {
             found = true;
 
 			itemData = {
-                name: "Nytt föremål",
+                name: game.i18n.localize("eon.items.nyttForemal"),
                 type: "Utrustning",                
                 system: {
                     installningar: {
@@ -257,7 +269,7 @@ export default class ItemHelper {
 
             let magnitud = {
                 namn: "magnitud",
-                label: "Magnitud",
+                label: game.i18n.localize("eon.sheets.item.magnitud"),
                 varde: 0
             }
 
@@ -265,7 +277,7 @@ export default class ItemHelper {
             properties.push(magnitud);
 
 			itemData = {
-                name: "Kongelat",
+                name: game.i18n.localize("eon.items.kongelat"),
                 type: "Utrustning",                
                 system: {
                     installningar: {
@@ -284,7 +296,7 @@ export default class ItemHelper {
             found = true;
 
 			itemData = {
-                name: "Ny skada",
+                name: game.i18n.localize("eon.items.nySkada"),
                 type: "Skada",                
                 system: {
                     installningar: {
@@ -301,7 +313,7 @@ export default class ItemHelper {
             found = true;
 
 			itemData = {
-                name: "Fältstörning",
+                name: game.i18n.localize("eon.items.faltstorning"),
                 type: "Skada",                
                 system: {
                     installningar: {
@@ -392,7 +404,194 @@ export default class ItemHelper {
         }
     }
 
-    
+    /**
+     * Ta bort alla items som skapats av CCW-folkslagsynken (egenskap + startspråk).
+     * @param {Actor} actor
+     */
+    static async removeCcwFolkslagManagedItems(actor) {
+        const ids = actor.items
+            .filter((item) => item.getFlag(ITEM_FLAG_SCOPE, CCW_FOLKSLAG_MANAGED_FLAG) === true)
+            .map((item) => item.id);
+        if (ids.length) await actor.deleteEmbeddedDocuments("Item", ids);
+    }
+
+    /**
+     * Seriell kö per actor: två parallella _prepareContext/sync-anrop annars kan båda se inga ccw-flaggade items och skapa dubletter.
+     * @type {Map<string, Promise<void>>}
+     */
+    static #ccwFolkslagSyncChains = new Map();
+
+    /**
+     * Actor-id under aktiv #syncCcwFolkslagItemsFromDraftInner (från remove tills finally).
+     * Förhindrar att CharacterCreationWizard._prepareContext startar ny sync när deleteEmbeddedDocuments
+     * redan tagit bort ccw-items men create inte körts (actor-uppdatering → render → guard).
+     * @type {Set<string>}
+     */
+    static #ccwFolkslagSyncActorIds = new Set();
+
+    /**
+     * @param {string} [actorId]
+     * @returns {boolean}
+     */
+    static isCcwFolkslagSyncInProgressForActor(actorId) {
+        return !!(actorId && this.#ccwFolkslagSyncActorIds.has(actorId));
+    }
+
+    /**
+     * Byter ut CCW-folkslags-items på actorn mot aktuellt Folkslag5-utkast (obligatoriska + valfria + startspråk).
+     * @param {Actor} actor
+     * @param {object} mergedDraft
+     */
+    static async syncCcwFolkslagItemsFromDraft(actor, mergedDraft) {
+        const actorId = actor?.id;
+        if (!actorId) return;
+
+        const prev = this.#ccwFolkslagSyncChains.get(actorId) ?? Promise.resolve();
+        const next = prev
+            .catch(() => {})
+            .then(() => this.#syncCcwFolkslagItemsFromDraftInner(actor, mergedDraft));
+        this.#ccwFolkslagSyncChains.set(actorId, next);
+        return next;
+    }
+
+    /**
+     * @param {Actor} actor
+     * @param {object} mergedDraft
+     */
+    static async #syncCcwFolkslagItemsFromDraftInner(actor, mergedDraft) {
+        const syncActorId = actor?.id;
+        if (!syncActorId) return;
+        this.#ccwFolkslagSyncActorIds.add(syncActorId);
+        try {
+            await this.removeCcwFolkslagManagedItems(actor);
+
+            const primarFolkslagId = (mergedDraft?.folkslag ?? "").toString().trim();
+            if (!primarFolkslagId) return;
+
+            const primarDoc = await loadFolkslag5Doc(primarFolkslagId);
+            if (!primarDoc) return;
+
+            const kulturFolkslagId = mergedDraft.harKulturfolkslag ? (mergedDraft.kulturfolkslag ?? "").toString().trim() : "";
+            const kulturDoc = kulturFolkslagId ? await loadFolkslag5Doc(kulturFolkslagId) : null;
+            const harKulturfolkslagEffective = !!(mergedDraft.harKulturfolkslag && kulturDoc);
+
+            const { listedRefs, valfriaPoolRefs } = partitionFolkslagEgenskaper(
+                primarDoc,
+                kulturDoc,
+                harKulturfolkslagEffective
+            );
+            const allRefs = collectAllEgenskapRefsForFinish(listedRefs, valfriaPoolRefs, mergedDraft.folkValfriaValda ?? []);
+
+            const egenskapPack = game.packs.get(FOLKSLAGSEGENSKAPER5_PACK);
+            if (!egenskapPack) {
+                console.warn(`[eon-rpg] syncCcwFolkslagItemsFromDraft: saknar pack ${FOLKSLAGSEGENSKAPER5_PACK}`);
+            } else {
+                /** @type {Item[]} */
+                let kallaEgenskaper = [];
+                try {
+                    kallaEgenskaper = await egenskapPack.getDocuments({ type: "Egenskap" });
+                } catch (err) {
+                    console.warn(err);
+                    kallaEgenskaper = [];
+                }
+                /** @type {object[]} */
+                const egenskapCreates = [];
+                const skapadeEgenskapNycklar = new Set();
+
+                for (const ref of allRefs) {
+                    const refUuid = normalizeEgenskapRefKey(ref);
+                    if (!refUuid || skapadeEgenskapNycklar.has(refUuid)) continue;
+                    skapadeEgenskapNycklar.add(refUuid);
+                    let kallaEgenskap = kallaEgenskaper.find((candidate) => candidate.uuid === refUuid);
+                    if (kallaEgenskap === undefined) {
+                        kallaEgenskap = game.items.find((candidate) => candidate.uuid === refUuid);
+                    }
+                    if (kallaEgenskap === undefined) continue;
+                    const beskrivning = (kallaEgenskap.system.beskrivning ?? "").toString();
+                    egenskapCreates.push({
+                        name: kallaEgenskap.name,
+                        type: "Egenskap",
+                        flags: {
+                            [ITEM_FLAG_SCOPE]: {
+                                [CCW_FOLKSLAG_MANAGED_FLAG]: true,
+                                [CCW_EGENSKAP_SOURCE_UUID_FLAG]: refUuid
+                            }
+                        },
+                        system: {
+                            installningar: {
+                                skapad: true,
+                                eon: actor.system.installningar.eon,
+                                version: kallaEgenskap.system.installningar.version,
+                                kantabort: true,
+                                folkslag: true,
+                                harniva: kallaEgenskap.system.installningar.harniva
+                            },
+                            niva: kallaEgenskap.system.niva,
+                            beskrivning
+                        }
+                    });
+                }
+                if (egenskapCreates.length) {
+                    await actor.createEmbeddedDocuments("Item", egenskapCreates);
+                }
+            }
+
+            const sprakKallaDoc =
+                mergedDraft.harKulturfolkslag && kulturFolkslagId ? kulturDoc : primarDoc;
+            const sprakList = sprakKallaDoc?.system?.sprak;
+            if (!sprakList?.length) return;
+
+            const sprakPack = game.packs.get(SPRAK5_PACK);
+            if (!sprakPack) {
+                console.warn(`[eon-rpg] syncCcwFolkslagItemsFromDraft: saknar pack ${SPRAK5_PACK}`);
+                return;
+            }
+            /** @type {Item[]} */
+            let sprakDocs = [];
+            try {
+                sprakDocs = await sprakPack.getDocuments({ type: "Språk" });
+            } catch (err) {
+                console.warn(err);
+                return;
+            }
+            /** @type {object[]} */
+            const sprakCreates = [];
+            const sprakSkapadeNycklar = new Set();
+            for (const sprakRad of sprakList) {
+                const sprakUuid = (sprakRad.uuid ?? "").toString().trim();
+                if (!sprakUuid || sprakSkapadeNycklar.has(sprakUuid)) continue;
+                let kallaSprak = sprakDocs.find((candidate) => candidate.uuid === sprakUuid);
+                if (kallaSprak === undefined) {
+                    kallaSprak = game.items.find((candidate) => candidate.uuid === sprakUuid);
+                }
+                if (kallaSprak === undefined) continue;
+                sprakSkapadeNycklar.add(sprakUuid);
+                sprakCreates.push({
+                    name: kallaSprak.name,
+                    type: "Språk",
+                    flags: {
+                        [ITEM_FLAG_SCOPE]: {
+                            [CCW_FOLKSLAG_MANAGED_FLAG]: true,
+                            [CCW_EGENSKAP_SOURCE_UUID_FLAG]: sprakUuid
+                        }
+                    },
+                    system: {
+                        installningar: {
+                            skapad: true,
+                            eon: actor.system.installningar.eon,
+                            version: kallaSprak.system.installningar.version,
+                            kantabort: true
+                        }
+                    }
+                });
+            }
+            if (sprakCreates.length) {
+                await actor.createEmbeddedDocuments("Item", sprakCreates);
+            }
+        } finally {
+            this.#ccwFolkslagSyncActorIds.delete(syncActorId);
+        }
+    }
 
     // Användes för att skapa upp vapenegenskaperna i kompendiet
     // Lägg till ItemHelper.CreateWeaponProperty(); i Ready
@@ -757,11 +956,11 @@ export default class ItemHelper {
             await Item.deleteDocuments(ids, {pack: packName});
 
             console.log(`EON | Raderade ${ids.length} items från ${packName}`);
-            ui.notifications.info(`Raderade ${ids.length} items från ${packName}`);
+            ui.notifications.info(game.i18n.format("eon.messages.raderadeItems", { count: ids.length, pack: packName }));
             return true;
         } catch (error) {
             console.error(`EON | Fel vid radering från ${packName}:`, error);
-            ui.notifications.error(`Fel vid radering från ${packName}`);
+            ui.notifications.error(game.i18n.format("eon.messages.felVidRadering", { pack: packName }));
             return false;
         }
     }
@@ -789,7 +988,7 @@ export default class ItemHelper {
         }
         
         if (!pack) {
-            ui.notifications.error("Kunde inte hitta vapenegenskaper-kompendiet");
+            ui.notifications.error(game.i18n.localize("eon.messages.kundeInteHittaVapenegenskaper"));
             return [];
         }
         
@@ -847,6 +1046,49 @@ export default class ItemHelper {
             return vapen;
         }        
 
-        return vandningar.find(e => e._id === id);
+        return vapen.find(e => e._id === id);
+    }
+
+    static async GetWeapon5(vapentyp, id) {
+        let kompendie = "";
+
+        if (vapentyp == "narstridsvapen") {
+            kompendie = "eon-rpg.narstridsvapen5";
+        }
+        else if (vapentyp == "avstandsvapen") {
+            kompendie = "eon-rpg.avstandsvapen5";
+        }
+        else {
+            return [];
+        }
+        const pack = game.packs.get(kompendie);
+        const vapen = await pack.getDocuments();
+
+        if (id == undefined) {
+            vapen.sort((a, b) => a.name.localeCompare(b.name));
+            return vapen;
+        }        
+
+        return vapen.find(e => e._id === id);
+    }
+
+    /**
+     * Hittar första närstridsvapen i kompendium eon-rpg.narstridsvapen5 (via GetWeapon5).
+     * @param {{ grupp?: string, mall?: string }} [filter]
+     * @returns {Promise<Item|null>}
+     */
+    static async findNarstridsvapen5InCompendium(filter = {}) {
+        const grupp = filter.grupp ?? "slagsmal";
+        const mall = filter.mall ?? "obevapnad";
+        const vapen = await this.GetWeapon5("narstridsvapen");
+        if (!Array.isArray(vapen) || !vapen.length) return null;
+        return (
+            vapen.find(
+                (i) =>
+                    i.type === "Närstridsvapen" &&
+                    i.system?.grupp == grupp &&
+                    i.system?.mall == mall
+            ) ?? null
+        );
     }
 }

@@ -6,6 +6,7 @@ import CalculateHelper from "../calculate-helper.js";
 import SelectHelper from "../select-helpers.js"
 import { SendMessage } from "../dice-helper.js";
 import { datavaluta } from '../../packs/valuta.js';
+import { ensureRollperson5StartingItems } from "../apps/character-creation-helper.js";
 
 export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
 
@@ -42,6 +43,24 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
         };
     }
 
+    /**
+     * Fas 1: öppna karaktärsskapande-wizarden för nya Rollperson5 (en gång per render-pass).
+     */
+    _maybeOpenCharacterCreationWizard() {
+        if (this.actor.type !== "Rollperson5") return;
+        if (this.actor.system?.installningar?.skapad) return;
+        if (this.actor.getFlag?.("eon-rpg", "wizardFinishing") === true) return;
+        queueMicrotask(async () => {
+            try {
+                const { CharacterCreationWizard } = await import("../apps/CharacterCreationWizard.js");
+                if (CharacterCreationWizard.isOpenFor(this.actor)) return;
+                await CharacterCreationWizard.open(this.actor);
+            } catch (err) {
+                console.error("Eon | CharacterCreationWizard", err);
+            }
+        });
+    }
+
     /** @override */
     get template() {
         let sheet = "rollperson5";
@@ -62,26 +81,19 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
             bok = "strid";
         } */
 
-        const actorData = foundry.utils.duplicate(this.actor);	
-        const version = game.data.system.version;	
+        const actorData = foundry.utils.duplicate(this.actor);
+        const version = game.data.system.version;
 
         if (!actorData.system.installningar.skapad) {
-            if (actorData.system.installningar.eon != "eon5") {
-                actorData.system.installningar.eon = "eon5";
-            } 
-
-            await CreateHelper.SkapaFardigheter(this.actor, CONFIG.EON, version);
-            await CreateHelper.SkapaKaraktarsdrag(actorData);
-            await CreateHelper.SkapaKaraktarsdrag(actorData);
-            const vapenlista = await ItemHelper.GetWeapon("narstridsvapen5");
-            await CreateHelper.SkapaNarstridsvapen(this.actor, "obevapnad", vapenlista, version, true);
-
-            actorData.system.installningar.skapad = true;
-            actorData.system.installningar.version = version;            
-            await this.actor.update(actorData);
-        }	
-        else {
-            await CalculateHelper.hanteraBerakningar(actorData);            
+            if (actorData.system.installningar.eon !== "eon5") {
+                await this.actor.update({ "system.installningar.eon": "eon5" });
+            }
+            if (this.actor.type === "Rollperson5") {
+                await ensureRollperson5StartingItems(this.actor);
+            }
+            this._maybeOpenCharacterCreationWizard();
+        } else {
+            await CalculateHelper.hanteraBerakningar(actorData);
             await this.actor.update(actorData);
         }
 
@@ -223,8 +235,9 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
             // }            
         }
 
+        const skillDisplayName = (name) => name && game.i18n.has(name) ? game.i18n.localize(name) : (name || "");
         for (const grupp in CONFIG.EON.fardighetgrupper) {
-            data.actor.system.listdata.fardigheter[grupp] = data.actor.system.listdata.fardigheter[grupp].sort((a, b) => a.name.localeCompare(b.name));
+            data.actor.system.listdata.fardigheter[grupp] = data.actor.system.listdata.fardigheter[grupp].sort((a, b) => skillDisplayName(a.name).localeCompare(skillDisplayName(b.name)));
         }
 
         data.actor.system.listdata.utrustning.vapen.narstrid = data.actor.system.listdata.utrustning.vapen.narstrid.sort((a, b) => a.name.localeCompare(b.name));
@@ -286,14 +299,15 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
         }
 
         data.listData = SelectHelper.SetupActor(data.actor);
-        data.enrichedBeskrivning = await foundry.applications.ux.TextEditor.implementation.enrichHTML(this.actor.system.bakgrund.beskrivning);
+        const bg5 = this.actor.system.bakgrund ?? {};
+        const enrich = async (html) =>
+            foundry.applications.ux.TextEditor.implementation.enrichHTML((html ?? "").toString());
+        data.enrichedBeskrivning = await enrich(bg5.beskrivning);
+        data.enrichedUtseende = await enrich(bg5.utseende);
+        data.enrichedRelationer = await enrich(bg5.relationer);
 
         // sortering
         data.sheet = this;
-
-        console.log(data.actor.name);
-        console.log(data.actor);
-        console.log(data.EON);        
 
         return data;
     }
@@ -374,6 +388,47 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
 
             this.render(false);
         });
+
+        html.find(".eon-sheet-kontakt-add").click(this._onKontaktListAdd.bind(this));
+        html.find(".eon-sheet-kontakt-remove").click(this._onKontaktListRemove.bind(this));
+    }
+
+    /**
+     * Lägg till tom rad för kretsar eller följeslagare (Eon 5).
+     * @param {Event} event
+     */
+    async _onKontaktListAdd(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!this.isEditable) return;
+        const list = (event.currentTarget?.dataset?.list ?? "").toString();
+        if (list !== "kretsar" && list !== "foljeslagare") return;
+        const current = foundry.utils.duplicate(this.actor.system[list] ?? []);
+        current.push({ namn: "", anteckning: "" });
+        await this.actor.update({ [`system.${list}`]: current });
+    }
+
+    /**
+     * Ta bort rad i kretsar eller följeslagare (Eon 5).
+     * @param {Event} event
+     */
+    async _onKontaktListRemove(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!this.isEditable) return;
+        const list = (event.currentTarget?.dataset?.list ?? "").toString();
+        const index = Number(event.currentTarget?.dataset?.index);
+        if (list !== "kretsar" && list !== "foljeslagare") return;
+        if (!Number.isInteger(index) || index < 0) return;
+        const ok = await Dialog.confirm({
+            title: game.i18n.localize("eon.dialogs.tarBort"),
+            content: `<p>${game.i18n.localize("eon.sheets.actor.kontaktRadTaBortBekraftelse")}</p>`
+        });
+        if (!ok) return;
+        const current = foundry.utils.duplicate(this.actor.system[list] ?? []);
+        if (index >= current.length) return;
+        current.splice(index, 1);
+        await this.actor.update({ [`system.${list}`]: current });
     }
  
     /** @override */
@@ -398,7 +453,7 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
             //update = true;       
         }  
         else if (droppedItem.type == "Folkslag") {
-            ui.notifications.warn(`Folkslag kan inte läggas till denna typ av Actor '${this.actor.type}'.`);
+            ui.notifications.warn(game.i18n.format("eon.messages.folkslagKanInteLaggasTill", { type: this.actor.type }));
             return false;
         }  
         
@@ -479,7 +534,7 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
             return;
         }
         
-        ui.notifications.error("Slag saknar funktion");
+        ui.notifications.error(game.i18n.localize("eon.messages.slagSaknarFunktion"));
 
         return;
     }
@@ -495,7 +550,7 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
         const itemid = await ItemHelper.CreateItem(this.actor, event);
 
         if (!itemid) {
-            ui.notifications.error("Typen som skall skapas saknar funktion");
+            ui.notifications.error(game.i18n.localize("eon.messages.typSaknarFunktion"));
         }
         else {
             const item = await this.actor.getEmbeddedDocument("Item", itemid);
@@ -651,7 +706,7 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
         // gäller item i sig
         const performDelete = await new Promise((resolve) => {
             Dialog.confirm({
-                title: "Tar bort " + source,
+                title: game.i18n.localize("eon.dialogs.tarBort") + " " + source,
                 yes: () => resolve(true),
                 no: () => resolve(false),
                 content: "Är du säker du vill ta bort " + source,
@@ -735,6 +790,9 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
         const element = event.currentTarget;
         const dataset = element.dataset;
 
+        // om disabled
+        if (element.classList.contains("disabled")) return;
+
         // om det var ett item
         if (dataset.itemid != undefined) {
             const itemid = dataset.itemid;
@@ -752,7 +810,7 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
                 this.render();
             }
             else {
-                ui.notifications.error("Datatypen ["+dataset.type+"] som skall ändras saknar funktion");
+                ui.notifications.error(game.i18n.format("eon.messages.datatypSaknarFunktion", { type: dataset.type }));
             }
 
             return;

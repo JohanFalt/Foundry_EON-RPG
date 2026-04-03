@@ -1,25 +1,25 @@
 <div class="item-box">
-    <div class="large-headline">Vapen</div>
+    <div class="large-headline">{{localize "eon.config.slag.vapen"}}</div>
 
     <div class="headline headline-background item-row">    
         <div class="weapon-icon pointer">
-            <a class="item-create" title="Lägg till vapen" data-type="närstridsvapen">
+            <a class="item-create" title="{{localize 'eon.sheets.actor.laggTillVapen'}}" data-type="närstridsvapen">
                 <i class="fa-solid fa-square-plus green"></i>
             </a>
         </div>    
-        <div style="width: 150px;">Närstridsvapen</div>
+        <div style="width: 150px;">{{localize "eon.sheets.actor.narstridsvapen"}}</div>
 
-        <div class="centerText" style="width: 60px;">Träffa</div>
+        <div class="centerText" style="width: 60px;">{{localize "eon.sheets.actor.traffa"}}</div>
 
-        <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-icon" title="Hugg" /></div>
-        <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_kross}}" class="item img-icon" title="Kross" /></div>
-        <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_stick}}" class="item img-icon" title="Stick" /></div>
-        <div style="margin-left: 50px;">Egenskaper</div>
+        <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-icon" title="{{localize 'eon.config.vapenskador.hugg'}}" /></div>
+        <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_kross}}" class="item img-icon" title="{{localize 'eon.config.vapenskador.kross'}}" /></div>
+        <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_stick}}" class="item img-icon" title="{{localize 'eon.config.vapenskador.stick'}}" /></div>
+        <div style="margin-left: 50px;">{{localize "eon.sheets.actor.egenskaper"}}</div>
     </div>   
 
     {{#each actor.system.listdata.vapen.narstrid as | vapen key|}}
         <div class="item-row item-listrow">
-            <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera vapen" data-source="weapon" data-itemid="{{vapen._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="item-listbox weapon-icon"><a class="item-edit" title="{{localize 'eon.sheets.actor.editeraVapen'}}" data-source="weapon" data-itemid="{{vapen._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             <div class="item-listbox vrollable" style="width: 150px;" data-source="weapon" data-itemid="{{vapen._id}}">{{vapen.name}}</div>
 
             <div class="item-listbox centerText" style="width: 60px;">
@@ -40,20 +40,20 @@
     
     <div class="headline headline-background item-row">        
         <div class="weapon-icon pointer">
-            <a class="item-create" title="Lägg till avståndsvapen" data-type="avståndsvapen">
+            <a class="item-create" title="{{localize 'eon.sheets.actor.laggTillAvstandsvapen'}}" data-type="avståndsvapen">
                 <i class="fa-solid fa-square-plus green"></i>
             </a>
         </div>
-        <div style="width: 150px;">Avståndsvapen</div>
-        <div class="centerText" style="width: 60px;">Träffa</div>
-        <div class="centerText" style="width: 100px;">Skada</div>
-        <div class="centerText" style="width: 100px;">Räckvidd</div>
-        <div>Egenskaper</div>
+        <div style="width: 150px;">{{localize "eon.sheets.actor.avstandsvapen"}}</div>
+        <div class="centerText" style="width: 60px;">{{localize "eon.sheets.actor.traffa"}}</div>
+        <div class="centerText" style="width: 100px;">{{localize "eon.sheets.actor.skada"}}</div>
+        <div class="centerText" style="width: 100px;">{{localize "eon.sheets.actor.rackvidd"}}</div>
+        <div>{{localize "eon.sheets.actor.egenskaper"}}</div>
     </div>   
 
     {{#each actor.system.listdata.vapen.avstand as | vapen key|}}
         <div class="item-row item-listrow">
-            <div class="item-listbox weapon-icon"><a class="item-edit" title="Editera vapen" data-source="weapon" data-itemid="{{vapen._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="item-listbox weapon-icon"><a class="item-edit" title="{{localize 'eon.sheets.actor.editeraVapen'}}" data-source="weapon" data-itemid="{{vapen._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
             <div class="item-listbox vrollable" style="width: 150px;" data-source="weapon" data-itemid="{{vapen._id}}">{{vapen.name}}</div>
             <div class="item-listbox centerText" style="width: 60px;">{{getDiceValue vapen.system.traffa}}</div>        
             <div class="item-listbox centerText" style="width: 100px;">{{getDiceValue vapen.system.skada}} {{{getWeaponDamageType vapen.system.skadetyp}}}</div>
@@ -72,26 +72,26 @@
         <div class="item-column">
 
             <div class="item-row" style="min-height: 75px;">
-                <div class="headline" style="width:175px;">Grundrustning</div>
+                <div class="headline" style="width:175px;">{{localize "eon.sheets.actor.grundrustning"}}</div>
                 <div class="attribute item-row">
                     <div class="dice-value">{{actor.system.harleddegenskaper.grundrustning.totalt}}</div>
-                    <div class="skill-icon"><a class="item-edit" title="Editera {{EON.CONFIG.harleddegenskaper.grundrustning.namn}}" data-type="attribute" data-source="harleddegenskaper" data-attribute="grundrustning"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+                    <div class="skill-icon"><a class="item-edit" title="{{localize 'eon.sheets.actor.editera'}} {{EON.CONFIG.harleddegenskaper.grundrustning.namn}}" data-type="attribute" data-source="harleddegenskaper" data-attribute="grundrustning"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
                 </div>
             </div>    
             
             <div class="item-row">
-                <div class="headline" style="width:175px;">Skydd</div>
+                <div class="headline" style="width:175px;">{{localize "eon.sheets.actor.skydd"}}</div>
                 <div class="floating-label-group">
-                    <input class="attribute-value skill-label skill-value" type="text" name="system.skada.skydd.hugg" value="{{actor.system.skada.skydd.hugg}}" data-dtype="Number" />
-                    <span class="floating-label">Hugg</span>
+                    <input class="attribute-value   skill-value" type="text" name="system.skada.skydd.hugg" value="{{actor.system.skada.skydd.hugg}}" data-dtype="Number" />
+                    <span class="floating-label">{{localize "eon.config.vapenskador.hugg"}}</span>
                 </div>
                 <div class="floating-label-group">
-                    <input class="attribute-value skill-label skill-value" type="text" name="system.skada.skydd.kross" value="{{actor.system.skada.skydd.kross}}" data-dtype="Number" />
-                    <span class="floating-label">Kross</span>
+                    <input class="attribute-value   skill-value" type="text" name="system.skada.skydd.kross" value="{{actor.system.skada.skydd.kross}}" data-dtype="Number" />
+                    <span class="floating-label">{{localize "eon.config.vapenskador.kross"}}</span>
                 </div>
                 <div class="floating-label-group">
-                    <input class="attribute-value skill-label skill-value" type="text" name="system.skada.skydd.stick" value="{{actor.system.skada.skydd.stick}}" data-dtype="Number" />
-                    <span class="floating-label">Stick</span>
+                    <input class="attribute-value   skill-value" type="text" name="system.skada.skydd.stick" value="{{actor.system.skada.skydd.stick}}" data-dtype="Number" />
+                    <span class="floating-label">{{localize "eon.config.vapenskador.stick"}}</span>
                 </div>                
             </div>
                        
@@ -102,26 +102,26 @@
         <div class="item-row item-right" style="width: 40%">
             <div class="information-area information-box" style="max-width: 250px; width: 250px;">
                 <div class="headline skill-row skill">
-                    <div class="three-column centerText">Skada</div>
+                    <div class="three-column centerText">{{localize "eon.sheets.actor.skada"}}</div>
                     <div class="three-column centerText">Utm.</div>
-                    <div class="three-column centerText">Vändning</div>                
+                    <div class="three-column centerText">{{localize "eon.sheets.actor.vandning"}}</div>                
                 </div>
     
                 {{#each actor.system.skada.vandning.lista as | vandning key|}}
                     <div class="skill-row skill">
-                        <div class="three-column centerText  ">{{vandning.skada}}</div>
-                        <div class="three-column centerText  ">{{vandning.utmattning}}</div>
+                        <div class="three-column centerText">{{vandning.skada}}</div>
+                        <div class="three-column centerText">{{vandning.utmattning}}</div>
                         {{#if vandning.vandning}}
                             <div class="three-column centerText {{#if (ne ../actor.system.skada.vandning.listaid "")}}vrollable{{/if}}" data-source="vandning" data-bonus="{{vandning.bonus}}">{{#if (gt vandning.bonus 0)}}1T10+{{vandning.bonus}}{{else}}1T10{{/if}}</div>
                         {{else}}
-                            <div class="three-column centerText  ">-</div>
+                            <div class="three-column centerText">-</div>
                         {{/if}}
                     </div>
                 {{/each}}
     
             </div>
             <div class="skill-icon">
-                <a class="item-edit" title="Editera" data-type="skada" data-attribute="vandning">
+                <a class="item-edit" title="{{localize 'eon.sheets.actor.editera'}}" data-type="skada" data-attribute="vandning">
                     <i class="icon fa-solid fa-pen-to-square"></i>
                 </a>
             </div>

@@ -11,24 +11,24 @@
                     </div>
 
                     <div class="item-column" style="min-width: 270px;">
-                        <div class="item-property-area   floating-label-group">
+                        <div class="item-property-area floating-label-group">
                             <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
-                            <span class="floating-label">Namn</span>
+                            <span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
                         </div>
 
-                        <div class="item-property-area   floating-label-group">
+                        <div class="item-property-area floating-label-group">
                             <input class="attribute-value" type="text" value="{{data.system.belastning}}" data-dtype="Number" disabled readonly />
-                            <span class="floating-label">Belastning</span>
+                            <span class="floating-label">{{localize "eon.sheets.actor.belastning"}}</span>
                         </div>
 
-                        <div class="item-property-area   floating-label-group" style="margin-top: 5px;">
+                        <div class="item-property-area floating-label-group" style="margin-top: 5px;">
                             <input type="number" name="system.belastning_reduction" 
                                 value="{{item.system.belastning_reduction}}" 
                                 class="attribute-value editable" 
                                 data-dtype="Number" 
                                 min="0" 
                                 style="width: 100px;" />
-                            <span class="floating-label">Belastningsreduktion</span>
+                            <span class="floating-label">{{localize "eon.sheets.item.belastningsreduktion"}}</span>
                         </div>
                     </div>     
                 </div>            
@@ -38,7 +38,7 @@
                         <div class="pointer red item-delete large-icon" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
                     {{/if}}     
                     
-                    <div class="information-area top-sidetext">RUSTNING</div>
+                    <div class="information-area top-sidetext">{{localize "eon.sheets.item.rustningLabel"}}</div>
                 </div>
             </div>
 			
@@ -48,22 +48,22 @@
             
             <div class="item-column">
                 <div class="item-row headline">
-                    <div style="width: 100px;">Delområde</div>
-                    <div style="width: 150px;">Material</div>
-                    <div class="centerText" style="width: 50px;">Edit</div>
-                    <div class="centerText" style="width: 50px;">Hugg</div>
-                    <div class="centerText" style="width: 50px;">Kross</div>
-                    <div class="centerText" style="width: 50px;">Stick</div>
-                    <div class="centerText" style="width: 50px;">Belastning</div>
+                    <div style="width: 100px;">{{localize "eon.sheets.actor.delomrade"}}</div>
+                    <div style="width: 150px;">{{localize "eon.sheets.actor.material"}}</div>
+                    <div class="centerText" style="width: 50px;">{{localize "eon.sheets.item.edit"}}</div>
+                    <div class="centerText" style="width: 50px;">{{localize "eon.config.vapenskador.hugg"}}</div>
+                    <div class="centerText" style="width: 50px;">{{localize "eon.config.vapenskador.kross"}}</div>
+                    <div class="centerText" style="width: 50px;">{{localize "eon.config.vapenskador.stick"}}</div>
+                    <div class="centerText" style="width: 50px;">{{localize "eon.sheets.actor.belastning"}}</div>
                 </div>
 
                 {{#each item.system.kroppsdel as |rustning key|}}
                     <div class="item-row item-listrow">
-                        <div class="item-listbox" style="width: 100px;">{{rustning.namn}}</div>
+                        <div class="item-listbox" style="width: 100px;">{{localize rustning.namn}}</div>
                         <div class="item-listbox" style="width: 150px;">
                             <select class="inputdata" data-source="armor" data-kroppsdel="{{rustning.kroppsdel}}" style="width: 125px;">                                
-                                <option value="">- Inget -</option>
-                                {{selectOptions ../rustningsmaterial selected=rustning.material labelAttr="namn" localize=false}}
+                                <option value="">{{localize "eon.sheets.item.ingetOption"}}</option>
+                                {{selectOptions ../rustningsmaterial selected=rustning.material labelAttr="namn" localize=true}}
                             </select>
                         </div>
                         <div class="item-listbox centerText" style="width: 50px;">

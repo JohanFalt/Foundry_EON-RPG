@@ -1,122 +1,374 @@
-<div>
+{{#if (eq actor.system.installningar.eon "eon4")}}
 
-    <div class="item-column info-box" style="max-height: 160px; width: 100%;">
+    <div>
 
-        <div class="bio">
-            <div class="floating-label-group">
-                <input class="text-value editable skill-label" type="text" name="name" value="{{actor.name}}" data-dtype="String" style="width: 300px" />
-                <span class="floating-label skill-label">Namn</span>
-            </div>
-        </div>        
+        <div class="item-column info-box" style="max-height: 200px; width: 100%;">
 
-        <div class="bio item-row">
-
-            <div>
+            <div class="bio">
                 <div class="floating-label-group">
-                    <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 138px" name="system.bakgrund.kon" value="{{data.system.bakgrund.kon}}" />
-                    <span class="floating-label skill-label">Kön</span>
+                    <input class="text-value editable" type="text" name="name" value="{{actor.name}}" data-dtype="String" style="width: 300px" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.namn"}}</span>
+                </div>
+            </div>        
+
+            <div class="bio item-row">
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" data-dtype="String" style="width: 138px" name="system.bakgrund.kon" value="{{data.system.bakgrund.kon}}" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.kon"}}</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" data-dtype="String" style="width: 50px" name="system.bakgrund.alder" value="{{data.system.bakgrund.alder}}" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.alder"}}</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" data-dtype="String" style="width: 50px" name="system.bakgrund.langd" value="{{data.system.bakgrund.langd}}" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.langd"}}</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" data-dtype="String" style="width: 50px" name="system.bakgrund.vikt" value="{{data.system.bakgrund.vikt}}" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.vikt"}}</span>
+                    </div>
                 </div>
             </div>
 
-            <div>
+            <div class="bio">
                 <div class="floating-label-group">
-                    <input class="attribute-value editable skill-label" type="text" data-dtype="String" style="width: 50px" name="system.bakgrund.alder" value="{{data.system.bakgrund.alder}}" />
-                    <span class="floating-label skill-label">Ålder</span>
+                    <select class="text-value editable" name="system.strid.vapenarm" id="system.strid.vapenarm" style="width: 300px">
+                        {{selectOptions listData.vapenArm selected=actor.system.strid.vapenarm localize=false}}                                        
+                    </select>
+                    <span class="floating-label">{{localize "eon.sheets.actor.vapenarm"}}</span>
                 </div>
             </div>
 
-            <div>
+            <div class="bio">
                 <div class="floating-label-group">
-                    <input class="attribute-value editable skill-label" type="text" data-dtype="String" style="width: 50px" name="system.bakgrund.langd" value="{{data.system.bakgrund.langd}}" />
-                    <span class="floating-label skill-label">Längd</span>
+                    <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.folkslag" value="{{data.system.bakgrund.folkslag}}" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.folkslag"}}</span>
+                </div>
+            </div>
+            {{#if (eq data.system.installningar.eon "eon5")}}
+            <div class="bio">
+                <div class="floating-label-group">
+                    <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.kulturfolkslag" value="{{data.system.bakgrund.kulturfolkslag}}" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.kulturfolkslag"}}</span>
+                </div>
+            </div>
+            {{/if}}
+
+            {{#if (eq data.system.installningar.eon "eon4")}}
+            <div class="bio">
+                <div class="floating-label-group">
+                    <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.religion" value="{{data.system.bakgrund.religion}}" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.religion"}}</span>
+                </div>
+            </div>
+            {{/if}}
+            {{#if (eq data.system.installningar.eon "eon5")}}
+            <div class="bio">
+                <div class="floating-label-group">
+                    <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.religion" value="{{data.system.bakgrund.religion}}" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.religion"}}</span>
+                </div>
+            </div>
+            <div class="bio">
+                <div class="floating-label-group">
+                    <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.doktriner" value="{{data.system.bakgrund.doktriner}}" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.doktriner"}}</span>
+                </div>
+            </div>
+            {{/if}}
+
+            <div class="bio">
+                <div class="floating-label-group">
+                    <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.varv" value="{{data.system.bakgrund.varv}}" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.varv"}}</span>
                 </div>
             </div>
 
-            <div>
+            <div class="bio">
                 <div class="floating-label-group">
-                    <input class="attribute-value editable skill-label" type="text" data-dtype="String" style="width: 50px" name="system.bakgrund.vikt" value="{{data.system.bakgrund.vikt}}" />
-                    <span class="floating-label skill-label">Vikt</span>
+                    <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.hemort" value="{{data.system.bakgrund.hemort}}" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.hemort"}}</span>
                 </div>
             </div>
-        </div>
-
-        <div class="bio">
-            <div class="floating-label-group">
-                <select class="text-value editable" name="system.strid.vapenarm" id="system.strid.vapenarm" style="width: 300px">
-                    {{selectOptions listData.vapenArm selected=actor.system.strid.vapenarm localize=false}}                                        
-                </select>
-                <span class="floating-label skill-label">Vapenarm</span>
+            {{#if (eq data.system.installningar.eon "eon5")}}
+            <div class="bio">
+                <div class="floating-label-group">
+                    <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.hemland" value="{{data.system.bakgrund.hemland}}" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.hemland"}}</span>
+                </div>
             </div>
-        </div>
+            {{/if}}
 
-        <div class="bio">
-            <div class="floating-label-group">
-                <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.folkslag" value="{{data.system.bakgrund.folkslag}}" />
-                <span class="floating-label skill-label">Folkslag</span>
+            <div class="bio">
+                <div class="floating-label-group">
+                    <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.arketyp" value="{{data.system.bakgrund.arketyp}}" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.arketyp"}}</span>
+                </div>
             </div>
-        </div>
 
-        <div class="bio">
-            <div class="floating-label-group">
-                <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.religion" value="{{data.system.bakgrund.religion}}" />
-                <span class="floating-label skill-label">Religion</span>
+            <div class="bio">
+                <div class="floating-label-group">
+                    <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.miljo" value="{{data.system.bakgrund.miljo}}" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.miljo"}}</span>
+                </div>
             </div>
-        </div>
-
-        <div class="bio">
-            <div class="floating-label-group">
-                <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.varv" value="{{data.system.bakgrund.varv}}" />
-                <span class="floating-label skill-label">Värv</span>
+            {{#if (eq data.system.installningar.eon "eon5")}}
+            <div class="bio">
+                <div class="floating-label-group">
+                    <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.levnadsstandard" value="{{data.system.bakgrund.levnadsstandard}}" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.levnadsstandard"}}</span>
+                </div>
             </div>
-        </div>
+            {{/if}}
 
-        <div class="bio">
-            <div class="floating-label-group">
-                <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.hemort" value="{{data.system.bakgrund.hemort}}" />
-                <span class="floating-label skill-label">Hemort</span>
+            <div class="bio">
+                <div class="floating-label-group">
+                    <input class="text-value editable" type="text" name="system.bakgrund.sysselsattning" value="{{data.system.bakgrund.sysselsattning}}" data-dtype="String" style="width: 300px" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.sysselsattning"}}</span>
+                </div>
             </div>
-        </div>        
-
-        <div class="bio">
-            <div class="floating-label-group">
-                <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.arketyp" value="{{data.system.bakgrund.arketyp}}" />
-                <span class="floating-label skill-label">Arketyp</span>
+            {{#if (eq data.system.installningar.eon "eon5")}}
+            <div class="bio">
+                <div class="floating-label-group">
+                    <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.koncept" value="{{data.system.bakgrund.koncept}}" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.koncept"}}</span>
+                </div>
             </div>
+            {{/if}}
+
+            
+
+            
         </div>
-
-        <div class="bio">
-            <div class="floating-label-group">
-                <input class="text-value editable skill-label" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.miljo" value="{{data.system.bakgrund.miljo}}" />
-                <span class="floating-label skill-label">Miljö</span>
-            </div>
-        </div>
-
-        <div class="bio">
-            <div class="floating-label-group">
-                <input class="text-value editable skill-label" type="text" name="system.bakgrund.sysselsattning" value="{{data.system.bakgrund.sysselsattning}}" data-dtype="String" style="width: 300px" />
-                <span class="floating-label skill-label">Sysselsättning</span>
-            </div>
-        </div>
-
-        
-
-        
     </div>
-</div>
+
+{{/if}}
+
+{{#if (eq actor.system.installningar.eon "eon5")}}
+
+    <div>
+
+        <div class="item-column info-box" style="max-height: 200px; width: 100%;">
+
+            <div class="bio item-row">
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" name="name" value="{{actor.name}}" data-dtype="String" style="width: 148px" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.namn"}}</span>
+                    </div>
+                </div>    
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" name="system.bakgrund.titel" value="{{data.system.bakgrund.titel}}" data-dtype="String" style="width: 148px" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.titel"}}</span>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="bio">
+                <div class="floating-label-group">
+                    <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.koncept" value="{{data.system.bakgrund.koncept}}" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.koncept"}}</span>
+                </div>
+            </div>
+
+            <div class="bio item-row">
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" data-dtype="String" style="width: 138px" name="system.bakgrund.kon" value="{{data.system.bakgrund.kon}}" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.kon"}}</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" data-dtype="String" style="width: 50px" name="system.bakgrund.alder" value="{{data.system.bakgrund.alder}}" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.alder"}}</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" data-dtype="String" style="width: 50px" name="system.bakgrund.langd" value="{{data.system.bakgrund.langd}}" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.langd"}}</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" data-dtype="String" style="width: 50px" name="system.bakgrund.vikt" value="{{data.system.bakgrund.vikt}}" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.vikt"}}</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="bio">
+                <div class="floating-label-group">
+                    <select class="text-value editable" name="system.strid.vapenarm" id="system.strid.vapenarm" style="width: 300px">
+                        {{selectOptions listData.vapenArm selected=actor.system.strid.vapenarm localize=false}}                                        
+                    </select>
+                    <span class="floating-label">{{localize "eon.sheets.actor.vapenarm"}}</span>
+                </div>
+            </div>
+
+            <div class="bio item-row">
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" data-dtype="String" style="width: 148px" name="system.bakgrund.folkslag" value="{{data.system.bakgrund.folkslag}}" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.folkslag"}}</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" data-dtype="String" style="width: 148px" name="system.bakgrund.kulturfolkslag" value="{{data.system.bakgrund.kulturfolkslag}}" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.kulturfolkslag"}}</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="bio">
+                <div class="floating-label-group">
+                    <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.religion" value="{{data.system.bakgrund.religion}}" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.religion"}}</span>
+                </div>
+            </div>
+            <div class="bio">
+                <div class="floating-label-group">
+                    <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.doktriner" value="{{data.system.bakgrund.doktriner}}" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.doktriner"}}</span>
+                </div>
+            </div>
+
+            <div class="bio item-row">
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" data-dtype="String" style="width: 148px" name="system.bakgrund.hemland" value="{{data.system.bakgrund.hemland}}" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.hemland"}}</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" data-dtype="String" style="width: 148px" name="system.bakgrund.hemort" value="{{data.system.bakgrund.hemort}}" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.hemort"}}</span>
+                    </div>
+                </div>  
+            </div>
+
+            <div class="bio item-row">
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" data-dtype="String" style="width: 98px" name="system.bakgrund.arketyp" value="{{data.system.bakgrund.arketyp}}" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.arketyp"}}</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" data-dtype="String" style="width: 98px" name="system.bakgrund.varv" value="{{data.system.bakgrund.varv}}" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.varv"}}</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" name="system.bakgrund.sysselsattning" value="{{data.system.bakgrund.sysselsattning}}" data-dtype="String" style="width: 98px" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.sysselsattning"}}</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="bio item-row">
+
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" data-dtype="String" style="width: 148px" name="system.bakgrund.miljo" value="{{data.system.bakgrund.miljo}}" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.miljo"}}</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="floating-label-group">
+                        <input class="text-value editable" type="text" data-dtype="String" style="width: 148px" name="system.bakgrund.levnadsstandard" value="{{data.system.bakgrund.levnadsstandard}}" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.levnadsstandard"}}</span>
+                    </div>
+                </div>
+
+            </div>
+
+            
+            
+        </div>
+    </div>
+
+{{/if}}
 
 {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-trait.html"}}
 
-<div class="large-headline">Anteckningar</div>
+{{#if (eq data.system.installningar.eon "eon5")}}
+
+    <div class="headline headline-background item-row">
+        <div class="weapon-icon pointer">
+            <a class="eon-sheet-kontakt-add" title="{{localize 'eon.wizard.kretsLaggTill'}}" data-list="kretsar">
+                <i class="fa-solid fa-square-plus green"></i>
+            </a>
+        </div>
+        <div class="large-headline">{{localize "eon.wizard.kretsarRubrik"}}</div>
+    </div>
+
+    {{#each data.system.kretsar}}
+
+        <div class="bio item-row" style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: flex-end; width: 100%; max-width: 640px;">
+            <div class="weapon-icon" style="flex: 0 0 auto; align-self: flex-end; padding-bottom: 2px;">
+                <a class="pointer red eon-sheet-kontakt-remove" title="{{localize 'eon.wizard.fardighetTaBortRad'}}" data-list="kretsar" data-index="{{@index}}"><i class="icon fa-solid fa-trash-can"></i></a>
+            </div>
+            <div class="floating-label-group" style="flex: 1 1 200px; min-width: 160px;">
+                <input class="text-value editable" type="text" data-dtype="String" name="system.kretsar.{{@index}}.namn" value="{{this.namn}}" style="width: 100%; box-sizing: border-box;" />
+                <span class="floating-label">{{localize "eon.sheets.actor.namn"}}</span>
+            </div>
+            <div class="floating-label-group" style="flex: 2 1 280px; min-width: 200px;">
+                <input class="text-value editable" type="text" data-dtype="String" name="system.kretsar.{{@index}}.anteckning" value="{{this.anteckning}}" style="width: 100%; box-sizing: border-box;" />
+                <span class="floating-label">{{localize "eon.sheets.actor.anteckning"}}</span>
+            </div>
+        </div>
+
+    {{/each}}
+    
+    <div class="large-headline">{{localize "eon.sheets.actor.relationer"}}</div>
+    <div class="editor-box">
+        {{editor enrichedRelationer target="system.bakgrund.relationer" button=true owner=owner editable=true}}
+    </div>
+
+    <div class="large-headline">{{localize "eon.sheets.actor.utseende"}}</div>
+    <div class="editor-box">
+        {{editor enrichedUtseende target="system.bakgrund.utseende" button=true owner=owner editable=true}}
+    </div>
+
+    
+{{/if}}
+
+<div class="large-headline">{{localize "eon.sheets.actor.anteckningar"}}</div>
 <div class="editor-box">
     {{editor enrichedBeskrivning target="system.bakgrund.beskrivning" button=true owner=owner editable=true}}
 </div>
-
-<!--<div class="clear">
-    <div class="large-headline">Rykten och titlar</div>
-    <div class="large-headline">Livsregler och eder</div>
-    <div class="large-headline">Organisationer</div>
-    <div class="large-headline">Relationer</div>
-    <div class="headline">Tillfälliga kontakter</div>
-    <div class="headline">Släkt</div>
-    <div class="large-headline">Viktiga datum</div>
-</div> -->

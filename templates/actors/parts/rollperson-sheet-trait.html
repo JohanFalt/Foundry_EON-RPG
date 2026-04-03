@@ -1,28 +1,10 @@
-<div class="large-headline">
-    <div>Egenskaper</div>     
-</div>
-{{#if (eq actor.system.installningar.eon "eon4")}}
-    {{#if (eq actor.system.bakgrund.folkslag "")}}
-        <div class="information-area information-box">Välj ett Folkslag från kompendiet eller skapa en egen och dra denna till rollformuläret.</div>
-    {{/if}}
-{{/if}}
-<div class="info-box item-column">
-    {{#each (getAncestryProperties actor) as |property id|}}
-        <div class="clear">
-            <div class="pullLeft item-listbox weapon-icon"><a class="item-edit" title="{{localize 'eon.sheets.actor.editeraEgenskap'}}" data-itemid="{{property._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
-            <div class="pullLeft headline">{{property.name}}</div>
-        </div>
-        <div class="description-row">{{{property.system.beskrivning}}}</div>
-    {{/each}}
-</div>
-
 <div class="headline headline-background item-row">
     <div class="weapon-icon pointer">
-        <a class="item-create" title="Lägg till karaktärsdrag" data-type="karaktärsdrag">
+        <a class="item-create" title="{{localize 'eon.sheets.actor.laggTillKaraktarsdrag'}}" data-type="karaktärsdrag">
             <i class="fa-solid fa-square-plus green"></i>
         </a>
     </div>       
-    <div>Karaktärsdrag</div>     
+    <div>{{localize "eon.sheets.actor.karaktarsdragLabel"}}</div>     
 </div>
 
 <div class="info-box item-row">
@@ -45,7 +27,7 @@
                 </div>
                 <div class="floating-label-group">
                     <input class="inputdata editable" type="text" data-dtype="String" id="{{../actor._id}}_karaktarsdrag_niva1_text_{{id}}" value="{{drag.niva1.text}}" data-source="karaktarsdrag" data-index="{{id}}" data-name="niva1.text" />
-                    <span class="floating-label text-label">Nivå 1</span>
+                    <span class="floating-label text-label">{{localize "eon.sheets.actor.niva1"}}</span>
                 </div>
             </div>
 
@@ -57,7 +39,7 @@
                 </div>
                 <div class="floating-label-group">
                     <input class="inputdata editable" type="text" data-dtype="String" id="{{../actor._id}}_karaktarsdrag_niva2_text_{{id}}" value="{{drag.niva2.text}}" data-source="karaktarsdrag" data-index="{{id}}" data-name="niva2.text" />
-                    <span class="floating-label text-label">Nivå 2</span>
+                    <span class="floating-label text-label">{{localize "eon.sheets.actor.niva2"}}</span>
                 </div>
             </div>
             
@@ -69,7 +51,7 @@
                 </div>
                 <div class="floating-label-group">
                     <input class="inputdata editable" type="text" data-dtype="String" id="{{../actor._id}}_karaktarsdrag_niva3_text_{{id}}" value="{{drag.niva3.text}}" data-source="karaktarsdrag" data-index="{{id}}" data-name="niva3.text" />
-                    <span class="floating-label text-label">Nivå 3</span>
+                    <span class="floating-label text-label">{{localize "eon.sheets.actor.niva3"}}</span>
                 </div>
             </div>
 
@@ -80,19 +62,19 @@
                             <div class="resource-box" data-value="{{drag.last}}">
                                 <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="last" data-value="{{drag.last}}"></span>
                             </div>
-                            <div class="pullLeft">Låst</div>
+                            <div class="pullLeft">{{localize "eon.sheets.actor.last"}}</div>
                         </div>
                         <div class="item-row three-inner-column">                        
                             <div class="resource-box" data-value="{{drag.svarighet}}">
                                 <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="svarighet" data-value="{{drag.svarighet}}"></span>
                             </div>
-                            <div class="pullLeft">Svaghet</div>
+                            <div class="pullLeft">{{localize "eon.sheets.actor.svaghet"}}</div>
                         </div>
                         <div class="item-row three-inner-column">                        
                             <div class="resource-box" data-value="{{drag.tvivel}}">
                                 <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="tvivel" data-value="{{drag.tvivel}}"></span>
                             </div>
-                            <div class="pullLeft">Tvivel</div>
+                            <div class="pullLeft">{{localize "eon.sheets.actor.tvivel"}}</div>
                         </div>
                     </div>
                 </div>
@@ -103,25 +85,25 @@
                             <div class="resource-box" data-value="{{drag.last}}">
                                 <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="last" data-value="{{drag.last}}"></span>
                             </div>
-                            <div class="pullLeft">Låst</div>
+                            <div class="pullLeft">{{localize "eon.sheets.actor.last"}}</div>
                         </div>
                         <div class="item-row four-column">                        
                             <div class="resource-box" data-value="{{drag.svarighet}}">
                                 <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="svarighet" data-value="{{drag.svarighet}}"></span>
                             </div>
-                            <div class="pullLeft">Svaghet</div>
+                            <div class="pullLeft">{{localize "eon.sheets.actor.svaghet"}}</div>
                         </div>
                         <div class="item-row four-column">                        
                             <div class="resource-box" data-value="{{drag.tvivel}}">
                                 <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="tvivel" data-value="{{drag.tvivel}}"></span>
                             </div>
-                            <div class="pullLeft">Tvivel</div>
+                            <div class="pullLeft">{{localize "eon.sheets.actor.tvivel"}}</div>
                         </div>
                         <div class="item-row four-column">                        
                             <div class="resource-box" data-value="{{drag.storning}}">
                                 <span class="resource-value resource-box-center" data-type="karaktarsdrag" data-index="{{id}}" data-name="storning" data-value="{{drag.storning}}"></span>
                             </div>
-                            <div class="pullLeft">Störning</div>
+                            <div class="pullLeft">{{localize "eon.sheets.actor.storning"}}</div>
                         </div>
                     </div>
                 </div>
@@ -130,67 +112,25 @@
         </div>
     {{/each}}
 
-   <!--  <div class="pullLeft two-column">
-
-        <div class="clear">
-            <div class="pullLeft caption">Sekundärt</div>
-            <div class="pullLeft attribute-value editable">
-                <select>
-                    <option>- Välj -</option>
-                    {{#each EON.karaktarsdrag as |karaktarsdrag key|}}
-                        <option value="{{key}}">{{karaktarsdrag.namn}}</option>
-                    {{/each}}
-                </select>
-            </div>
-        </div>
-
-        <div class="clear">
-            <div class="pullLeft">
-                <div class="pullLeft">Nivå 1</div>
-                <div class="resource-box pullLeft" data-value="" data-name="">
-                    <span class="resource-value" data-index="0" data-type="" data-value=""></span>
-                </div>
-            </div>
-            <div class="pullLeft"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
-        </div>
-        <div class="clear">
-            <div class="pullLeft">
-                <div class="pullLeft">Nivå 2</div>
-                <div class="resource-box pullLeft" data-value="" data-name="">
-                    <span class="resource-value" data-index="0" data-type="" data-value=""></span>
-                </div>
-            </div>
-            <div class="pullLeft"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
-        </div>
-        <div class="clear">
-            <div class="pullLeft">
-                <div class="pullLeft">Nivå 3</div>
-                <div class="resource-box pullLeft" data-value="" data-name="">
-                    <span class="resource-value" data-index="0" data-type="" data-value=""></span>
-                </div>
-            </div>
-            <div class="pullLeft"><input class="attribute-value editable" type="text" data-dtype="String" /></div>
-        </div>
-        <div class="clear">
-            <div class="pullLeft">
-                <div class="pullLeft">Låst</div>
-                <div class="resource-box pullLeft" data-value="" data-name="">
-                    <span class="resource-value" data-index="0" data-type="" data-value=""></span>
-                </div>
-            </div>
-            <div class="pullLeft">
-                <div class="pullLeft">Svaghet</div>
-                <div class="resource-box pullLeft" data-value="" data-name="">
-                    <span class="resource-value" data-index="0" data-type="" data-value=""></span>
-                </div>
-            </div>
-            <div class="pullLeft">
-                <div class="pullLeft">Tvivel</div>
-                <div class="resource-box pullLeft" data-value="" data-name="">
-                    <span class="resource-value" data-index="0" data-type="" data-value=""></span>
-                </div>
-            </div>
-        </div>
-
-    </div> -->
 </div>
+
+<div class="headline headline-background item-row">
+    <div>{{localize "eon.sheets.actor.egenskaper"}}</div>     
+</div>
+
+{{#if (eq actor.system.installningar.eon "eon4")}}
+    {{#if (eq actor.system.bakgrund.folkslag "")}}
+        <div class="information-area information-box">{{localize "eon.sheets.info.valjFolkslagKompendium"}}</div>
+    {{/if}}
+{{/if}}
+
+<div class="info-box item-column">
+    {{#each (getAncestryProperties actor) as |property id|}}
+        <div class="clear">
+            <div class="pullLeft item-listbox weapon-icon"><a class="item-edit" title="{{localize 'eon.sheets.actor.editeraEgenskap'}}" data-itemid="{{property._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
+            <div class="pullLeft headline">{{property.name}}</div>
+        </div>
+        <div class="description-row">{{{property.system.beskrivning}}}</div>
+    {{/each}}
+</div>
+

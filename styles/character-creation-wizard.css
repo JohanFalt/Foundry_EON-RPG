@@ -1,0 +1,1083 @@
+/* Karaktärsskapande (light tokens enligt mockup v2-plan) */
+/* Ligga ovanför rollformuläret: högre bas-z + bringToFront vid öppning/ark-render */
+.application.eon-character-creation-wizard {
+  z-index: 160;
+}
+
+.eon-character-creation-wizard {
+  --eon-ccw-bg: #f8f6f1;
+  --eon-ccw-panel: #fff;
+  --eon-ccw-border: #c9b896;
+  --eon-ccw-text: #2c2416;
+  --eon-ccw-label: #5a4a32;
+  --eon-ccw-accent: #8b6914;
+}
+
+.eon-character-creation-wizard .window-content {
+  padding: 0;
+  overflow: hidden;
+  background: var(--eon-ccw-bg);
+  color: var(--eon-ccw-text);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 13px;
+}
+
+.eon-ccw-wrapper {
+  display: flex;
+  max-height: min(1000px, 85vh);
+  min-height: 420px;
+  background: var(--eon-ccw-panel);
+  border: 1px solid var(--eon-ccw-border);
+  border-radius: 6px;
+  margin: 8px;
+  overflow: hidden;
+}
+
+.eon-ccw-sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: linear-gradient(180deg, #f5f2ec 0%, #ebe6de 100%);
+  border-right: 1px solid var(--eon-ccw-border);
+  padding: 10px 8px;
+  overflow-y: auto;
+  font-size: 11px;
+}
+
+.eon-ccw-summary-title {
+  font-weight: 700;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--eon-ccw-accent);
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--eon-ccw-border);
+}
+
+.eon-ccw-summary-hint {
+  font-size: 9px;
+  color: var(--eon-ccw-label);
+  margin: 0 0 8px 0;
+  line-height: 1.35;
+  white-space: pre-line;
+}
+
+.eon-ccw-summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 2px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.eon-ccw-summary-row span:first-child {
+  color: var(--eon-ccw-label);
+  flex-shrink: 0;
+}
+
+.eon-ccw-summary-row span:last-child {
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 120px;
+}
+
+.eon-ccw-sidebar-ta {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 4px 6px;
+  font-size: 10px;
+  border: 1px solid var(--eon-ccw-border);
+  border-radius: 3px;
+  resize: vertical;
+  min-height: 48px;
+}
+
+.eon-ccw-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: min(1000px, 85vh);
+}
+
+.eon-ccw-header {
+  background: linear-gradient(180deg, #e8e0d0 0%, #ddd4c4 100%);
+  border-bottom: 2px solid var(--eon-ccw-border);
+  padding: 8px 12px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--eon-ccw-label);
+  flex-shrink: 0;
+}
+
+.eon-ccw-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 6px 8px 0;
+  background: #eee9e0;
+  border-bottom: 1px solid var(--eon-ccw-border);
+  flex-shrink: 0;
+}
+
+.eon-ccw-tab {
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--eon-ccw-label);
+  background: #e5dfd5;
+  border: 1px solid var(--eon-ccw-border);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  margin-bottom: -1px;
+}
+
+.eon-ccw-tab:hover {
+  background: #ddd4c4;
+}
+
+.eon-ccw-tab.active {
+  background: var(--eon-ccw-panel);
+  color: var(--eon-ccw-accent);
+  border-bottom: 1px solid var(--eon-ccw-panel);
+  margin-bottom: -2px;
+  padding-bottom: 7px;
+}
+
+.eon-ccw-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 16px;
+  min-height: 0;
+}
+
+.eon-ccw-section-title {
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--eon-ccw-accent);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e5dfd5;
+}
+
+.eon-ccw-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.eon-ccw-row-stack {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.eon-ccw-label {
+  min-width: 120px;
+  color: var(--eon-ccw-label);
+  font-size: 12px;
+}
+
+.eon-ccw-row input[type="text"],
+.eon-ccw-row textarea,
+.eon-ccw-row select.eon-ccw-select {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Enhetligt utseende för alla input/select/textarea i wizardn (t.ex. ccw_hemland, ccw_utseende). */
+.eon-character-creation-wizard input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="button"]):not([type="submit"]),
+.eon-character-creation-wizard select,
+.eon-character-creation-wizard textarea {
+  box-sizing: border-box;
+  padding: 6px 8px;
+  border: 1px solid var(--eon-ccw-border);
+  border-radius: 4px;
+  font-size: 13px;
+  background: #fff;
+  color: var(--eon-ccw-text);
+}
+
+.eon-ccw-row--vapenarm .eon-ccw-select {
+  flex: 1 1 12rem;
+  max-width: 16rem;
+}
+
+.eon-ccw-row--vapenarm .eon-ccw-btn-handelse-add {
+  flex: 0 0 auto;
+}
+
+.eon-ccw-row .eon-ccw-icon-btn {
+  flex: 0 0 auto;
+  align-self: center;
+}
+
+.eon-ccw-icon-btn {
+  padding: 6px 10px;
+  border: 1px solid var(--eon-ccw-border);
+  border-radius: 4px;
+  background: #fff;
+  color: #8b2942;
+  cursor: pointer;
+}
+
+.eon-ccw-doktrin-add {
+  flex: 0 0 auto;
+  align-self: center;
+}
+
+.eon-ccw-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+  padding: 10px 12px;
+  border-top: 1px solid var(--eon-ccw-border);
+  background: #f5f2ec;
+  flex-shrink: 0;
+}
+
+.eon-ccw-btn {
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--eon-ccw-border);
+}
+
+.eon-ccw-btn.secondary {
+  background: #fff;
+  color: var(--eon-ccw-label);
+}
+
+.eon-ccw-btn.secondary:hover {
+  background: #ebe6de;
+}
+
+.eon-ccw-btn.primary {
+  background: var(--eon-ccw-accent);
+  color: #fff;
+  border-color: #6d5210;
+}
+
+.eon-ccw-btn.primary:hover {
+  filter: brightness(1.08);
+}
+
+/* Div-baserade data grids (ersätter table) */
+.eon-ccw-datagrid {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.eon-ccw-datagrid__row {
+  display: grid;
+  align-items: center;
+  gap: 0;
+  border-bottom: 1px solid #f0ebe0;
+}
+
+.eon-ccw-datagrid__row--head {
+  border-bottom: 1px solid #e5dfd5;
+  font-weight: 600;
+}
+
+.eon-ccw-datagrid__cell {
+  padding: 4px 8px;
+  vertical-align: middle;
+  min-width: 0;
+}
+
+.eon-ccw-datagrid__cell--hdr {
+  color: var(--eon-ccw-label);
+  font-size: 12px;
+  padding: 6px 8px;
+}
+
+.eon-ccw-datagrid__cell--num {
+  text-align: right;
+  justify-self: end;
+}
+
+.eon-ccw-datagrid__cell--span3 {
+  grid-column: 1 / -1;
+}
+
+.eon-ccw-sidebar .eon-ccw-datagrid {
+  font-size: 10px;
+}
+
+.eon-ccw-sidebar .eon-ccw-datagrid__row {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.eon-ccw-sidebar .eon-ccw-datagrid__cell {
+  padding: 2px 4px;
+}
+
+.eon-ccw-sidebar .eon-ccw-datagrid__cell--hdr {
+  font-size: 10px;
+  padding: 2px 4px;
+  font-weight: 600;
+}
+
+.eon-ccw-sidebar .eon-ccw-datagrid__cell input {
+  width: 100%;
+  max-width: 100%;
+  padding: 2px 4px;
+  font-size: 10px;
+  border: 1px solid var(--eon-ccw-border);
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+
+/* Kolumner G/B: plats för [−] + eon-ccw-num-tiny (36px) + [+] utan att rutan blir bred */
+.eon-ccw-datagrid--summary-attr .eon-ccw-datagrid__row {
+  grid-template-columns: 1fr minmax(64px, auto) minmax(64px, auto);
+}
+
+.eon-ccw-datagrid--summary-2 .eon-ccw-datagrid__row {
+  grid-template-columns: 1fr minmax(64px, auto);
+}
+
+.eon-ccw-datagrid--bonus .eon-ccw-datagrid__row {
+  grid-template-columns: minmax(0, 18%) minmax(0, 16%) minmax(0, 14%) minmax(0, 1fr);
+  font-size: 12px;
+}
+
+.eon-ccw-datagrid--handelse .eon-ccw-datagrid__row {
+  grid-template-columns: minmax(0, 28%) minmax(52px, 12%) minmax(0, 1fr) auto;
+  font-size: 12px;
+  align-items: center;
+}
+
+.eon-ccw-datagrid--handelse .eon-ccw-datagrid__cell--col-hash {
+  text-align: center;
+  justify-self: center;
+}
+
+/* Rubrikrad: samma vänsterjustering som övriga kolumnrubriker (Resultat var centrerad). */
+.eon-ccw-datagrid--handelse .eon-ccw-datagrid__row--head .eon-ccw-datagrid__cell--col-hash {
+  text-align: left;
+  justify-self: start;
+}
+
+.eon-ccw-datagrid--handelse .eon-ccw-datagrid__cell--col-actions {
+  justify-self: end;
+}
+
+.eon-ccw-fardighet-grupp {
+  margin-top: 18px;
+}
+
+.eon-ccw-fardighet-grupp--valfria-enheter {
+  margin-top: 10px;
+  margin-bottom: 4px;
+}
+
+.eon-ccw-hint.eon-ccw-hint--inline {
+  margin: 0 0 14px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.eon-ccw-fardighet-grupp__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.eon-ccw-fardighet-grupp__label {
+  font-weight: 600;
+}
+
+.eon-ccw-fardighet-grupp--kontakter {
+  margin-top: 18px;
+}
+
+.eon-ccw-datagrid--kontakt-rad .eon-ccw-datagrid__row {
+  grid-template-columns: minmax(0, 22%) minmax(0, 1fr) auto;
+  font-size: 12px;
+  align-items: center;
+  column-gap: 6px;
+}
+
+.eon-ccw-datagrid--kontakt-rad .eon-ccw-datagrid__cell--kontakt-actions {
+  white-space: nowrap;
+  justify-self: end;
+}
+
+.eon-ccw-datagrid--fardighet-fordelning .eon-ccw-datagrid__row {
+  font-size: 12px;
+  align-items: center;
+}
+
+/* Färdighetsflik (T/I/B): gemensamt rutnät så rubriker (t.ex. Enheter) linjerar med samma kolumnbredd på alla rader. */
+/* Kolumn Enheter: minst ~5.25rem så stegaren (±+52px+±) och rubriken delar samma spår — inte minmax(3rem,3.25rem) som klämmer mot stegaren. */
+.eon-ccw-datagrid--fardighet-fordelning.eon-ccw-datagrid--fardighet-med-installningar {
+  display: grid;
+  grid-template-columns:
+    minmax(9.5rem, 14rem)
+    minmax(2.75rem, 3.25rem)
+    minmax(5.25rem, auto)
+    minmax(3.5rem, 5.25rem)
+    minmax(6rem, 7.5rem)
+    minmax(6rem, 7.5rem)
+    minmax(6rem, 7.5rem)
+    auto;
+  column-gap: 6px;
+  align-items: center;
+  font-size: 12px;
+}
+
+.eon-ccw-datagrid--fardighet-fordelning.eon-ccw-datagrid--fardighet-med-installningar .eon-ccw-datagrid__row {
+  display: contents;
+}
+
+.eon-ccw-datagrid--fardighet-fordelning.eon-ccw-datagrid--fardighet-med-installningar .eon-ccw-datagrid__cell {
+  border-bottom: 1px solid #f0ebe0;
+}
+
+.eon-ccw-datagrid--fardighet-fordelning.eon-ccw-datagrid--fardighet-med-installningar .eon-ccw-datagrid__row--head .eon-ccw-datagrid__cell {
+  border-bottom: 1px solid #e5dfd5;
+}
+
+/* Flik 10: endast språkval + ta bort (inga GV/enheter/totalt) */
+.eon-ccw-datagrid--fardighet-fordelning.eon-ccw-datagrid--fardighet-sprak .eon-ccw-datagrid__row {
+  grid-template-columns: minmax(9.5rem, 18rem) auto;
+  column-gap: 6px;
+  align-items: center;
+  justify-content: start;
+}
+
+.eon-ccw-datagrid--fardighet-sprak .eon-ccw-datagrid__row--sprak-tom {
+  grid-template-columns: 1fr;
+}
+
+.eon-ccw-datagrid--fardighet-sprak .eon-ccw-sprak-lista-namn {
+  display: inline-block;
+  padding: 4px 6px;
+  line-height: 1.35;
+  box-sizing: border-box;
+}
+
+/* Övriga typer: samma idé — ett rutnät per tabell så Enheter/Totalt inte hoppar mellan rader. */
+.eon-ccw-datagrid--fardighet-fordelning.eon-ccw-datagrid--fardighet-ovrig-typer {
+  display: grid;
+  grid-template-columns:
+    minmax(9.5rem, 14rem)
+    minmax(5.25rem, auto)
+    minmax(3.5rem, 5.25rem)
+    auto;
+  column-gap: 6px;
+  align-items: center;
+  font-size: 12px;
+}
+
+.eon-ccw-datagrid--fardighet-fordelning.eon-ccw-datagrid--fardighet-ovrig-typer .eon-ccw-datagrid__row {
+  display: contents;
+}
+
+.eon-ccw-datagrid--fardighet-fordelning.eon-ccw-datagrid--fardighet-ovrig-typer .eon-ccw-datagrid__cell {
+  border-bottom: 1px solid #f0ebe0;
+}
+
+.eon-ccw-datagrid--fardighet-fordelning.eon-ccw-datagrid--fardighet-ovrig-typer .eon-ccw-datagrid__row--head .eon-ccw-datagrid__cell {
+  border-bottom: 1px solid #e5dfd5;
+}
+
+.eon-ccw-datagrid--fardighet-ovrig-typer .eon-ccw-datagrid__row--head .eon-ccw-datagrid__cell--hdr {
+  white-space: nowrap;
+}
+
+.eon-ccw-datagrid--fardighet-fordelning .eon-ccw-fardighet-ovrig-namn-input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  font: inherit;
+}
+
+.eon-ccw-datagrid--fardighet-fordelning .eon-ccw-datagrid__cell--col-fardighet-poang {
+  text-align: center;
+  justify-self: center;
+  min-width: 0;
+}
+
+.eon-ccw-datagrid--fardighet-fordelning .eon-ccw-datagrid__cell--col-fardighet-grundvarde {
+  text-align: center;
+  justify-self: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.eon-ccw-datagrid--fardighet-fordelning .eon-ccw-datagrid__cell--col-fardighet-slutligt6 {
+  text-align: center;
+  justify-self: center;
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--eon-ccw-text);
+}
+
+.eon-ccw-datagrid--fardighet-fordelning .eon-ccw-datagrid__row--head .eon-ccw-datagrid__cell--col-fardighet-slutligt6 {
+  white-space: normal;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.eon-ccw-datagrid--fardighet-fordelning .eon-ccw-datagrid__cell--col-fardighet-inst {
+  text-align: center;
+  justify-self: center;
+  font-size: 11px;
+  line-height: 1.2;
+  min-width: 0;
+}
+
+.eon-ccw-datagrid--fardighet-fordelning .eon-ccw-datagrid__row--head .eon-ccw-datagrid__cell--col-fardighet-inst {
+  padding: 4px 6px;
+  white-space: nowrap;
+  line-height: 1.25;
+}
+
+.eon-ccw-datagrid--fardighet-fordelning .eon-ccw-datagrid__cell--chk input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+}
+
+.eon-ccw-datagrid--fardighet-fordelning .eon-ccw-datagrid__cell--col-fardighet-actions {
+  justify-self: end;
+}
+
+.eon-ccw-datagrid--fardighet-fordelning .eon-ccw-datagrid__cell--col-fardighet {
+  max-width: 14rem;
+}
+
+.eon-ccw-fardighet-item-select {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 4px 6px;
+  border: 1px solid var(--eon-ccw-border);
+  border-radius: 3px;
+  font-size: 12px;
+  box-sizing: border-box;
+  background: var(--eon-ccw-panel);
+  color: var(--eon-ccw-text);
+}
+
+.eon-ccw-handelse-tabell-select {
+  width: 100%;
+  min-width: 0;
+  padding: 4px 6px;
+  border: 1px solid var(--eon-ccw-border);
+  border-radius: 3px;
+  font-size: 12px;
+  box-sizing: border-box;
+  background: var(--eon-ccw-panel);
+  color: var(--eon-ccw-text);
+}
+
+.eon-ccw-handelse-add-row {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.eon-ccw-btn-handelse-add,
+.eon-ccw-btn-handelse-remove,
+.eon-ccw-doktrin-add {
+  padding: 4px 10px;
+  font-size: 11px;
+  border: 1px solid var(--eon-ccw-border);
+  border-radius: 3px;
+  background: linear-gradient(180deg, #faf8f4 0%, #ebe6de 100%);
+  color: var(--eon-ccw-text);
+  cursor: pointer;
+}
+
+.eon-ccw-btn-handelse-remove {
+  white-space: nowrap;
+}
+
+.eon-ccw-btn-handelse-add:hover,
+.eon-ccw-btn-handelse-remove:hover,
+.eon-ccw-doktrin-add:hover {
+  border-color: var(--eon-ccw-accent);
+}
+
+.eon-ccw-datagrid--enhet .eon-ccw-datagrid__row--head .eon-ccw-datagrid__cell--num {
+  text-align: right;
+}
+
+/* Flik 8: ett rutnät på behållaren + display:contents på rader → samma kolumnbredd på alla rader (attributtext påverkar inte). */
+.eon-ccw-datagrid--attr {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(3.25rem, auto)
+    minmax(5.25rem, auto)
+    minmax(3.5rem, auto);
+  column-gap: 8px;
+  align-items: center;
+}
+
+.eon-ccw-datagrid--attr .eon-ccw-datagrid__row {
+  display: contents;
+  font-size: 12px;
+}
+
+/* Radram: rad-elementet ritas inte (contents) — linje under varje cell. */
+.eon-ccw-datagrid--attr .eon-ccw-datagrid__cell {
+  border-bottom: 1px solid #f0ebe0;
+}
+
+.eon-ccw-datagrid--attr .eon-ccw-datagrid__row--head .eon-ccw-datagrid__cell {
+  border-bottom: 1px solid #e5dfd5;
+}
+
+/* Grund + Bonus delar --col-grund; centrera rubrik och kontroller i kolumnen (samma som siffercentrering i rutorna). */
+.eon-ccw-datagrid--attr .eon-ccw-datagrid__cell--col-grund,
+.eon-ccw-datagrid--attr .eon-ccw-datagrid__cell--col-totalt {
+  justify-self: center;
+  text-align: center;
+}
+
+.eon-ccw-datagrid--attr .eon-ccw-datagrid__cell--col-grund .eon-ccw-narrow {
+  width: 52px;
+  max-width: 100%;
+}
+
+/* Flik 8 Totalt: som flik 9 slutlig T6 — text utan ruta. */
+.eon-ccw-harledd-totalt-display {
+  display: inline;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--eon-ccw-text);
+}
+
+/* Flik 8: grund speglas från sidopanelen — ej redigerbar */
+.eon-ccw-harledd-grund-mirror {
+  background: rgba(0, 0, 0, 0.04);
+  cursor: default;
+  color: var(--eon-ccw-text);
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.eon-ccw-harledd-grund-mirror:focus {
+  outline: none;
+}
+
+.eon-ccw-harledd-grund-mirror::-webkit-outer-spin-button,
+.eon-ccw-harledd-grund-mirror::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.eon-ccw-datagrid--enhet .eon-ccw-datagrid__row {
+  grid-template-columns: 1fr minmax(64px, auto);
+  font-size: 12px;
+}
+
+.eon-ccw-datagrid--sprak .eon-ccw-datagrid__row {
+  grid-template-columns: minmax(0, 18%) minmax(0, 16%) minmax(0, 1fr);
+  font-size: 12px;
+}
+
+.eon-ccw-datagrid--utrustning-lista .eon-ccw-datagrid__row {
+  grid-template-columns: minmax(0, 1fr) minmax(6.5rem, 8rem) auto;
+  font-size: 12px;
+  align-items: center;
+  column-gap: 6px;
+}
+
+.eon-ccw-datagrid--utrustning-lista-utan-antal .eon-ccw-datagrid__row {
+  grid-template-columns: minmax(0, 1fr) auto;
+  font-size: 12px;
+  align-items: center;
+  column-gap: 6px;
+}
+
+.eon-ccw-datagrid--utrustning-lista .eon-ccw-datagrid__cell--utrustning-actions {
+  justify-self: end;
+  display: inline-flex;
+  gap: 4px;
+}
+
+.eon-ccw-datagrid--utrustning-lista-utan-antal .eon-ccw-datagrid__cell--utrustning-actions {
+  justify-self: end;
+  display: inline-flex;
+  gap: 4px;
+}
+
+.eon-ccw-dropzone {
+  border: 2px dashed var(--eon-ccw-border);
+  border-radius: 6px;
+  background: #f5f2ec;
+  color: var(--eon-ccw-label);
+  padding: 12px;
+  margin: 8px 0 12px;
+  text-align: center;
+}
+
+.eon-ccw-dropzone.is-dragover {
+  border-color: var(--eon-ccw-accent);
+  background: #efe7da;
+  color: var(--eon-ccw-text);
+}
+
+.eon-ccw-antal-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.eon-ccw-antal-stepper .eon-ccw-icon-btn {
+  padding: 2px 7px;
+}
+
+.eon-ccw-antal-value {
+  min-width: 1.75rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.eon-ccw-datagrid--kd .eon-ccw-datagrid__row {
+  grid-template-columns: minmax(0, 12%) minmax(0, 18%) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  font-size: 12px;
+}
+
+/* Första kolumnen roll (primär/sekundär) + åtgärdskolumn */
+.eon-ccw-datagrid--karaktarsdrag-rad .eon-ccw-datagrid__row {
+  grid-template-columns: minmax(0, 7.5rem) minmax(0, 16%) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 6px;
+}
+
+.eon-ccw-datagrid--karaktarsdrag-rad .eon-ccw-datagrid__cell--kd-roll {
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.eon-ccw-datagrid--karaktarsdrag-rad .eon-ccw-datagrid__cell--kd-actions {
+  white-space: nowrap;
+  justify-self: end;
+}
+
+.eon-ccw-datagrid--mystik .eon-ccw-datagrid__row {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  font-size: 12px;
+}
+
+.eon-ccw-datagrid--bonus .eon-ccw-datagrid__cell input,
+.eon-ccw-datagrid--handelse .eon-ccw-datagrid__cell input,
+.eon-ccw-datagrid--handelse .eon-ccw-datagrid__cell select,
+.eon-ccw-datagrid--fardighet-fordelning .eon-ccw-datagrid__cell input:not([type="checkbox"]),
+.eon-ccw-datagrid--fardighet-fordelning .eon-ccw-datagrid__cell select,
+.eon-ccw-datagrid--attr .eon-ccw-datagrid__cell input,
+.eon-ccw-datagrid--enhet .eon-ccw-datagrid__cell input,
+.eon-ccw-datagrid--kontakt-rad .eon-ccw-datagrid__cell input,
+.eon-ccw-datagrid--sprak .eon-ccw-datagrid__cell input,
+.eon-ccw-datagrid--kd .eon-ccw-datagrid__cell input,
+.eon-ccw-datagrid--mystik .eon-ccw-datagrid__cell input {
+  width: 100%;
+  min-width: 0;
+  padding: 4px 6px;
+  border: 1px solid var(--eon-ccw-border);
+  border-radius: 3px;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+.eon-ccw-num-tiny {
+  width: 36px !important;
+  max-width: 40px !important;
+  text-align: center;
+}
+
+/* Sidopanel härledda G/B: smal eon-ccw-num-tiny + egna ± (inga webbläsarspinners) */
+.eon-ccw-num-tiny-stepper {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 1px;
+  max-width: 100%;
+}
+
+.eon-ccw-num-tiny-stepper .eon-ccw-num-tiny {
+  flex: 0 0 auto;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.eon-ccw-num-tiny-stepper .eon-ccw-num-tiny::-webkit-inner-spin-button,
+.eon-ccw-num-tiny-stepper .eon-ccw-num-tiny::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Flik 8 bonus: samma ±-mönster som sidopanelen, behåll eon-ccw-narrow (52px) */
+.eon-ccw-num-stepper--narrow .eon-ccw-narrow {
+  flex: 0 0 auto;
+  width: 52px !important;
+  max-width: 52px !important;
+  min-width: 52px !important;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.eon-ccw-num-stepper--narrow .eon-ccw-narrow::-webkit-inner-spin-button,
+.eon-ccw-num-stepper--narrow .eon-ccw-narrow::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.eon-ccw-num-step-btn {
+  flex: 0 0 14px;
+  width: 14px;
+  min-width: 14px;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 700;
+  border: 1px solid var(--eon-ccw-border);
+  border-radius: 2px;
+  background: linear-gradient(180deg, #faf8f4 0%, #ebe6de 100%);
+  color: var(--eon-ccw-text);
+  cursor: pointer;
+  align-self: stretch;
+}
+
+.eon-ccw-num-step-btn:hover {
+  border-color: var(--eon-ccw-accent);
+}
+
+.eon-ccw-summary-input-num {
+  width: 44px;
+  padding: 2px 4px;
+  font-size: 11px;
+  text-align: right;
+  border: 1px solid var(--eon-ccw-border);
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+
+.eon-ccw-mini-note {
+  font-size: 9px;
+  line-height: 1.3;
+  color: var(--eon-ccw-label);
+}
+
+.eon-ccw-datagrid__row--extra-attr-poang .eon-ccw-datagrid__cell:first-child {
+  font-weight: 600;
+  color: var(--eon-ccw-label);
+}
+
+.eon-ccw-section {
+  border-bottom: 1px solid #e5dfd5;
+  padding: 8px 0;
+}
+
+.eon-ccw-section:last-child {
+  border-bottom: none;
+}
+
+.eon-ccw-hint {
+  font-size: 11px;
+  color: #666;
+  margin: 4px 0 8px 0;
+  line-height: 1.35;
+}
+
+.eon-ccw-hint--preline {
+  white-space: pre-line;
+}
+
+.eon-ccw-hint--in-field-column {
+  flex: 1;
+  min-width: 0;
+  margin: 0 0 4px 0;
+  align-self: center;
+}
+
+.eon-ccw-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  border: 2px solid var(--eon-ccw-accent);
+  color: var(--eon-ccw-accent);
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.eon-ccw-step-placeholder {
+  display: inline-block;
+  width: 1.5em;
+  margin-right: 14px;
+  flex-shrink: 0;
+}
+
+.eon-ccw-subsection-title {
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--eon-ccw-accent);
+  margin: 12px 0 8px 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e5dfd5;
+}
+
+.eon-ccw-inline-cb {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--eon-ccw-label);
+}
+
+.eon-ccw-narrow {
+  width: 52px;
+  max-width: 64px;
+  flex: 0 0 52px;
+  text-align: right;
+}
+
+.eon-ccw-narrow[data-dtype="Number"] {
+  text-align: center;
+}
+
+.eon-ccw-totalt {
+  min-width: 3em;
+}
+
+.eon-ccw-panel textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  /* bakgrund/kant: samma som .eon-character-creation-wizard textarea ovan */
+}
+
+.eon-ccw-muted {
+  color: var(--eon-ccw-label);
+  font-style: italic;
+}
+
+.eon-ccw-start-sprak-list {
+  margin: 4px 0 12px 18px;
+  padding: 0;
+  font-size: 12px;
+}
+
+.eon-ccw-folk-egenskaper-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.eon-ccw-folk-egenskap-row {
+  padding: 8px 10px;
+  border: 1px solid #e5dfd5;
+  border-radius: 4px;
+  background: #faf8f4;
+}
+
+.eon-ccw-folk-egenskap-namn {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.eon-ccw-folk-egenskap-besk {
+  font-size: 12px;
+  color: var(--eon-ccw-label);
+  line-height: 1.35;
+}
+
+/* Icke valda valfria: kompendietext, skrivskyddad (jämför prose-mirror när vald) */
+.eon-ccw-folk-beskrivning-readonly {
+  margin-top: 4px;
+  padding: 6px 8px;
+  border: 1px dashed #cfc8ba;
+  border-radius: 4px;
+  background: #f0ece4;
+}
+
+/* Foundry <prose-mirror> för folkslag-egenskaper */
+.eon-ccw-folk-egenskap-row prose-mirror {
+  margin-top: 4px;
+}
+
+/* Obligatoriska rader: större min-höjd när redigeringsläge är på */
+.eon-ccw-folk-egenskap-row:not(.eon-ccw-folk-egenskap-row--valfri) prose-mirror[toggled] {
+  min-height: 10rem !important;
+}
+
+/* Valfria rader: host-höjd styrs här (Foundrys default 150px ska inte gälla dessa). */
+.eon-ccw-folk-egenskap-row--valfri prose-mirror[toggled] {
+  min-height: 5rem !important;
+}
+
+/* Öppen/fokuserad editor får större yta. */
+.eon-ccw-folk-egenskap-row--valfri prose-mirror[toggled][open],
+.eon-ccw-folk-egenskap-row--valfri prose-mirror[toggled]:focus-within {
+  min-height: 10rem !important;
+}
+
+.eon-ccw-folk-egenskap-row--valfri prose-mirror .editor.prosemirror.active {
+  min-height: 10rem !important;
+}
+
+.eon-ccw-folk-egenskap-row--valfri prose-mirror .editor.prosemirror.inactive {
+  min-height: 5rem;
+}
+
+.eon-ccw-folk-egenskap-row--valfri .eon-ccw-folk-beskrivning-readonly {
+  min-height: 5rem;
+  box-sizing: border-box;
+}
+
+
+.eon-ccw-folk-valfria-checks {
+  margin-bottom: 0;
+}
+
+.eon-ccw-folk-egenskap-row--valfri .eon-ccw-folk-valfri-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+
+.eon-ccw-folk-egenskap-row--valfri .eon-ccw-folk-valfri-label input {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.eon-ccw-folk-valfri-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}

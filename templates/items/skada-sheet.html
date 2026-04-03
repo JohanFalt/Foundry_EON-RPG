@@ -15,40 +15,40 @@
 
                 <div class="item-area pullLeft">
                     <div class="item-top">
-                        <div class="item-property-area   floating-label-group">
+                        <div class="item-property-area floating-label-group">
                             {{#if (eq data.system.typ "faltstorning")}}
                                 <select class="text-value inputdata" name="system.id" data-source="aspekt">
-                                    <option value="">- Välj -</option>
+                                    <option value="">{{localize "eon.sheets.item.valjOption"}}</option>
                                     {{#select item.system.id}}										
                                         {{#each EON.CONFIG.aspekter as |aspekt key|}}
-                                            <option value="{{key}}">{{aspekt}}</option>
+                                            <option value="{{key}}">{{localize aspekt}}</option>
                                         {{/each}}
                                     {{/select}}
                                 </select>
                             {{else if (eq data.system.typ "skada")}}
                                 <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
                             {{/if}}
-                            <span class="floating-label">Namn</span>
+                            <span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
                         </div>
 
                         {{#if (eq data.system.typ "faltstorning")}}
-                            <div class="item-property-area   floating-label-group">
+                            <div class="item-property-area floating-label-group">
                                 <select class="text-value" name="system.niva">
-                                    <option value="">- Välj -</option>
+                                    <option value="">{{localize "eon.sheets.item.valjOption"}}</option>
                                     {{#select item.system.niva}}										
-                                        <option value="flimmer">Fältflimmer</option>
-                                        <option value="mattlig">Måttlig fältstörning</option>
-                                        <option value="allvarlig">Allvarlig fältstörning</option>
-                                        <option value="kritisk">Kritisk fältstörning</option>
+                                        <option value="flimmer">{{localize "eon.sheets.item.faltstorningFlimmer"}}</option>
+                                        <option value="mattlig">{{localize "eon.sheets.item.faltstorningMattlig"}}</option>
+                                        <option value="allvarlig">{{localize "eon.sheets.item.faltstorningAllvarlig"}}</option>
+                                        <option value="kritisk">{{localize "eon.sheets.item.faltstorningKritisk"}}</option>
                                     {{/select}}
                                 </select>
-                                <span class="floating-label">Nivå</span>
+                                <span class="floating-label">{{localize "eon.sheets.actor.niva"}}</span>
                             </div>
                         {{/if}}
 
-                        <div class="item-property-area   floating-label-group">
+                        <div class="item-property-area floating-label-group">
                             <input class="text-value editable" type="text" name="system.referens" value="{{data.system.referens}}" data-dtype="String" autocomplete="off" autofocus required />
-                            <span class="floating-label">Referens</span>
+                            <span class="floating-label">{{localize "eon.sheets.item.referens"}}</span>
                         </div>
 
                     </div>       
@@ -60,10 +60,10 @@
                     {{/if}}     
                     
                     {{#if (eq data.system.typ "skada")}}
-                        <div class="information-area top-sidetext">SKADA</div>
+                        <div class="information-area top-sidetext">{{localize "eon.sheets.item.skadaSheetLabel"}}</div>
                     {{/if}}
                     {{#if (eq data.system.typ "faltstorning")}}
-                        <div class="information-area top-sidetext">FÄLTSTÖRNING</div>
+                        <div class="information-area top-sidetext">{{localize "eon.sheets.item.faltstorningSheetLabel"}}</div>
                     {{/if}}
                 </div>
             </div>	

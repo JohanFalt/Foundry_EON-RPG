@@ -458,9 +458,8 @@ export class SkillRoll {
         this.typ = "skill";
         this.grupp = item.system.grupp;
 
-        this.namn = item.name;
+        this.namn = game.i18n.has(item.name) ? game.i18n.localize(item.name) : item.name;
         this.svarighet = "";
-        this.namn = item.name;
         this.hantverk = item.system["hantverk"];
         this.kannetecken = item.system["kannetecken"];
         this.expertis = item.system["expertis"];   
@@ -801,7 +800,7 @@ export class MysteryRoll {
 
     constructor(item, actor) {
         this.typ = "mystery";
-        this.namn = item.name;
+        this.namn = game.i18n.has(item.name) ? game.i18n.localize(item.name) : item.name;
         this.moment = item.system.moment;
         this.magnitud = item.system.magnitud;
         this.close = false;

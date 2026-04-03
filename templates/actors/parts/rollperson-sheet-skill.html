@@ -2,15 +2,15 @@
     <div class="skill-area" style="{{getSkillAreaHeight actor.system.listdata.fardigheter}}">
         {{#each EON.CONFIG.fardighetgrupper as |grupp key|}}
             <div class="skill-row skill">
-                <div class="skill-headline headline">{{grupp}}</div>
+                <div class="skill-headline headline">{{localize grupp}}</div>
                 <div class="floating-label-group">
-                    <input class="attribute-value editable skill-label skill-value" name="system.fardigheter.{{key}}.erf" type="text" value="{{getActorSkillGroupExp ../actor.system.fardigheter key}}" data-dtype="Number" />
-                    <span class="floating-label skill-label">Erfarenhet</span>
+                    <input class="attribute-value editable   skill-value" name="system.fardigheter.{{key}}.erf" type="text" value="{{getActorSkillGroupExp ../actor.system.fardigheter key}}" data-dtype="Number" />
+                    <span class="floating-label">{{localize "eon.sheets.actor.erfarenhet"}}</span>
                 </div>
 
                 {{#if (eqAny key "mystik" "sprak" "ovriga")}}
                     <div class="pointer">
-                        <a class="item-create" title="Lägg till färdighet" data-type="färdighet" data-subtype="{{key}}">
+                        <a class="item-create" title="{{localize 'eon.sheets.actor.laggTillFardighet'}}" data-type="färdighet" data-subtype="{{key}}">
                             <i class="fa-solid fa-square-plus green"></i>
                         </a>
                     </div>
@@ -19,30 +19,32 @@
             {{#each (getActorSkillGroup ../actor.system.listdata.fardigheter key) as |fardighet key|}}
                 <div class="skill-row skill">
                     {{#if (eq fardighet.type "Språk")}}   
-                        <div class="caption normalskill">{{fardighet.name}}</div>
+                        <div class="caption normalskill">{{localize fardighet.name}}</div>
                         <div class="resource-box">
-                            <span class="resource-value {{#if fardighet.system.talabrytning}}active{{/if}}" style="margin-top: 5px;" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="talabrytning" data-type="boolean" title="Talar med brytning"></span>
-                            <span class="resource-value {{#if fardighet.system.talaflytande}}active{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="talaflytande" data-type="boolean" title="Talar flytande"></span>
-                            <span class="resource-value {{#if fardighet.system.lasaskriva}}active{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="lasaskriva" data-type="boolean" title="Kan läsa och skriva"></span>
+                            <span class="resource-value {{#if fardighet.system.talabrytning}}active{{/if}}" style="margin-top: 5px;" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="talabrytning" data-type="boolean" title="{{localize 'eon.sheets.actor.talarMedBrytning'}}"></span>
+                            <span class="resource-value {{#if fardighet.system.talaflytande}}active{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="talaflytande" data-type="boolean" title="{{localize 'eon.sheets.actor.talarFlytande'}}"></span>
+                            <span class="resource-value {{#if fardighet.system.lasaskriva}}active{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="lasaskriva" data-type="boolean" title="{{localize 'eon.sheets.actor.kanLasaochSkriva'}}"></span>
                         </div>
                         <div class="pointer language-icon">
-                            <a class="item-edit" title="Editera språk" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
+                            <a class="item-edit" title="{{localize 'eon.sheets.actor.editeraSprak'}}" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
                         </div>
                     {{else}}
-                        <div>
-                            {{#if fardighet.system.installningar.lattlard}}
-                                <div style="width: 8px;position: relative;top: 1px;"><i class="fa-solid fa-sort-up green"></i></div>
-                            {{/if}}
-                            {{#if fardighet.system.installningar.svarlard}}
-                                <div style="width: 8px;position: relative;top: -4px;"><i class="fa-solid fa-sort-down red"></i></div>
-                            {{/if}}
-                        </div>
-                        <div class="vrollable caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div> 
+                        {{#if (eq actor.system.installningar.eon "eon4")}}
+                            <div>
+                                {{#if fardighet.system.installningar.lattlard}}
+                                    <div style="width: 8px;position: relative;top: 1px;"><i class="fa-solid fa-sort-up green"></i></div>
+                                {{/if}}
+                                {{#if fardighet.system.installningar.svarlard}}
+                                    <div style="width: 8px;position: relative;top: -4px;"><i class="fa-solid fa-sort-down red"></i></div>
+                                {{/if}}
+                            </div>
+                        {{/if}}
+                        <div class="vrollable caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{localize fardighet.name}}</div> 
                             
                         <div class="dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
                         {{{getAttributeShortName fardighet.system.attribut}}}
                         <div class="pointer skill-icon">
-                            <a class="item-edit" title="Editera färdighet" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
+                            <a class="item-edit" title="{{localize 'eon.sheets.actor.editeraFardighet'}}" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
                         </div>
                     {{/if}}
                 </div>
@@ -51,18 +53,18 @@
     </div>
 {{else if (eq actor.system.installningar.eon "eon5")}}
     <div class="floating-label-group">
-        <input class="attribute-value editable skill-label skill-value" name="system.fardigheter.ovriga.erf" type="text" value="{{getActorSkillGroupExp actor.system.fardigheter 'ovriga'}}" data-dtype="Number" />
-        <span class="floating-label skill-label">Erfarenhet</span>
+        <input class="attribute-value editable skill-value" name="system.fardigheter.ovriga.erf" type="text" value="{{getActorSkillGroupExp actor.system.fardigheter 'ovriga'}}" data-dtype="Number" />
+        <span class="floating-label">{{localize "eon.sheets.actor.erfarenhet"}}</span>
     </div>
 
     <div class="skill-area" style="{{getSkillAreaHeight actor.system.listdata.fardigheter}}">
         {{#each EON.CONFIG.fardighetgrupper as |grupp key|}}
             <div class="skill-row skill">
-                <div class="skill-headline headline">{{grupp}}</div>                
+                <div class="skill-headline headline">{{localize grupp}}</div>                
 
                 {{#if (eqAny key "mystik" "sprak" "ovriga")}}
                     <div class="pointer">
-                        <a class="item-create" title="Lägg till färdighet" data-type="färdighet" data-subtype="{{key}}">
+                        <a class="item-create" title="{{localize 'eon.sheets.actor.laggTillFardighet'}}" data-type="färdighet" data-subtype="{{key}}">
                             <i class="fa-solid fa-square-plus green"></i>
                         </a>
                     </div>
@@ -71,14 +73,14 @@
             {{#each (getActorSkillGroup ../actor.system.listdata.fardigheter key) as |fardighet key|}}
                 <div class="skill-row skill">
                     {{#if (eq fardighet.type "Språk")}}   
-                        <div class="caption normalskill">{{fardighet.name}}</div>
+                        <div class="caption normalskill">{{localize fardighet.name}}</div>
                         <div class="resource-box">
-                            <span class="resource-value {{#if fardighet.system.talabrytning}}active{{/if}}" style="margin-top: 5px;" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="talabrytning" data-type="boolean" title="Talar med brytning"></span>
-                            <span class="resource-value {{#if fardighet.system.talaflytande}}active{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="talaflytande" data-type="boolean" title="Talar flytande"></span>
-                            <span class="resource-value {{#if fardighet.system.lasaskriva}}active{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="lasaskriva" data-type="boolean" title="Kan läsa och skriva"></span>
+                            <span class="resource-value {{#if fardighet.system.talabrytning}}active{{/if}} {{#if fardighet.system.endastskrift}}disabled{{/if}}" style="margin-top: 5px;" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="talabrytning" data-type="boolean" title="{{localize 'eon.sheets.actor.talarMedBrytning'}}"></span>
+                            <span class="resource-value {{#if fardighet.system.talaflytande}}active{{/if}} {{#if fardighet.system.endastskrift}}disabled{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="talaflytande" data-type="boolean" title="{{localize 'eon.sheets.actor.talarFlytande'}}"></span>
+                            <span class="resource-value {{#if fardighet.system.lasaskriva}}active{{/if}} {{#if fardighet.system.endasttal}}disabled{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="lasaskriva" data-type="boolean" title="{{localize 'eon.sheets.actor.kanLasaochSkriva'}}"></span>
                         </div>
                         <div class="pointer language-icon">
-                            <a class="item-edit" title="Editera språk" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
+                            <a class="item-edit" title="{{localize 'eon.sheets.actor.editeraSprak'}}" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
                         </div>
                     {{else}}
                         <div>
@@ -89,7 +91,7 @@
                                 <div style="width: 8px;position: relative;top: -4px;"><i class="fa-solid fa-sort-down red"></i></div>
                             {{/if}}
                         </div>
-                        <div class="vrollable caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{fardighet.name}}</div> 
+                        <div class="vrollable caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{localize fardighet.name}}</div> 
                             
                         <div class="dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
                         {{#if (eq actor.system.installningar.eon "eon4")}}
@@ -98,7 +100,7 @@
                             <div>{{skillDisplayShort fardighet}}</div>
                         {{/if}}
                         <div class="pointer skill-icon">
-                            <a class="item-edit" title="Editera färdighet" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
+                            <a class="item-edit" title="{{localize 'eon.sheets.actor.editeraFardighet'}}" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
                         </div>
                     {{/if}}
                 </div>

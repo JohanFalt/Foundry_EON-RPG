@@ -7,36 +7,36 @@
                 </div>
 
                 <div class="pullLeft" style="min-width: 270px;">
-                    <div class="item-property-area   floating-label-group">
+                    <div class="item-property-area floating-label-group">
                         <select class="text-value inputdata" name="name" data-source="valuta">
-                            <option value="">- Välj valuta -</option>
+                            <option value="">{{localize "eon.sheets.item.valutaValjOption"}}</option>
                             {{#each (getCurrencyList EON.CONFIG.datavaluta) as | valuta key|}}
                                 <option value="{{valuta.namn}}" {{#if (eq ../item.name valuta.namn)}}selected{{/if}}>
                                     {{valuta.namn}} ({{valuta.ursprung}})
                                 </option>
                             {{/each}}
                         </select>
-                        <span class="floating-label">Valuta</span>
+                        <span class="floating-label">{{localize "eon.sheets.item.valuta"}}</span>
                     </div>
 
-                    <div class="item-property-area   floating-label-group">
+                    <div class="item-property-area floating-label-group">
                         <input class="attribute-value" name="system.metall" type="text" value="{{item.system.metall}}" data-dtype="String" readonly />
-                        <span class="floating-label">Metall</span>
+                        <span class="floating-label">{{localize "eon.sheets.item.metall"}}</span>
                     </div>
 
-                    <div class="item-property-area   floating-label-group">
+                    <div class="item-property-area floating-label-group">
                         <input class="attribute-value" name="system.silver_varde" type="text" value="{{item.system.silver_varde}}" data-dtype="Number" readonly />
-                        <span class="floating-label">Silvervärde</span>
+                        <span class="floating-label">{{localize "eon.sheets.item.silvervarde"}}</span>
                     </div>
 
-                    <div class="item-property-area   floating-label-group">
+                    <div class="item-property-area floating-label-group">
                         <input class="attribute-value editable" name="system.antal" type="text" value="{{item.system.antal}}" data-dtype="Number" />
-                        <span class="floating-label">Antal</span>
+                        <span class="floating-label">{{localize "eon.sheets.item.antal"}}</span>
                     </div>
 
-                    <div class="item-property-area   floating-label-group">
+                    <div class="item-property-area floating-label-group">
                         <input class="attribute-value" name="system.vikt" type="text" value="{{item.system.vikt}}" data-dtype="Number" readonly />
-                        <span class="floating-label">Vikt (st/kg)</span>
+                        <span class="floating-label">{{localize "eon.sheets.item.viktStKg"}}</span>
                     </div>
                 </div>
 
@@ -44,7 +44,7 @@
                     {{#if hasActor}}
                         <div class="pointer red item-delete large-icon" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
                     {{/if}}     
-                    <div class="information-area top-sidetext">VALUTA</div>
+                    <div class="information-area top-sidetext">{{localize "eon.sheets.item.valutaSheetLabel"}}</div>
                 </div>
             </div>
         </header>

@@ -2,10 +2,10 @@
 
     <div class="clear attribute item-row" style="margin-bottom: 25px;">
         <div class="three-column item-row">
-            <div class="headline">Grundskada</div>
+            <div class="headline">{{localize EON.CONFIG.harleddegenskaper.grundskada.namn}}</div>
             <div class="dice-value">{{getDiceValue data.system.harleddegenskaper.grundskada.totalt}}</div>
             <div class="pullLeft skill-icon">
-                <a class="item-edit" title="Editera grundskada" 
+                <a class="item-edit" title="{{localize 'eon.sheets.actor.editera'}} {{localize EON.CONFIG.harleddegenskaper.grundskada.namn}}" 
                     data-type="attribute" 
                     data-source="harleddegenskaper" 
                     data-attribute="grundskada">
@@ -14,10 +14,10 @@
             </div>
         </div>   
         <div class="three-column item-row">
-            <div class="headline">Grundrustning</div>
+            <div class="headline">{{localize EON.CONFIG.harleddegenskaper.grundrustning.namn}}</div>
             <div class="dice-value">{{data.system.harleddegenskaper.grundrustning.totalt}}</div>
             <div class="pullLeft skill-icon">
-                <a class="item-edit" title="Editera grundrustning" 
+                <a class="item-edit" title="{{localize 'eon.sheets.actor.editera'}} {{localize EON.CONFIG.harleddegenskaper.grundrustning.namn}}" 
                    data-type="attribute" 
                    data-source="harleddegenskaper"
                    data-attribute="grundrustning">
@@ -26,10 +26,10 @@
             </div>
         </div>     
         <div class="three-column item-row">
-            <div class="headline">Läkningstakt</div>
+            <div class="headline">{{localize EON.CONFIG.harleddegenskaper.lakningstakt.namn}}</div>
             <div class="dice-value">{{data.system.strid.lakningstakt.totalt}}</div>
             <div class="pullLeft skill-icon">
-                <a class="item-edit" title="Editera läkningstakt" 
+                <a class="item-edit" title="{{localize 'eon.sheets.actor.editera'}} {{localize EON.CONFIG.harleddegenskaper.lakningstakt.namn}}" 
                    data-type="strid" 
                    data-attribute="lakningstakt">
                     <i class="icon fa-solid fa-pen-to-square"></i>
@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <div class="large-headline">Vapen</div>
+    <div class="large-headline">{{localize "eon.sheets.actor.vapen"}}</div>
     
     {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-weapon-close.html"}}
 

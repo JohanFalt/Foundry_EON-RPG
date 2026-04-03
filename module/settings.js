@@ -1,8 +1,9 @@
 export const systemSettings = function() {
+    const L = (key) => game.i18n.localize(key);
 
     game.settings.register("eon-rpg", "systemVersion", {
-		name: "Version",
-		hint: "System version",
+		name: L("eon.settings.version"),
+		hint: L("eon.settings.versionHint"),
 		scope: "world",
 		config: true,
 		default: "1",
@@ -11,7 +12,25 @@ export const systemSettings = function() {
 
     /* Messages */
     game.settings.register("eon-rpg", "eoncombattrackerbeta", {
-		name: "Read about eon combat tracker beta",
+		name: L("eon.settings.eonCombatTrackerBeta"),
+		hint: "",
+		scope: "world",
+		config: false,
+		default: false,
+		type: Boolean,
+	});
+
+    game.settings.register("eon-rpg", "eontranslation", {
+		name: L("eon.settings.eontranslation"),
+		hint: "",
+		scope: "world",
+		config: false,
+		default: false,
+		type: Boolean,
+	});
+
+    game.settings.register("eon-rpg", "eoncreationwizard", {
+		name: L("eon.settings.eoncreationwizard"),
 		hint: "",
 		scope: "world",
 		config: false,
@@ -20,35 +39,35 @@ export const systemSettings = function() {
 	});
 
     game.settings.register("eon-rpg", "textfont", {
-		name: "Textfont",
-		hint: "Valda fonten till text (kräver omstart av Foundry)",
+		name: L("eon.settings.textfont"),
+		hint: L("eon.settings.textfontHint"),
 		scope: "world",
 		config: true,
 		default: "eon1",
 		type: String,
         choices: {
-			"eon1": "Eon font 1",
-            "normal": "Normal font"
+			"eon1": L("eon.settings.eon1"),
+            "normal": L("eon.settings.normalFont")
 		}
 	});
 
     game.settings.register("eon-rpg", "headlinefont", {
-		name: "Rubrikfont",
-		hint: "Valda fonten till rubriker (kräver omstart av Foundry)",
+		name: L("eon.settings.headlinefont"),
+		hint: L("eon.settings.headlinefontHint"),
 		scope: "world",
 		config: true,
 		default: "eon1",
 		type: String,
         choices: {
-			"eon1": "Eon rubrik-fonttyp 1",
-            "eon2": "Eon rubrik-fonttyp 2",
-            "normal": "Normal font"
+			"eon1": L("eon.settings.eonRubrik1"),
+            "eon2": L("eon.settings.eonRubrik2"),
+            "normal": L("eon.settings.normalFont")
 		}
 	});
 
     game.settings.register("eon-rpg", "eonCombatTrackerEnabled", {
-        name: "Aktivera Eon Combat Tracker",
-        hint: "Visas överst när encounter startas. Foundrys vanliga combat tracker i sidofältet visas alltid.",
+        name: L("eon.settings.aktiveraEonCombatTracker"),
+        hint: L("eon.settings.aktiveraEonCombatTrackerHint"),
         scope: "world",
         config: true,
         default: true,
@@ -71,34 +90,34 @@ export const systemSettings = function() {
 
     
     game.settings.register("eon-rpg", "bookEon", {
-		name: "Eon",
-		hint: "Vilken version av Eon används primärt?",
+		name: L("eon.settings.bookEon"),
+		hint: L("eon.settings.bookEonHint"),
 		scope: "world",
 		config: false,
 		default: "eon4",
 		type: String,
 		choices: {
-			"eon4": "Eon 4",
-			"eon5": "Eon 5"
+			"eon4": L("eon.settings.eon4"),
+			"eon5": L("eon.settings.eon5")
 		}
 	});
 
 	game.settings.register("eon-rpg", "bookCombat", {
-		name: "Strid",
-		hint: "Skall systemet använda sig av de regler och tillägg som kom i boken Strid?",
+		name: L("eon.settings.bookCombat"),
+		hint: L("eon.settings.bookCombatHint"),
 		scope: "world",
 		config: false,
 		default: "Nej",
 		type: String,
 		choices: {
 			//"strid": "Ja",
-			"grund": "Nej"
+			"grund": L("eon.settings.nej")
 		}
 	});
 
     game.settings.register("eon-rpg", "bookMagic", {
-		name: "Magi",
-		hint: "Skall systemet använda sig av de regler och tillägg som kom i boken Magi?",
+		name: L("eon.settings.bookMagic"),
+		hint: L("eon.settings.bookMagicHint"),
 		scope: "world",
 		config: false,
 		default: true,
@@ -106,8 +125,8 @@ export const systemSettings = function() {
 	});
 
     game.settings.register("eon-rpg", "weightRules", {
-		name: "Vikt/Belastning",
-		hint: "Skall vad man bär på sig utöver rustningar beräknas in i belastning?",
+		name: L("eon.settings.weightRules"),
+		hint: L("eon.settings.weightRulesHint"),
 		scope: "world",
 		config: false,
 		default: true,
@@ -115,8 +134,8 @@ export const systemSettings = function() {
 	});    
 
     game.settings.register("eon-rpg", "hinderenceSkillGroupMovement", {
-		name: "Belastningsavdrag Rörelsefärdigheter",
-		hint: "Skall färdighetsgruppen Rörelsefärdigheter få avdrag för belastning automatiskt?",
+		name: L("eon.settings.hinderenceSkillGroupMovement"),
+		hint: L("eon.settings.hinderenceSkillGroupMovementHint"),
 		scope: "world",
 		config: false,
 		default: true,
@@ -124,8 +143,8 @@ export const systemSettings = function() {
 	});
 
     game.settings.register("eon-rpg", "hinderenceAttributeMovement", {
-		name: "Belastningsavdrag Rörlighet",
-		hint: "Skall färdigheter med attributet Rörlighet få avdrag för belastning automatiskt?",
+		name: L("eon.settings.hinderenceAttributeMovement"),
+		hint: L("eon.settings.hinderenceAttributeMovementHint"),
 		scope: "world",
 		config: false,
 		default: false,
@@ -134,9 +153,9 @@ export const systemSettings = function() {
 
     /* Groups of settings */
     game.settings.registerMenu("eon-rpg", "bookSettings", {
-        name: "Böcker",
-        hint: "Vilka böcker skall användas i systemet",
-        label: "Bokinställningar",
+        name: L("eon.settings.bocker"),
+        hint: L("eon.settings.bockerHint"),
+        label: L("eon.settings.bokinstallningarLabel"),
         icon: "icon fa-solid fa-gear",
         type: Books,
         restricted: true,
@@ -144,9 +163,9 @@ export const systemSettings = function() {
 
     /* Groups of settings */
     game.settings.registerMenu("eon-rpg", "ruleSettings", {
-        name: "Regler",
-        hint: "Vilka specifika regler skall användas i systemet",
-        label: "Regelinställningar",
+        name: L("eon.settings.regler"),
+        hint: L("eon.settings.reglerHint"),
+        label: L("eon.settings.regelinstallningarLabel"),
         icon: "icon fa-solid fa-gear",
         type: Rules,
         restricted: true,
@@ -159,7 +178,7 @@ export class Books extends FormApplication {
         return foundry.utils.mergeObject(super.defaultOptions, {
             id: "books",
             classes: ["EON setting-dialog"],
-            title: "Bokinställningar",
+            title: game.i18n.localize("eon.dialogs.bokinstallningar"),
             template: "systems/eon-rpg/templates/dialogs/dialog-settings.html",
         });
     }
@@ -216,7 +235,7 @@ export class Books extends FormApplication {
     _onClickSubmenu(event) {
         event.preventDefault();
         const menu = game.settings.menus.get(event.currentTarget.dataset.key);
-        if (!menu) return ui.notifications.error("No submenu found for the provided key");
+        if (!menu) return ui.notifications.error(game.i18n.localize("eon.messages.noSubmenuFound"));
         const app = new menu.type();
         return app.render(true);
     }
@@ -259,7 +278,7 @@ export class Rules extends FormApplication {
         return foundry.utils.mergeObject(super.defaultOptions, {
             id: "rules",
             classes: ["EON setting-dialog"],
-            title: "Regelinställningar",
+            title: game.i18n.localize("eon.dialogs.regelinstallningar"),
             template: "systems/eon-rpg/templates/dialogs/dialog-settings.html",
         });
     }
@@ -316,7 +335,7 @@ export class Rules extends FormApplication {
     _onClickSubmenu(event) {
         event.preventDefault();
         const menu = game.settings.menus.get(event.currentTarget.dataset.key);
-        if (!menu) return ui.notifications.error("No submenu found for the provided key");
+        if (!menu) return ui.notifications.error(game.i18n.localize("eon.messages.noSubmenuFound"));
         const app = new menu.type();
         return app.render(true);
     }

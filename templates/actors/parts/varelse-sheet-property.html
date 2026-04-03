@@ -2,11 +2,11 @@
     <div>
         <div class="item-row headline item-listrow">
             <div class="item-listbox weapon-icon">
-                <a class="item-create" title="Lägg till egenskap" data-type="egenskap">
+                <a class="item-create" title="{{localize 'eon.sheets.actor.laggTillEgenskap'}}" data-type="egenskap">
                     <i class="fa-solid fa-square-plus green"></i>
                 </a>
             </div>
-            <div class="item-listbox">Egenskaper</div>
+            <div class="item-listbox">{{localize "eon.sheets.actor.egenskaper"}}</div>
         </div>
     </div>
 
@@ -14,7 +14,7 @@
         <div class="skill-row skill">
             <div class="normalskill" style="width: 90%;">{{egenskap.name}}</div> 
             <div class="pointer skill-icon">
-                <a class="item-edit" title="Editera egenskap" data-source="egenskap" data-itemid="{{egenskap._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
+                <a class="item-edit" title="{{localize 'eon.sheets.actor.editeraEgenskap'}}" data-source="egenskap" data-itemid="{{egenskap._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
             </div>
         </div>
         {{#if (ne egenskap.system.beskrivning "")}}
