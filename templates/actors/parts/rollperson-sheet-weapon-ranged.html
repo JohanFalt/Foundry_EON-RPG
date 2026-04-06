@@ -12,8 +12,8 @@
         <div class="centerText" style="width: 75px;">{{localize "eon.sheets.actor.traffa"}}</div>
         <div class="centerText" style="width: 70px;">{{localize "eon.sheets.actor.skada"}}</div>
         <div class="centerText" style="width: 90px;">{{localize "eon.sheets.actor.rackvidd"}}</div>        
-        <div class="centerText" style="width: 50px;">{{localize "eon.sheets.item.antal"}}</div>
-        <div class="centerText" style="width: 50px;">{{localize "eon.sheets.actor.vikt"}}</div>
+        <div class="centerText" style="width: 70px;">{{localize "eon.sheets.item.antal"}}</div>
+        <div class="centerText" style="width: 70px;">{{localize "eon.sheets.actor.vikt"}}</div>
         <div>{{localize "eon.sheets.actor.egenskaper"}}</div>
     </div>
 
@@ -30,13 +30,13 @@
             <div class="item-listbox centerText" style="width: 75px;">{{getDiceValue (getActorSkillGroupValue ../actor vapen.system.grupp "strid")}}</div>
             <div class="item-listbox centerText" style="width: 70px;">{{getDiceValue vapen.system.skada}} {{{getWeaponDamageType vapen.system.skadetyp}}}</div>
 
-            <div class="item-listbox centerText" style="width: 90px;">{{{getRange ../EON.CONFIG.vapenavstand vapen.system.rackvidd}}}</div>
-            <div class="item-listbox centerText" style="width: 50px;">
+            <div class="item-listbox centerText" style="width: 90px;">{{localize (getRange ../EON.CONFIG.vapenavstand vapen.system.rackvidd)}}</div>
+            <div class="item-listbox centerText" style="width: 70px;">
                 <i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="{{vapen._id}}"></i>
                 <span class="number-of-text">{{vapen.system.antal}}</span>
                 <i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="{{vapen._id}}"></i>
             </div>
-            <div class="item-listbox centerText" style="width: 50px;">
+            <div class="item-listbox centerText" style="width: 70px;">
                 {{#if (eq vapen.system.vikt 0)}}
                     -
                 {{else}}

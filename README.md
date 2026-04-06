@@ -1,3 +1,5 @@
+![](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v5.2.1/v5.2.1.zip)
+
 ![](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v5.2.0/v5.2.0.zip)
 
 ![](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v5.1.3/v5.1.3.zip)

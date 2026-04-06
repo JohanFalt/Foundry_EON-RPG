@@ -268,7 +268,7 @@ Hooks.once("setup", function () {
 /* ------------------------------------ */
 Hooks.once("ready", async () => {
 	const installedVersion = game.settings.get("eon-rpg", "systemVersion");
-    const systemVersion = game.data.system.version;
+    const systemVersion = game.system.version;
     const isDemo = false;
 
     if (game.user.isGM) {

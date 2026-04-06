@@ -41,8 +41,8 @@
                 </a>
             </div>
             <div class="item-listbox" style="width: 230px;">{{localize "eon.sheets.item.namn"}}</div>
-            <div class="item-listbox" style="width: 50px;">{{localize "eon.sheets.item.antal"}}</div>
-            <div class="item-listbox" style="width: 50px;">{{localize "eon.sheets.actor.vikt"}}</div>
+            <div class="item-listbox" style="width: 70px;">{{localize "eon.sheets.item.antal"}}</div>
+            <div class="item-listbox" style="width: 70px;">{{localize "eon.sheets.actor.vikt"}}</div>
             <div class="item-listbox">{{localize "eon.sheets.actor.totalVikt"}}</div>
         </div>    
 
@@ -61,7 +61,7 @@
                 </a>
             </div>
             <div class="item-listbox sortable" style="width: 230px;" data-sort="name" data-list="utrustning_foremal">
-                Namn 
+                {{localize "eon.sheets.item.namn"}} 
                 {{#if (isSortedAsc 'utrustning_foremal' 'name')}}
                     <i class="fa-solid fa-arrow-up"></i>
                 {{else if (isSortedDesc 'utrustning_foremal' 'name')}}
@@ -71,7 +71,7 @@
                 {{/if}}
             </div>
             <div class="item-listbox sortable" style="width: 150px;" data-sort="system.grupp" data-list="utrustning_foremal">
-                Grupp 
+                {{localize "eon.sheets.item.grupp"}} 
                 {{#if (isSortedAsc 'utrustning_foremal' 'system.grupp')}}
                     <i class="fa-solid fa-arrow-up"></i>
                 {{else if (isSortedDesc 'utrustning_foremal' 'system.grupp')}}
@@ -80,8 +80,8 @@
                     <i class="fa-solid fa-arrows-up-down"></i>
                 {{/if}}
             </div>
-            <div class="item-listbox" style="width: 50px;">{{localize "eon.sheets.item.antal"}}</div>
-            <div class="item-listbox" style="width: 50px;">{{localize "eon.sheets.actor.vikt"}}</div>
+            <div class="item-listbox" style="width: 70px;">{{localize "eon.sheets.item.antal"}}</div>
+            <div class="item-listbox" style="width: 70px;">{{localize "eon.sheets.actor.vikt"}}</div>
             <div class="item-listbox">{{localize "eon.sheets.item.antalPerEnhet"}}</div>
         </div>
 

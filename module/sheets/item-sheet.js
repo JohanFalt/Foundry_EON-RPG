@@ -70,7 +70,7 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		}
 
 		if (!itemData.system.installningar.skapad) {
-			const version = game.data.system.version;
+			const version = game.system.version;
 
 			itemData.system.installningar.version = version;
 			itemData.system.installningar.skapad = true;
@@ -130,7 +130,7 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 					itemData.name = "Ny rustning";
 				}
 
-				const kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, game.data.system.version);
+				const kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, game.system.version);
 				kroppsdelar.forEach(k => k.modifiera = false);
 				itemData.system.kroppsdel = kroppsdelar;
 				itemData.system.typ = "utrustning";
@@ -481,7 +481,7 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		const header = event.currentTarget;
 		const type = header.dataset.type;
 		const source = header.dataset.source;
-        const version = game.data.system.version;
+        const version = game.system.version;
 		const itemData = foundry.utils.duplicate(this.item);
 
 		if ((type == "moment") && (source == "ritual")) {

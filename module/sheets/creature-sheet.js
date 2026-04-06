@@ -45,7 +45,7 @@ export default class EonCreatureSheet extends foundry.appv1.sheets.ActorSheet {
     /** @override */
     async getData() {
         const actorData = foundry.utils.duplicate(this.actor);	
-        const version = game.data.system.version;	
+        const version = game.system.version;	
 
 		if (!actorData.system.installningar.skapad) {
             actorData.system.installningar.eon = "eon4";
@@ -150,7 +150,7 @@ export default class EonCreatureSheet extends foundry.appv1.sheets.ActorSheet {
         if (((droppedItem.type.toLowerCase() == "närstridsvapen") || (droppedItem.type.toLowerCase() == "avståndsvapen") || (droppedItem.type.toLowerCase() == "sköld")) && 
                 (droppedItem.system.grupp != "")) {
 
-            const version = game.data.system.version;
+            const version = game.system.version;
             const fardighet = droppedItem.system.grupp;
             let found = false;
 

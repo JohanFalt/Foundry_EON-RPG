@@ -48,18 +48,19 @@ export class SpellRoll {
 
         this.varaktighettyptext = "";
         if (this.varaktighet) {
-            this.varaktighettyptext = CONFIG.EON.magi.varaktighet[item.system.varaktighet.tid];
+            const varaktighetKey = CONFIG.EON.magi.varaktighet[item.system.varaktighet.tid];
+            this.varaktighettyptext = varaktighetKey ? game.i18n.localize(varaktighetKey) : "";
         }
         else {
             if (item.system.varaktighet.koncentration) {
-                this.varaktighettyptext = "Koncentration";
+                this.varaktighettyptext = game.i18n.localize("eon.config.magi.varaktighet.koncentration");
             }
             if (item.system.varaktighet.momentan) {
-                this.varaktighettyptext = "Momentan";
+                this.varaktighettyptext = game.i18n.localize("eon.config.magi.varaktighet.momentan");
             }
             if (item.system.varaktighet.immanent) {
-                this.varaktighettyptext = "Immanent";
-            }            
+                this.varaktighettyptext = game.i18n.localize("eon.config.magi.varaktighet.immanent");
+            }
         }
 
         this.varaktighettyp = item.system.varaktighet.tid;
@@ -72,7 +73,8 @@ export class SpellRoll {
         
         this.omfangtyptext = "";
         if (this.omfang) {
-            this.omfangtyptext = CONFIG.EON.magi.omradesomfang[item.system.omfang.yta];
+            const omfangKey = CONFIG.EON.magi.omradesomfang[item.system.omfang.yta];
+            this.omfangtyptext = omfangKey ? game.i18n.localize(omfangKey) : "";
         }
         else {
             this.omfangtyptext = `${item.system.omfang.antal} ${item.system.omfang.text}`;
@@ -86,7 +88,8 @@ export class SpellRoll {
         this.rackvidd = item.system.rackvidd.stracka > 0;        
         this.rackviddtyptext = "";
         if (this.rackvidd) {
-            this.rackviddtyptext = CONFIG.EON.magi.rackvidd[item.system.rackvidd.stracka];
+            const rackviddKey = CONFIG.EON.magi.rackvidd[item.system.rackvidd.stracka];
+            this.rackviddtyptext = rackviddKey ? game.i18n.localize(rackviddKey) : "";
         }
         else {
             this.rackviddtyptext = `${item.system.rackvidd.antal} ${item.system.rackvidd.text}`;
@@ -295,10 +298,13 @@ export class DialogSpellRoll extends FormApplication {
 
                 if (this.object.varaktighettyp > 11) {
                     const tidsvarde = Math.pow(2, (this.object.varaktighettyp - 11));
-                    this.object.varaktighettyptext = `${String(tidsvarde)} år`;
+                    this.object.varaktighettyptext = game.i18n.format("eon.sheets.item.varaktighetYears", {
+                        years: String(tidsvarde),
+                    });
                 }
                 else {
-                    this.object.varaktighettyptext = CONFIG.EON.magi.varaktighet[this.object.varaktighettyp];
+                    const varaktighetKey = CONFIG.EON.magi.varaktighet[this.object.varaktighettyp];
+                    this.object.varaktighettyptext = varaktighetKey ? game.i18n.localize(varaktighetKey) : "";
                 }
             }    
 
@@ -324,8 +330,9 @@ export class DialogSpellRoll extends FormApplication {
                     this.object.omfangtyptext = `${String(tidsvarde)} kilometer`;
                 }
                 else {
-                    this.object.omfangtyptext = CONFIG.EON.magi.omradesomfang[this.object.omfangtyp];
-                }                
+                    const omfangKey = CONFIG.EON.magi.omradesomfang[this.object.omfangtyp];
+                    this.object.omfangtyptext = omfangKey ? game.i18n.localize(omfangKey) : "";
+                }
             }
             else {
                 if(direction == "up") {
@@ -365,8 +372,9 @@ export class DialogSpellRoll extends FormApplication {
                     this.object.rackviddtyptext = `${String(tidsvarde)} kilometer`;
                 }
                 else {
-                    this.object.rackviddtyptext = CONFIG.EON.magi.rackvidd[this.object.rackviddtyp];
-                }                
+                    const rackviddKey = CONFIG.EON.magi.rackvidd[this.object.rackviddtyp];
+                    this.object.rackviddtyptext = rackviddKey ? game.i18n.localize(rackviddKey) : "";
+                }
             }
             else {
                 if(direction == "up") {
@@ -511,14 +519,14 @@ export class DialogSpellRoll extends FormApplication {
         roll.grundvarde = grundvarde;
 
         // Omfång
-        roll.description += `<b>Omfång:</b> ${this.object.omfangtyptext}<br />`;
+        roll.description += `<b>${game.i18n.localize("eon.sheets.item.omfang")}:</b> ${this.object.omfangtyptext}<br />`;
         // Räckvidd
-        roll.description += `<b>Räckvidd:</b> ${this.object.rackviddtyptext}<br />`;
+        roll.description += `<b>${game.i18n.localize("eon.sheets.actor.rackvidd")}:</b> ${this.object.rackviddtyptext}<br />`;
         // Varaktighet
-        roll.description += `<b>Varaktighet:</b> ${this.object.varaktighettyptext}<br />`;
+        roll.description += `<b>${game.i18n.localize("eon.sheets.item.varaktighet")}:</b> ${this.object.varaktighettyptext}<br />`;
         // Överflöd
         if (this.object.overflod > 0) {
-            roll.description += `<b>Överflöd:</b> ${this.object.overflod}<br />`;
+            roll.description += `<b>${game.i18n.localize("eon.dialogs.overflod")}:</b> ${this.object.overflod}<br />`;
         }        
 
         // Försvar

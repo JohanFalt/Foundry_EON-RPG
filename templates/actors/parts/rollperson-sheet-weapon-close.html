@@ -19,8 +19,8 @@
         <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_hugg}}" class="item img-icon" title="{{localize 'eon.config.vapenskador.hugg'}}" /></div>
         <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_kross}}" class="item img-icon" title="{{localize 'eon.config.vapenskador.kross'}}" /></div>
         <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_stick}}" class="item img-icon" title="{{localize 'eon.config.vapenskador.stick'}}" /></div>
-        <div class="centerText" style="width: 50px;">{{localize "eon.sheets.item.antal"}}</div>
-        <div class="centerText" style="width: 50px;">{{localize "eon.sheets.actor.vikt"}}</div>
+        <div class="centerText" style="width: 70px;">{{localize "eon.sheets.item.antal"}}</div>
+        <div class="centerText" style="width: 70px;">{{localize "eon.sheets.actor.vikt"}}</div>
         <div>{{localize "eon.sheets.actor.egenskaper"}}</div>
     </div>
 
@@ -38,12 +38,12 @@
             <div class="item-listbox centerText" style="width: 50px;">{{#if (eq vapen.system.hugg.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.hugg ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
             <div class="item-listbox centerText" style="width: 50px;">{{#if (eq vapen.system.kross.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.kross ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
             <div class="item-listbox centerText" style="width: 50px;">{{#if (eq vapen.system.stick.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.stick ../actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
-            <div class="item-listbox centerText" style="width: 50px;">
+            <div class="item-listbox centerText" style="width: 70px;">
                 <i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="{{vapen._id}}"></i>
                 <span class="number-of-text">{{vapen.system.antal}}</span>
                 <i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="{{vapen._id}}"></i>
             </div>
-            <div class="item-listbox centerText" style="width: 50px;">
+            <div class="item-listbox centerText" style="width: 70px;">
                 {{#if (eq vapen.system.vikt 0)}}
                     -
                 {{else}}

@@ -83,7 +83,7 @@ export async function validateFolkslagWizardForFinish(mergedDraft) {
  */
 export async function ensureRollperson5StartingItems(actor) {
     if (!actor || actor.type !== "Rollperson5") return;
-    const version = game.data.system.version;
+    const version = game.system.version;
 
     const hasFardighet = actor.items?.some((item) => item.type === "Färdighet");
     if (!hasFardighet) {
@@ -174,7 +174,7 @@ export function validateFas1Finish(actor, wizardDraft = null) {
  * @param {object} wizardData
  */
 export async function applyCharacterCreationFinish(actor, wizardData) {
-    const version = game.data.system.version;
+    const version = game.system.version;
     const mergedDraft = foundry.utils.mergeObject(defaultWizardData(), wizardData, { inplace: false, recursive: true });
 
     const actorData = foundry.utils.duplicate(actor);

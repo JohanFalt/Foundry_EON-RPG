@@ -10,8 +10,8 @@
             <div class="centerText" style="width: 55px;">{{localize "eon.sheets.actor.avstand"}}</div>
             <div class="centerText" style="width: 60px;">{{localize "eon.sheets.actor.skydd"}}</div>
             <div class="centerText" style="width: 70px;">{{localize "eon.sheets.actor.skada"}}</div>
-            <div class="centerText" style="width: 50px;">{{localize "eon.sheets.item.antal"}}</div>
-            <div class="centerText" style="width: 50px;">{{localize "eon.sheets.actor.vikt"}}</div>
+            <div class="centerText" style="width: 70px;">{{localize "eon.sheets.item.antal"}}</div>
+            <div class="centerText" style="width: 70px;">{{localize "eon.sheets.actor.vikt"}}</div>
             <div>{{localize 'eon.sheets.actor.egenskaper'}}</div>
         </div>
     </div>
@@ -31,12 +31,12 @@
                 <div class="item-listbox centerText" style="width: 55px;">{{getDiceValue skold.system.avstand}}</div>
                 <div class="item-listbox centerText" style="width: 60px;">{{skold.system.skydd}}</div>
                 <div class="item-listbox centerText" style="width: 70px;">{{#if (eq skold.system.skada.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues skold.system.skada ../actor.system.harleddegenskaper.grundskada.totalt)}} {{{getWeaponDamageType skold.system.skadetyp}}}{{/if}}</div>
-                <div class="item-listbox centerText" style="width: 50px;">
+                <div class="item-listbox centerText" style="width: 70px;">
                     <i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="{{skold._id}}"></i>
                     <span class="number-of-text">{{skold.system.antal}}</span>
                     <i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="{{skold._id}}"></i>
                 </div>
-                <div class="item-listbox centerText" style="width: 50px;">
+                <div class="item-listbox centerText" style="width: 70px;">
                     {{#if (eq skold.system.vikt 0)}}
                         -
                     {{else}}

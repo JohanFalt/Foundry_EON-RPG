@@ -12,7 +12,7 @@
 
     {{#each actor.system.listdata.egenskaper as | egenskap key|}}
         <div class="skill-row skill">
-            <div class="normalskill" style="width: 90%;">{{egenskap.name}}</div> 
+            <div class="normalskill" style="width: 90%;">{{localize egenskap.name}}</div> 
             <div class="pointer skill-icon">
                 <a class="item-edit" title="{{localize 'eon.sheets.actor.editeraEgenskap'}}" data-source="egenskap" data-itemid="{{egenskap._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
             </div>

@@ -3,11 +3,11 @@ export default class SelectHelper {
         let listData = [];
 
         listData.vapenArm = {
-            "": "- Välj -",
-            "hoger": "Höger",
-            "vanster": "Vänster",
-            "annat": "Annat"
-        }
+            "": "eon.wizard.vapenarmValj",
+            hoger: "eon.wizard.vapenarmVal_hoger",
+            vanster: "eon.wizard.vapenarmVal_vanster",
+            annat: "eon.wizard.vapenarmVal_annat",
+        };
 
         let djurGrupper = {
             "": "- Välj -"

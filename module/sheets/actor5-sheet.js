@@ -82,7 +82,7 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
         } */
 
         const actorData = foundry.utils.duplicate(this.actor);
-        const version = game.data.system.version;
+        const version = game.system.version;
 
         if (!actorData.system.installningar.skapad) {
             if (actorData.system.installningar.eon !== "eon5") {

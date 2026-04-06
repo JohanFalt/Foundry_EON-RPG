@@ -26,7 +26,7 @@ export default class ItemHelper {
         let found = false;
         const header = event.currentTarget;
 		const type = header.dataset.type;
-        const version = game.data.system.version;
+        const version = game.system.version;
 		let itemData;        
 
         if (type == "färdighet") {
@@ -194,7 +194,7 @@ export default class ItemHelper {
 
         if (type == "rustning") {
             found = true;
-            const kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, game.data.system.version);
+            const kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, game.system.version);
 
 			itemData = {
                 name: game.i18n.localize("eon.items.nyRustning"),

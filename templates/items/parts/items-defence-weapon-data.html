@@ -31,17 +31,17 @@
     
     <div class="item-property-area" style="display: flex; flex-direction: row;">
 
-        <div class="floating-label-group ">
-            <div class="dice-value   tic pointer" data-property="skada" style="margin-left: 2px;">{{getDiceValue item.system.skada}}</div>
+        <div class="item-property-area floating-label-group ">
+            <div class="dice-value tic pointer" data-property="skada" style="margin-left: 2px; height: var(--eon-line-height-floattext); padding-top: 6px;">{{getDiceValue item.system.skada}}</div>
             <span class="floating-label">{{localize "eon.sheets.actor.skada"}}</span>
         </div>                        
 
-        <div class="dual-box floating-label-group">
-            <select name="system.skadetyp">
+        <div class="dual-box item-property-area floating-label-group">
+            <select name="system.skadetyp" class="height: var(--eon-line-height-floattext); padding-top: 6px;">
                 <option value="">{{localize "eon.sheets.item.valjOption"}}</option>
                 {{#select item.system.skadetyp}}
                     {{#each EON.CONFIG.vapenskador as |skadetyp key|}}
-                        <option value="{{key}}">{{skadetyp}}</option>
+                        <option value="{{key}}">{{localize skadetyp}}</option>
                     {{/each}}
                 {{/select}}
             </select>
@@ -50,12 +50,12 @@
     </div>   
     
     <div class="item-property-area floating-label-group ">
-        <div class="dice-value   tic pointer" data-property="narstrid" style="margin-left: 2px;">{{getDiceValue item.system.narstrid}}</div>
+        <div class="dice-value tic pointer" data-property="narstrid" style="margin-left: 2px; height: var(--eon-line-height-floattext); padding-top: 6px;">{{getDiceValue item.system.narstrid}}</div>
         <span class="floating-label">{{localize "eon.dialogs.narstrid"}}</span>
     </div>
 
     <div class="item-property-area floating-label-group ">
-        <div class="dice-value   tic pointer" data-property="avstand" style="margin-left: 2px;">{{getDiceValue item.system.avstand}}</div>
+        <div class="dice-value   tic pointer" data-property="avstand" style="margin-left: 2px; height: var(--eon-line-height-floattext); padding-top: 6px;">{{getDiceValue item.system.avstand}}</div>
         <span class="floating-label">{{localize "eon.dialogs.avstand"}}</span>
     </div>
 

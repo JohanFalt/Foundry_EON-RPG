@@ -531,7 +531,8 @@
                 "hantverk": "Hantverk",
                 "expertis": "Expertis",
                 "kannetecken": "Kännetecken",
-                "formaga": "Förmåga"
+                "formaga": "Förmåga",
+                "grupp": "Grupp"
             },
             "item": {
                 "aspekt": "Aspekt",
@@ -616,6 +617,7 @@
                 "tillfalligVaraktighetOption": "- Tillfällig -",
                 "varaktighetMomentan": "Momentan",
                 "varaktighetImmanent": "Immanent",
+                "varaktighetYears": "{years} år",
                 "ritualKostnadKort": "Kost.",
                 "ritualTab": "Ritual",
                 "eon4Kort": "EON 4",

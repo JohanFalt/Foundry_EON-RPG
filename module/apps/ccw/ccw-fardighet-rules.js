@@ -49,7 +49,7 @@ export function getWizardOvrigFardighetTypeFlags(wizardKey) {
 export async function createWizardOvrigFardighetItem(actor, wizardKey) {
     const flags = getWizardOvrigFardighetTypeFlags(wizardKey);
     if (!flags || !actor?.createEmbeddedDocuments) return null;
-    const version = game.data.system.version;
+    const version = game.system.version;
     const itemData = {
         name: game.i18n.localize("eon.items.nyFardighet"),
         type: "Färdighet",
@@ -86,7 +86,7 @@ export async function createWizardOvrigFardighetItem(actor, wizardKey) {
  */
 export async function createWizardMystikFardighetItem(actor) {
     if (!actor?.createEmbeddedDocuments) return null;
-    const version = game.data.system.version;
+    const version = game.system.version;
     const itemData = {
         name: game.i18n.localize("eon.items.nyFardighet"),
         type: "Färdighet",
