@@ -55,7 +55,7 @@
                 <div class="item-listbox weapon-icon"><a class="item-send" title="{{localize 'eon.sheets.item.skickaBeskrivning'}}" data-source="description" data-itemid="{{kraft._id}}"><i class="icon fa-solid fa-share"></i></a></div>
             {{/if}}
             <div class="item-listbox vrollable" style="width: 175px;" data-source="spell" data-itemid="{{kraft._id}}">{{kraft.name}}</div>
-            <div class="item-listbox" style="width: 75px;">{{getConfigPropertyName kraft.system.aspekt ../EON.CONFIG.aspekter}}</div>
+            <div class="item-listbox" style="width: 75px;">{{localize (getConfigPropertyName kraft.system.aspekt ../EON.CONFIG.aspekter)}}</div>
             <div class="item-listbox centerText" style="width: 80px;">{{kraft.system.svarighet}}</div>
             <div class="item-listbox" style="width: 140px;">{{shorten (getSpellSetting kraft "omfang") 15 false}}</div>
             <div class="item-listbox" style="width: 140px;">{{shorten (getSpellSetting kraft "rackvidd") 15 false}}</div>
@@ -67,7 +67,7 @@
 
 <div class="item-box">
 
-    <div class="large-headline">{{localize "eon.sheets.item.kongelat"}}</div>
+    <div class="large-headline">{{localize "eon.sheets.actor.kongelat"}}</div>
 
     <div class="headline headline-background item-row item-listrow">
         <div class="item-listbox weapon-icon">
@@ -118,8 +118,8 @@
             {{else}}
                 <div class="item-listbox weapon-icon"><a class="item-send" title="{{localize 'eon.sheets.item.skickaBeskrivning'}}" data-source="description" data-itemid="{{faltstorning._id}}"><i class="icon fa-solid fa-share"></i></a></div>
             {{/if}}
-            <div class="item-listbox" style="width: 175px;">{{getConfigPropertyName faltstorning.name ../EON.CONFIG.aspekter}}</div>
-            <div class="item-listbox">{{getConfigPropertyName faltstorning.system.niva ../EON.CONFIG.magi.faltstorning}}</div>
+            <div class="item-listbox" style="width: 175px;">{{localize (getConfigPropertyName faltstorning.name ../EON.CONFIG.aspekter)}}</div>
+            <div class="item-listbox">{{localize (getConfigPropertyName faltstorning.system.niva ../EON.CONFIG.magi.faltstorning)}}</div>
         </div>
     {{/each}}    
 

@@ -13,10 +13,24 @@
     {{/if}}
 </div>
 
-<div class="pullLeft" style="min-width: 270px;">
+<div class="pullLeft weapon-item" style="min-width: 270px;">
     <div class="item-property-area floating-label-group">
         <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
         <span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
+    </div>
+
+    <div class="item-property-area floating-label-group">
+        <select class="text-value" name="system.grupp">                                
+            {{#select item.system.grupp}}
+                <option value="">{{localize "eon.sheets.item.ingenFardighet"}}</option>
+                {{#each EON.CONFIG.vapengrupper as |vapengrupp key|}}
+                    {{#if (eq vapengrupp.grupp "avstandsvapen")}}
+                        <option value="{{key}}">{{localize vapengrupp.namn}}</option>
+                    {{/if}}
+                {{/each}}
+            {{/select}}
+        </select>
+        <span class="floating-label">{{localize "eon.sheets.item.fardighet"}}</span>
     </div>
     
     <div class="item-property-area floating-label-group">
@@ -42,7 +56,7 @@
     {{/if}}
     
     <div class="item-property-area floating-label-group">
-        <select class="text-value" name="system.rackvidd">
+        <select class="text-value" name="system.rackvidd" style="width: 133px">
             <option value="">{{localize "eon.sheets.item.valjOption"}}</option>
             {{#select item.system.rackvidd}}
                 {{#each EON.CONFIG.vapenavstand as |vapenavstand key|}}
@@ -55,8 +69,8 @@
 
     <div class="item-property-area" style="display: flex; flex-direction: row;">
 
-        <div class="item-property-area floating-label-group" style="margin-right: 10px;">
-            <div class="dice-value tic pointer" data-property="skada" style="margin-left: 2px; height: var(--eon-line-height-floattext); padding-top: 6px;">{{getDiceValue item.system.skada}}</div>
+        <div class="item-property-area floating-label-group" style="margin-right: 10px; width: 80px;">
+            <div class="dice-value tic pointer" data-property="skada" style="width: 60px;">{{getDiceValue item.system.skada}}</div>
             <span class="floating-label">{{localize "eon.sheets.actor.skada"}}</span>
         </div>
 

@@ -239,7 +239,7 @@
             "utrustningsgrupper": {
                 "behallare": "Containers",
                 "belysning": "Light",
-                "djurtillbehor": "Djurtillbehör",
+                "djurtillbehor": "Animal accessories",
                 "fiske": "Fishing tools",
                 "forvaring": "Storage",
                 "husgrad": "Utensils",
@@ -532,7 +532,8 @@
                 "expertis": "Expertise",
                 "kannetecken": "Trait",
                 "formaga": "Ability",
-                "grupp": "Group"
+                "grupp": "Group",
+                "kongelat": "Congelate"
             },
             "item": {
                 "aspekt": "Aspekt",

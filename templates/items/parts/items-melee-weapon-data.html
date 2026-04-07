@@ -28,7 +28,7 @@
     {{/if}}	
 </div>
 
-<div class="item-column" style="min-width: 270px;">
+<div class="item-column weapon-item" style="min-width: 270px;">
     <div class="item-property-area floating-label-group">
         <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
         <span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
@@ -48,12 +48,12 @@
         <span class="floating-label">{{localize "eon.sheets.item.fardighet"}}</span>
     </div>
 
-    <div class="item-property-area floating-label-group">
+    <div class="item-row item-property-area floating-label-group">
         <input class="attribute-value editable" name="system.langd" type="text" value="{{item.system.langd}}" data-dtype="Number" />
         <span class="floating-label">{{localize "eon.sheets.item.langdCm"}}</span>
     </div>
 
-    <div class="item-property-area floating-label-group">
+    <div class="item-row item-property-area floating-label-group">
         <input class="attribute-value editable" name="system.vikt" type="text" value="{{item.system.vikt}}" data-dtype="Number" />
         <span class="floating-label">{{localize "eon.sheets.item.viktKg"}}</span>
     </div>

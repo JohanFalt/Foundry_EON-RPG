@@ -2,7 +2,7 @@
     <img src="{{EON.CONFIG.ikoner.besvarjelse}}" class="item img-block" />
 </div>
 
-<div class="item-area pullLeft">
+<div class="item-area pullLeft spell-item">
     <div class="item-top">
         <div>
             <div class="item-property-area floating-label-group">
@@ -56,13 +56,13 @@
 
             <div class="item-property-area item-row" style="display: flex; flex-direction: row;">
 
-                <div class="item-property-area floating-label-group" >
-                    <input class="attribute-value editable" type="text" name="system.omfang.antal" value="{{item.system.omfang.antal}}" data-dtype="Number" {{#if (eq item.system.omfang.yta 0)}}autocomplete="off" autofocus required{{else}}disabled readonly{{/if}} style="height: var(--eon-line-height-floattext); padding-top: 6px;" />
+                <div class="item-property-area floating-label-group" style="width: 80px">
+                    <input class="attribute-value editable" type="text" name="system.omfang.antal" value="{{item.system.omfang.antal}}" data-dtype="Number" {{#if (eq item.system.omfang.yta 0)}}autocomplete="off" autofocus required{{else}}disabled readonly{{/if}} />
                     <span class="floating-label">{{localize "eon.dialogs.antalMal"}}</span>
                 </div>
 
-                <div class="dual-box-right item-property-area floating-label-group">
-                    <input class="text-value editable" type="text" name="system.omfang.text" value="{{item.system.omfang.text}}" data-dtype="String" {{#if (eq item.system.omfang.yta 0)}}autocomplete="off" autofocus required{{else}}disabled readonly{{/if}} style="height: var(--eon-line-height-floattext); padding-top: 6px;" />
+                <div class="dual-box-right item-property-area floating-label-group" style="width: 155px">
+                    <input class="text-value editable" type="text" name="system.omfang.text" value="{{item.system.omfang.text}}" data-dtype="String" {{#if (eq item.system.omfang.yta 0)}}autocomplete="off" autofocus required{{else}}disabled readonly{{/if}} />
                     <span class="floating-label">{{localize "eon.sheets.item.typAvMal"}}</span>
                 </div>		
                 
@@ -83,13 +83,13 @@
 
             <div class="item-property-area item-row">
 
-                <div class="item-property-area floating-label-group">
-                    <input class="attribute-value editable" type="text" name="system.rackvidd.antal" value="{{item.system.rackvidd.antal}}" data-dtype="Number" {{#if (eq item.system.rackvidd.stracka 0)}}autocomplete="off" autofocus required{{else}}disabled readonly{{/if}} style="height: var(--eon-line-height-floattext); padding-top: 6px;" />
+                <div class="item-property-area floating-label-group" style="width: 80px">
+                    <input class="attribute-value editable" type="text" name="system.rackvidd.antal" value="{{item.system.rackvidd.antal}}" data-dtype="Number" {{#if (eq item.system.rackvidd.stracka 0)}}autocomplete="off" autofocus required{{else}}disabled readonly{{/if}} />
                     <span class="floating-label">{{localize "eon.sheets.item.stracka"}}</span>
                 </div>
 
-                <div class="dual-box-right item-property-area floating-label-group">
-                    <input class="text-value editable" type="text" name="system.rackvidd.text" value="{{item.system.rackvidd.text}}" data-dtype="String" {{#if (eq item.system.rackvidd.stracka 0)}}autocomplete="off" autofocus required{{else}}disabled readonly{{/if}} style="height: var(--eon-line-height-floattext); padding-top: 6px;" />
+                <div class="dual-box-right item-property-area floating-label-group" style="width: 155px">
+                    <input class="text-value editable" type="text" name="system.rackvidd.text" value="{{item.system.rackvidd.text}}" data-dtype="String" {{#if (eq item.system.rackvidd.stracka 0)}}autocomplete="off" autofocus required{{else}}disabled readonly{{/if}} />
                     <span class="floating-label">{{localize "eon.sheets.item.rackvidstyp"}}</span>
                 </div>
 

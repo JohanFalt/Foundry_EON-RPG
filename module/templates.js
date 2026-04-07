@@ -840,7 +840,13 @@ export const RegisterHandlebarsHelpers = function () {
 	});
 
 	Handlebars.registerHelper("shorten", function (text, i, exact) {
+		if (text === undefined) {
+			return "";
+		}
+
 		let result = text;
+
+
 
 		if (text.length > i) {
 			if (exact) {

@@ -1,6 +1,6 @@
 <form class="{{cssClass}}" autocomplete="off">
 
-	<div class="sheet-item">
+	<div class="sheet-item armor-item">
 
 		<header class="sheet-header item-top">
 
@@ -58,7 +58,7 @@
                 </div>
 
                 {{#each item.system.kroppsdel as |rustning key|}}
-                    <div class="item-row item-listrow">
+                    <div class="item-row item-listrow" style="height: 32px">
                         <div class="item-listbox" style="width: 100px;">{{localize rustning.namn}}</div>
                         <div class="item-listbox" style="width: 150px;">
                             <select class="inputdata" data-source="armor" data-kroppsdel="{{rustning.kroppsdel}}" style="width: 125px;">                                

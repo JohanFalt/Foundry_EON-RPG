@@ -458,6 +458,16 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         `;
     }    
 
+    if (await CompareVersion(installedVersion, '5.2.2', isDemo)) {
+        partMessage += `
+        <p>
+            <p>Fixat att man inte kunde välja vilken färdighet ett avståndsvapen har.</p>
+            <p>Fixat översättnignsfel.</p>
+            <p>Fixat olika grafikfel.</p>
+        </p>           
+         `;
+    }
+
     // if (await CompareVersion(installedVersion, '5.1.2', isDemo)) {
     //      partMessage += `
     //      <p>

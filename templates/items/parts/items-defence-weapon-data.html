@@ -7,7 +7,7 @@
     {{/if}}	
 </div>
 
-<div class="pullLeft" style="min-width: 270px;">
+<div class="pullLeft weapon-item" style="min-width: 270px;">
 
     <div class="item-property-area floating-label-group">
         <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
@@ -31,8 +31,8 @@
     
     <div class="item-property-area" style="display: flex; flex-direction: row;">
 
-        <div class="item-property-area floating-label-group ">
-            <div class="dice-value tic pointer" data-property="skada" style="margin-left: 2px; height: var(--eon-line-height-floattext); padding-top: 6px;">{{getDiceValue item.system.skada}}</div>
+        <div class="item-property-area floating-label-group" style="width: 80px">
+            <div class="dice-value tic pointer" data-property="skada" style="width: 60px">{{getDiceValue item.system.skada}}</div>
             <span class="floating-label">{{localize "eon.sheets.actor.skada"}}</span>
         </div>                        
 
@@ -50,12 +50,12 @@
     </div>   
     
     <div class="item-property-area floating-label-group ">
-        <div class="dice-value tic pointer" data-property="narstrid" style="margin-left: 2px; height: var(--eon-line-height-floattext); padding-top: 6px;">{{getDiceValue item.system.narstrid}}</div>
+        <div class="dice-value tic pointer" data-property="narstrid" style="width: 60px">{{getDiceValue item.system.narstrid}}</div>
         <span class="floating-label">{{localize "eon.dialogs.narstrid"}}</span>
     </div>
 
     <div class="item-property-area floating-label-group ">
-        <div class="dice-value   tic pointer" data-property="avstand" style="margin-left: 2px; height: var(--eon-line-height-floattext); padding-top: 6px;">{{getDiceValue item.system.avstand}}</div>
+        <div class="dice-value   tic pointer" data-property="avstand" style="width: 60px;">{{getDiceValue item.system.avstand}}</div>
         <span class="floating-label">{{localize "eon.dialogs.avstand"}}</span>
     </div>
 

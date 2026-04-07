@@ -5,7 +5,7 @@
                 <div class="skill-headline headline">{{localize grupp}}</div>
                 <div class="floating-label-group">
                     <input class="attribute-value editable   skill-value" name="system.fardigheter.{{key}}.erf" type="text" value="{{getActorSkillGroupExp ../actor.system.fardigheter key}}" data-dtype="Number" />
-                    <span class="floating-label">{{localize "eon.sheets.actor.erfarenhet"}}</span>
+                    <span class="erfarenhet-box floating-label">{{localize "eon.sheets.actor.erfarenhet"}}</span>
                 </div>
 
                 {{#if (eqAny key "mystik" "sprak" "ovriga")}}
@@ -54,7 +54,7 @@
 {{else if (eq actor.system.installningar.eon "eon5")}}
     <div class="floating-label-group">
         <input class="attribute-value editable skill-value" name="system.fardigheter.ovriga.erf" type="text" value="{{getActorSkillGroupExp actor.system.fardigheter 'ovriga'}}" data-dtype="Number" />
-        <span class="floating-label">{{localize "eon.sheets.actor.erfarenhet"}}</span>
+        <span class="erfarenhet-box floating-label">{{localize "eon.sheets.actor.erfarenhet"}}</span>
     </div>
 
     <div class="skill-area" style="{{getSkillAreaHeight actor.system.listdata.fardigheter}}">

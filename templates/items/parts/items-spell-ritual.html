@@ -1,4 +1,4 @@
-<div class="item-box" style="width: 530px;">
+<div class="item-box spell-item" style="width: 530px;">
 
     <div class="large-headline">{{localize "eon.sheets.item.ritualer"}}</div>    
 
@@ -82,14 +82,14 @@
                 <div style="width: 150px;">
                     <select class="inputdata" id="ritual.momentgrupp_{{key}}" data-source="ritual" data-key="{{key}}" style="width: 140px;">
                         <option>{{localize "eon.sheets.item.valjOption"}}</option>
-                        {{selectOptions ../EON.CONFIG.fardighetgrupper selected=item.grupp}}
+                        {{selectOptions ../EON.CONFIG.fardighetgrupper selected=item.grupp localize=true}}
                     </select>
                 </div>
                 <div style="width: 150px;">
                     <select class="inputdata" id="ritual.moment_{{key}}" data-source="ritual" data-key="{{key}}" style="width: 140px;">
                         <option>{{localize "eon.sheets.item.valjOption"}}</option>
                         {{#if item.grupp}}
-                            {{selectOptions (getActorSkillGroup ../EON.fardigheter item.grupp) selected=item.fardighet valueAttr="namn" keyAttr="key"}}
+                            {{selectOptions (getActorSkillGroup ../EON.fardigheter item.grupp) selected=item.fardighet valueAttr="namn" keyAttr="key" localize=true}}
                         {{/if}}
                     </select>
                 </div> 

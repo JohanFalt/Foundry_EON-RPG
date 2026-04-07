@@ -541,6 +541,12 @@
     line-height: var(--eon-line-height-default);
 }
 
+.EON .floating-label-group .attribute-value {
+    margin-left: 2px; 
+    height: var(--eon-line-height-floattext); 
+    padding-top: 6px;
+}
+
 .EON .pointer:hover,
 .EON .pointer:focus {
   cursor: pointer;
@@ -605,6 +611,12 @@
     border-radius: 3px;
     height: var(--eon-line-height-default);
     line-height: var(--eon-line-height-default);
+}
+
+.EON .floating-label-group .dice-value {
+    margin-left: 2px; 
+    height: var(--eon-line-height-floattext); 
+    padding-top: 6px;
 }
 
 .eon-theme-light.EON .dice-value {
@@ -1219,6 +1231,12 @@ input.skill-value {
     margin-bottom: 8px;
 }
 
+/* Flera rader (last/svaghet/tvivel/störning) — undvik .bio max-height:26px som kollapsar innehållet */
+.EON .bio.trait-stats-eon5 {
+    max-height: none;
+    align-self: stretch;
+}
+
 .EON .skill-headline.headline {
     width: 71%;
 }
@@ -1429,7 +1447,8 @@ input.skill-value {
     pointer-events: none;
     font-family: var(--eon-main-headline-norm);
     font-size: var(--eon-box-headline-size);
-    top: -8px;
+    /* top: -8px; */
+    top: 0px;
     left: 8px;
     transition: all 0.2s ease;
     opacity: 1;
@@ -1437,12 +1456,19 @@ input.skill-value {
 .floating-label-group .floating-label.text-label {
     top: -7px;
 }
-.EON .item-property-area.floating-label-group .floating-label {
+/* .EON .item-property-area.floating-label-group .floating-label
+.EON .floating-label-group .floating-label.ritual-label,
+.EON .floating-label-group .floating-label.weaponroll-label,
+.EON .weapon-item .floating-label-group .floating-label,
+.EON .armor-item .floating-label-group .floating-label,
+.EON .spell-item .floating-label-group .floating-label {
     top: 0px;
-}
-.floating-label-group .floating-label.ritual-label {
-    top: 0px;
-}
+} */
+ .EON .floating-label-group .floating-label.erfarenhet-box,
+ .EON .bio-box .floating-label-group .floating-label {
+    top: -8px;
+ }
+
 .floating-label-group input:focus ~ .floating-label,
 .floating-label-group input:disabled ~ .floating-label,
 .floating-label-group input:not(:focus):valid ~ .floating-label,
