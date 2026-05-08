@@ -472,6 +472,10 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
             
         </ul></p>     
         `;
+        partMessage += `
+        <h4>Foundry v14 stöd</h4>  
+        <p>Modulen har nu stöd för både Foundry v13 och v14.</p>
+        `;
     }  
 
     // if (await CompareVersion(installedVersion, '5.2.2', isDemo)) {
