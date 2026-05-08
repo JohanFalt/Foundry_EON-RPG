@@ -1,11 +1,11 @@
 {
     "id": "eon-rpg",
     "title": "Eon RPG",
-    "version": "5.2.2",
+    "version": "5.3.0",
     "compatibility": {
         "minimum": "13",
-        "verified": "13",
-        "maximum": "13"
+        "verified": "14",
+        "maximum": "14"
     },
     "authors": [{
         "name": "Johan Fält",
@@ -409,6 +409,58 @@
                     ]
                 }
             }
+        },
+        {
+            "name": "vandningar5",
+            "label": "Vändningar",
+            "system": "eon-rpg",
+            "path": "packs/vandningar5",
+            "type": "RollTable",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "eon5",
+                        "grundbok",
+                        "tabeller",
+                        "varelser"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "djur5",
+            "label": "Djur",
+            "system": "eon-rpg",
+            "path": "packs/djur5",
+            "type": "Actor",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "eon5",
+                        "grundbok",
+                        "varelser"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "varelser5",
+            "label": "Varelser",
+            "system": "eon-rpg",
+            "path": "packs/varelser5",
+            "type": "Actor",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "eon5",
+                        "grundbok",
+                        "varelser"
+                    ]
+                }
+            }
         }
     ],
     "packFolders": [{
@@ -478,6 +530,21 @@
                     "vapenegenskaper5",
                     "utrustning5"
                 ]
+            },
+            {
+                "name": "Tabeller",
+                "sorting": "m",
+                "packs": [
+                    "vandningar5"
+                ]
+            },
+            {
+                "name": "Varelser",
+                "sorting": "m",
+                "packs": [
+                    "djur5",
+                    "varelser5"
+                ]
             }
         ]
     }],
@@ -488,8 +555,8 @@
         "gridUnits": "m"
     },  
     "url": "https://github.com/JohanFalt/Foundry_EON-RPG",
-    "manifest": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.2.2/system.json",  
-    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.2.2/v5.2.2.zip",
+    "manifest": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.3.0/system.json",  
+    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.3.0/v5.3.0.zip",
     "bugs": "https://github.com/JohanFalt/Foundry_EON-RPG/issues",
     "license": "LICENSE.txt"
 }

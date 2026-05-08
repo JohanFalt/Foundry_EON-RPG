@@ -9,33 +9,32 @@ export default class SelectHelper {
             annat: "eon.wizard.vapenarmVal_annat",
         };
 
-        let djurGrupper = {
-            "": "- Välj -"
-        };
-
-        listData.djurGrupper = Object.assign(djurGrupper, game.EON.CONFIG.djurgrupper);
-
-        let djurVariant = {
-            "": "- Välj -"
-        }
-
-        for (const variant in game.EON.djur.variant) {
-            let id = variant.toLowerCase();
-            let namn = game.EON.djur.variant[variant].namn;
-
-            if (id != 'ingen') {
-                djurVariant = Object.assign(djurVariant, {[id]: namn});    
-            }            
-        }
-
-        listData.djurVariant = djurVariant;      
-
         return listData;
     }
 
-    static SetupItem(item) {
-        let listData = [];      
+    /**
+     * Bygger record key → i18n-nyckel (namn) för vapengrupper med given grupp-typ.
+     * @param {Record<string, { namn?: string, grupp?: string }>|undefined} vapengrupper
+     * @param {string} gruppTyp t.ex. "narstridsvapen" | "avstandsvapen"
+     */
+    static _filterVapengrupperByGrupp(vapengrupper, gruppTyp) {
+        const out = {};
+        if (!vapengrupper) return out;
+        for (const [key, v] of Object.entries(vapengrupper)) {
+            if (v?.grupp === gruppTyp && v.namn != null) {
+                out[key] = v.namn;
+            }
+        }
+        return out;
+    }
 
+    static SetupItem(_item) {
+        const listData = {
+            vapenegenskaper: [],
+        };
+        const vg = CONFIG.EON?.vapengrupper;
+        listData.vapengrupperNarstridsvapen = SelectHelper._filterVapengrupperByGrupp(vg, "narstridsvapen");
+        listData.vapengrupperAvstandsvapen = SelectHelper._filterVapengrupperByGrupp(vg, "avstandsvapen");
         return listData;
     }
 }

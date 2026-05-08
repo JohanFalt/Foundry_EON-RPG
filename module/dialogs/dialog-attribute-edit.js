@@ -209,6 +209,71 @@ export class DialogAttributeEdit extends FormApplication {
         }
     }
 
+    /**
+     * Varelse Eon 4: max 6 tärningar + overflow till bonus.
+     * Gäller grundegenskaper (om de finns) och härledda attribut med T6-grund — inte grundrustning (siffervärde).
+     */
+    _beraknaTotaltVardeOptions(actorData) {
+        const src = actorData ?? this.actor;
+        if (!CalculateHelper.isVarelseEon4(src)) return {};
+        if (this.object.attributeType === "grundegenskaper") {
+            return { varelseEon4Grundegenskap: true };
+        }
+        if (this.object.attributeType === "harleddegenskaper" && this.object.attributeKey !== "grundrustning") {
+            return { varelseEon4Grundegenskap: true };
+        }
+        return {};
+    }
+
+    /**
+     * Om tic (+) ska stoppa omvandling +4 bonus → +1 tärning när grund redan har 6 tärningar.
+     * Endast Varelse Eon 4 (samma omfattning som _beraknaTotaltVardeOptions). Rollperson: alltid obegränsat via tic.
+     */
+    _varelseEon4TicSexTarningsTak(actorData) {
+        const src = actorData ?? this.actor;
+        if (!CalculateHelper.isVarelseEon4(src)) return false;
+        if (this.object.attributeType === "grundegenskaper") return true;
+        if (this.object.attributeType === "harleddegenskaper" && this.object.attributeKey !== "grundrustning") {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Varelse Eon 5: normalisera grundvärde till obegränsat format (ingen 6T6-cap)
+     * för härledda T6-attribut i dialogen, så visningen blir t.ex. 7T6+1 istället för 6T6+5.
+     */
+    async _normaliseraVarelseEon5Grund(actorData) {
+        const src = actorData ?? this.actor;
+        if (CalculateHelper.isVarelseEon4(src)) return false;
+        if (this.object.attributeType !== "harleddegenskaper" || this.object.attributeKey === "grundrustning") {
+            return false;
+        }
+
+        const attribut = actorData?.system?.[this.object.attributeType]?.[this.object.attributeKey];
+        if (!attribut?.grund) return false;
+
+        const normaliserad = await CalculateHelper.BeraknaTotaltVarde({
+            grund: foundry.utils.duplicate(attribut.grund),
+            bonuslista: []
+        }, {});
+        if (!normaliserad || typeof normaliserad !== "object") return false;
+
+        const nuTvarde = parseInt(attribut.grund.tvarde) || 0;
+        const nuBonus = parseInt(attribut.grund.bonus) || 0;
+        const nyTvarde = parseInt(normaliserad.tvarde) || 0;
+        const nyBonus = parseInt(normaliserad.bonus) || 0;
+        if (nuTvarde === nyTvarde && nuBonus === nyBonus) return false;
+
+        attribut.grund.tvarde = nyTvarde;
+        attribut.grund.bonus = nyBonus;
+        attribut.totalt = await CalculateHelper.BeraknaTotaltVarde(
+            attribut,
+            this._beraknaTotaltVardeOptions(actorData)
+        );
+        return true;
+    }
+
     /** @override */
 	get template() {
         return "systems/eon-rpg/templates/dialogs/dialog-attribute-edit.html";
@@ -222,7 +287,14 @@ export class DialogAttributeEdit extends FormApplication {
         data.EON = game.EON;
 		data.EON.CONFIG = CONFIG.EON;
 
-        this.object = this.object.reload(this.actor);      
+        const actorData = foundry.utils.duplicate(this.actor);
+        const normaliserad = await this._normaliseraVarelseEon5Grund(actorData);
+        if (normaliserad) {
+            await this.actor.update(actorData);
+            this.object = this.object.reload(actorData);
+        } else {
+            this.object = this.object.reload(this.actor);
+        }
 
         if (this.object.attributeType == "bakgrund") {
             this.object.varde = this.actor.system.altvarde[this.object.attributeKey];
@@ -234,41 +306,45 @@ export class DialogAttributeEdit extends FormApplication {
             data.vandningLista = {};
             data.valtid = "";
             let lista = {
-                "": "- Välj -"
+                "": game.i18n.localize("eon.dialogs.vandningQuickpickPlaceholder")
             };
 
             // hämta alla vändningstabeller som finns i kompendiet.
             // #243
-            const vandningar = await ItemHelper.GetCreatureCombatTurn();
+            const vandningar = await ItemHelper.GetCreatureCombatTurn(this.actor.system.installningar.eon);
             for (const i in vandningar) {
-                lista = Object.assign(lista, {[vandningar[i]._id] : vandningar[i].name});
-            } 
-                
+                const tid = vandningar[i].id ?? vandningar[i]._id;
+                lista = Object.assign(lista, {[tid] : vandningar[i].name});
+            }
+
             data.vandningLista = lista;
-        }    
+            const lid = this.object.attributeListId ?? "";
+            data.vandningQuickpickSelected = (lid !== "" && Object.prototype.hasOwnProperty.call(lista, lid)) ? lid : "";
+        }
 
         if (data.hasDescription) {
             data.enrichedBeskrivning = await foundry.applications.ux.TextEditor.implementation.enrichHTML(this.object.attributeDescription);
         }
 
         if (this.object.attributeType == "grundegenskaper") {
-            data.headline = "GRUNDEGENSKAP";
+            data.headline = game.i18n.localize("eon.dialogs.attributeEdit.headlineGrundegenskap");
         }
         else if (this.object.attributeType == "strid") {
-            data.headline = "STRID";
+            data.headline = game.i18n.localize("eon.dialogs.attributeEdit.headlineStrid");
         }
         else if (this.object.attributeType == "skada") {
-            data.headline = this.object.attributeKey.toUpperCase();
-
-            if (this.object.attributeKey == "forsvar") {
-                data.headline = "FÖRSVAR";
-            } 
-            if (this.object.attributeKey == "vandning") {
-                data.headline = "VÄNDNING";
-            }
+            const skadaHeadlineKey = {
+                forsvar: "eon.dialogs.forsvar",
+                skydd: "eon.sheets.actor.skydd",
+                utmattning: "eon.sheets.actor.utmattning",
+                vandning: "eon.sheets.actor.vandning"
+            }[this.object.attributeKey];
+            data.headline = skadaHeadlineKey
+                ? game.i18n.localize(skadaHeadlineKey).toUpperCase()
+                : this.object.attributeKey.toUpperCase();
         }
         else {
-            data.headline = 'HÄRLETT ATTRIBUT';
+            data.headline = game.i18n.localize("eon.dialogs.attributeEdit.headlineHarlettAttribut");
         }
         
         //console.log(this.object.attributeKey);
@@ -311,6 +387,12 @@ export class DialogAttributeEdit extends FormApplication {
         html
             .find('.closebutton')
             .click(this._closeForm.bind(this));
+
+        html.find("#vandning-compendium-pick").on("change", (ev) => {
+            const v = ev.currentTarget.value;
+            const input = html.find('input[name="attribut.listaid"]');
+            if (input.length) input.val(v);
+        });
     } 
 
     async _updateObject(event, formData) {
@@ -344,7 +426,9 @@ export class DialogAttributeEdit extends FormApplication {
                 if (i == 1) {
                     if (value !== undefined) {
                         const index = key.split(".")[1];
-                        actorData.system[this.object.attributeType][this.object.attributeKey][index] = value;
+                        let v = value;
+                        if (index === "listaid" && typeof v === "string") v = v.trim();
+                        actorData.system[this.object.attributeType][this.object.attributeKey][index] = v;
                     }
                 }    
                 if (i == 3) {      
@@ -387,6 +471,14 @@ export class DialogAttributeEdit extends FormApplication {
                     actorData.system[this.object.attributeType][this.object.attributeKey].namn = value;
                 }
             }
+        }
+
+        const attrPath = actorData.system[this.object.attributeType]?.[this.object.attributeKey];
+        if (attrPath?.grund != null && this.object.attributeType !== "skada") {
+            attrPath.totalt = await CalculateHelper.BeraknaTotaltVarde(
+                attrPath,
+                this._beraknaTotaltVardeOptions(actorData));
+            await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
         }
 
         await this.actor.update(actorData);
@@ -471,13 +563,17 @@ export class DialogAttributeEdit extends FormApplication {
                         actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde += 1;
 					    actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus = 0;
                     }
-                    else if (actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde < 6) {
+                    else if (
+                        !this._varelseEon4TicSexTarningsTak(actorData)
+                        || actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde < 6) {
 					    actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde += 1;
 					    actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus = 0;
                     }
 				}
 
-				actorData.system[this.object.attributeType][this.object.attributeKey].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.attributeType][this.object.attributeKey]);
+				actorData.system[this.object.attributeType][this.object.attributeKey].totalt = await CalculateHelper.BeraknaTotaltVarde(
+                    actorData.system[this.object.attributeType][this.object.attributeKey],
+                    this._beraknaTotaltVardeOptions(actorData));
 				await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
 				await this.actor.update(actorData);
 			}
@@ -487,14 +583,19 @@ export class DialogAttributeEdit extends FormApplication {
 				let bonus = actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista[key].bonus;
 
 				bonus += 1;
-				if ((bonus > 3) && (actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde < 6)) {
+				if (
+                    (bonus > 3)
+                    && (!this._varelseEon4TicSexTarningsTak(actorData)
+                        || actorData.system[this.object.attributeType][this.object.attributeKey].grund.tvarde < 6)) {
 					tvarde += 1;
 					bonus = 0;
 				}
 
 				actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista[key].tvarde = tvarde;
 				actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista[key].bonus = bonus;
-				actorData.system[this.object.attributeType][this.object.attributeKey].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.attributeType][this.object.attributeKey]);
+				actorData.system[this.object.attributeType][this.object.attributeKey].totalt = await CalculateHelper.BeraknaTotaltVarde(
+                    actorData.system[this.object.attributeType][this.object.attributeKey],
+                    this._beraknaTotaltVardeOptions(actorData));
 				await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
 				await this.actor.update(actorData);
 			}
@@ -571,7 +672,9 @@ export class DialogAttributeEdit extends FormApplication {
                     actorData.system[this.object.attributeType][this.object.attributeKey].grund.bonus = 0;
                 }
 
-                actorData.system[this.object.attributeType][this.object.attributeKey].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.attributeType][this.object.attributeKey]);
+                actorData.system[this.object.attributeType][this.object.attributeKey].totalt = await CalculateHelper.BeraknaTotaltVarde(
+                    actorData.system[this.object.attributeType][this.object.attributeKey],
+                    this._beraknaTotaltVardeOptions(actorData));
                 await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
                 await this.actor.update(actorData);
             }
@@ -590,7 +693,9 @@ export class DialogAttributeEdit extends FormApplication {
 
                 actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista[key].tvarde = tvarde;
                 actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista[key].bonus = bonus;
-                actorData.system[this.object.attributeType][this.object.attributeKey].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.attributeType][this.object.attributeKey]);
+                actorData.system[this.object.attributeType][this.object.attributeKey].totalt = await CalculateHelper.BeraknaTotaltVarde(
+                    actorData.system[this.object.attributeType][this.object.attributeKey],
+                    this._beraknaTotaltVardeOptions(actorData));
                 await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
 
                 await this.actor.update(actorData);
@@ -671,7 +776,9 @@ export class DialogAttributeEdit extends FormApplication {
             actorData.system.strid[this.object.attributeKey].totalt = total;
         } else {
             actorData.system[this.object.attributeType][this.object.attributeKey].bonuslista.splice(key, 1);
-            actorData.system[this.object.attributeType][this.object.attributeKey].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system[this.object.attributeType][this.object.attributeKey]);
+            actorData.system[this.object.attributeType][this.object.attributeKey].totalt = await CalculateHelper.BeraknaTotaltVarde(
+                actorData.system[this.object.attributeType][this.object.attributeKey],
+                this._beraknaTotaltVardeOptions(actorData));
             await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
         }
 

@@ -1,7 +1,7 @@
 {
     "TYPES.Actor.Rollperson": "Rollperson Eon 4",
     "TYPES.Actor.Rollperson5": "Rollperson Eon 5",
-    "TYPES.Actor.Varelse": "Varelse Eon 4",
+    "TYPES.Actor.Varelse": "Varelse",
     "TYPES.Item.Folkslag": "Folkslag Eon 4",
     "TYPES.Item.Folkslag5": "Folkslag Eon 5",
     "eon": {
@@ -708,7 +708,17 @@
             "lyckasForsvara": "Lyckas försvara för att bli anfallare",
             "antalMal": "Antal mål",
             "overflod": "Överflöd",
-            "improvisedMagi": "Improviserad magi"
+            "improvisedMagi": "Improviserad magi",
+            "vandningTableNotFound": "Hittar ingen vändningstabell för det sparade id:t eller UUID:et. Kontrollera att tabellen finns och att id stämmer.",
+            "vandningModifiering": "Modifiering",
+            "vandningTableIdLabel": "Tabell (id eller UUID)",
+            "vandningTableIdHint": "Klistra in världstabellens UUID, kompendium-UUID eller kort tabell-id. Snabbvalet fyller i id från systemkompendiet.",
+            "vandningQuickpickPlaceholder": "— Välj från kompendium —",
+            "attributeEdit": {
+                "headlineGrundegenskap": "GRUNDEGENSKAP",
+                "headlineStrid": "STRID",
+                "headlineHarlettAttribut": "HÄRLETT ATTRIBUT"
+            }
         },
         "settings": {
             "version": "Version",

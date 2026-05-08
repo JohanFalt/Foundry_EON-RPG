@@ -1014,16 +1014,31 @@ export default class ItemHelper {
         return nylista;
     }
 
-    static async GetCreatureCombatTurn(id) {
-        const pack = game.packs.get("eon-rpg.vandningar");
+    static async GetCreatureCombatTurn(version, id = undefined) {
+        let packname = "eon-rpg.vandningar";
+
+        if (version === "eon5") {
+            packname = "eon-rpg.vandningar5";
+        }
+
+        const pack = game.packs.get(packname);
         const vandningar = await pack.getDocuments();
 
         if (id == undefined) {
             vandningar.sort((a, b) => a.name.localeCompare(b.name));
             return vandningar;
-        }        
+        }
 
-        return vandningar.find(e => e._id === id);
+        id = typeof id === "string" ? id.trim() : id;
+        if (id === "") return undefined;
+
+        const fromPack = vandningar.find(e => e.id === id || e._id === id);
+        if (fromPack) return fromPack;
+
+        const fromUuidDoc = await fromUuid(id);
+        if (fromUuidDoc?.documentName === "RollTable") return fromUuidDoc;
+
+        return game.tables.get(id) ?? undefined;
     }
 
     static async GetWeapon(vapentyp, id) {

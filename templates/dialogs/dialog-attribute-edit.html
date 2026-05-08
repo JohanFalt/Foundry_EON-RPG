@@ -39,11 +39,24 @@
 
                     {{#if object.hasLista}}
                         <div class="item-column">      
+                            {{#if (eq object.attributeKey "vandning")}}
+                            <div class="floating-label-group" style="margin-bottom: 12px;">
+                                <input class="text-value editable" type="text" name="attribut.listaid" value="{{object.attributeListId}}" autocomplete="off" style="width: 100%; max-width: 300px;" />
+                                <span class="floating-label">{{localize "eon.dialogs.vandningTableIdLabel"}}</span>
+                            </div>
+                            <div class="information-area information-box" style="margin-bottom: 12px;">{{localize "eon.dialogs.vandningTableIdHint"}}</div>
                             <div>
-                                <select class="text-value editable" name="attribut.listaid" style="width: 300px">
-                                    {{selectOptions this.vandningLista selected=object.attributeListId localize=false}}  
+                                <select id="vandning-compendium-pick" class="text-value editable" style="width: 300px">
+                                    {{selectOptions vandningLista selected=vandningQuickpickSelected localize=false}}
                                 </select>
                             </div>
+                            {{else}}
+                            <div>
+                                <select class="text-value editable" name="attribut.listaid" style="width: 300px">
+                                    {{selectOptions vandningLista selected=object.attributeListId localize=false}}  
+                                </select>
+                            </div>
+                            {{/if}}
 
                             <div class="item-row headline" style="margin-top: 10px;">
                                 <div class="three-column centerText">{{localize "eon.sheets.actor.skada"}}</div>

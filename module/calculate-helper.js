@@ -1,11 +1,71 @@
 import DiceHelper from "./dice-helper.js";
 
 export default class CalculateHelper {
-    static async BeraknaTotaltVarde(attribut) {
+    /**
+     * Varelse under Eon 4-regler: type Varelse och eon tom eller "eon4".
+     * @param {Actor|object} actorOrData - Actor eller duplicerad actorData med .type och .system
+     */
+    static isVarelseEon4(actorOrData) {
+        if (!actorOrData) return false;
+        const type = actorOrData.type;
+        if (type !== "Varelse") return false;
+        const eon = actorOrData.system?.installningar?.eon;
+        return eon === "eon4" || eon === "";
+    }
+
+    /**
+     * Ordinarie Eon: +4 bonus → +1 tärning (obegränsat antal tärningar).
+     */
+    static _normaliseraTarningBonusOrdinarie(totalTarning, totalBonus) {
+        let t = totalTarning;
+        let b = totalBonus;
+        while (b > 3) {
+            t += 1;
+            b -= 4;
+        }
+        while (b < -1 && t > 0) {
+            t -= 1;
+            b += 4;
+        }
+        return { tvarde: t, bonus: b };
+    }
+
+    /**
+     * Varelse Eon 4 grundegenskap: max 6 tärningar; överskjutande tärningar blir +4 bonus vardera.
+     * Bonus → tärning bara medan tärningar < 6.
+     */
+    static _normaliseraVarelseEon4Grundegenskap(totalTarning, totalBonus) {
+        let t = totalTarning;
+        let b = totalBonus;
+        while (b > 3 && t < 6) {
+            t += 1;
+            b -= 4;
+        }
+        while (b < -1 && t > 0) {
+            t -= 1;
+            b += 4;
+        }
+        while (t > 6) {
+            t -= 1;
+            b += 4;
+        }
+        return { tvarde: t, bonus: b };
+    }
+
+    /**
+     * @param {object} attribut
+     * @param {boolean|object} [options] - Om true: samma som { varelseEon4Grundegenskap: true } (bakåtkompat)
+     * @param {boolean} [options.varelseEon4Grundegenskap]
+     */
+    static async BeraknaTotaltVarde(attribut, options = false) {
         if (attribut == undefined) {
             console.error("'attribut' empty in BeraknaTotaltVarde");
             return false;
         }
+
+        const varelseEon4Grundegenskap =
+            options === true ||
+            (typeof options === "object" && options !== null && options.varelseEon4Grundegenskap === true);
 
         // Special handling för läkningstakt och grundrustning
         if (attribut.varde !== undefined) {
@@ -32,39 +92,35 @@ export default class CalculateHelper {
 
         let totalTarning = Math.floor(parseInt(attribut.grund.tvarde));
         let totalBonus = Math.floor(parseInt(attribut.grund.bonus));
+        const bonuslista = attribut.bonuslista ?? [];
 
-        if(attribut.bonuslista.length > 0) {
-			for (const bonus of attribut.bonuslista) {
-				totalTarning += Math.floor(parseInt(bonus.tvarde || 0));
-				totalBonus += Math.floor(parseInt(bonus.bonus || 0));
-			}
+        for (const bonus of bonuslista) {
+            totalTarning += Math.floor(parseInt(bonus.tvarde || 0));
+            totalBonus += Math.floor(parseInt(bonus.bonus || 0));
+        }
 
-			if (totalBonus > 3) {
-				while (totalBonus > 3) {
-					totalTarning += 1;
-					totalBonus -= 4;
-				}
-			}
-            else if (totalBonus < -1) {
-				while (totalBonus < -1) {
-					totalTarning -= 1;
-					totalBonus += 4;
-				}
-			}
-		}
+        let result;
+        if (varelseEon4Grundegenskap) {
+            result = CalculateHelper._normaliseraVarelseEon4Grundegenskap(totalTarning, totalBonus);
+        } else {
+            result = CalculateHelper._normaliseraTarningBonusOrdinarie(totalTarning, totalBonus);
+        }
 
-		if ((totalTarning == 0) && (totalBonus < 0)) {
-			totalBonus = 0;
-		}
-		if (totalTarning < 0) {
-			totalTarning = 0;
-			totalBonus = 0;
-		}
+        totalTarning = result.tvarde;
+        totalBonus = result.bonus;
+
+        if ((totalTarning == 0) && (totalBonus < 0)) {
+            totalBonus = 0;
+        }
+        if (totalTarning < 0) {
+            totalTarning = 0;
+            totalBonus = 0;
+        }
 
         return {
             tvarde: Math.floor(totalTarning),
             bonus: Math.floor(totalBonus)
-        }
+        };
     }
 
     static async hanteraBerakningar(actorData) {

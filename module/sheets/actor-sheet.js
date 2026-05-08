@@ -94,8 +94,8 @@ export default class EonActorSheet extends foundry.appv1.sheets.ActorSheet {
             if (!key) return items;
 
             return items.sort((a, b) => {
-                let valA = getProperty(a, key) ?? '';
-                let valB = getProperty(b, key) ?? '';
+                let valA = foundry.utils.getProperty(a, key) ?? '';
+                let valB = foundry.utils.getProperty(b, key) ?? '';
 
                 if (typeof valA === 'string') valA = valA.toLowerCase();
                 if (typeof valB === 'string') valB = valB.toLowerCase();

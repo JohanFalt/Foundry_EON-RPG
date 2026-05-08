@@ -436,37 +436,51 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
     //      `;
     // }
 
-    if (await CompareVersion(installedVersion, '5.2.0', isDemo)) {
+    // if (await CompareVersion(installedVersion, '5.2.0', isDemo)) {
+    //     headMessage += `
+    //     <p><ul style="margin-top: 0">
+    //         <li>Översättning till engelska</li
+    //         <li>Lagt till Hjälpformuläret från Eon 5 vid skapande av rollperson</li>
+    //         <li>Tillägg till Eon V kompendium:<br />
+    //             Folkslag<br />
+    //             Folkslagsegenskaper<br />
+    //             Språk<br />
+    //             Utrustningspaket under Utrustning/paket
+    //         </li>
+            
+    //     </ul></p>     
+    //     `;
+    //     partMessage += `
+    //     <h4>Eon 5 Hjälpformulär</h4>  
+    //     <p>Denna modulen startar upp när ett Eon 5 rollformulär skapas.</p>
+    //     <h4>Engelsk översättning</h4>  
+    //     <p>Systemet finns nu på engelska, vilket språk (svenska/engelska) man vill använda bestämmer respektive användare i Foundry inställningarna.</p>
+    //     `;
+    // }    
+
+    if (await CompareVersion(installedVersion, '5.3.0', isDemo)) {
         headMessage += `
         <p><ul style="margin-top: 0">
-            <li>Översättning till engelska</li
-            <li>Lagt till Hjälpformuläret från Eon 5 vid skapande av rollperson</li>
+            <li>Foundry v14 stöd</li>
+            <li>Fixat hanteringen av varelse-formuläret till Eon 5</li>
             <li>Tillägg till Eon V kompendium:<br />
-                Folkslag<br />
-                Folkslagsegenskaper<br />
-                Språk<br />
-                Utrustningspaket under Utrustning/paket
+                Djur - bastyper av djur<br />
+                Vändningar - vändningar som kan användas av varelser<br />
             </li>
             
         </ul></p>     
         `;
-        partMessage += `
-        <h4>Eon 5 Hjälpformulär</h4>  
-        <p>Denna modulen startar upp när ett Eon 5 rollformulär skapas.</p>
-        <h4>Engelsk översättning</h4>  
-        <p>Systemet finns nu på engelska, vilket språk (svenska/engelska) man vill använda bestämmer respektive användare i Foundry inställningarna.</p>
-        `;
-    }    
+    }  
 
-    if (await CompareVersion(installedVersion, '5.2.2', isDemo)) {
-        partMessage += `
-        <p>
-            <p>Fixat att man inte kunde välja vilken färdighet ett avståndsvapen har.</p>
-            <p>Fixat översättnignsfel.</p>
-            <p>Fixat olika grafikfel.</p>
-        </p>           
-         `;
-    }
+    // if (await CompareVersion(installedVersion, '5.2.2', isDemo)) {
+    //     partMessage += `
+    //     <p>
+    //         <p>Fixat att man inte kunde välja vilken färdighet ett avståndsvapen har.</p>
+    //         <p>Fixat översättnignsfel.</p>
+    //         <p>Fixat olika grafikfel.</p>
+    //     </p>           
+    //      `;
+    // }
 
     // if (await CompareVersion(installedVersion, '5.1.2', isDemo)) {
     //      partMessage += `

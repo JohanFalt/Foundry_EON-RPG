@@ -7,7 +7,6 @@ import { data5fardigheter } from "../packs/fardigheter.js";
 // import { datastrid } from "../packs/strid.js";
 // import { datautrustning } from "../packs/utrustning.js";
 // import { datautrustning5 } from "../packs/utrustning5.js";
-import { datadjur } from "../packs/djur.js";
 import { datavaluta } from "../packs/valuta.js";
 
 /**
@@ -114,9 +113,6 @@ export async function Setup() {
 
 		// fileData = datautrustning5;
 		// Object.assign(importData, fileData);
-
-		fileData = datadjur;
-		Object.assign(importData, fileData);
 
 		fileData = datavaluta;
 		Object.assign(importData, fileData);
@@ -331,11 +327,11 @@ export const RegisterHandlebarsHelpers = function () {
 				dice = "";
 			}
 
-			if (value?.bonus > 0) {
-				return dice + "+" + value?.grund.bonus;
+			if (value.grund.bonus > 0) {
+				return dice + "+" + value.grund.bonus;
 			}
-			if (value?.bonus < 0) {
-				return dice + value?.grund?.bonus;
+			if (value.grund.bonus < 0) {
+				return dice + value.grund.bonus;
 			}			
 		}
 

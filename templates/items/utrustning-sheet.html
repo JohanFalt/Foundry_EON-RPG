@@ -13,12 +13,8 @@
                     {{#if (eq item.system.typ "kongelat")}}
                         <div class="item-property-area floating-label-group">
                             <select class="text-value" name="name">                                
-                                {{#select item.name}}
-                                    <option value="Kongelat">{{localize "eon.sheets.item.valjOption"}}</option>
-                                    {{#each EON.CONFIG.aspekter as |aspekt key|}}
-                                        <option value="{{key}}">{{localize aspekt}}</option>
-                                    {{/each}}
-                                {{/select}}
+                                <option value="">{{localize "eon.sheets.item.valjOption"}}</option>
+                                {{selectOptions EON.CONFIG.aspekter selected=item.name localize=true}}
                             </select>
                             <span class="floating-label">{{localize "eon.sheets.item.aspekt"}}</span>
                         </div>

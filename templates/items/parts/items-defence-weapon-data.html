@@ -39,11 +39,7 @@
         <div class="dual-box item-property-area floating-label-group">
             <select name="system.skadetyp" class="height: var(--eon-line-height-floattext); padding-top: 6px;">
                 <option value="">{{localize "eon.sheets.item.valjOption"}}</option>
-                {{#select item.system.skadetyp}}
-                    {{#each EON.CONFIG.vapenskador as |skadetyp key|}}
-                        <option value="{{key}}">{{localize skadetyp}}</option>
-                    {{/each}}
-                {{/select}}
+                {{selectOptions EON.CONFIG.vapenskador selected=item.system.skadetyp localize=true}}
             </select>
             <span class="floating-label">{{localize "eon.sheets.item.skadetyp"}}</span>
         </div>

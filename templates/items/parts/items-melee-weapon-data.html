@@ -36,14 +36,8 @@
     
     <div class="item-property-area floating-label-group">
         <select class="text-value" name="system.grupp">                                
-            {{#select item.system.grupp}}
-                <option value="">{{localize "eon.sheets.item.ingenFardighet"}}</option>
-                {{#each EON.CONFIG.vapengrupper as |vapengrupp key|}}
-                    {{#if (eq vapengrupp.grupp "narstridsvapen")}}
-                        <option value="{{key}}">{{localize vapengrupp.namn}}</option>
-                    {{/if}}
-                {{/each}}
-            {{/select}}
+            <option value="">{{localize "eon.sheets.item.ingenFardighet"}}</option>
+            {{selectOptions listData.vapengrupperNarstridsvapen selected=item.system.grupp localize=true}}
         </select>
         <span class="floating-label">{{localize "eon.sheets.item.fardighet"}}</span>
     </div>

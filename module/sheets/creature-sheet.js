@@ -48,7 +48,17 @@ export default class EonCreatureSheet extends foundry.appv1.sheets.ActorSheet {
         const version = game.system.version;	
 
 		if (!actorData.system.installningar.skapad) {
-            actorData.system.installningar.eon = "eon4";
+            let defaultEon = "eon4";
+            try {
+                const settingValue = game.settings.get("eon-rpg", "bookEon");
+                if (settingValue === "eon4" || settingValue === "eon5") {
+                    defaultEon = settingValue;
+                }
+            }
+            catch (err) {
+                // bookEon inte registrerad än — falla tillbaka på eon4
+            }
+            actorData.system.installningar.eon = defaultEon;
 
             await CreateHelper.SkapaFardigheter(this.actor, CONFIG.EON, version);
             actorData.system.skada.vandning.lista = await CreateHelper.SkapaVandningar();
@@ -94,6 +104,10 @@ export default class EonCreatureSheet extends foundry.appv1.sheets.ActorSheet {
         data.actor.system.listdata.vapen.avstand = data.actor.system.listdata.vapen.avstand.sort((a, b) => a.name.localeCompare(b.name));
 
         data.listData = SelectHelper.SetupActor(this.actor);
+        data.listData.eonOptions = {
+            "eon4": "eon.settings.eon4",
+            "eon5": "eon.settings.eon5"
+        };
 
         data.enrichedBeskrivning = await foundry.applications.ux.TextEditor.implementation.enrichHTML(this.actor.system.bakgrund.beskrivning);
 
@@ -145,7 +159,8 @@ export default class EonCreatureSheet extends foundry.appv1.sheets.ActorSheet {
 
         const droppedItem = await Item.implementation.fromDropData(_data);   
         
-        droppedItem.system.installningar.eon = "eon4";
+        const varelseEon = this.actor.system?.installningar?.eon;
+        droppedItem.system.installningar.eon = (varelseEon === "eon5") ? "eon5" : "eon4";
 
         if (((droppedItem.type.toLowerCase() == "närstridsvapen") || (droppedItem.type.toLowerCase() == "avståndsvapen") || (droppedItem.type.toLowerCase() == "sköld")) && 
                 (droppedItem.system.grupp != "")) {
@@ -246,87 +261,27 @@ export default class EonCreatureSheet extends foundry.appv1.sheets.ActorSheet {
 		const source = dataset.source;
 		const actorData = foundry.utils.duplicate(this.actor);	
 
-        if ((source == "varelsegrupp") || (source == "varelsemall"))  {
-            var grupp = document.getElementById("varelsegrupp");
-            var mall = document.getElementById("varelsemall");
-
-            if (mall.value == "custom") {
-                // TODO: ja vad göra nu?
-                return;
-            }
-            
-            let gruppData = game.EON.djur.varelsemall['ingen'];
-
-            if (grupp.value != "") {
-                gruppData = game.EON.djur.varelsemall[grupp.value];
-                gruppData.typ = grupp.value;
-            }  
-
-            let mallData = game.EON.djur.variant['ingen'];
-
-            if (mall.value != "") {
-                mallData = game.EON.djur.variant[mall.value];
-            }
-
-            if ((actorData.name == '') && (mallData.namn != '')) {
-                actorData.name = mallData.namn;
-            }
-            
-            actorData.system.bakgrund.beskrivning = mallData.beskrivning;
-            actorData.system.referens = mallData.referens;
-
-            actorData.system.installningar.varelsegrupp = mallData.typ;
-
-            if ((gruppData.typ != "") && (mallData.typ != gruppData.typ)) {
-                actorData.system.installningar.varelsegrupp = gruppData.typ;
-            }
+        if (source == "eon") {
+            const nyttEon = element.value === "eon5" ? "eon5" : "eon4";
+            actorData.system.installningar.eon = nyttEon;
 
             for (const egenskap in actorData.system.harleddegenskaper) {
-                if (actorData.system.harleddegenskaper[egenskap] == undefined) {
+                const attribut = actorData.system.harleddegenskaper[egenskap];
+                if (attribut == undefined) {
                     continue;
                 }
 
-                let mallExists = (mallData.harleddegenskaper?.[egenskap] == undefined) ? false : true;
-                let mallVarde = false;
-                let gruppExists = (gruppData.harleddegenskaper?.[egenskap] == undefined) ? false : true;
-                let gruppVarde = false;
-
-                if (mallExists) {
-                    mallVarde = mallData.harleddegenskaper[egenskap];
+                if (attribut.grund?.tvarde != undefined) {
+                    const varelseHarleddOpts =
+                        egenskap !== "grundrustning" && CalculateHelper.isVarelseEon4(actorData)
+                            ? { varelseEon4Grundegenskap: true }
+                            : {};
+                    attribut.totalt = await CalculateHelper.BeraknaTotaltVarde(attribut, varelseHarleddOpts);
                 }
-                if (gruppExists) {
-                    gruppVarde = gruppData.harleddegenskaper[egenskap];
-                }
-
-                if (actorData.system.harleddegenskaper[egenskap].grund?.tvarde != undefined) {
-                    if (!mallVarde) {
-                        mallVarde = {
-                            tvarde: 0,
-                            bonus: 0
-                        };
-                    }
-                    if (!gruppVarde) {
-                        gruppVarde = {
-                            tvarde: 0,
-                            bonus: 0
-                        };
-                    }     
-                    
-                    actorData.system.harleddegenskaper[egenskap].grund.tvarde = mallVarde.tvarde + gruppVarde.tvarde;
-                    actorData.system.harleddegenskaper[egenskap].grund.bonus = mallVarde.bonus + gruppVarde.bonus;
-                    actorData.system.harleddegenskaper[egenskap].totalt = await CalculateHelper.BeraknaTotaltVarde(actorData.system.harleddegenskaper[egenskap]);
-                }
-                else {
-                    let mall = (!mallVarde) ? 0 : parseInt(mallVarde);
-                    let grupp = (!gruppVarde) ? 0 : parseInt(gruppVarde);
-
-                    //actorData.system.harleddegenskaper[egenskap] = mall + grupp;
-                    actorData.system.harleddegenskaper[egenskap].varde = mall + grupp;
-                    actorData.system.harleddegenskaper[egenskap].totalt = mall + grupp;
+                else if (attribut.varde !== undefined) {
+                    await CalculateHelper.BeraknaTotaltVarde(attribut);
                 }
             }
-
-            actorData.system.strid.aterhamtning = gruppData.strid.aterhamtning;
 
             await this.actor.update(actorData);
             this.render();

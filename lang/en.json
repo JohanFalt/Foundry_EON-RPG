@@ -1,7 +1,7 @@
 {
     "TYPES.Actor.Rollperson": "PC Eon 4",
     "TYPES.Actor.Rollperson5": "PC Eon 5",
-    "TYPES.Actor.Varelse": "Creature Eon 4",
+    "TYPES.Actor.Varelse": "Creature",
     "TYPES.Item.Folkslag": "Ancestry Eon 4",
     "TYPES.Item.Folkslag5": "Ancestry Eon 5",
     "eon": {
@@ -708,7 +708,17 @@
             "lyckasForsvara": "Succeeds in defending to become the attacker",
             "antalMal": "Num. targets",
             "overflod": "Surplus",
-            "improvisedMagi": "Improvised magic"
+            "improvisedMagi": "Improvised magic",
+            "vandningTableNotFound": "No reversal roll table was found for the saved id or UUID. Check that the table exists and the id is correct.",
+            "vandningModifiering": "Modifier",
+            "vandningTableIdLabel": "Table (id or UUID)",
+            "vandningTableIdHint": "Paste a world table UUID, compendium UUID, or short table id. Quick pick fills in an id from the system compendium.",
+            "vandningQuickpickPlaceholder": "— Choose from compendium —",
+            "attributeEdit": {
+                "headlineGrundegenskap": "ATTRIBUTE",
+                "headlineStrid": "COMBAT",
+                "headlineHarlettAttribut": "DERIVED ATTRIBUTE"
+            }
         },
         "settings": {
             "version": "Version",

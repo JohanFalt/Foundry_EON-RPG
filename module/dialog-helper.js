@@ -74,13 +74,18 @@ export default class classDialogHelper {
         const vandningid = actor.system.skada?.vandning?.listaid;
 
         if ((vandningid != undefined) && (vandningid != "")) {
-            let table = await ItemHelper.GetCreatureCombatTurn(vandningid);
+            const table = await ItemHelper.GetCreatureCombatTurn(actor.system.installningar.eon, vandningid);
+
+            if (!table) {
+                ui.notifications.error(game.i18n.localize("eon.dialogs.vandningTableNotFound"));
+                return;
+            }
 
             // Template for the dialog form
             const template = `
                 <form>
                     <div class="form-group">
-                        <label>Modifiering</label>
+                        <label>${game.i18n.localize("eon.dialogs.vandningModifiering")}</label>
                         <input id="numberValue" value="${bonus}" />
                     </div>
                 </form>`;
@@ -99,8 +104,6 @@ export default class classDialogHelper {
                         }
 
                         const roll = await new Roll(formula);
-                        // #243
-                        //const table = game.tables.find(i => i._id === vandning);
                         await table.draw({roll});
                     }
                 }

@@ -17,7 +17,7 @@ export default class CreateHelper {
                 }
             }       
         } 
-        else {
+        else if (actor.system.installningar.eon === "eon4") {
             let itemData = await this.SkapaFardighetItem(actor, 'allman', game.EON.fardigheter['vildmark']['genomsoka'], 'genomsoka', version, false, true);
             await actor.createEmbeddedDocuments("Item", [itemData]);
 

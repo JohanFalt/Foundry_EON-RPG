@@ -14,21 +14,13 @@
 
             {{#if (eq item.system.installningar.eon "eon4")}}
                 <select class="inputdata" id="object.fardighet_{{key}}" data-source="moment" data-key="{{key}}" data-egenskap="fardighet" style="width: 140px;">
-                    <option>{{localize "eon.sheets.item.valjOption"}}</option>
-                    {{#select item.fardighet}}
-                        {{#each ../EON.fardigheter.mystik as |fardighet key|}}
-                            <option value="{{key}}">{{localize fardighet.namn}}</option>
-                        {{/each}}
-                    {{/select}}
+                    <option value="">{{localize "eon.sheets.item.valjOption"}}</option>
+                    {{selectOptions ../EON.fardigheter.mystik selected=item.fardighet labelAttr="namn" localize=true}}
                 </select>
             {{else}}
                 <select class="inputdata" id="object.fardighet_{{key}}" data-source="moment" data-key="{{key}}" data-egenskap="fardighet" style="width: 140px;">
-                    <option>{{localize "eon.sheets.item.valjOption"}}</option>
-                    {{#select item.fardighet}}
-                        {{#each ../EON.fardigheter5.mystik as |fardighet key|}}
-                            <option value="{{key}}">{{localize fardighet.namn}}</option>
-                        {{/each}}
-                    {{/select}}
+                    <option value="">{{localize "eon.sheets.item.valjOption"}}</option>
+                    {{selectOptions ../EON.fardigheter5.mystik selected=item.fardighet labelAttr="namn" localize=true}}
                 </select>
             {{/if}}
         </div>        
