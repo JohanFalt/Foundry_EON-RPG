@@ -462,7 +462,8 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         headMessage += `
         <p><ul style="margin-top: 0">
             <li>Foundry v14 stöd</li>
-            <li>Fixat hanteringen av varelse-formuläret till Eon 5</li>
+            <li>Fixat hanteringen av varelse-formuläret för stödtill Eon 5</li>
+            <li>Lägga till en egenskapad vändning till en varelse genom att klistra in tabellens id</li>
             <li>Tillägg till Eon V kompendium:<br />
                 Djur - bastyper av djur<br />
                 Vändningar - vändningar som kan användas av varelser<br />

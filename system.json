@@ -36,18 +36,6 @@
         "styles/eon-combat-tracker.css",
         "styles/dice/eon-dice-roller.css"
     ],
-    "relationships": {
-        "requires": [{
-            "id": "eon-dice-roller",
-            "type": "module",
-            "manifest": "https://raw.githubusercontent.com/JohanFalt/Foundry_EonDiceRoller/main/module.json",
-            "compatibility": {
-                "minimum": "2",
-                "verified": "2",
-                "maximum": "3"
-            }
-        }]
-    },
     "packs": [
         {
             "name": "vapenegenskaper",

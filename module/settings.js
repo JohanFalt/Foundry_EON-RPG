@@ -38,6 +38,15 @@ export const systemSettings = function() {
 		type: Boolean,
 	});
 
+    game.settings.register("eon-rpg", "eondiceremoval", {
+		name: L("eon.settings.eondiceremoval"),
+		hint: "",
+		scope: "world",
+		config: false,
+		default: false,
+		type: Boolean,
+	});
+
     game.settings.register("eon-rpg", "textfont", {
 		name: L("eon.settings.textfont"),
 		hint: L("eon.settings.textfontHint"),

@@ -16,6 +16,7 @@ import { CharacterCreationWizard } from "./apps/CharacterCreationWizard.js";
 
 import ItemHelper from "./item-helper.js";
 import MigrationWizard from "./ui/migration-wizard-helper.js";
+import "./ui/eon-dice-tray.js";
 
 let eonCombatTrackerApp = null;
 
@@ -321,6 +322,15 @@ Hooks.once("ready", async () => {
                         <p>Utkastet sparas på <strong>samma rollperson</strong> medan du arbetar. <strong>Slutför</strong> överför då uppgifterna till det ordinarie rollformuläret enligt reglerna. Redan under skapandet kan en del synas på arket (t.ex. grundfärdigheter och föremål du lagt till). <strong>Fortsätt senare</strong> stänger fönstret och behåller utkastet – öppna rollpersonen igen för att fortsätta.</p>
                         <p style="margin-top: 12px;">När du <strong>öppnar arket</strong> för en oslutförd rollperson öppnas karaktärsskapandet oftast <strong>automatiskt</strong>.</p>`
                 ], 'eoncreationwizard');
+            }
+
+            if (!game.settings.get('eon-rpg', 'eondiceremoval')) {
+                await MigrationWizard.show([
+                        // Sida 1
+                        `<h2>Borttagning av krav till EON dice helper</h2>
+                        <p>Från och med denna versionen behöver man inte ha modulen Eon dice helper installerad. OM du kan se två uppsättningar av tärningspanelen gå in i modulinställningarna och kryssa bort Eon dice helper. Starta sedan om Foundry.</p>
+                        <p>All funktion som den modulen hade är nu en del av systemets grundfunktioner.</p>`
+                ], 'eondiceremoval');
             }
         };
         setTimeout(() => showWizards(), 100);

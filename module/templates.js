@@ -71,6 +71,10 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/combat/eon-combat-tracker.html",
 		"systems/eon-rpg/templates/combat/eon-combatant-portrait.html",
 		"systems/eon-rpg/templates/wizard/character-creation-wizard.hbs",
+
+		"systems/eon-rpg/templates/dice/tray.html",
+		"systems/eon-rpg/templates/dice/roll-template.html",
+		"systems/eon-rpg/templates/dice/dialog-settings.html",
     ];
 
     /* Load the template parts

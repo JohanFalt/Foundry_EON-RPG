@@ -198,7 +198,7 @@ export async function RollDice(diceRoll) {
     const obRoll = diceRoll.obRoll;
     const typeRoll = diceRoll.typeroll;
     const action = diceRoll.action;
-    const color = game.settings.get("eon-dice-roller", "diceColor");
+    const color = game.settings.get("eon-rpg", "diceColor");
     
 
     let canRoll = number > 0;
@@ -336,7 +336,7 @@ export async function RollDice(diceRoll) {
     };
 
     // Render the chat card template
-    const template = `modules/eon-dice-roller/templates/roll-template.html`;
+    const template = `systems/eon-rpg/templates/dice/roll-template.html`;
     const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
 
     const chatData = {
@@ -369,7 +369,7 @@ export async function SendMessage(actor, config, headline, message) {
     };
 
     // Render the chat card template
-    const template = `modules/eon-dice-roller/templates/roll-template.html`;
+    const template = `systems/eon-rpg/templates/dice/roll-template.html`;
     const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
 
     const chatData = {
