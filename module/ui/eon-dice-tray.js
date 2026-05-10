@@ -82,8 +82,10 @@ class DiceGraphicsDialog extends FormApplication {
 
     activateListeners(html) {
         super.activateListeners(html);
-        html.querySelector(".submenu button")?.addEventListener("click", this._onClickSubmenu.bind(this));
-        html.querySelector('button[name="reset"]')?.addEventListener("click", this._onResetDefaults.bind(this));
+        const root = html?.[0] ?? html;
+        if (!(root instanceof HTMLElement)) return;
+        root.querySelector(".submenu button")?.addEventListener("click", this._onClickSubmenu.bind(this));
+        root.querySelector('button[name="reset"]')?.addEventListener("click", this._onResetDefaults.bind(this));
     }
 
     _onClickSubmenu(event) {
@@ -109,7 +111,7 @@ class DiceGraphicsDialog extends FormApplication {
     }
 
     async _updateObject(_, formData) {
-        for (const [k, v] of Object.entries(flattenObject(formData))) {
+        for (const [k, v] of Object.entries(foundry.utils.flattenObject(formData))) {
             const s = game.settings.settings.get(k);
             if (!s) continue;
             const current = game.settings.get("eon-rpg", s.key);

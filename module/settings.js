@@ -1,3 +1,19 @@
+/**
+ * Översätt inställningens etikett/hjälptext (och ev. val) vid render — inte vid register(),
+ * eftersom init ofta körs innan lang-paket är laddade och localize() då returnerar nyckeln.
+ */
+function prepareSettingForForm(s) {
+    const setting = foundry.utils.duplicate(s);
+    setting.name = game.i18n.localize(s.name);
+    setting.hint = game.i18n.localize(s.hint ?? "");
+    if (s.choices) {
+        setting.choices = Object.fromEntries(
+            Object.entries(s.choices).map(([k, v]) => [k, game.i18n.localize(v)])
+        );
+    }
+    return setting;
+}
+
 export const systemSettings = function() {
     const L = (key) => game.i18n.localize(key);
 
@@ -207,8 +223,7 @@ export class Books extends FormApplication {
             for (let s of game.settings.settings.values()) {
                 // // Exclude settings the user cannot change
                 if ((s.key == "bookEon") || (s.key == "bookCombat") || (s.key == "bookMagic")) {
-                    // Update setting data
-                    const setting = foundry.utils.duplicate(s);
+                    const setting = prepareSettingForForm(s);
 
                     setting.value = game.settings.get("eon-rpg", setting.key);
                     setting.type = s.type instanceof Function ? s.type.name : "String";
@@ -270,7 +285,7 @@ export class Books extends FormApplication {
   
     /** @override */
     async _updateObject(event, formData) {
-        for (let [k, v] of Object.entries(flattenObject(formData))) {
+        for (let [k, v] of Object.entries(foundry.utils.flattenObject(formData))) {
             let s = game.settings.settings.get(k);
             let current = game.settings.get("eon-rpg", s.key);
 
@@ -307,8 +322,7 @@ export class Rules extends FormApplication {
             for (let s of game.settings.settings.values()) {
                 // // Exclude settings the user cannot change
                 if ((s.key == "weightRules") || (s.key == "hinderenceSkillGroupMovement") || (s.key == "hinderenceAttributeMovement")) {
-                    // Update setting data
-                    const setting = foundry.utils.duplicate(s);
+                    const setting = prepareSettingForForm(s);
 
                     setting.value = game.settings.get("eon-rpg", setting.key);
                     setting.type = s.type instanceof Function ? s.type.name : "String";
@@ -370,7 +384,7 @@ export class Rules extends FormApplication {
   
     /** @override */
     async _updateObject(event, formData) {
-        for (let [k, v] of Object.entries(flattenObject(formData))) {
+        for (let [k, v] of Object.entries(foundry.utils.flattenObject(formData))) {
             let s = game.settings.settings.get(k);
             let current = game.settings.get("eon-rpg", s.key);
 

@@ -478,6 +478,15 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         `;
     }  
 
+    if (await CompareVersion(installedVersion, '5.3.1', isDemo)) {
+         partMessage += `
+         <p>
+             <p>Fixat översättningar i världsinställningarna.</p>
+             <p>Fixat ett fel där man inte kunde spara eon inställningarna för världen.</p>
+         </p>           
+          `;
+    }
+
     // if (await CompareVersion(installedVersion, '5.2.2', isDemo)) {
     //     partMessage += `
     //     <p>

@@ -1,16 +1,16 @@
 @font-face {
   font-family: "rubrik";
-  src: url('../assets/fonts/vinque rg.otf') format("opentype");
+  src: url('../../assets/fonts/vinque rg.otf') format("opentype");
 }
 
 @font-face {
   font-family: "eon-font";
-  src: url('../assets/fonts/OFLGoudyStMTT.ttf') format("opentype");
+  src: url('../../assets/fonts/OFLGoudyStMTT.ttf') format("opentype");
 }
 
 @font-face {
   font-family: "eon-font-siffror";
-  src: url('../assets/fonts/Sukhumala Regular.otf') format("opentype");
+  src: url('../../assets/fonts/Sukhumala Regular.otf') format("opentype");
 }
 
 :root {
@@ -21,11 +21,11 @@
   --chat-font-large: 16px;
   --chat-font-x-large: 24px;
 
-  --chat-background-color: url('../assets/img/graphics/chat-background.jpg');
+  --chat-background-color: url('../../assets/img/graphics/chat-background.svg');
   --chat-text-color: black;
   --chat-border-message: 3px ridge black;
   --chat-header-text-color: black;
-  --chat-header-background-color: url('../assets/img/graphics/stone.jpg');
+  --chat-header-background-color: url('../../assets/img/graphics/stone.svg');
 }
 
 section.eon-roller {

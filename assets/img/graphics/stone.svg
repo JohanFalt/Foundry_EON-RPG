@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="64" viewBox="0 0 256 64" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="stone" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#9a9a9a"/>
+      <stop offset="100%" style="stop-color:#6e6e6e"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="64" fill="url(#stone)"/>
+  <rect width="256" height="64" fill="#000" opacity="0.08"/>
+</svg>
