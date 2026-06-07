@@ -1,22 +1,20 @@
+![](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v5.3.2/v5.3.2.zip)
+
 ![](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v5.3.1/v5.3.1.zip)
 
 ![](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v5.3.0/v5.3.0.zip)
+
+![](https://img.shields.io/badge/Foundry-v14-informational)
 
 ![](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v5.2.2/v5.2.2.zip)
 
 ![](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v5.1.3/v5.1.3.zip)
 
-![Latest Release Download Count](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v5.1.0/v5.1.0.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge)
+![](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v5.0.0/v5.0.0.zip)
 
-![Latest Release Download Count](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v5.0.0/v5.0.0.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge)
-
-![Latest Release Download Count](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v4.0.5/v4.0.5.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge)
-
-![Latest Release Download Count](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v4.0.0/v4.0.0.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge)
+![](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v4.0.5/v4.0.5.zip)
 
 ![](https://img.shields.io/badge/Foundry-v13-informational)
-
-![](https://img.shields.io/badge/Foundry-v12-informational)
 
 I would never require it by anyone or even expect someone to do but if you really want to feel free to [buy me a coffee](https://ko-fi.com/johanfk) 
 
