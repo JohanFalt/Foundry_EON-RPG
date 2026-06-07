@@ -477,6 +477,14 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         <p>Modulen har nu stöd för både Foundry v13 och v14.</p>
         `;
     }  
+	
+	if (await CompareVersion(installedVersion, '5.3.2', isDemo)) {
+         partMessage += `
+         <p>
+             <p>Fixat översättningar för grundegenskaps-slag då dessa kom ut fel i chatten.</p>
+         </p>           
+          `;
+    }
 
     if (await CompareVersion(installedVersion, '5.3.1', isDemo)) {
          partMessage += `
