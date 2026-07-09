@@ -1,0 +1,63 @@
+<section class="tab {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+    <div class="item-box">
+        <div class="large-headline">{{localize "eon.sheets.actor.formelsamling"}}</div>
+
+        <div class="headline headline-background item-row item-listrow">
+            <div class="item-listbox weapon-icon">
+                <a data-action="itemCreate" data-type="besvärjelse" title="{{localize 'eon.sheets.actor.laggTillBesvarjelse'}}">
+                    <i class="fa-solid fa-square-plus green"></i>
+                </a>
+            </div>
+            <div class="item-listbox" style="width: 175px;">{{localize "eon.sheets.item.namn"}}</div>
+            <div class="item-listbox" style="width: 75px;">{{localize "eon.sheets.item.aspekt"}}</div>
+            <div class="item-listbox centerText" style="width: 80px;">{{localize "eon.sheets.actor.svarighet"}}</div>
+            <div class="item-listbox" style="width: 140px;">{{localize "eon.sheets.item.omfang"}}</div>
+            <div class="item-listbox" style="width: 140px;">{{localize "eon.sheets.actor.rackvidd"}}</div>
+            <div class="item-listbox" style="width: 140px;">{{localize "eon.sheets.item.varaktighet"}}</div>
+        </div>
+
+        {{#each listdata.magi.besvarjelse as |kraft|}}
+            <div class="item-row item-listrow">
+                <div class="item-listbox weapon-icon">
+                    <a data-action="itemEdit" data-item-id="{{kraft._id}}" title="{{localize 'eon.sheets.actor.editeraBesvarjelse'}}">
+                        <i class="icon fa-solid fa-pen-to-square"></i>
+                    </a>
+                </div>
+                <div class="item-listbox vrollable" style="width: 175px;" data-action="rollDialog" data-source="spell" data-item-id="{{kraft._id}}">{{kraft.name}}</div>
+                <div class="item-listbox" style="width: 75px;">{{localize (getConfigPropertyName kraft.system.aspekt @root.EON.CONFIG.aspekter)}}</div>
+                <div class="item-listbox centerText" style="width: 80px;">{{kraft.system.svarighet}}</div>
+                <div class="item-listbox" style="width: 140px;">{{shorten (getSpellSetting kraft "omfang") 15 false}}</div>
+                <div class="item-listbox" style="width: 140px;">{{shorten (getSpellSetting kraft "rackvidd") 15 false}}</div>
+                <div class="item-listbox" style="width: 140px;">{{shorten (getSpellSetting kraft "varaktighet") 15 false}}</div>
+            </div>
+        {{/each}}
+    </div>
+
+    <div class="item-box">
+        <div class="large-headline">{{localize "eon.sheets.actor.kongelat"}}</div>
+
+        <div class="headline headline-background item-row item-listrow">
+            <div class="item-listbox weapon-icon">
+                <a data-action="itemCreate" data-type="kongelat" title="{{localize 'eon.sheets.actor.laggTillKongelat'}}">
+                    <i class="fa-solid fa-square-plus green"></i>
+                </a>
+            </div>
+            <div class="item-listbox" style="width: 175px;">{{localize "eon.sheets.item.aspekt"}}</div>
+            <div class="item-listbox centerText" style="width: 100px;">{{localize "eon.sheets.item.magnitud"}}</div>
+            <div class="item-listbox centerText" style="width: 75px;">{{localize "eon.sheets.item.antal"}}</div>
+        </div>
+
+        {{#each listdata.magi.kongelat as |kongelat|}}
+            <div class="item-row item-listrow">
+                <div class="item-listbox weapon-icon">
+                    <a data-action="itemEdit" data-item-id="{{kongelat._id}}" title="{{localize 'eon.sheets.actor.editeraKongelat'}}">
+                        <i class="icon fa-solid fa-pen-to-square"></i>
+                    </a>
+                </div>
+                <div class="item-listbox" style="width: 175px;">{{getConfigPropertyName kongelat.name @root.EON.CONFIG.aspekter}}</div>
+                <div class="item-listbox centerText" style="width: 100px;">{{getPropertyLevel kongelat.system.egenskaper "magnitud"}}</div>
+                <div class="item-listbox centerText" style="width: 75px;">{{kongelat.system.antal}} st</div>
+            </div>
+        {{/each}}
+    </div>
+</section>

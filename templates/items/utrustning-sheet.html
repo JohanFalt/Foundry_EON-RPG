@@ -138,11 +138,21 @@
                     <div class="large-headline">{{localize "eon.sheets.item.forvarar"}}</div>
 
                     {{#each (getConnectedItems item.actor item._id) as |utrustning key|}}
-                        <div class="clear">
-                            <div class="pullLeft" style="width: 220px;">
-                                {{utrustning.name}}
+                        <div class="item-row item-listrow container-contents">
+                            <div class="item-listbox weapon-icon">
+                                <a class="item-edit" title="{{localize 'eon.sheets.item.editeraUtrustning'}}" data-source="utrustning" data-itemid="{{utrustning._id}}">
+                                    <i class="icon fa-solid fa-pen-to-square"></i>
+                                </a>
                             </div>
-                            <div class="pointer item-pull" data-itemid="{{utrustning._id}}" title="{{localize 'eon.sheets.item.flyttaUtUrForvaring'}}"><i class="icon fa-solid fa-trash-can"></i></div>
+                            <div class="item-listbox" style="width: 220px;">{{utrustning.name}}</div>
+                            <div class="item-listbox" style="width: 70px;">
+                                <i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="{{utrustning._id}}"></i>
+                                <span class="number-of-text">{{utrustning.system.antal}}</span>
+                                <i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="{{utrustning._id}}"></i>
+                            </div>
+                            <div class="pointer item-pull weapon-icon" data-itemid="{{utrustning._id}}" title="{{localize 'eon.sheets.item.flyttaUtUrForvaring'}}">
+                                <i class="icon fa-solid fa-box-open"></i>
+                            </div>
                         </div>
                     {{/each}}
                 </div>

@@ -177,6 +177,14 @@
     min-width: 0;
 }
 
+.portrait-header-actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: 4px;
+    align-items: center;
+}
+
+.portrait-remove-btn,
 .portrait-defeated-btn {
     flex-shrink: 0;
     padding: 2px 4px;
@@ -187,6 +195,12 @@
     cursor: pointer;
     line-height: 1;
 }
+.portrait-remove-btn:hover {
+    background: rgba(100, 50, 50, 0.9);
+    color: #f0c0c0;
+    border-color: rgba(180, 80, 80, 0.7);
+}
+
 .portrait-defeated-btn:hover {
     background: rgba(80, 80, 90, 0.9);
     color: #e0e0e8;
@@ -206,9 +220,40 @@
     margin-bottom: 4px;
 }
 
-.portrait-image {
+.eon-combatant-portrait .portrait-image-btn {
     width: 36px;
     height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+    overflow: hidden;
+}
+
+.eon-combatant-portrait .portrait-image-btn:hover:not(:disabled) .portrait-image {
+    box-shadow: 0 0 0 2px rgba(125, 160, 220, 0.85);
+}
+
+.eon-combatant-portrait .portrait-image-btn:disabled {
+    cursor: default;
+    opacity: 0.55;
+}
+
+.eon-combatant-portrait .portrait-image-btn .portrait-image {
+    display: block;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
     object-fit: cover;
     border-radius: 6px;
     flex-shrink: 0;
@@ -520,4 +565,29 @@
 
 .eon-select-opponent-dialog .form-footer button span {
     color: inherit !important;
+}
+
+/* Stridsflöde – knappar i chatt */
+.chat-message .eon-combat-attack-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.chat-message .eon-combat-attack-btn {
+    font-size: 12px;
+    padding: 4px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 1px solid rgba(242, 211, 107, 0.45);
+    background: rgba(30, 40, 55, 0.85);
+    color: #f2d36b;
+}
+
+.chat-message .eon-combat-attack-btn:hover {
+    background: rgba(242, 211, 107, 0.2);
+    border-color: #f2d36b;
 }

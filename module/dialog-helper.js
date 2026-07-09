@@ -14,8 +14,11 @@ export default class classDialogHelper {
         event.preventDefault();
 
 		const element = event.currentTarget;
-		const dataset = element.dataset; 
-        const item = await actor.getEmbeddedDocument("Item", dataset.itemid);
+		const dataset = element.dataset;
+        const itemId = dataset.itemId ?? dataset.itemid;
+        if (!itemId) return;
+        const item = await actor.getEmbeddedDocument("Item", itemId);
+        if (!item) return;
 
         const roll = new SkillRoll(item, actor);
         let skillRollUse = new DialogSkillRoll(actor, roll);
@@ -56,8 +59,11 @@ export default class classDialogHelper {
 
     static async WeaponDialog(event, actor) {
 		const element = event.currentTarget;
-		const dataset = element.dataset; 
-        const item = await actor.getEmbeddedDocument("Item", dataset.itemid);
+		const dataset = element.dataset;
+        const itemId = dataset.itemId ?? dataset.itemid;
+        if (!itemId) return;
+        const item = await actor.getEmbeddedDocument("Item", itemId);
+        if (!item) return;
 
         const roll = new WeaponRoll(actor, item);
 		let weaponRollUse = new DialogWeaponRoll(actor, roll);

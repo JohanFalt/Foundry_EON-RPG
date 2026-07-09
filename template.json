@@ -1,8 +1,9 @@
 {
 	"Actor": {
-        "types": ["Rollperson", "Rollperson5", "Varelse"],
+        "types": ["Rollperson", "Rollperson5", "Motstandare5", "Varelse"],
         "Rollperson": {},
         "Rollperson5": {},
+        "Motstandare5": {},
         "Varelse": {}
     },
     "Item": {

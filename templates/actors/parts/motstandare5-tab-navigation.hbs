@@ -1,0 +1,7 @@
+<div class="navigation">
+    <nav class="sheet-tabs tabs tab-area headlineTabs" data-group="primary">
+        {{#each tabs as |tab|}}
+            <div class="tabButton{{#unless @first}} tabboxleft{{/unless}} {{tab.cssClass}}" data-action="tab" data-group="{{tab.group}}" data-tab="{{tab.id}}" title="{{localize tab.title}}"><span class="tab-icon">{{{tab.icon}}}</span><span class="tab-label">{{localize tab.title}}</span></div>
+        {{/each}}
+    </nav>
+</div>

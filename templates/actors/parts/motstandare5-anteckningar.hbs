@@ -1,0 +1,54 @@
+<section class="tab {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+    <div class="bio-box">
+
+        <div class="item-column info-box" style="width: 100%;">
+
+            <div class="bio item-row">
+
+                <div>
+
+                    <div class="floating-label-group">
+
+                        <input class="text-value editable" type="text" name="name" value="{{actor.name}}" data-dtype="String" style="width: 148px" />
+
+                        <span class="floating-label">{{localize "eon.sheets.actor.namn"}}</span>
+
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <div class="floating-label-group">
+
+                        <input class="text-value editable" type="text" name="system.bakgrund.arketyp" value="{{actor.system.bakgrund.arketyp}}" data-dtype="String" style="width: 148px" />
+
+                        <span class="floating-label">{{localize "eon.sheets.actor.arketyp"}}</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="large-headline">{{localize "eon.sheets.actor.anteckningar"}}</div>
+
+    <div class="editor-box">
+
+        <prose-mirror name="system.bakgrund.beskrivning" value="{{beskrivning}}" toggled compact>
+
+            {{{enrichedBeskrivning}}}
+
+        </prose-mirror>
+
+    </div>
+
+</section>
+

@@ -1,9 +1,9 @@
 {
     "id": "eon-rpg",
     "title": "Eon RPG",
-    "version": "5.3.2",
+    "version": "5.4.0",
     "compatibility": {
-        "minimum": "13",
+        "minimum": "14",
         "verified": "14",
         "maximum": "14"
     },
@@ -34,7 +34,7 @@
         "styles/eon-main.css",
         "styles/editor/editor.css",
         "styles/eon-combat-tracker.css",
-        "styles/dice/eon-dice-roller.css"
+        "styles/eon-dice-roller.css"
     ],
     "packs": [
         {
@@ -449,6 +449,23 @@
                     ]
                 }
             }
+        },
+        {
+            "name": "motstandare5",
+            "label": "Motståndare",
+            "system": "eon-rpg",
+            "path": "packs/motstandare5",
+            "type": "Actor",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "eon5",
+                        "grundbok",
+                        "motstandare"
+                    ]
+                }
+            }
         }
     ],
     "packFolders": [{
@@ -531,7 +548,8 @@
                 "sorting": "m",
                 "packs": [
                     "djur5",
-                    "varelser5"
+                    "varelser5",
+                    "motstandare5"
                 ]
             }
         ]
@@ -543,8 +561,8 @@
         "gridUnits": "m"
     },  
     "url": "https://github.com/JohanFalt/Foundry_EON-RPG",
-    "manifest": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.3.2/system.json",  
-    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.3.2/v5.3.2.zip",
+    "manifest": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.4.0/system.json",  
+    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.4.0/v5.4.0.zip",
     "bugs": "https://github.com/JohanFalt/Foundry_EON-RPG/issues",
     "license": "LICENSE.txt"
 }

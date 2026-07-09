@@ -140,9 +140,9 @@ export function buildHandelseTabellOptionsHtml(selectedKey = "", index = 0) {
 
 /** @param {Item} item */
 export function fardighetItemDisplayName(item) {
-    const n = (item?.name ?? "").toString();
-    if (n.startsWith("eon.")) return game.i18n.localize(n);
-    return n;
+    const itemName = (item?.name ?? "").toString();
+    if (itemName.startsWith("eon.")) return game.i18n.localize(itemName);
+    return itemName;
 }
 
 /**
@@ -162,26 +162,25 @@ export function buildFardighetItemOptionsHtml(
     itemIdsTakenByOtherRows = null
 ) {
     const esc = foundry.utils.escapeHTML;
-    const gKey = (enhetKey ?? "").toString();
-    const items = (actor?.items ?? []).filter((it) => wizardFardighetItemMatchesWizardKey(gKey, it));
-    const labeled = items.map((it) => ({
-        it,
-        label: fardighetItemDisplayName(it)
+    const enhetKeyStr = (enhetKey ?? "").toString();
+    const items = (actor?.items ?? []).filter((item) => wizardFardighetItemMatchesWizardKey(enhetKeyStr, item));
+    const labeled = items.map((item) => ({
+        item,
+        label: fardighetItemDisplayName(item)
     }));
     labeled.sort((a, b) => a.label.localeCompare(b.label, game.i18n?.lang ?? "sv"));
     const sel = (selectedItemId ?? "").toString().trim();
     const taken = itemIdsTakenByOtherRows instanceof Set ? itemIdsTakenByOtherRows : new Set();
     const parts = [
-        `<select name="ccw_tf_${gKey}_rf_${rowIndex}_item" class="eon-ccw-fardighet-item-select">`,
+        `<select name="ccw_tf_${enhetKeyStr}_rf_${rowIndex}_item" class="eon-ccw-fardighet-item-select">`,
         `<option value="" data-ccw-grundvarde="0">${esc(game.i18n.localize("eon.wizard.fardighetValjFardighet"))}</option>`
     ];
-    const omst = mystikOmstopt === true;
-    for (const { it, label } of labeled) {
-        const id = (it.id ?? "").toString();
-        if (taken.has(id) && id !== sel) continue;
-        const selected = id === sel ? " selected" : "";
-        const gv = defaultWizardFardighetGrundForCcwDraft(actor, it, gKey, omst);
-        parts.push(`<option value="${esc(id)}" data-ccw-grundvarde="${gv}"${selected}>${esc(label)}</option>`);
+    for (const { item, label } of labeled) {
+        const itemId = (item.id ?? "").toString();
+        if (taken.has(itemId) && itemId !== sel) continue;
+        const selected = itemId === sel ? " selected" : "";
+        const defaultGrundvarde = defaultWizardFardighetGrundForCcwDraft(actor, item, enhetKeyStr, mystikOmstopt === true);
+        parts.push(`<option value="${esc(itemId)}" data-ccw-grundvarde="${defaultGrundvarde}"${selected}>${esc(label)}</option>`);
     }
     parts.push("</select>");
     return parts.join("");
@@ -216,12 +215,12 @@ export async function buildSprakItemOptionsHtml(
     const startSet = startSprakUuids instanceof Set ? startSprakUuids : new Set();
     const sel = (selectedUuid ?? "").toString().trim();
     const labeled = docs
-        .map((d) => ({ d, label: (d.name ?? "").toString().trim() || (d.uuid ?? "").toString() }))
-        .filter(({ d }) => {
-            const u = (d.uuid ?? "").toString();
-            if (!u) return false;
-            if (startSet.has(u)) return false;
-            if (taken.has(u) && u !== sel) return false;
+        .map((sprakDoc) => ({ sprakDoc, label: (sprakDoc.name ?? "").toString().trim() || (sprakDoc.uuid ?? "").toString() }))
+        .filter(({ sprakDoc }) => {
+            const sprakUuid = (sprakDoc.uuid ?? "").toString();
+            if (!sprakUuid) return false;
+            if (startSet.has(sprakUuid)) return false;
+            if (taken.has(sprakUuid) && sprakUuid !== sel) return false;
             return true;
         });
     labeled.sort((a, b) => a.label.localeCompare(b.label, game.i18n?.lang ?? "sv"));
@@ -229,12 +228,12 @@ export async function buildSprakItemOptionsHtml(
         `<select name="ccw_tf_sprak_rf_${rowIndex}_item" class="eon-ccw-fardighet-item-select" aria-label="${esc(emptyLabel)}">`,
         `<option value="" data-ccw-grundvarde="0">${esc(emptyLabel)}</option>`
     ];
-    for (const { d } of labeled) {
-        const u = (d.uuid ?? "").toString();
-        const selected = u === sel ? " selected" : "";
-        const gv = defaultWizardFardighetGrundFardighetsvarde(d, "sprak", false);
+    for (const { sprakDoc } of labeled) {
+        const sprakUuid = (sprakDoc.uuid ?? "").toString();
+        const selected = sprakUuid === sel ? " selected" : "";
+        const defaultGrundvarde = defaultWizardFardighetGrundFardighetsvarde(sprakDoc, "sprak", false);
         parts.push(
-            `<option value="${esc(u)}" data-ccw-grundvarde="${gv}"${selected}>${esc((d.name ?? "").toString())}</option>`
+            `<option value="${esc(sprakUuid)}" data-ccw-grundvarde="${defaultGrundvarde}"${selected}>${esc((sprakDoc.name ?? "").toString())}</option>`
         );
     }
     parts.push("</select>");

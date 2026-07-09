@@ -44,14 +44,16 @@ export function getMergedWizardData(actor) {
             }
         }
     }
-    const avt = merged.avtrubbning ?? {};
-    for (const avtKey of ["valfriKategori", "utsatthet", "vald", "overnaturligt"]) {
-        const v = avt[avtKey];
-        if (v === "" || v === null || v === undefined) avt[avtKey] = "0";
+    const avtrubbningUtkast = merged.avtrubbning ?? {};
+    for (const avtrubbningKey of ["valfriKategori", "utsatthet", "vald", "overnaturligt"]) {
+        const faltVarde = avtrubbningUtkast[avtrubbningKey];
+        if (faltVarde === "" || faltVarde === null || faltVarde === undefined) avtrubbningUtkast[avtrubbningKey] = "0";
     }
-    merged.avtrubbning = avt;
-    const exPo = merged.extraAttributPoang;
-    if (exPo === "" || exPo === null || exPo === undefined) merged.extraAttributPoang = "0";
+    merged.avtrubbning = avtrubbningUtkast;
+    const extraAttributPoangRaw = merged.extraAttributPoang;
+    if (extraAttributPoangRaw === "" || extraAttributPoangRaw === null || extraAttributPoangRaw === undefined) {
+        merged.extraAttributPoang = "0";
+    }
     if (!Array.isArray(merged.doktrinRader)) merged.doktrinRader = [];
 
     if (!Array.isArray(merged.sprakFordelning)) merged.sprakFordelning = [];
@@ -117,11 +119,11 @@ export function getMergedWizardData(actor) {
     }
     if (!merged.utrustningPaket) merged.utrustningPaket = {};
     for (const key of UTRUSTNING_PKT_KEYS) {
-        const v = merged.utrustningPaket[key];
-        if (v === "" || v === null || v === undefined) merged.utrustningPaket[key] = "0";
+        const paketVarde = merged.utrustningPaket[key];
+        if (paketVarde === "" || paketVarde === null || paketVarde === undefined) merged.utrustningPaket[key] = "0";
     }
-    const mystAnt = merged.mystikAntal;
-    if (mystAnt === "" || mystAnt === null || mystAnt === undefined) merged.mystikAntal = "0";
+    const mystikAntalRaw = merged.mystikAntal;
+    if (mystikAntalRaw === "" || mystikAntalRaw === null || mystikAntalRaw === undefined) merged.mystikAntal = "0";
 
     if (!merged.fardighetFordelning || typeof merged.fardighetFordelning !== "object") {
         merged.fardighetFordelning = {};
@@ -158,22 +160,27 @@ export function getMergedWizardData(actor) {
                 };
             }
             const itemDoc = itemId && actor?.items?.get ? actor.items.get(itemId) : null;
-            const defG = defaultWizardFardighetGrundForCcwDraft(actor, itemDoc, key, merged.mystikOmstopt === true);
+            const defaultGrundvarde = defaultWizardFardighetGrundForCcwDraft(
+                actor,
+                itemDoc,
+                key,
+                merged.mystikOmstopt === true
+            );
             const hasStoredGrund =
                 row.grundvarde !== undefined &&
                 row.grundvarde !== null &&
                 String(row.grundvarde).trim() !== "";
-            const ink = !!row.inkompetent;
-            const block = !!row.blockering;
-            const grundRaw = hasStoredGrund ? row.grundvarde : defG;
-            const grundStr = clampWizardFardighetGrundvardeForInkompetentStr(grundRaw, ink);
+            const inkompetent = !!row.inkompetent;
+            const blockering = !!row.blockering;
+            const grundRaw = hasStoredGrund ? row.grundvarde : defaultGrundvarde;
+            const grundStr = clampWizardFardighetGrundvardeForInkompetentStr(grundRaw, inkompetent);
             return {
                 itemId,
                 grundvarde: grundStr,
-                poang: clampWizardFardighetPoangStrForRow(row.poang, ink, block, grundStr),
+                poang: clampWizardFardighetPoangStrForRow(row.poang, inkompetent, blockering, grundStr),
                 talang: !!row.talang,
-                inkompetent: ink,
-                blockering: block,
+                inkompetent,
+                blockering,
                 [CCW_WIZARD_CREATED_FARDIGHET_ROW]: ccwCreated
             };
         });
@@ -184,17 +191,17 @@ export function getMergedWizardData(actor) {
     }
 
     const allowedVapenarm = new Set(["", "hoger", "vanster", "annat"]);
-    let va = (merged.vapenarm ?? "").toString().trim();
-    if (!va && actor?.system?.strid?.vapenarm) {
-        const fromActor = (actor.system.strid.vapenarm ?? "").toString().trim();
-        if (allowedVapenarm.has(fromActor) && fromActor !== "") va = fromActor;
+    let vapenarmVal = (merged.vapenarm ?? "").toString().trim();
+    if (!vapenarmVal && actor?.system?.strid?.vapenarm) {
+        const franActor = (actor.system.strid.vapenarm ?? "").toString().trim();
+        if (allowedVapenarm.has(franActor) && franActor !== "") vapenarmVal = franActor;
     }
-    merged.vapenarm = allowedVapenarm.has(va) ? va : "";
+    merged.vapenarm = allowedVapenarm.has(vapenarmVal) ? vapenarmVal : "";
 
     if (actor?.system?.bakgrund) {
-        const k0 = (merged.kon ?? "").toString().trim();
-        const k1 = (actor.system.bakgrund.kon ?? "").toString().trim();
-        if (!k0 && k1) merged.kon = k1;
+        const konFranUtkast = (merged.kon ?? "").toString().trim();
+        const konFranActor = (actor.system.bakgrund.kon ?? "").toString().trim();
+        if (!konFranUtkast && konFranActor) merged.kon = konFranActor;
     }
 
     return merged;

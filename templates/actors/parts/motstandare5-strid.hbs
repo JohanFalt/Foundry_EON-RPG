@@ -1,0 +1,149 @@
+<section class="tab {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+    <div class="item-box">
+        <div class="large-headline">{{localize "eon.config.slag.vapen"}}</div>
+
+        <div class="headline headline-background item-row">
+            <div class="weapon-icon pointer">
+                <a data-action="itemCreate" data-type="närstridsvapen" title="{{localize 'eon.sheets.actor.laggTillVapen'}}">
+                    <i class="fa-solid fa-square-plus green"></i>
+                </a>
+            </div>
+            <div style="width: 145px;">{{localize "eon.sheets.actor.narstridsvapen"}}</div>
+            <div class="centerText" style="width: 75px;">{{localize "eon.sheets.actor.traffa"}}</div>
+            <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_hugg}}" title="{{localize 'eon.config.vapenskador.hugg'}}" /></div>
+            <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_kross}}" title="{{localize 'eon.config.vapenskador.kross'}}" /></div>
+            <div class="centerText" style="width: 50px;"><img class="img-icon" src="{{EON.CONFIG.ikoner.skada_stick}}" title="{{localize 'eon.config.vapenskador.stick'}}" /></div>
+            <div>{{localize "eon.sheets.actor.egenskaper"}}</div>
+        </div>
+
+        {{#each listdata.utrustning.vapen.narstrid as |vapen|}}
+            <div class="item-row item-listrow">
+                <div class="item-listbox weapon-icon">
+                    <a data-action="itemEdit" data-item-id="{{vapen._id}}" title="{{localize 'eon.sheets.actor.editeraVapen'}}">
+                        <i class="icon fa-solid fa-pen-to-square"></i>
+                    </a>
+                </div>
+                <div class="item-listbox weapon-icon">
+                    <a data-action="itemActive" data-item-id="{{vapen._id}}" title="{{localize 'eon.sheets.actor.buren'}}"><i class="icon fa-solid fa-hand{{#if vapen.system.installningar.buren}} green{{/if}}"></i></a>
+                </div>
+
+                <div class="item-listbox vrollable" style="width: 125px;" data-action="rollDialog" data-type="vapen" data-item-id="{{vapen._id}}">{{vapen.name}}</div>
+                <div class="item-listbox centerText" style="width: 75px;">
+                    {{#if (ne vapen.system.grupp "")}}
+                        {{getDiceValue (getActorSkillGroupValue @root.actor vapen.system.grupp "strid")}}
+                    {{else}}
+                        {{getDiceValue @root.actor.system.strid.anfallForsvar}}
+                    {{/if}}
+                </div>
+                <div class="item-listbox centerText" style="width: 50px;">{{#if (eq vapen.system.hugg.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.hugg @root.actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
+                <div class="item-listbox centerText" style="width: 50px;">{{#if (eq vapen.system.kross.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.kross @root.actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
+                <div class="item-listbox centerText" style="width: 50px;">{{#if (eq vapen.system.stick.aktiv false)}}-{{else}}{{getDiceValue (addDiceValues vapen.system.stick @root.actor.system.harleddegenskaper.grundskada.totalt)}}{{/if}}</div>
+                <div class="item-listbox" title="{{getPropertyList vapen.system.egenskaper}}">{{shorten (getPropertyList vapen.system.egenskaper) 40 false}}</div>
+            </div>
+        {{/each}}
+
+        <div class="headline headline-background item-row">
+            <div class="weapon-icon pointer">
+                <a data-action="itemCreate" data-type="avståndsvapen" title="{{localize 'eon.sheets.actor.laggTillAvstandsvapen'}}">
+                    <i class="fa-solid fa-square-plus green"></i>
+                </a>
+            </div>
+            <div style="width: 145px;">{{localize "eon.sheets.actor.avstandsvapen"}}</div>
+            <div class="centerText" style="width: 75px;">{{localize "eon.sheets.actor.traffa"}}</div>
+            <div class="centerText" style="width: 70px;">{{localize "eon.sheets.actor.skada"}}</div>
+            <div class="centerText" style="width: 90px;">{{localize "eon.sheets.actor.rackvidd"}}</div>
+            <div>{{localize "eon.sheets.actor.egenskaper"}}</div>
+        </div>
+
+        {{#each listdata.utrustning.vapen.avstand as |vapen|}}
+            <div class="item-row item-listrow">
+                <div class="item-listbox weapon-icon">
+                    <a data-action="itemEdit" data-item-id="{{vapen._id}}" title="{{localize 'eon.sheets.actor.editeraVapen'}}">
+                        <i class="icon fa-solid fa-pen-to-square"></i>
+                    </a>
+                </div>
+                <div class="item-listbox weapon-icon">
+                    <a data-action="itemActive" data-item-id="{{vapen._id}}" title="{{localize 'eon.sheets.actor.buren'}}"><i class="icon fa-solid fa-hand{{#if vapen.system.installningar.buren}} green{{/if}}"></i></a>
+                </div>
+
+                <div class="item-listbox vrollable" style="width: 125px;" data-action="rollDialog" data-type="vapen" data-item-id="{{vapen._id}}">{{vapen.name}}</div>
+                <div class="item-listbox centerText" style="width: 75px;">
+                    {{#if (ne vapen.system.grupp "")}}
+                        {{getDiceValue (getActorSkillGroupValue @root.actor vapen.system.grupp "strid")}}
+                    {{else}}
+                        {{getDiceValue @root.actor.system.strid.anfallForsvar}}
+                    {{/if}}
+                </div>
+                <div class="item-listbox centerText" style="width: 70px;">{{getDiceValue vapen.system.skada}} {{{getWeaponDamageType vapen.system.skadetyp}}}</div>
+                <div class="item-listbox centerText" style="width: 90px;">{{localize (getRange @root.EON.CONFIG.vapenavstand vapen.system.rackvidd)}}</div>
+                <div class="item-listbox" title="{{getPropertyList vapen.system.egenskaper}}">{{shorten (getPropertyList vapen.system.egenskaper) 40 false}}</div>
+            </div>
+        {{/each}}
+    </div>
+
+    <div class="item-box">
+        <div class="headline headline-background item-row">
+            <div class="weapon-icon pointer">
+                <a data-action="itemCreate" data-type="sköld" title="{{localize 'eon.sheets.actor.laggTillSkold'}}">
+                    <i class="fa-solid fa-square-plus green"></i>
+                </a>
+            </div>
+            <div style="width: 145px;">{{localize "eon.sheets.actor.skoldLabel"}}</div>
+            <div class="centerText" style="width: 75px;">{{localize "eon.sheets.actor.traffa"}}</div>
+            <div class="centerText" style="width: 55px;">{{localize "eon.sheets.actor.narstrid"}}</div>
+            <div class="centerText" style="width: 55px;">{{localize "eon.sheets.actor.avstand"}}</div>
+            <div class="centerText" style="width: 60px;">{{localize "eon.sheets.actor.skydd"}}</div>
+            <div>{{localize "eon.sheets.actor.egenskaper"}}</div>
+        </div>
+
+        {{#each listdata.utrustning.vapen.skold as |skold|}}
+            <div class="item-row item-listrow">
+                <div class="item-listbox weapon-icon">
+                    <a data-action="itemEdit" data-item-id="{{skold._id}}" title="{{localize 'eon.sheets.actor.editeraSkold'}}">
+                        <i class="icon fa-solid fa-pen-to-square"></i>
+                    </a>
+                </div>
+                <div class="item-listbox weapon-icon">
+                    <a data-action="itemActive" data-item-id="{{skold._id}}" title="{{localize 'eon.sheets.actor.buren'}}"><i class="icon fa-solid fa-hand{{#if skold.system.installningar.buren}} green{{/if}}"></i></a>
+                </div>
+
+                <div class="item-listbox vrollable" style="width: 125px;" data-action="rollDialog" data-type="vapen" data-item-id="{{skold._id}}">{{skold.name}}</div>
+                <div class="item-listbox centerText" style="width: 75px;">{{getDiceValue (getActorSkillGroupValue @root.actor skold.system.grupp "strid")}}</div>
+                <div class="item-listbox centerText" style="width: 55px;">{{getDiceValue skold.system.narstrid}}</div>
+                <div class="item-listbox centerText" style="width: 55px;">{{getDiceValue skold.system.avstand}}</div>
+                <div class="item-listbox centerText" style="width: 60px;">{{skold.system.skydd}}</div>
+                <div class="item-listbox">{{shorten (getPropertyList skold.system.egenskaper) 40 false}}</div>
+            </div>
+        {{/each}}
+    </div>
+
+    <div class="item-box">
+        <div class="headline headline-background item-row item-listrow">
+            <div class="weapon-icon pointer">
+                <a data-action="itemCreate" data-type="rustning" title="{{localize 'eon.sheets.actor.laggTillRustning'}}">
+                    <i class="fa-solid fa-square-plus green"></i>
+                </a>
+            </div>
+            <div class="item-listbox" style="width: 145px;">{{localize "eon.sheets.actor.rustning"}}</div>
+            <div class="item-listbox centerText" style="width: 100px;">{{localize "eon.sheets.actor.belastning"}}</div>
+            <div class="item-listbox">{{localize "eon.sheets.actor.delomrade"}}</div>
+        </div>
+
+        {{#each listdata.utrustning.rustning as |rustning|}}
+            <div class="item-row item-listrow">
+                <div class="item-listbox weapon-icon">
+                    <a data-action="itemEdit" data-item-id="{{rustning._id}}" title="{{localize 'eon.sheets.actor.editeraRustning'}}">
+                        <i class="icon fa-solid fa-pen-to-square"></i>
+                    </a>
+                </div>
+                <div class="item-listbox weapon-icon">
+                    <a data-action="itemActive" data-item-id="{{rustning._id}}" title="{{localize 'eon.sheets.actor.buren'}}"><i class="icon fa-solid fa-hand{{#if rustning.system.installningar.buren}} green{{/if}}"></i></a>
+                </div>
+
+                <div class="item-listbox" style="width: 125px;">{{rustning.name}}</div>
+                <div class="item-listbox centerText" style="width: 100px;">{{rustning.system.belastning}}</div>
+                <div class="item-listbox">{{rustning.system.tacker}}</div>
+            </div>
+        {{/each}}
+    </div>
+</section>

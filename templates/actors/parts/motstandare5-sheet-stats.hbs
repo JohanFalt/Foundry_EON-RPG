@@ -1,0 +1,63 @@
+<div class="item-row">
+    <div class="three-column item-column">
+        <div class="headline">
+            <div class="attribute-area">{{localize "eon.sheets.actor.harleddaAttribut"}}</div>
+        </div>
+
+        {{#each @root.EON.CONFIG.harleddegenskaper as |cfg key|}}
+            {{#unless (eq key "visdom")}}
+                {{#unless (eq key "grundrustning")}}
+                    {{#unless (eq key "grundskada")}}
+                        {{#unless (eq key "initiativ")}}
+                            <div class="attribute item-row">
+                                <div class="vrollable caption" data-action="rollDialog" data-source="attribute" data-type="harleddegenskaper" data-key="{{key}}">{{localize cfg.namn}}</div>
+                                <div class="dice-value">{{getDiceValue (getActorAttribute @root.actor 'harleddegenskaper' key)}}</div>
+                                <div class="skill-icon">
+                                    <a data-action="attributeEdit" data-source="harleddegenskaper" data-attribute="{{key}}" title="{{localize 'eon.sheets.actor.editera'}} {{localize cfg.namn}}">
+                                        <i class="icon fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        {{/unless}}
+                    {{/unless}}
+                {{/unless}}
+            {{/unless}}
+        {{/each}}
+
+        <div class="attribute item-row">
+            <div class="caption">{{localize "eon.config.harleddegenskaper.grundrustning.namn"}}</div>
+            <div class="dice-value">{{actor.system.harleddegenskaper.grundrustning.totalt}}</div>
+            <div class="skill-icon">
+                <a data-action="attributeEdit" data-source="harleddegenskaper" data-attribute="grundrustning" title="{{localize 'eon.sheets.actor.editera'}} {{localize 'eon.config.harleddegenskaper.grundrustning.namn'}}">
+                    <i class="icon fa-solid fa-pen-to-square"></i>
+                </a>
+            </div>
+        </div>
+        <div class="attribute item-row">
+            <div class="caption">{{localize "eon.config.harleddegenskaper.grundskada.namn"}}</div>
+            <div class="dice-value">{{getDiceValue actor.system.harleddegenskaper.grundskada.totalt}}</div>
+            <div class="skill-icon">
+                <a data-action="attributeEdit" data-source="harleddegenskaper" data-attribute="grundskada" title="{{localize 'eon.sheets.actor.editera'}} {{localize 'eon.config.harleddegenskaper.grundskada.namn'}}">
+                    <i class="icon fa-solid fa-pen-to-square"></i>
+                </a>
+            </div>
+        </div>
+        <div class="attribute item-row">
+            <div class="vrollable caption" data-action="rollDialog" data-source="strid" data-key="anfallForsvar">{{localize "eon.sheets.motstandare.anfallForsvar"}}</div>
+            <div class="dice-value">{{getDiceValue actor.system.strid.anfallForsvar}}</div>
+            <div class="skill-icon">
+                <a data-action="attributeEdit" data-source="strid" data-attribute="anfallForsvar" title="{{localize 'eon.sheets.actor.editera'}} {{localize 'eon.sheets.motstandare.anfallForsvar'}}">
+                    <i class="icon fa-solid fa-pen-to-square"></i>
+                </a>
+            </div>
+        </div>        
+    </div>   
+
+    <div class="two-column item-column">
+
+        {{> "systems/eon-rpg/templates/actors/parts/motstandare5-sheet-health.hbs"}}
+    
+    </div>
+</div>
+
+

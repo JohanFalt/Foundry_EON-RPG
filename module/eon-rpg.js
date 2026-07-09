@@ -9,10 +9,12 @@ import { eon } from "./config.js";
 import { systemSettings } from "./settings.js";
 import * as Templates from "./templates.js";
 import * as Migration from "./migration.js";
-import { datavaluta } from '../packs/valuta.js';
+import { datavaluta } from '../data/valuta.js';
 import { CombatHelper } from "./combat-helper.js";
 import { EonCombatTracker } from "./apps/EonCombatTracker.js";
 import { CharacterCreationWizard } from "./apps/CharacterCreationWizard.js";
+import { CombatAttackFlow } from "./combat-attack-flow.js";
+import { CombatAttackChat } from "./combat-attack-chat.js";
 
 import ItemHelper from "./item-helper.js";
 import MigrationWizard from "./ui/migration-wizard-helper.js";
@@ -194,6 +196,7 @@ Hooks.once("init", async function() {
 
     CONFIG.Actor.dataModels.Rollperson = models.EonRollperson;
     CONFIG.Actor.dataModels.Rollperson5 = models.Eon5Rollperson;
+    CONFIG.Actor.dataModels.Motstandare5 = models.Eon5Motstandare;
     CONFIG.Actor.dataModels.Varelse = models.EonVarelse;
 
     CONFIG.Item.dataModels.Folkslag = models.EonFolkslag;
@@ -217,6 +220,9 @@ Hooks.once("init", async function() {
 
     CONFIG.EON = eon;
     CONFIG.EON.CharacterCreationWizard = CharacterCreationWizard;
+    CONFIG.EON.CombatAttackFlow = CombatAttackFlow;
+    CONFIG.EON.CombatAttackChat = CombatAttackChat;
+    CombatAttackChat.registerHooks();
     // Localize config strings from lang (eon.config.*) so templates get correct language
     localizeEonConfig(eon);
     CONFIG.EON.settings = [];
@@ -226,6 +232,7 @@ Hooks.once("init", async function() {
     CONFIG.EON.settings.weightRules = game.settings.get("eon-rpg", "weightRules");
     CONFIG.EON.settings.hinderenceSkillGroupMovement = game.settings.get("eon-rpg", "hinderenceSkillGroupMovement");
     CONFIG.EON.settings.hinderenceAttributeMovement = game.settings.get("eon-rpg", "hinderenceAttributeMovement");
+    CONFIG.EON.settings.stridEon5KroppsbyggnadAvdrag = game.settings.get("eon-rpg", "stridEon5KroppsbyggnadAvdrag");
     CONFIG.EON.settings.textfont = game.settings.get("eon-rpg", "textfont");
     CONFIG.EON.settings.headlinefont = game.settings.get("eon-rpg", "headlinefont");
 
@@ -239,6 +246,10 @@ Hooks.once("init", async function() {
     foundry.documents.collections.Actors.registerSheet("EON", sheets.Eon5ActorSheet, { 
         types: ["Rollperson5"],         
         makeDefault: true 
+    });
+    foundry.documents.collections.Actors.registerSheet("EON", sheets.Eon5MotstandareSheet, {
+        types: ["Motstandare5"],
+        makeDefault: true
     });
     foundry.documents.collections.Actors.registerSheet("EON", sheets.EonCreatureSheet, { 
         types: ["Varelse"],         
@@ -283,25 +294,74 @@ Hooks.once("ready", async () => {
         
         // Visa wizards en i taget med kort fördröjning (första först, sedan nästa när användaren stängt)
         const showWizards = async () => {
+            // if (!game.settings.get('eon-rpg', 'eoncombattrackerbeta')) {
+            //     await MigrationWizard.show([
+            //             // Sida 1
+            //             `<h2>Eon Combat Tracker</h2>
+            //             <p>Eon Combat Tracker är systemets strids-/initiativspår som visas överst i mitten när du startar en <strong>encounter</strong>. Den följer Eons fasindelning (Avstånd, Närstrid, Mystik, Övrigt) och stödjer <strong>delstrider</strong> enligt regelboken.</p>
+            //             <p>Alla deltagare i encountern visas som porträtt. För varje porträtt kan du välja fas, slå initiativ (Reaktion), vid närstrid välja motståndare och bekräfta delstrid, samt använda <strong>Nästa</strong> för att gå vidare. Turordningen hanterar delstrider en i taget.</p>`,
+            //             // Sida 2
+            //             `<h2>Så använder du trackern</h2>
+            //             <ol style="margin-left: 20px; margin-top: 10px;">
+            //             <li><strong>Skapa encounter</strong></li>
+            //             <li><strong>Välj deltagare</strong> – Lägg till respektive deltagare genom Foundry på normalt sätt.</li>
+            //             <li><strong>Starta encounter</strong> – Eon Combat Tracker visas automatiskt överst.</li>                
+            //             <li><strong>Välj fas</strong> – Varje deltagare väljer först fas. Alla måste välja fas innan andra val blir tillgängliga.</li>
+            //             <li><strong>Slå initiativ</strong> – Öppnar formuläret för att slå Reaktion, lägg till eventuell bonus. Försvarare i delstrid slår inte initiativ separat. Finns en "slå initiativ för alla" knapp på vänster hovermeny.</li>
+            //             <li><strong>Delstrid</strong> – Vid Närstrid: välj motståndare, bekräfta delstrid, sätt roll. Byta motståndare kräver att du först lämnar delstrid. Den som väljer motståndare sätts automatiskt som anfallare.</li>
+            //             <li><strong>Nästa/föregående</strong> – Man flyttar markeringen vems tur det är med pilarna i vänster/höger hovermeny; turordningen följer en delstrid i taget. Efter den som är sist i rundan finns en markering; då blir det ny runda.</li>
+            //             <li><strong>Avsluta striden</strong> – När striden är slut stäng encounter i Foundry och trackern kommer att stängas automatiskt.</li>
+            //             </ol>`
+            //     ], 'eoncombattrackerbeta');
+            // }
+
+            // 1) Aldrig läst grund → 3-sidig wizard (sida 1–2 befintlig + sida 3 ny)
             if (!game.settings.get('eon-rpg', 'eoncombattrackerbeta')) {
                 await MigrationWizard.show([
-                        // Sida 1
-                        `<h2>Eon Combat Tracker</h2>
-                        <p>Eon Combat Tracker är systemets strids-/initiativspår som visas överst i mitten när du startar en <strong>encounter</strong>. Den följer Eons fasindelning (Avstånd, Närstrid, Mystik, Övrigt) och stödjer <strong>delstrider</strong> enligt regelboken.</p>
-                        <p>Alla deltagare i encountern visas som porträtt. För varje porträtt kan du välja fas, slå initiativ (Reaktion), vid närstrid välja motståndare och bekräfta delstrid, samt använda <strong>Nästa</strong> för att gå vidare. Turordningen hanterar delstrider en i taget.</p>`,
-                        // Sida 2
-                        `<h2>Så använder du trackern</h2>
-                        <ol style="margin-left: 20px; margin-top: 10px;">
-                        <li><strong>Skapa encounter</strong></li>
-                        <li><strong>Välj deltagare</strong> – Lägg till respektive deltagare genom Foundry på normalt sätt.</li>
-                        <li><strong>Starta encounter</strong> – Eon Combat Tracker visas automatiskt överst.</li>                
-                        <li><strong>Välj fas</strong> – Varje deltagare väljer först fas. Alla måste välja fas innan andra val blir tillgängliga.</li>
-                        <li><strong>Slå initiativ</strong> – Öppnar formuläret för att slå Reaktion, lägg till eventuell bonus. Försvarare i delstrid slår inte initiativ separat. Finns en "slå initiativ för alla" knapp på vänster hovermeny.</li>
-                        <li><strong>Delstrid</strong> – Vid Närstrid: välj motståndare, bekräfta delstrid, sätt roll. Byta motståndare kräver att du först lämnar delstrid. Den som väljer motståndare sätts automatiskt som anfallare.</li>
-                        <li><strong>Nästa/föregående</strong> – Man flyttar markeringen vems tur det är med pilarna i vänster/höger hovermeny; turordningen följer en delstrid i taget. Efter den som är sist i rundan finns en markering; då blir det ny runda.</li>
-                        <li><strong>Avsluta striden</strong> – När striden är slut stäng encounter i Foundry och trackern kommer att stängas automatiskt.</li>
-                        </ol>`
+                    // Sida 1
+                    `<h2>Eon Combat Tracker</h2>
+                    <p>Eon Combat Tracker är systemets strids-/initiativspår som visas överst i mitten när du startar en <strong>encounter</strong>. Den följer Eons fasindelning (Avstånd, Närstrid, Mystik, Övrigt) och stödjer <strong>delstrider</strong> enligt regelboken.</p>
+                    <p>Alla deltagare i encountern visas som porträtt. För varje porträtt kan du välja fas, slå initiativ (Reaktion), vid närstrid välja motståndare och bekräfta delstrid, samt använda <strong>Nästa</strong> för att gå vidare. Turordningen hanterar delstrider en i taget.</p>`,
+                    // Sida 2
+                    `<h2>Så använder du trackern</h2>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Skapa encounter</strong></li>
+                    <li><strong>Välj deltagare</strong> – Lägg till respektive deltagare genom Foundry på normalt sätt.</li>
+                    <li><strong>Starta encounter</strong> – Eon Combat Tracker visas automatiskt överst.</li>
+                    <li><strong>Välj fas</strong> – Varje deltagare väljer först fas. Alla måste välja fas innan andra val blir tillgängliga.</li>
+                    <li><strong>Slå initiativ</strong> – Öppnar formuläret för att slå Reaktion, lägg till eventuell bonus. Försvarare i delstrid slår inte initiativ separat. Finns en "slå initiativ för alla" knapp på vänster hovermeny.</li>
+                    <li><strong>Delstrid</strong> – Vid Närstrid: välj motståndare, bekräfta delstrid, sätt roll. Byta motståndare kräver att du först lämnar delstrid. Den som väljer motståndare sätts automatiskt som anfallare.</li>
+                    <li><strong>Nästa/föregående</strong> – Man flyttar markeringen vems tur det är med pilarna i vänster/höger hovermeny; turordningen följer en delstrid i taget. Efter den som är sist i rundan finns en markering; då blir det ny runda.</li>
+                    <li><strong>Avsluta striden</strong> – När striden är slut stäng encounter i Foundry och trackern kommer att stängas automatiskt.</li>
+                    </ol>`,
+                    // Sida 3
+                    `<h2>Anfall, försvar och skada</h2>
+                    <p>Stridsmodulen hanterar nu hela flödet från vapenslag till skada.</p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Slå anfall</strong> – Välj mål (från trackern vid aktiv encounter/delstrid) och slå som vanligt.</li>
+                    <li><strong>Försvar</strong> – Vid träff eller miss får försvararen en knapp i chatten för att slå försvar (undvika, vapen eller sköld).</li>
+                    <li><strong>Resultat</strong> – Systemet jämför anfall vs försvar och visar träff/miss och eventuellt övertag.</li>
+                    <li><strong>Träffplats och skada</strong> – Vid träff: slå träffplats (1T10), sedan skada, och till sist tillfoga skada på försvararen.</li>
+                    </ol>
+                    <p style="margin-top: 12px;">Du kan också <strong>markera som besegrad</strong>, <strong>ta bort från striden</strong> och <strong>öppna rollformulär</strong> via porträttet i trackern.</p>`
                 ], 'eoncombattrackerbeta');
+                if (game.settings.get('eon-rpg', 'eoncombattrackerbeta')) {
+                    await game.settings.set('eon-rpg', 'eoncombattracker', true);
+                }
+            }
+            // 2) Läst grund (äldre 5.3/5.4) men inte attack → enbart attack-wizard
+            else if (!game.settings.get('eon-rpg', 'eoncombattracker')) {
+                await MigrationWizard.show([
+                    `<h2>Nytt: Anfall och försvar i stridsmodulen</h2>
+                    <p>Eon Combat Tracker hanterar nu hela stridsflödet – inte bara initiativ och delstrider.</p>
+                    <p>När du slår <strong>anfall</strong> mot ett mål i en aktiv encounter går flödet vidare i chatten:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Försvararen slår <strong>försvar</strong> via knapp i chatten</li>
+                    <li>Systemet visar <strong>träff/miss</strong> och övertag</li>
+                    <li>Vid träff: <strong>träffplats</strong>, <strong>skadeslag</strong> och <strong>tillfoga skada</strong></li>
+                    </ul>
+                    <p style="margin-top: 12px;">Mål väljs automatiskt från trackern vid närstrid (delstrid) och avståndsvapen. Bekräfta delstrid i trackern innan närstridsanfall.</p>`
+                ], 'eoncombattracker');
             }
 
             if (!game.settings.get('eon-rpg', 'eontranslation')) {
@@ -402,24 +462,55 @@ Hooks.on("deleteCombat", async () => {
     await renderEonCombatTrackerIfNeeded();
 });
 
-Hooks.on("renderActorSheet", (sheet) => { 
+function getSheetElementRoot(sheet) {
+    const el = sheet?.element;
+    if (!el) return null;
+    return el instanceof HTMLElement ? el : el[0];
+}
+
+Hooks.on("renderActorSheet", (sheet) => {
+    const root = getSheetElementRoot(sheet);
+    if (!root) return;
     clearHTML(sheet);
 
     if (CONFIG.EON.settings.textfont == "eon1") {
-        sheet.element[0].classList.add("eon-text");
+        root.classList.add("eon-text");
     }
     else {
-        sheet.element[0].classList.add("normal-text");
-    }    
+        root.classList.add("normal-text");
+    }
 
     if (CONFIG.EON.settings.headlinefont == "eon1") {
-        sheet.element[0].classList.add("eon1-headline");
+        root.classList.add("eon1-headline");
     }
     else if (CONFIG.EON.settings.headlinefont == "eon2") {
-        sheet.element[0].classList.add("eon2-headline");
+        root.classList.add("eon2-headline");
     }
     else {
-        sheet.element[0].classList.add("normal-headline");
+        root.classList.add("normal-headline");
+    }
+});
+
+Hooks.on("renderActorSheetV2", (sheet) => {
+    const root = getSheetElementRoot(sheet);
+    if (!root) return;
+    clearHTML(sheet);
+
+    if (CONFIG.EON.settings.textfont == "eon1") {
+        root.classList.add("eon-text");
+    }
+    else {
+        root.classList.add("normal-text");
+    }
+
+    if (CONFIG.EON.settings.headlinefont == "eon1") {
+        root.classList.add("eon1-headline");
+    }
+    else if (CONFIG.EON.settings.headlinefont == "eon2") {
+        root.classList.add("eon2-headline");
+    }
+    else {
+        root.classList.add("normal-headline");
     }
 });
 
@@ -460,6 +551,46 @@ Hooks.on("renderItemSheet", (sheet) => {
     }
 });
 
+Hooks.on("renderItemSheetV2", (sheet) => {
+    const root = getSheetElementRoot(sheet);
+    if (!root) return;
+    clearHTML(sheet);
+
+    if (CONFIG.EON.settings.textfont == "eon1") {
+        root.classList.add("eon-text");
+    }
+    else {
+        root.classList.add("normal-text");
+    }
+
+    if (CONFIG.EON.settings.headlinefont == "eon1") {
+        root.classList.add("eon1-headline");
+    }
+    else if (CONFIG.EON.settings.headlinefont == "eon2") {
+        root.classList.add("eon2-headline");
+    }
+    else {
+        root.classList.add("normal-headline");
+    }
+
+    const item = sheet.document ?? sheet.item;
+    if (!item?.type) return;
+
+    const itemType = item.type.toLowerCase().replace(" ", "");
+    if (itemType === "närstridsvapen" || itemType === "avståndsvapen" || itemType === "sköld") {
+        root.classList.add("vapen");
+    }
+    if (itemType === "rustning") {
+        root.classList.add("rustning");
+    }
+    if (itemType === "besvärjelse" || itemType === "mysterie") {
+        root.classList.add("besvarjelse");
+    }
+    if (itemType === "folkslag" || itemType === "folkslag5") {
+        root.classList.add("folkslag");
+    }
+});
+
 /* ------------------------------------ */
 /* When rendered a sheet    			*/
 /* ------------------------------------ */
@@ -483,23 +614,66 @@ Hooks.on("renderFormApplication", (sheet) => {
         sheet.element[0].classList.add("normal-headline");
     }
 
-    if (sheet.object?.typ != undefined) {
-        if (sheet.object.typ.toLowerCase().replace(" ", "") == "vapen") {
+    const formObj = sheet.object;
+    if (formObj) {
+        const typNorm = formObj.typ?.toLowerCase?.()?.replace?.(" ", "");
+        if (typNorm === "vapen") {
             sheet.element[0].classList.add("vapen");
         }
-
-        if (sheet.object.typ.toLowerCase().replace(" ", "") == "rustning") {
+        if (typNorm === "rustning") {
             sheet.element[0].classList.add("rustning");
         }
-
-        if (sheet.object.typ.toLowerCase().replace(" ", "") == "spell") {
+        if (typNorm === "spell") {
             sheet.element[0].classList.add("besvarjelse");
         }
 
-        if ((sheet.object.type.toLowerCase().replace(" ", "") == "folkslag") || (sheet.object.type.toLowerCase().replace(" ", "") == "folkslag5")) {
+        const typeNorm = formObj.type?.toLowerCase?.()?.replace?.(" ", "");
+        if (typeNorm === "folkslag" || typeNorm === "folkslag5") {
             sheet.element[0].classList.add("folkslag");
         }
     }    
+});
+
+Hooks.on("renderApplicationV2", (app) => {
+    const root = getSheetElementRoot(app);
+    if (!root) return;
+    clearHTML(app);
+
+    if (CONFIG.EON.settings.textfont == "eon1") {
+        root.classList.add("eon-text");
+    }
+    else {
+        root.classList.add("normal-text");
+    }
+
+    if (CONFIG.EON.settings.headlinefont == "eon1") {
+        root.classList.add("eon1-headline");
+    }
+    else if (CONFIG.EON.settings.headlinefont == "eon2") {
+        root.classList.add("eon2-headline");
+    }
+    else {
+        root.classList.add("normal-headline");
+    }
+
+    const formObj = app.object ?? app.document;
+    if (formObj) {
+        const typNorm = formObj.typ?.toLowerCase?.()?.replace?.(" ", "");
+        if (typNorm === "vapen") {
+            root.classList.add("vapen");
+        }
+        if (typNorm === "rustning") {
+            root.classList.add("rustning");
+        }
+        if (typNorm === "spell") {
+            root.classList.add("besvarjelse");
+        }
+
+        const typeNorm = formObj.type?.toLowerCase?.()?.replace?.(" ", "");
+        if (typeNorm === "folkslag" || typeNorm === "folkslag5") {
+            root.classList.add("folkslag");
+        }
+    }
 });
 
 Hooks.on("renderDialog", (sheet) => { 
@@ -524,13 +698,15 @@ Hooks.on("renderDialog", (sheet) => {
 });
 
 function clearHTML(sheet) {
-	sheet.element[0].classList.remove("vapen");
-    sheet.element[0].classList.remove("rustning");
-    sheet.element[0].classList.remove("besvarjelse");
-    sheet.element[0].classList.remove("folkslag");
-    sheet.element[0].classList.remove("normal-text");
-    sheet.element[0].classList.remove("eon-text");
-    sheet.element[0].classList.remove("normal-headline");
-    sheet.element[0].classList.remove("eon1-headline");
-    sheet.element[0].classList.remove("eon2-headline");
+    const root = getSheetElementRoot(sheet);
+    if (!root) return;
+	root.classList.remove("vapen");
+    root.classList.remove("rustning");
+    root.classList.remove("besvarjelse");
+    root.classList.remove("folkslag");
+    root.classList.remove("normal-text");
+    root.classList.remove("eon-text");
+    root.classList.remove("normal-headline");
+    root.classList.remove("eon1-headline");
+    root.classList.remove("eon2-headline");
 }

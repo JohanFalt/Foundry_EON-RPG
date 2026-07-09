@@ -25,11 +25,20 @@
                 {{> menuPartial}} 
             {{/each}} 
 
-            {{#each data.system.settings}} 
-                {{> settingPart}} 
+            {{#if data.system.segments}}
+                {{#each data.system.segments}}
+                    <h3 class="settings-segment-header module-header">{{this.label}}</h3>
+                    {{#each this.settings}}
+                        {{> settingPart}}
+                    {{/each}}
+                {{/each}}
             {{else}}
-                <p>{{localize "eon.dialogs.ingen"}}</p>
-            {{/each}}
+                {{#each data.system.settings}} 
+                    {{> settingPart}} 
+                {{else}}
+                    <p>{{localize "eon.dialogs.ingen"}}</p>
+                {{/each}}
+            {{/if}}
         </div>
     </section>
 

@@ -49,7 +49,12 @@ export class CombatHelper {
                     resolve(value);
                 };
 
-                const rollData = new AttributeRoll(actor, "harleddegenskaper", "reaktion", "Reaktion");
+                const rollData = new AttributeRoll(
+                    actor,
+                    "harleddegenskaper",
+                    "reaktion",
+                    game.i18n.localize("eon.config.harleddegenskaper.reaktion.namn")
+                );
                 const dialog = new DialogAttributeRoll(actor, rollData, {
                     onRollComplete: ({ result }) => done(Number(result)),
                     onRollCancelled: () => done(null)

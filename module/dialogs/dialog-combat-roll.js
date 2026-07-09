@@ -94,25 +94,6 @@ export class DialogCombat extends foundry.applications.api.HandlebarsApplication
         return super.close(options);
     }
 
-    // static get defaultOptions() {
-    //     //let mode = (game.settings.get('core', 'uiConfig').colorScheme.applications == "dark" ? " eon-theme-dark " : " eon-theme-light ");
-    //     let mode = " eon-theme-light ";
-
-    //     return foundry.utils.mergeObject(super.defaultOptions, {
-    //         classes: ["EON general-dialog" + mode],
-    //         title: "",
-    //         window: {
-    //             resizable: true
-    //         },
-    //         position: {
-    //             width: 600,
-    //             height: 700
-    //         },
-    //         tabs: [],
-    //         dragDrop: []
-    //     });
-    // }
-
     static DEFAULT_OPTIONS = {
 		form: {
 		},

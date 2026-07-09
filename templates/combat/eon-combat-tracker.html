@@ -22,10 +22,15 @@
         <article class="eon-combatant-portrait {{#if isCurrentTurn}}is-current-turn{{/if}} {{#if isDefeated}}is-defeated{{/if}} {{#if showGroupSeparator}}has-group-separator{{/if}} {{#if isLastInRound}}is-last-in-round{{/if}}">
             <div class="portrait-header">
                 <div class="portrait-name">{{name}}</div>
-                <button type="button" data-action="toggle-defeated" data-combatant-id="{{id}}" class="portrait-defeated-btn {{#if isDefeated}}is-defeated{{/if}}" title="{{#if isDefeated}}{{localize 'eon.combat.aterstallInteBesegrad'}}{{else}}{{localize 'eon.combat.markeraBesegrad'}}{{/if}}" aria-label="{{#if isDefeated}}{{localize 'eon.combat.aterstall'}}{{else}}{{localize 'eon.combat.markeraBesegrad'}}{{/if}}"><i class="fa-solid fa-skull"></i></button>
+                <div class="portrait-header-actions">
+                    <button type="button" data-action="remove-from-combat" data-combatant-id="{{id}}" class="portrait-remove-btn" title="{{localize 'eon.combat.taBortFranStriden'}}" aria-label="{{localize 'eon.combat.taBortFranStriden'}}"><i class="fa-solid fa-xmark"></i></button>
+                    <button type="button" data-action="toggle-defeated" data-combatant-id="{{id}}" class="portrait-defeated-btn {{#if isDefeated}}is-defeated{{/if}}" title="{{#if isDefeated}}{{localize 'eon.combat.aterstallInteBesegrad'}}{{else}}{{localize 'eon.combat.markeraBesegrad'}}{{/if}}" aria-label="{{#if isDefeated}}{{localize 'eon.combat.aterstall'}}{{else}}{{localize 'eon.combat.markeraBesegrad'}}{{/if}}"><i class="fa-solid fa-skull"></i></button>
+                </div>
             </div>
             <div class="portrait-and-phases">
-                <img class="portrait-image" src="{{img}}" alt="{{name}}" />
+                <button type="button" class="portrait-image-btn" data-action="open-sheet" data-combatant-id="{{id}}" {{#unless hasActor}}disabled{{/unless}} title="{{#if hasActor}}{{localize 'eon.combat.oppnaActorSheet'}}{{else}}{{localize 'eon.combat.ingaActorKopplad'}}{{/if}}" aria-label="{{localize 'eon.combat.oppnaActorSheet'}}">
+                    <img class="portrait-image" src="{{img}}" alt="{{name}}" />
+                </button>
                 <div class="phase-icons">
                     <button type="button" data-action="set-phase" data-combatant-id="{{id}}" data-phase="initiative_distance" class="{{#if isPhaseDistanceSelected}}is-selected{{/if}}" title="{{localize 'eon.config.combatPhases.initiative_distance.namn'}}" aria-label="{{localize 'eon.config.combatPhases.initiative_distance.namn'}}"><img src="systems/eon-rpg/assets/img/icons/bowman.svg" alt="{{localize 'eon.config.combatPhases.initiative_distance.namn'}}" /></button>
                     <button type="button" data-action="set-phase" data-combatant-id="{{id}}" data-phase="initiative_close" class="{{#if isPhaseCloseSelected}}is-selected{{/if}}" title="{{localize 'eon.config.combatPhases.initiative_close.namn'}}" aria-label="{{localize 'eon.config.combatPhases.initiative_close.namn'}}"><img src="systems/eon-rpg/assets/img/icons/swordman.svg" alt="{{localize 'eon.config.combatPhases.initiative_close.namn'}}" /></button>
@@ -39,8 +44,8 @@
                 {{/if}}
                 <div class="portrait-meta">
                     <span>{{localize "eon.combat.init"}}: {{initiative}}</span>
-                    {{#if phaseLabel}}<span>{{localize "eon.combat.fas"}}: {{phaseLabel}}</span>{{/if}}
-                    {{#if roleLabel}}<span>{{localize "eon.combat.delstrid"}} - {{roleLabel}}</span>{{/if}}
+                    {{#if phaseLabel}}<span>{{localize "eon.combat.fas"}}: {{localize phaseLabel}}</span>{{/if}}
+                    {{#if roleLabel}}<span>{{localize "eon.combat.delstrid"}} - {{localize roleLabel}}</span>{{/if}}
                     {{#if pendingTargetsCount}}<span>{{localize "eon.combat.valdaMotstandare"}}: {{pendingTargetsCount}}</span>{{/if}}
                 </div>
             </div>

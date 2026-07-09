@@ -1,0 +1,130 @@
+<div class="item-box item-row">
+    <div class="two-third-column item-row">
+        <div class="item-row one-column">
+            <div class="two-column">
+                <div class="headline">{{localize "eon.sheets.actor.smarta"}}</div>
+                <div class="item-row">
+                    <!-- <div class="resource-box" title="{{localize 'eon.sheets.actor.smartniva'}}" data-value="{{actor.system.skada.smarta}}" data-name="skada">
+                        {{#numFromLoop 1 6}}
+                            <span class="resource-box resource-box-center resource-value" data-action="skadaResource" data-index="{{this}}" data-value="smarta"></span>
+                        {{/numFromLoop}}
+                    </div> -->
+                    <!--<div class="information-area information-box">{{localize "eon.sheets.info.avdragFysiskaHandlingar"}}</div>-->
+                    <div class="resource-box floating-label-group">
+                        <input name="system.skada.smarta" class="attribute-value skill-value" type="text" value="{{actor.system.skada.smarta}}" data-dtype="Number" />
+                        <span class="floating-label">{{localize 'eon.sheets.actor.smartniva'}}</span>
+                    </div>
+                    <div class="floating-label-group">
+                        <input class="attribute-value editable" type="text" value="{{#if (gt actor.system.berakning.svarighet.smarta 0)}}-{{actor.system.berakning.svarighet.smarta}}T6{{else}}{{localize 'eon.sheets.actor.inga'}}{{/if}}" disabled readonly />
+                        <span class="floating-label">{{localize "eon.sheets.actor.avdrag"}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="two-column">
+                <div class="headline">{{localize "eon.sheets.actor.blodning"}}</div>
+                <div class="item-row">
+                    <div class="resource-box" data-value="{{actor.system.skada.blodning}}" data-name="skada" title="{{localize 'eon.sheets.actor.blodningstakt'}}">
+                        {{#numFromLoop 1 3}}
+                            <span class="resource-box resource-box-center resource-value" data-action="skadaResource" data-index="{{this}}" data-value="blodning"></span>
+                        {{/numFromLoop}}
+                    </div>
+                    <div class="floating-label-group">
+                        <input class="attribute-value editable skill-value" name="system.skada.blodningsvarighet" type="text" value="{{actor.system.skada.blodningsvarighet}}" data-dtype="Number" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.svarighet"}}</span>
+                    </div>
+                </div>
+                <!-- <div class="information-area information-box">{{localize "eon.sheets.info.utmattningBlodningRunda"}}</div> -->
+            </div>
+        </div>
+        <div class="item-row one-column">
+            <div class="two-column">
+                <div class="headline">{{localize "eon.sheets.actor.infektion"}}</div>
+                <div class="item-row">
+                    <div class="resource-box floating-label-group">
+                        <input name="system.skada.infektion" class="attribute-value editable skill-value" type="text" value="{{actor.system.skada.infektion}}" data-dtype="Number" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.niva"}}</span>
+                    </div>
+                    <div class="resource-box floating-label-group">
+                        <input name="system.skada.infektionsvarighet" class="attribute-value editable skill-value" type="text" value="{{actor.system.skada.infektionsvarighet}}" data-dtype="Number" />
+                        <span class="floating-label">{{localize "eon.sheets.actor.svarighet"}}</span>
+                    </div>
+                </div>
+                <!-- <div class="information-area information-box">{{localize "eon.sheets.info.dodsslagDygn"}}</div> -->
+            </div>
+
+            <div class="two-column">
+                <div class="headline">{{localize "eon.sheets.actor.inreSkada"}}</div>
+                <div class="three-quarter-column">
+                    <div class="resource-box" data-value="{{actor.system.skada.inreskada}}" data-name="skada">
+                        {{#numFromLoop 1 3}}
+                            <span class="resource-box resource-box-center resource-value" data-action="skadaResource" data-index="{{this}}" data-value="inreskada"></span>
+                        {{/numFromLoop}}
+                    </div>
+                    <!-- <div class="information-area information-box">{{localize "eon.sheets.info.inreSkadaDygn"}}</div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="headline">{{localize "eon.sheets.actor.sar"}}</div>
+        {{#each @root.EON.CONFIG.kroppsdelar.grund as |kroppsdel key|}}
+            <div class="item-row">
+                <div style="width: 75px;">{{localize kroppsdel}}</div>
+                <div class="resource-box" data-value="{{getActorSar @root.actor key}}" data-name="skada">
+                    {{#numFromLoop 1 3}}
+                        <span class="resource-box resource-value" data-action="skadaResource" data-index="{{this}}" data-type="sar" data-value="{{key}}"></span>
+                    {{/numFromLoop}}
+                </div>
+            </div>
+        {{/each}}
+        <!-- <div class="information-area information-box">{{localize "eon.sheets.info.avdragPaverkadeSlag"}}</div> -->
+    </div>
+
+    <div class="item-column">
+        <div class="headline">
+            <div class="attribute-area">{{localize "eon.sheets.actor.utmattning"}}</div>
+        </div>
+        <div class="item-row">
+            <div class="floating-label-group">
+                <input class="attribute-value" type="text" value="{{actor.system.skada.utmattning.grund}}" disabled readonly />
+                <span class="floating-label">{{localize "eon.sheets.actor.grund"}}</span>
+            </div>
+            <div class="floating-label-group">
+                <input class="attribute-value editable skill-value" name="system.skada.utmattning.varde" type="text" value="{{actor.system.skada.utmattning.varde}}" data-dtype="Number" />
+                <span class="floating-label">{{localize "eon.sheets.actor.varde"}}</span>
+            </div>
+        </div>
+    </div>        
+</div>
+
+<div class="item-box">
+    <div class="item-row headline" style="line-height: 25px; width:100%; border-bottom-style: solid; border-bottom-width: 1px; border-top-style: solid; border-top-width: 1px;">
+        <div class="weapon-icon">
+            <a data-action="itemCreate" data-type="skada" title="{{localize 'eon.sheets.actor.laggTillAllvarligSkada'}}">
+                <i class="fa-solid fa-square-plus green"></i>
+            </a>
+        </div>
+        <div>{{localize "eon.sheets.actor.allvarligaSkador"}}</div>
+    </div>
+    <div>
+        {{#if (eq listdata.skador.length 0)}}
+            <div class="item-row item-listrow">
+                {{localize "eon.sheets.actor.ingaAllvarligaSkador"}}
+            </div>
+        {{/if}}
+        {{#each listdata.skador as |skada|}}
+            <div class="item-row item-listrow">
+                <div class="item-listbox weapon-icon">
+                    <a data-action="itemEdit" data-item-id="{{skada._id}}" title="{{localize 'eon.sheets.actor.editeraSkada'}}">
+                        <i class="icon fa-solid fa-pen-to-square"></i>
+                    </a>
+                </div>
+                <div class="item-listbox" style="width: 125px;">{{skada.name}}</div>
+            </div>
+        {{/each}}
+    </div>
+</div>
+
+

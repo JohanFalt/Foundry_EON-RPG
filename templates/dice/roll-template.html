@@ -18,7 +18,7 @@
     
     {{#if (gt data.difficulty 0)}}
         <div class="tray-action-area">
-            Svårighet: {{data.difficulty}}<br />  
+            {{localize "eon.sheets.actor.svarighet"}}: {{data.difficulty}}<br />  
             {{data.resulttext}}            
         </div>
     {{/if}}
@@ -42,7 +42,7 @@
     {{/if}}
 
     <div class="tray-result-area">
-        Totalt: {{data.result}}
+        {{localize "eon.sheets.actor.totalt"}}: {{data.result}}
     </div>
 {{/if}}
 
@@ -65,7 +65,7 @@
 
     {{#if (gt data.difficulty 0)}}
         <div class="tray-action-area">
-            Svårighet: {{data.difficulty}}<br />  
+            {{localize "eon.sheets.actor.svarighet"}}: {{data.difficulty}}<br />  
             {{data.resulttext}}            
         </div>
     {{/if}}
@@ -83,7 +83,7 @@
     </div>
 
     <div class="tray-result-area">
-        Totalt: {{data.result}}
+        {{localize "eon.sheets.actor.totalt"}}: {{data.result}}
     </div>
 {{/if}}
 
@@ -105,7 +105,7 @@
     <div class="tray-action-area">{{data.title}}</div>    
     {{#if (gt data.difficulty 0)}}
         <div class="tray-action-area">
-            Svårighet: {{data.difficulty}}<br />  
+            {{localize "eon.sheets.actor.svarighet"}}: {{data.difficulty}}<br />  
             {{data.resulttext}}            
         </div>
     {{/if}}
@@ -123,8 +123,33 @@
     </div>
 
     <div class="tray-result-area">
-        Totalt: {{data.result}}
+        {{localize "eon.sheets.actor.totalt"}}: {{data.result}}
     </div>
+{{/if}}
+
+{{#if (eq data.type "combatFlow")}}
+    <div class="tray-title-area">{{data.title}}</div>
+    {{#each data.sections}}
+        {{#if this}}
+            <div class="tray-action-area">{{{this}}}</div>
+        {{/if}}
+    {{/each}}
+    {{#if data.diceTitle}}
+        <div class="tray-action-area">{{data.diceTitle}}</div>
+    {{/if}}
+    {{#if data.diceresult}}
+        <div class="tray-roll-area">
+            {{#each data.diceresult as |dice|}}
+                <span class="tray-dice tray-dice-value {{../data.dicecolor}}">{{dice}}</span>
+            {{/each}}
+        </div>
+    {{/if}}
+    {{#if data.total}}
+        <div class="tray-result-area">{{localize "eon.sheets.actor.totalt"}}: {{data.total}}</div>
+    {{/if}}
+    {{#if data.result}}
+        <div class="tray-result-area">{{{data.result}}}</div>
+    {{/if}}
 {{/if}}
 
 {{#if (eq data.type "message")}}

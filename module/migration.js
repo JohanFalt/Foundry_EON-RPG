@@ -158,7 +158,7 @@ export const updateActor = async function(actor, config, systemVersion) {
             if (actor.system.installningar.eon === "") {
                 updateData.system.installningar.eon = "eon4";
             }
-            if (actor.type === "rollperson5") {
+            if (actor.type === "rollperson5" || actor.type === "Motstandare5") {
                 if (!Number.isInteger(actor.system.harleddegenskaper?.visdom)) {
                     updateData.system.harleddegenskaper.visdom = 0;
                     console.log('visdom ' + actor.name);
@@ -460,8 +460,7 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
 
     if (await CompareVersion(installedVersion, '5.3.0', isDemo)) {
         headMessage += `
-        <p><ul style="margin-top: 0">
-            <li>Foundry v14 stöd</li>
+        <p><ul style="margin-top: 0">            
             <li>Tagit bort kravet på modulen Eon dice helper, den är nu en del av systemets grundfunktioner</li>
             <li>Fixat hanteringen av varelse-formuläret för stödtill Eon 5</li>
             <li>Lägga till en egenskapad vändning till en varelse genom att klistra in tabellens id</li>
@@ -472,100 +471,42 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
             
         </ul></p>     
         `;
-        partMessage += `
-        <h4>Foundry v14 stöd</h4>  
-        <p>Modulen har nu stöd för både Foundry v13 och v14.</p>
-        `;
+        // partMessage += `
+        // <h4>Foundry v14 stöd</h4>  
+        // <p>Modulen har nu stöd för både Foundry v13 och v14.</p>
+        // `;
     }  
-	
-	if (await CompareVersion(installedVersion, '5.3.2', isDemo)) {
-         partMessage += `
-         <p>
-             <p>Fixat översättningar för grundegenskaps-slag då dessa kom ut fel i chatten.</p>
-         </p>           
-          `;
-    }
 
-    if (await CompareVersion(installedVersion, '5.3.1', isDemo)) {
-         partMessage += `
-         <p>
-             <p>Fixat översättningar i världsinställningarna.</p>
-             <p>Fixat ett fel där man inte kunde spara eon inställningarna för världen.</p>
-         </p>           
-          `;
-    }
+    if (await CompareVersion(installedVersion, '5.4.0', isDemo)) {
+        headMessage += `
+        <p><ul style="margin-top: 0">
+            <li>Foundry v14 krav</li>
+            <li>Stridmodulen: attack vs försvar, initiativ, skadeformulär, besegrad/ta bort från strid, öppna formulär från trackern</li>
+            <li>Ny actortyp för Eon 5: Motståndare (med varelser i kompendiet)</li>
+            <li>Vapen: förbättrad dialog, inställning för kroppsbyggnadskrav, Ob visas i generella slaget</li>
+            <li>Utrustning: förbättrad layout, +/- antal i behållare (t.ex. väska)</li>
+            <li>Övrigt: eget folkslag, inställning för Eon 4/5-visning, flera slag i samma chattmeddelande</li>
+            <li>Detaljer: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/10?closed=1">v5.4</a></li>
+        </ul></p>    
+        `;
+        partMessage += `
+            <h4>Stridmodulen</h4>  
+            <p>Stridmodulen har växt och nu hanterar den även stridsresultat.</p>
+            <p>Varje deltagare av striden har en besegrad-knapp som markerar deltagaren som besegrad, vilket kan vara tillfälligt eller permanent. Systemet hoppar då över dem.</p>
+            <p>Genom att klicka på deltagarens porträtt öppnas detas formulär.</p>
+            <h4>Motståndare</h4>
+            <p>En ny typ av actor har lagts till för Eon 5 - Motståndare.</p>
+            <p>De motståndare som finns listade i Regelboken finns i Eon 5 kompendiumet under Varelser.</p>
+        `;
+    } 
 
-    // if (await CompareVersion(installedVersion, '5.2.2', isDemo)) {
-    //     partMessage += `
-    //     <p>
-    //         <p>Fixat att man inte kunde välja vilken färdighet ett avståndsvapen har.</p>
-    //         <p>Fixat översättnignsfel.</p>
-    //         <p>Fixat olika grafikfel.</p>
-    //     </p>           
-    //      `;
-    // }
-
-    // if (await CompareVersion(installedVersion, '5.1.2', isDemo)) {
+    // if (await CompareVersion(installedVersion, '5.3.1', isDemo)) {
     //      partMessage += `
     //      <p>
-    //          <p>Visualiserar nu folkslagsegenskaper i Bakgrundsfliken i Eon 5.</p>
+    //          <p>Fixat översättningar i världsinställningarna.</p>
+    //          <p>Fixat ett fel där man inte kunde spara eon inställningarna för världen.</p>
     //      </p>           
-    //      `;
-    // }
-	
-    // if (await CompareVersion(installedVersion, '5.1.1', isDemo)) {
-    //      partMessage += `
-    //      <p>
-    //          <p>Ett fel hittades där man inte kunde hantera rustningar korrekt.</p>
-    //      </p>           
-    //      `;
-    // }    
-
-    // if (await CompareVersion(installedVersion, '4.0.5', isDemo)) {
-    //     partMessage += `
-    //     <p>
-    //         <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/345">#345</a>] - BUGG: EON 5 - Färdigheten Klättra fanns inte med i färdighetslistan när man skapar en rollperson.</p>
-    //         <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/342">#342</a>] - BUGG: Varelse EON 4 - Man kan inte ta bort nya färdigheter och egenskaper från varelseformuläret.</p>
-    //     </p>           
-    //     `;
-    // }
-
-    // if (await CompareVersion(installedVersion, '4.0.4', isDemo)) {
-    //     partMessage += `
-    //     <p>
-    //         <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/339">#339</a>] - BUGG: EON 4 - Kunde inte ändra på en varelses färdigheter.</p>
-    //         <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/343">#343</a>] - BUGG: EON 4 - En varelses vapenattacker blev fel om man använde vanliga vapen.</p>
-    //         <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/340">#340</a>] - BUGG: Fel editering av ritualer till besvärjelser.</p>
-    //         <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/341">#341</a>] - BUGG: Fel när man skulle editera en valuta.</p>
-    //         <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/338">#338</a>] - BUGG: Fel vid beräkning av grundutmattning på grund av rustningar.</p>
-    //     </p>           
-    //     `;
-    // }
-
-    // if (await CompareVersion(installedVersion, '4.0.3', isDemo)) {
-    //     partMessage += `
-    //     <p>
-    //         <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/337">#337</a>] - BUGG: Fel i beräkningen av belastning.</p>
-    //     </p>           
-    //     `;
-    // }
-
-    // if (await CompareVersion(installedVersion, '4.0.2', isDemo)) {
-    //     partMessage += `
-    //     <p>
-    //         <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/336">#336</a>] - BUGG: Att dra in vapen till Eon 4 rollformulär fungerade inte.</p>
-    //     </p>           
-    //     `;
-    // }
-
-    // if (await CompareVersion(installedVersion, '4.0.1', isDemo)) {
-    //     partMessage += `
-    //     <p>
-    //         <h4>Eon 5 rollformulär</h4>            
-    //         <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/329">#329</a>] - Belastningstabellen gav fel värde i Eon 5.</p>
-    //         <p>[<a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/333">#333</a>] - Kan inte spara karaktärsdrag samt om man hade mer än ett rollformulär öppet så togs värdet på det andra rollformulärets karaktärsdraget.</p>
-    //     </p>           
-    //     `;
+    //       `;
     // }
 
     if (partMessage == "") {

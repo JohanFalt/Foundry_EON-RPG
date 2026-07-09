@@ -14,6 +14,26 @@ function prepareSettingForForm(s) {
     return setting;
 }
 
+const RULES_SEGMENT_KEYS = {
+    belastning: ["weightRules", "hinderenceSkillGroupMovement", "hinderenceAttributeMovement"],
+    strid: ["stridEon5KroppsbyggnadAvdrag"]
+};
+
+function buildRulesSettingsForKeys(keys) {
+    const settings = [];
+    for (const s of game.settings.settings.values()) {
+        if (!keys.includes(s.key)) continue;
+        const setting = prepareSettingForForm(s);
+        setting.value = game.settings.get("eon-rpg", setting.key);
+        setting.type = s.type instanceof Function ? s.type.name : "String";
+        setting.scope = "eon-rpg";
+        setting.isBoolean = s.type === Boolean;
+        setting.isSelect = s.choices !== undefined;
+        settings.push(setting);
+    }
+    return settings;
+}
+
 export const systemSettings = function() {
     const L = (key) => game.i18n.localize(key);
 
@@ -29,6 +49,15 @@ export const systemSettings = function() {
     /* Messages */
     game.settings.register("eon-rpg", "eoncombattrackerbeta", {
 		name: L("eon.settings.eonCombatTrackerBeta"),
+		hint: "",
+		scope: "world",
+		config: false,
+		default: false,
+		type: Boolean,
+	});
+
+    game.settings.register("eon-rpg", "eoncombattracker", {
+		name: L("eon.settings.eonCombatTracker"),
 		hint: "",
 		scope: "world",
 		config: false,
@@ -176,6 +205,15 @@ export const systemSettings = function() {
 		type: Boolean
 	});
 
+    game.settings.register("eon-rpg", "stridEon5KroppsbyggnadAvdrag", {
+		name: L("eon.settings.stridEon5KroppsbyggnadAvdrag"),
+		hint: L("eon.settings.stridEon5KroppsbyggnadAvdragHint"),
+		scope: "world",
+		config: false,
+		default: true,
+		type: Boolean
+	});
+
     /* Groups of settings */
     game.settings.registerMenu("eon-rpg", "bookSettings", {
         name: L("eon.settings.bocker"),
@@ -313,29 +351,26 @@ export class Rules extends FormApplication {
             system: { 
                 title: game.system.title, 
                 menus: [], 
-                settings: [] 
+                settings: [],
+                segments: []
             }
         };
 
-        // Classify all settings
         if (hasPermission) {
-            for (let s of game.settings.settings.values()) {
-                // // Exclude settings the user cannot change
-                if ((s.key == "weightRules") || (s.key == "hinderenceSkillGroupMovement") || (s.key == "hinderenceAttributeMovement")) {
-                    const setting = prepareSettingForForm(s);
-
-                    setting.value = game.settings.get("eon-rpg", setting.key);
-                    setting.type = s.type instanceof Function ? s.type.name : "String";
-                    setting.scope = "eon-rpg";
-                    setting.isBoolean = s.type === Boolean;
-                    setting.isSelect = s.choices !== undefined;
-
-                    data.system.settings.push(setting);
-                } 
-            }
+            data.system.segments = [
+                {
+                    id: "belastning",
+                    label: game.i18n.localize("eon.settings.segment.belastning"),
+                    settings: buildRulesSettingsForKeys(RULES_SEGMENT_KEYS.belastning)
+                },
+                {
+                    id: "strid",
+                    label: game.i18n.localize("eon.settings.segment.strid"),
+                    settings: buildRulesSettingsForKeys(RULES_SEGMENT_KEYS.strid)
+                }
+            ];
         }
   
-        // Return data
         return {
             user: game.user,
             canConfigure: hasPermission,
@@ -390,6 +425,9 @@ export class Rules extends FormApplication {
 
             if (v !== current) {
                 await game.settings.set("eon-rpg", s.key, v);
+                if (s.key === "stridEon5KroppsbyggnadAvdrag" && CONFIG.EON?.settings) {
+                    CONFIG.EON.settings.stridEon5KroppsbyggnadAvdrag = v;
+                }
             }
         }
     }

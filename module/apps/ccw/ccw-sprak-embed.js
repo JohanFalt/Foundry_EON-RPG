@@ -107,16 +107,16 @@ export async function createEmbeddedSprakFromCompendiumUuid(actor, compendiumUui
     } catch {
         return null;
     }
-    const src = sprakDocs.find((d) => d.uuid === uuid);
+    const src = sprakDocs.find((doc) => doc.uuid === uuid);
     if (!src) return null;
-    const fv = defaultWizardFardighetGrundFardighetsvarde(src, "sprak", false);
-    const pool = fardighetsvardeToTvardeBonus(fv);
+    const fardighetsvarde = defaultWizardFardighetGrundFardighetsvarde(src, "sprak", false);
+    const t6Pool = fardighetsvardeToTvardeBonus(fardighetsvarde);
     const itemData = foundry.utils.duplicate(src.toObject());
     delete itemData._id;
     itemData.system = itemData.system ?? {};
     itemData.system.varde = {
-        tvarde: pool.tvarde,
-        bonus: pool.bonus,
+        tvarde: t6Pool.tvarde,
+        bonus: t6Pool.bonus,
         bonuslista: []
     };
     itemData.flags = foundry.utils.mergeObject(itemData.flags ?? {}, {

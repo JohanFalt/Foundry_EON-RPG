@@ -1,0 +1,38 @@
+<section class="tab {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+    <div class="item-box">
+        <div class="large-headline">{{localize "eon.config.slag.mysterium"}}</div>
+
+        <div class="headline headline-background item-row item-listrow">
+            <div class="item-listbox weapon-icon">
+                <a data-action="itemCreate" data-type="mysterie" title="{{localize 'eon.sheets.actor.laggTillMysterie'}}">
+                    <i class="fa-solid fa-square-plus green"></i>
+                </a>
+            </div>
+            <div class="item-listbox" style="width: 200px;">{{localize "eon.sheets.item.namn"}}</div>
+            <div class="item-listbox centerText" style="width: 100px;">{{localize "eon.sheets.item.magnitud"}}</div>
+            <div class="item-listbox" style="width: 90px;">{{localize "eon.sheets.item.omfang"}}</div>
+            <div class="item-listbox" style="width: 90px;">{{localize "eon.sheets.actor.rackvidd"}}</div>
+            <div class="item-listbox" style="width: 100px;">{{localize "eon.sheets.item.varaktighet"}}</div>
+            <div class="item-listbox">{{localize "eon.sheets.item.moment"}}</div>
+        </div>
+
+        {{#each listdata.religion.mysterie as |kraft|}}
+            <div class="item-row item-listrow">
+                <div class="item-listbox weapon-icon">
+                    <a data-action="itemEdit" data-item-id="{{kraft._id}}" title="{{localize 'eon.sheets.actor.editeraMysterie'}}">
+                        <i class="icon fa-solid fa-pen-to-square"></i>
+                    </a>
+                </div>
+                <div class="item-listbox active-icon">
+                    <input type="checkbox" data-action="itemActive" data-item-id="{{kraft._id}}" data-property="aktiv" {{isChecked kraft.system.installningar.aktiv}} />
+                </div>
+                <div class="item-listbox vrollable" style="width: 170px;" data-action="rollDialog" data-source="mystery" data-item-id="{{kraft._id}}">{{kraft.name}}</div>
+                <div class="item-listbox centerText" style="width: 100px;">{{kraft.system.magnitud}}</div>
+                <div class="item-listbox" style="width: 90px;">{{kraft.system.omfang}}</div>
+                <div class="item-listbox" style="width: 90px;">{{kraft.system.rackvidd}}</div>
+                <div class="item-listbox" style="width: 100px;">{{kraft.system.varaktighet}}</div>
+                <div class="item-listbox" title="{{getMysterySkills @root.actor kraft.system.moment}}">{{shorten (getMysterySkills @root.actor kraft.system.moment) 25 false}}</div>
+            </div>
+        {{/each}}
+    </div>
+</section>

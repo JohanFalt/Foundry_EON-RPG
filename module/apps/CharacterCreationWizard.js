@@ -484,8 +484,8 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
         return (async () => {
             await this._saveFormToFlags();
             const merged = getMergedWizardData(this.actor);
-            const fd = { ...(merged.fardighetFordelning ?? {}) };
-            const rows = Array.isArray(fd[grupp]) ? [...fd[grupp]] : [];
+            const fardighetFordelning = { ...(merged.fardighetFordelning ?? {}) };
+            const rows = Array.isArray(fardighetFordelning[grupp]) ? [...fardighetFordelning[grupp]] : [];
             if (WIZARD_OVRIGA_ENHET_KEYS.includes(grupp)) {
                 const itemId = await createWizardOvrigFardighetItem(this.actor, grupp);
                 if (!itemId) {
@@ -502,8 +502,8 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
             } else {
                 rows.push(emptyFardighetFordelningRow());
             }
-            fd[grupp] = rows;
-            await persistWizardData(this.actor, { fardighetFordelning: fd });
+            fardighetFordelning[grupp] = rows;
+            await persistWizardData(this.actor, { fardighetFordelning });
             this._ccwSkipFocusRestoreOnce = true;
             await this.render(true);
         })();
@@ -519,8 +519,8 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
         return (async () => {
             await this._saveFormToFlags();
             const merged = getMergedWizardData(this.actor);
-            const fd = { ...(merged.fardighetFordelning ?? {}) };
-            const rows = Array.isArray(fd.mystik) ? [...fd.mystik] : [];
+            const fardighetFordelning = { ...(merged.fardighetFordelning ?? {}) };
+            const rows = Array.isArray(fardighetFordelning.mystik) ? [...fardighetFordelning.mystik] : [];
             const itemId = await createWizardMystikFardighetItem(this.actor);
             if (!itemId) {
                 ui.notifications?.error?.(game.i18n.localize("eon.messages.typSaknarFunktion"));
@@ -533,8 +533,8 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
                 poang: "0",
                 [CCW_WIZARD_CREATED_FARDIGHET_ROW]: true
             });
-            fd.mystik = rows;
-            await persistWizardData(this.actor, { fardighetFordelning: fd });
+            fardighetFordelning.mystik = rows;
+            await persistWizardData(this.actor, { fardighetFordelning });
             this._ccwSkipFocusRestoreOnce = true;
             await this.render(true);
         })();
@@ -549,8 +549,8 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
         return (async () => {
             await this._saveFormToFlags();
             const merged = getMergedWizardData(this.actor);
-            const fd = { ...(merged.fardighetFordelning ?? {}) };
-            const rows = Array.isArray(fd[grupp]) ? [...fd[grupp]] : [];
+            const fardighetFordelning = { ...(merged.fardighetFordelning ?? {}) };
+            const rows = Array.isArray(fardighetFordelning[grupp]) ? [...fardighetFordelning[grupp]] : [];
             if (idx >= rows.length) return;
             const removed = rows[idx];
             if (
@@ -565,12 +565,12 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
             const poangRaw = parseInt(String(removed?.poang ?? "0").trim(), 10);
             const poangTillbaka = Number.isFinite(poangRaw) ? Math.max(0, poangRaw) : 0;
             rows.splice(idx, 1);
-            fd[grupp] = rows;
+            fardighetFordelning[grupp] = rows;
             const curPool = parseInt(String(merged.enheter?.[grupp] ?? "0").trim(), 10);
             const curSafe = Number.isFinite(curPool) ? Math.max(0, curPool) : 0;
             const enheter = { ...(merged.enheter ?? {}) };
             enheter[grupp] = clampWizardFieldToNonNegativeIntStr(String(curSafe + poangTillbaka));
-            await persistWizardData(this.actor, { fardighetFordelning: fd, enheter });
+            await persistWizardData(this.actor, { fardighetFordelning, enheter });
             this._ccwSkipFocusRestoreOnce = true;
             await this.render(true);
         })();
@@ -699,12 +699,12 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
             await this._saveFormToFlags();
             const roll = new Roll("1d10");
             await roll.evaluate();
-            const t = Number(roll.total);
-            const v = t === 10 ? "vanster" : "hoger";
-            await persistWizardData(this.actor, { vapenarm: v });
-            const valLabel = game.i18n.localize(`eon.wizard.vapenarmVal_${v}`);
+            const slagResultat = Number(roll.total);
+            const vapenarm = slagResultat === 10 ? "vanster" : "hoger";
+            await persistWizardData(this.actor, { vapenarm });
+            const valLabel = game.i18n.localize(`eon.wizard.vapenarmVal_${vapenarm}`);
             ui.notifications?.info?.(
-                `${game.i18n.localize("eon.wizard.vapenarmSlumpa")}: ${t} → ${valLabel}`
+                `${game.i18n.localize("eon.wizard.vapenarmSlumpa")}: ${slagResultat} → ${valLabel}`
             );
             this._ccwSkipFocusRestoreOnce = true;
             await this.render(true);
@@ -949,9 +949,9 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
         if (!(bEl instanceof HTMLInputElement)) bEl = root.querySelector(`[name="ccw_ov_attr_${key}_b"]`);
         const out = root.querySelector(`[data-ccw-harledd-totalt="${key}"]`);
         if (!(out instanceof HTMLElement)) return;
-        const g = gEl instanceof HTMLInputElement ? gEl.value : "0";
-        const b = bEl instanceof HTMLInputElement ? bEl.value : "0";
-        out.textContent = wizardHarleddTotaltDisplayText(key, g, b);
+        const grundVarde = gEl instanceof HTMLInputElement ? gEl.value : "0";
+        const bonusVarde = bEl instanceof HTMLInputElement ? bEl.value : "0";
+        out.textContent = wizardHarleddTotaltDisplayText(key, grundVarde, bonusVarde);
     }
 
     /**
@@ -961,8 +961,8 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
     static #ccwInkompetentForFardighetPoangName(root, poangFieldName) {
         const m = (poangFieldName ?? "").toString().match(/^ccw_tf_(.+)_rf_(\d+)_poang$/);
         if (!m || !root) return false;
-        const ink = root.querySelector(`[name="ccw_tf_${m[1]}_rf_${m[2]}_inkompetent"]`);
-        return ink instanceof HTMLInputElement && ink.checked;
+        const inkompetentEl = root.querySelector(`[name="ccw_tf_${m[1]}_rf_${m[2]}_inkompetent"]`);
+        return inkompetentEl instanceof HTMLInputElement && inkompetentEl.checked;
     }
 
     /**
@@ -990,23 +990,26 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
         const blockEl = root.querySelector(`[name="ccw_tf_${gKey}_rf_${idx}_blockering"]`);
         const gvEl = root.querySelector(`[name="ccw_tf_${gKey}_rf_${idx}_grundvarde"]`);
         const poangEl = root.querySelector(`[name="ccw_tf_${gKey}_rf_${idx}_poang"]`);
-        const ink = inkEl instanceof HTMLInputElement && inkEl.type === "checkbox" && inkEl.checked;
-        const block = blockEl instanceof HTMLInputElement && blockEl.type === "checkbox" && blockEl.checked;
+        const inkompetent = inkEl instanceof HTMLInputElement && inkEl.type === "checkbox" && inkEl.checked;
+        const blockering = blockEl instanceof HTMLInputElement && blockEl.type === "checkbox" && blockEl.checked;
         if (gvEl instanceof HTMLInputElement) {
-            gvEl.max = String(ink ? 1 : 8);
-            const gvc = clampWizardFardighetGrundvardeForInkompetentValue(gvEl.value, ink);
-            if (gvEl.value !== "" && String(gvc) !== gvEl.value) gvEl.value = String(gvc);
+            gvEl.max = String(inkompetent ? 1 : 8);
+            const grundvardeClamped = clampWizardFardighetGrundvardeForInkompetentValue(gvEl.value, inkompetent);
+            if (gvEl.value !== "" && String(grundvardeClamped) !== gvEl.value) gvEl.value = String(grundvardeClamped);
         }
-        const gvNum = gvEl instanceof HTMLInputElement ? clampWizardFardighetGrundvardeForInkompetentValue(gvEl.value, ink) : 0;
+        const grundvarde =
+            gvEl instanceof HTMLInputElement
+                ? clampWizardFardighetGrundvardeForInkompetentValue(gvEl.value, inkompetent)
+                : 0;
         if (poangEl instanceof HTMLInputElement) {
-            poangEl.disabled = block;
-            const cap = getWizardFardighetPoangCapForRow(ink, block, gvNum);
-            poangEl.max = String(cap);
-            if (block) {
+            poangEl.disabled = blockering;
+            const poangCap = getWizardFardighetPoangCapForRow(inkompetent, blockering, grundvarde);
+            poangEl.max = String(poangCap);
+            if (blockering) {
                 poangEl.value = "0";
             } else {
-                const pc = clampWizardFardighetPoangValueForRow(poangEl.value, ink, block, gvNum);
-                if (poangEl.value !== "" && String(pc) !== poangEl.value) poangEl.value = String(pc);
+                const poangClamped = clampWizardFardighetPoangValueForRow(poangEl.value, inkompetent, blockering, grundvarde);
+                if (poangEl.value !== "" && String(poangClamped) !== poangEl.value) poangEl.value = String(poangClamped);
             }
         }
         CharacterCreationWizard.updateFardighetSlutligT6Display(root, gKey, idx);
@@ -1030,11 +1033,11 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
         const pEl = root.querySelector(`[name="ccw_tf_${gKey}_rf_${idx}_poang"]`);
         const inkEl = root.querySelector(`[name="ccw_tf_${gKey}_rf_${idx}_inkompetent"]`);
         const blockEl = root.querySelector(`[name="ccw_tf_${gKey}_rf_${idx}_blockering"]`);
-        const gv = gvEl instanceof HTMLInputElement ? gvEl.value : "0";
-        const pv = pEl instanceof HTMLInputElement ? pEl.value : "0";
+        const grundvarde = gvEl instanceof HTMLInputElement ? gvEl.value : "0";
+        const poang = pEl instanceof HTMLInputElement ? pEl.value : "0";
         const ovrig = WIZARD_OVRIGA_ENHET_KEYS.includes(gKey);
         const isSprak = gKey === "sprak";
-        cell.textContent = formatWizardFardighetRowSlutligT6(gv, pv, {
+        cell.textContent = formatWizardFardighetRowSlutligT6(grundvarde, poang, {
             ovrigWizardTyp: ovrig,
             sprak: isSprak,
             inkompetent: ovrig || isSprak ? false : inkEl instanceof HTMLInputElement && inkEl.checked,
@@ -1412,7 +1415,9 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
         if (!inner) return;
         await this._saveFormToFlags();
         const draft = getMergedWizardData(this.actor);
-        let rows = Array.isArray(draft.doktrinRader) ? draft.doktrinRader.map((r) => ({ beskrivning: (r?.beskrivning ?? "").toString() })) : [];
+        let rows = Array.isArray(draft.doktrinRader)
+            ? draft.doktrinRader.map((doktrinRad) => ({ beskrivning: (doktrinRad?.beskrivning ?? "").toString() }))
+            : [];
         if (btn.classList.contains("eon-ccw-doktrin-add")) {
             rows.push({ beskrivning: "" });
         } else if (btn.classList.contains("eon-ccw-doktrin-del")) {
@@ -1971,14 +1976,19 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
             if (!rootNow || !pm) return;
             const inkEl = rootNow.querySelector(`[name="ccw_tf_${pm[1]}_rf_${pm[2]}_inkompetent"]`);
             const blockEl = rootNow.querySelector(`[name="ccw_tf_${pm[1]}_rf_${pm[2]}_blockering"]`);
-            const ink = inkEl instanceof HTMLInputElement && inkEl.checked;
-            const block = blockEl instanceof HTMLInputElement && blockEl.checked;
+            const inkompetent = inkEl instanceof HTMLInputElement && inkEl.checked;
+            const blockering = blockEl instanceof HTMLInputElement && blockEl.checked;
             const gvEl = rootNow.querySelector(`[name="ccw_tf_${pm[1]}_rf_${pm[2]}_grundvarde"]`);
-            const gvRaw = gvEl instanceof HTMLInputElement ? gvEl.value : "0";
-            targetElement.max = String(getWizardFardighetPoangCapForRow(ink, block, gvRaw));
-            const c = clampWizardFardighetPoangValueForRow(targetElement.value, ink, block, gvRaw);
-            if (targetElement.value !== "" && String(c) !== targetElement.value) {
-                targetElement.value = String(c);
+            const grundvardeRaw = gvEl instanceof HTMLInputElement ? gvEl.value : "0";
+            targetElement.max = String(getWizardFardighetPoangCapForRow(inkompetent, blockering, grundvardeRaw));
+            const poangClamped = clampWizardFardighetPoangValueForRow(
+                targetElement.value,
+                inkompetent,
+                blockering,
+                grundvardeRaw
+            );
+            if (targetElement.value !== "" && String(poangClamped) !== targetElement.value) {
+                targetElement.value = String(poangClamped);
             }
             CharacterCreationWizard.updateFardighetSlutligT6Display(rootNow, pm[1], parseInt(pm[2], 10));
             return;
@@ -1988,11 +1998,11 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
             const gm = targetElement.name.match(/^ccw_tf_(.+)_rf_(\d+)_grundvarde$/);
             if (!rootNow || !gm) return;
             const inkElG = rootNow.querySelector(`[name="ccw_tf_${gm[1]}_rf_${gm[2]}_inkompetent"]`);
-            const ink = inkElG instanceof HTMLInputElement && inkElG.checked;
-            const c = clampWizardFardighetGrundvardeForInkompetentValue(targetElement.value, ink);
-            targetElement.max = String(ink ? 1 : 8);
-            if (targetElement.value !== "" && String(c) !== targetElement.value) {
-                targetElement.value = String(c);
+            const inkompetent = inkElG instanceof HTMLInputElement && inkElG.checked;
+            const grundvardeClamped = clampWizardFardighetGrundvardeForInkompetentValue(targetElement.value, inkompetent);
+            targetElement.max = String(inkompetent ? 1 : 8);
+            if (targetElement.value !== "" && String(grundvardeClamped) !== targetElement.value) {
+                targetElement.value = String(grundvardeClamped);
             }
             CharacterCreationWizard.syncFardighetRowDomControls(rootNow, gm[1], parseInt(gm[2], 10));
             return;
@@ -2086,11 +2096,11 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
             if (root && match) {
                 const grupp = match[1];
                 const rowIndex = parseInt(match[2], 10);
-                const inkEl = root.querySelector(`[name="ccw_tf_${grupp}_rf_${rowIndex}_inkompetent"]`);
-                const ink = inkEl instanceof HTMLInputElement && inkEl.checked;
-                const clamped = clampWizardFardighetGrundvardeForInkompetentValue(targetElement.value, ink);
-                if (targetElement.value !== "" && String(clamped) !== targetElement.value) {
-                    targetElement.value = String(clamped);
+                const inkompetentEl = root.querySelector(`[name="ccw_tf_${grupp}_rf_${rowIndex}_inkompetent"]`);
+                const inkompetent = inkompetentEl instanceof HTMLInputElement && inkompetentEl.checked;
+                const grundvardeClamped = clampWizardFardighetGrundvardeForInkompetentValue(targetElement.value, inkompetent);
+                if (targetElement.value !== "" && String(grundvardeClamped) !== targetElement.value) {
+                    targetElement.value = String(grundvardeClamped);
                 }
                 CharacterCreationWizard.syncFardighetRowDomControls(root, grupp, rowIndex);
             }

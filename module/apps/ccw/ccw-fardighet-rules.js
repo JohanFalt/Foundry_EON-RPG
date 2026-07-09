@@ -136,13 +136,13 @@ export function emptyFardighetFordelningRow() {
  */
 export function getMystikFornimmaItemId(actor) {
     if (!actor?.items) return "";
-    const it = actor.items.find(
-        (x) =>
-            x.type === "Färdighet" &&
-            (x.system?.grupp ?? "").toString() === "mystik" &&
-            (x.system?.id ?? "").toString() === "fornimma"
+    const fornimmaItem = actor.items.find(
+        (item) =>
+            item.type === "Färdighet" &&
+            (item.system?.grupp ?? "").toString() === "mystik" &&
+            (item.system?.id ?? "").toString() === "fornimma"
     );
-    return (it?.id ?? "").toString();
+    return (fornimmaItem?.id ?? "").toString();
 }
 
 /**
@@ -152,23 +152,25 @@ export function getMystikFornimmaItemId(actor) {
  */
 export function applyMystikOmstoptFornimmaFardighetRows(actor, draft) {
     if (!draft?.fardighetFordelning || typeof draft.fardighetFordelning !== "object") return;
-    const fid = getMystikFornimmaItemId(actor);
+    const fornimmaItemId = getMystikFornimmaItemId(actor);
     const mystikRows = Array.isArray(draft.fardighetFordelning.mystik) ? [...draft.fardighetFordelning.mystik] : [];
     if (!draft.mystikOmstopt) {
-        if (!fid) {
+        if (!fornimmaItemId) {
             draft.fardighetFordelning.mystik = mystikRows;
             return;
         }
-        draft.fardighetFordelning.mystik = mystikRows.filter((row) => (row?.itemId ?? "").toString().trim() !== fid);
+        draft.fardighetFordelning.mystik = mystikRows.filter(
+            (row) => (row?.itemId ?? "").toString().trim() !== fornimmaItemId
+        );
         return;
     }
-    if (!fid) {
+    if (!fornimmaItemId) {
         draft.fardighetFordelning.mystik = mystikRows;
         return;
     }
-    const has = mystikRows.some((row) => (row?.itemId ?? "").toString().trim() === fid);
-    if (!has) {
-        mystikRows.push({ ...emptyFardighetFordelningRow(), itemId: fid });
+    const harFornimmaRad = mystikRows.some((row) => (row?.itemId ?? "").toString().trim() === fornimmaItemId);
+    if (!harFornimmaRad) {
+        mystikRows.push({ ...emptyFardighetFordelningRow(), itemId: fornimmaItemId });
     }
     draft.fardighetFordelning.mystik = mystikRows;
 }
@@ -182,11 +184,11 @@ export function normalizeWizardNumStr(rawInput) {
 
 /** Händelsetabeller (slag) och färdighetsenheter får inte vara negativa. */
 export function clampWizardFieldToNonNegativeIntStr(raw) {
-    const t = (raw ?? "").toString().trim();
-    if (t === "") return "0";
-    const n = parseInt(t, 10);
-    if (!Number.isFinite(n)) return "0";
-    return String(Math.max(0, n));
+    const text = (raw ?? "").toString().trim();
+    if (text === "") return "0";
+    const parsed = parseInt(text, 10);
+    if (!Number.isFinite(parsed)) return "0";
+    return String(Math.max(0, parsed));
 }
 
 /**
@@ -208,9 +210,9 @@ export function getWizardFardighetPoangCap(inkompetent) {
  */
 export function getWizardFardighetPoangCapForRow(inkompetent, blockering, grundvardeRaw) {
     if (blockering) return 0;
-    const gv = clampWizardFardighetGrundvardeForInkompetentValue(grundvardeRaw, inkompetent);
-    if (inkompetent) return Math.max(0, 1 - gv);
-    return Math.max(0, CCW_FARDIGHET_ENHETER_MAX - gv);
+    const grundvarde = clampWizardFardighetGrundvardeForInkompetentValue(grundvardeRaw, inkompetent);
+    if (inkompetent) return Math.max(0, 1 - grundvarde);
+    return Math.max(0, CCW_FARDIGHET_ENHETER_MAX - grundvarde);
 }
 
 /**
@@ -220,10 +222,10 @@ export function getWizardFardighetPoangCapForRow(inkompetent, blockering, grundv
  * @returns {number}
  */
 export function clampWizardFardighetGrundvardeForInkompetentValue(raw, inkompetent) {
-    let n = parseInt(String(raw ?? "").trim(), 10);
-    if (!Number.isFinite(n)) n = 0;
+    let parsed = parseInt(String(raw ?? "").trim(), 10);
+    if (!Number.isFinite(parsed)) parsed = 0;
     const cap = inkompetent ? 1 : CCW_FARDIGHET_ENHETER_MAX;
-    return Math.max(0, Math.min(cap, n));
+    return Math.max(0, Math.min(cap, parsed));
 }
 
 /**
@@ -243,10 +245,10 @@ export function clampWizardFardighetGrundvardeForInkompetentStr(raw, inkompetent
  * @returns {number}
  */
 export function clampWizardFardighetPoangValueForRow(raw, inkompetent, blockering, grundvardeRaw) {
-    let n = parseInt(String(raw ?? "").trim(), 10);
-    if (!Number.isFinite(n)) n = 0;
+    let parsed = parseInt(String(raw ?? "").trim(), 10);
+    if (!Number.isFinite(parsed)) parsed = 0;
     const cap = getWizardFardighetPoangCapForRow(!!inkompetent, !!blockering, grundvardeRaw);
-    return Math.max(0, Math.min(cap, n));
+    return Math.max(0, Math.min(cap, parsed));
 }
 
 /**
@@ -266,10 +268,10 @@ export function clampWizardFardighetPoangStrForRow(raw, inkompetent, blockering,
  * @returns {number}
  */
 export function clampWizardFardighetPoangValue(raw, inkompetent = false) {
-    let n = parseInt(String(raw ?? "").trim(), 10);
-    if (!Number.isFinite(n)) n = 0;
+    let parsed = parseInt(String(raw ?? "").trim(), 10);
+    if (!Number.isFinite(parsed)) parsed = 0;
     const cap = getWizardFardighetPoangCap(!!inkompetent);
-    return Math.max(0, Math.min(cap, n));
+    return Math.max(0, Math.min(cap, parsed));
 }
 
 /**
@@ -301,11 +303,11 @@ const FARDIGHETSVARDE_TILL_TVARDE_TABELL = Object.freeze([
 
 /** @param {unknown} fardighetsvarde */
 export function fardighetsvardeToTvardeBonus(fardighetsvarde) {
-    let fv = Math.floor(Number(fardighetsvarde));
-    if (!Number.isFinite(fv)) fv = 0;
-    fv = Math.max(0, Math.min(CCW_FARDIGHET_ENHETER_MAX, fv));
-    const p = FARDIGHETSVARDE_TILL_TVARDE_TABELL[fv];
-    return { tvarde: p.tvarde, bonus: p.bonus };
+    let fardighetsvardeHeltal = Math.floor(Number(fardighetsvarde));
+    if (!Number.isFinite(fardighetsvardeHeltal)) fardighetsvardeHeltal = 0;
+    fardighetsvardeHeltal = Math.max(0, Math.min(CCW_FARDIGHET_ENHETER_MAX, fardighetsvardeHeltal));
+    const tabellRad = FARDIGHETSVARDE_TILL_TVARDE_TABELL[fardighetsvardeHeltal];
+    return { tvarde: tabellRad.tvarde, bonus: tabellRad.bonus };
 }
 
 /**
@@ -316,20 +318,20 @@ export function fardighetsvardeToTvardeBonus(fardighetsvarde) {
  */
 export function wizardFardighetRowCombinedFardighetsvarde(grundvardeRaw, poangRaw, opts = {}) {
     if (opts.ovrigWizardTyp === true) {
-        const p = clampWizardFardighetPoangValue(poangRaw, false);
-        return Math.min(CCW_FARDIGHET_ENHETER_MAX, p);
+        const poang = clampWizardFardighetPoangValue(poangRaw, false);
+        return Math.min(CCW_FARDIGHET_ENHETER_MAX, poang);
     }
     const sprak = opts.sprak === true;
-    const ink = opts.inkompetent === true;
-    const block = opts.blockering === true;
-    const g0 = sprak
+    const inkompetent = opts.inkompetent === true;
+    const blockering = opts.blockering === true;
+    const grundvarde = sprak
         ? clampWizardFardighetGrundTvardeValue(grundvardeRaw)
-        : clampWizardFardighetGrundvardeForInkompetentValue(grundvardeRaw, ink);
-    const p = sprak
+        : clampWizardFardighetGrundvardeForInkompetentValue(grundvardeRaw, inkompetent);
+    const poang = sprak
         ? clampWizardFardighetPoangValue(poangRaw, false)
-        : clampWizardFardighetPoangValueForRow(poangRaw, ink, block, g0);
-    const capFv = ink ? 1 : CCW_FARDIGHET_ENHETER_MAX;
-    return Math.min(capFv, g0 + p);
+        : clampWizardFardighetPoangValueForRow(poangRaw, inkompetent, blockering, grundvarde);
+    const maxFardighetsvarde = inkompetent ? 1 : CCW_FARDIGHET_ENHETER_MAX;
+    return Math.min(maxFardighetsvarde, grundvarde + poang);
 }
 
 /**
@@ -339,8 +341,8 @@ export function wizardFardighetRowCombinedFardighetsvarde(grundvardeRaw, poangRa
  * @param {{ sprak?: boolean, inkompetent?: boolean, blockering?: boolean, ovrigWizardTyp?: boolean }} [opts]
  */
 export function formatWizardFardighetRowSlutligT6(grundvardeRaw, poangRaw, opts = {}) {
-    const fv = wizardFardighetRowCombinedFardighetsvarde(grundvardeRaw, poangRaw, opts);
-    return formatHarleddT6PoolDisplay(fardighetsvardeToTvardeBonus(fv));
+    const fardighetsvarde = wizardFardighetRowCombinedFardighetsvarde(grundvardeRaw, poangRaw, opts);
+    return formatHarleddT6PoolDisplay(fardighetsvardeToTvardeBonus(fardighetsvarde));
 }
 
 /**
@@ -350,11 +352,11 @@ export function formatWizardFardighetRowSlutligT6(grundvardeRaw, poangRaw, opts 
  * @returns {number} 0–8
  */
 export function tvardeBonusToFardighetsvarde(tvardeRaw, bonusRaw) {
-    const t = Math.floor(parseInt(String(tvardeRaw ?? 0), 10)) || 0;
-    const b = Math.floor(parseInt(String(bonusRaw ?? 0), 10)) || 0;
+    const tvarde = Math.floor(parseInt(String(tvardeRaw ?? 0), 10)) || 0;
+    const bonus = Math.floor(parseInt(String(bonusRaw ?? 0), 10)) || 0;
     for (let tableIndex = 0; tableIndex < FARDIGHETSVARDE_TILL_TVARDE_TABELL.length; tableIndex++) {
-        const p = FARDIGHETSVARDE_TILL_TVARDE_TABELL[tableIndex];
-        if (p.tvarde === t && p.bonus === b) return tableIndex;
+        const tabellRad = FARDIGHETSVARDE_TILL_TVARDE_TABELL[tableIndex];
+        if (tabellRad.tvarde === tvarde && tabellRad.bonus === bonus) return tableIndex;
     }
     return 0;
 }
@@ -375,23 +377,23 @@ export function defaultWizardFardighetGrundFardighetsvarde(itemDoc, enhetKey, my
         (itemDoc.system?.id ?? "").toString() === "fornimma" &&
         mystikOmstopt === true
     ) {
-        const t = parseInt(String(itemDoc.system?.varde?.tvarde ?? 0), 10);
-        const b = parseInt(String(itemDoc.system?.varde?.bonus ?? 0), 10);
-        const mapped = Number.isFinite(t) ? tvardeBonusToFardighetsvarde(t, b) : 0;
+        const tvarde = parseInt(String(itemDoc.system?.varde?.tvarde ?? 0), 10);
+        const bonus = parseInt(String(itemDoc.system?.varde?.bonus ?? 0), 10);
+        const mapped = Number.isFinite(tvarde) ? tvardeBonusToFardighetsvarde(tvarde, bonus) : 0;
         if (mapped > 0) return Math.min(CCW_FARDIGHET_ENHETER_MAX, mapped);
         return 1;
     }
     if (enhetKeyStr === "sprak" && itemDoc?.type === "Språk") {
-        const t = parseInt(String(itemDoc.system?.varde?.tvarde ?? 0), 10);
-        const b = parseInt(String(itemDoc.system?.varde?.bonus ?? 0), 10);
-        if (!Number.isFinite(t) || t < 0) return 0;
-        return Math.min(CCW_FARDIGHET_ENHETER_MAX, tvardeBonusToFardighetsvarde(t, b));
+        const tvarde = parseInt(String(itemDoc.system?.varde?.tvarde ?? 0), 10);
+        const bonus = parseInt(String(itemDoc.system?.varde?.bonus ?? 0), 10);
+        if (!Number.isFinite(tvarde) || tvarde < 0) return 0;
+        return Math.min(CCW_FARDIGHET_ENHETER_MAX, tvardeBonusToFardighetsvarde(tvarde, bonus));
     }
     if (!itemDoc || itemDoc.type !== "Färdighet") return 0;
-    const t = parseInt(String(itemDoc.system?.varde?.tvarde ?? 0), 10);
-    const b = parseInt(String(itemDoc.system?.varde?.bonus ?? 0), 10);
-    if (!Number.isFinite(t) || t < 0) return 0;
-    return Math.min(CCW_FARDIGHET_ENHETER_MAX, tvardeBonusToFardighetsvarde(t, b));
+    const tvarde = parseInt(String(itemDoc.system?.varde?.tvarde ?? 0), 10);
+    const bonus = parseInt(String(itemDoc.system?.varde?.bonus ?? 0), 10);
+    if (!Number.isFinite(tvarde) || tvarde < 0) return 0;
+    return Math.min(CCW_FARDIGHET_ENHETER_MAX, tvardeBonusToFardighetsvarde(tvarde, bonus));
 }
 
 /**
@@ -422,9 +424,9 @@ export function defaultWizardFardighetGrundForCcwDraft(actor, itemDoc, enhetKey,
  * @returns {number}
  */
 export function clampWizardFardighetGrundTvardeValue(raw) {
-    let n = parseInt(String(raw ?? "").trim(), 10);
-    if (!Number.isFinite(n)) n = 0;
-    return Math.max(0, Math.min(CCW_FARDIGHET_ENHETER_MAX, n));
+    let parsed = parseInt(String(raw ?? "").trim(), 10);
+    if (!Number.isFinite(parsed)) parsed = 0;
+    return Math.max(0, Math.min(CCW_FARDIGHET_ENHETER_MAX, parsed));
 }
 
 /**
@@ -443,17 +445,34 @@ export function clampWizardFardighetGrundTvardeStr(raw) {
  * @returns {{ tvarde: number, bonus: number }}
  */
 export function attributVardeTillHarleddT6Attribut(attributVardeRaw) {
-    let v = Math.floor(parseInt(String(attributVardeRaw ?? "").trim(), 10));
-    if (!Number.isFinite(v)) v = 0;
-    if (v < 4) return { tvarde: 0, bonus: 0 };
-    if (v <= 24) {
-        const tvarde = Math.floor((v - 4) / 4) + 1;
-        const bonus = (v - 4) % 4;
+    let attributVarde = Math.floor(parseInt(String(attributVardeRaw ?? "").trim(), 10));
+    if (!Number.isFinite(attributVarde)) attributVarde = 0;
+    if (attributVarde < 4) return { tvarde: 0, bonus: 0 };
+    if (attributVarde <= 24) {
+        const tvarde = Math.floor((attributVarde - 4) / 4) + 1;
+        const bonus = (attributVarde - 4) % 4;
         return { tvarde, bonus };
     }
     const tvardeVid24 = Math.floor((24 - 4) / 4) + 1;
     const bonusVid24 = (24 - 4) % 4;
-    return { tvarde: tvardeVid24, bonus: bonusVid24 + (v - 24) };
+    return { tvarde: tvardeVid24, bonus: bonusVid24 + (attributVarde - 24) };
+}
+
+/**
+ * Omvandling av härledd T6-pool till attributvärde (G+B) för tabellen "Uträkningar av Attribut".
+ * @param {{ tvarde?: number, bonus?: number }} pool
+ * @returns {number}
+ */
+export function harleddT6AttributTillAttributVarde(pool = {}) {
+    const tvarde = Math.floor(Number(pool.tvarde)) || 0;
+    const bonus = Math.floor(Number(pool.bonus)) || 0;
+    if (tvarde <= 0 && bonus <= 0) return 0;
+
+    const tvardeVid24 = Math.floor((24 - 4) / 4) + 1;
+    if (tvarde < tvardeVid24) {
+        return 4 + (tvarde - 1) * 4 + bonus;
+    }
+    return 24 + bonus;
 }
 
 /**
@@ -461,12 +480,12 @@ export function attributVardeTillHarleddT6Attribut(attributVardeRaw) {
  * @returns {string}
  */
 export function formatHarleddT6PoolDisplay(pool) {
-    const t = pool.tvarde;
-    const b = pool.bonus;
-    if (t === 0 && b === 0) return "0";
-    if (b === 0) return `${t}T6`;
-    if (b > 0) return `${t}T6+${b}`;
-    return `${t}T6${b}`;
+    const tvarde = pool.tvarde;
+    const bonus = pool.bonus;
+    if (tvarde === 0 && bonus === 0) return "0";
+    if (bonus === 0) return `${tvarde}T6`;
+    if (bonus > 0) return `${tvarde}T6+${bonus}`;
+    return `${tvarde}T6${bonus}`;
 }
 
 /**
@@ -477,12 +496,10 @@ export function formatHarleddT6PoolDisplay(pool) {
  * @returns {string}
  */
 export function wizardHarleddTotaltDisplayText(key, grundRaw, bonusRaw) {
+    const grundVarde = Math.floor(parseInt(String(grundRaw ?? "").trim(), 10)) || 0;
+    const bonusVarde = Math.floor(parseInt(String(bonusRaw ?? "").trim(), 10)) || 0;
     if (key === "visdom") {
-        const g = Math.floor(parseInt(String(grundRaw ?? "").trim(), 10)) || 0;
-        const b = Math.floor(parseInt(String(bonusRaw ?? "").trim(), 10)) || 0;
-        return String(g + b);
+        return String(grundVarde + bonusVarde);
     }
-    const g = Math.floor(parseInt(String(grundRaw ?? "").trim(), 10)) || 0;
-    const b = Math.floor(parseInt(String(bonusRaw ?? "").trim(), 10)) || 0;
-    return formatHarleddT6PoolDisplay(attributVardeTillHarleddT6Attribut(g + b));
+    return formatHarleddT6PoolDisplay(attributVardeTillHarleddT6Attribut(grundVarde + bonusVarde));
 }

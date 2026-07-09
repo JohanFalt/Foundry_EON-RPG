@@ -1,13 +1,15 @@
 import DiceHelper from "./dice-helper.js";
-import { dataskapa } from "../packs/skapa.js";
-import { datafardigheter } from "../packs/fardigheter.js";
-import { data5fardigheter } from "../packs/fardigheter.js";
+import CalculateHelper from "./calculate-helper.js";
+import { CombatAttackFlow } from "./combat-attack-flow.js";
+import { dataskapa } from "../data/skapa.js";
+import { datafardigheter } from "../data/fardigheter.js";
+import { data5fardigheter } from "../data/fardigheter.js";
 // import { datavapen } from "../packs/vapen.js";
 // import { data5vapen } from "../packs/vapen_eon5.js";
 // import { datastrid } from "../packs/strid.js";
 // import { datautrustning } from "../packs/utrustning.js";
 // import { datautrustning5 } from "../packs/utrustning5.js";
-import { datavaluta } from "../packs/valuta.js";
+import { datavaluta } from "../data/valuta.js";
 
 /**
  * Define a set of template paths to pre-load
@@ -71,6 +73,18 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/combat/eon-combat-tracker.html",
 		"systems/eon-rpg/templates/combat/eon-combatant-portrait.html",
 		"systems/eon-rpg/templates/wizard/character-creation-wizard.hbs",
+
+		"systems/eon-rpg/templates/actors/parts/motstandare5-sheet-header.hbs",
+		"systems/eon-rpg/templates/actors/parts/motstandare5-sheet-stats.hbs",
+		"systems/eon-rpg/templates/actors/parts/motstandare5-sheet-health.hbs",
+		"systems/eon-rpg/templates/actors/parts/motstandare5-tab-navigation.hbs",
+		"systems/eon-rpg/templates/actors/parts/motstandare5-fardigheter.hbs",
+		"systems/eon-rpg/templates/actors/parts/motstandare5-strid.hbs",
+		"systems/eon-rpg/templates/actors/parts/motstandare5-magi.hbs",
+		"systems/eon-rpg/templates/actors/parts/motstandare5-religion.hbs",
+		"systems/eon-rpg/templates/actors/parts/motstandare5-anteckningar.hbs",
+
+		"systems/eon-rpg/templates/dialogs/dialog-pick-fardighet.hbs",
 
 		"systems/eon-rpg/templates/dice/tray.html",
 		"systems/eon-rpg/templates/dice/roll-template.html",
@@ -501,8 +515,8 @@ export const RegisterHandlebarsHelpers = function () {
 
 	// hämtar en särskild räckvidd
 	Handlebars.registerHelper("getRange", function(rackviddlista, rackvidd) {
-		if (isEmpty(rackvidd)) {
-			return "&nbsp;";
+		if (isEmpty(rackvidd) || !rackviddlista?.[rackvidd]?.namn) {
+			return "";
 		}
 
 		return rackviddlista[rackvidd].namn;
@@ -552,26 +566,44 @@ export const RegisterHandlebarsHelpers = function () {
 
 	// hämtar värdet på en särskild färdighet som RP har.
 	Handlebars.registerHelper("getActorSkillGroupValue", function(actor, fardighet, grupp) {
+		const fardigheter = actor?.system?.listdata?.fardigheter;
+		if (!fardigheter) {
+			return { tvarde: 0, bonus: 0 };
+		}
+
+		let skillVarde = null;
+
 		if (grupp != "") {
-			if (actor.system.listdata.fardigheter[grupp] != undefined) {
-				for (const item of actor.system.listdata.fardigheter[grupp]) {
+			if (fardigheter[grupp] != undefined) {
+				for (const item of fardigheter[grupp]) {
 					if (item.system.id == fardighet) {
-						return item.system.varde;
+						skillVarde = item.system.varde;
+						break;
 					}
 				}
 			}
 		}
-		else {
-			if (actor.system.listdata.fardigheter != undefined) {
-				for (const item of actor.system.listdata.fardigheter) {
-					if (item.system.id == fardighet) {
-						return item.system.varde;
-					}
+		else if (Array.isArray(fardigheter)) {
+			for (const item of fardigheter) {
+				if (item.system.id == fardighet) {
+					skillVarde = item.system.varde;
+					break;
 				}
 			}
 		}
 
-				
+		if (CombatAttackFlow.isMotstandareActor(actor)) {
+			if (grupp === "strid" && fardighet) {
+				return CalculateHelper.resolveMotstandareStridTraffa(actor, skillVarde).varde;
+			}
+			if (String(fardighet ?? "").toLowerCase() === "undvika") {
+				return CalculateHelper.resolveMotstandareUndvika(actor, skillVarde);
+			}
+		}
+
+		if (skillVarde) {
+			return skillVarde;
+		}
 
 		return {
 			"tvarde": 0,
@@ -604,6 +636,9 @@ export const RegisterHandlebarsHelpers = function () {
 
 	// hämtar ett attribut med egenskaper
 	Handlebars.registerHelper("getActorAttribute", function(actor, typ, key) {
+		if (!actor?.system?.[typ]?.[key]) {
+			return { tvarde: 0, bonus: 0 };
+		}
 		if (actor.system[typ][key].totalt == undefined) {
 			return actor.system[typ][key];
 		}
@@ -722,11 +757,15 @@ export const RegisterHandlebarsHelpers = function () {
 	});
 
 	Handlebars.registerHelper("getActorSar", function(actor, key) {
-		return actor.system.skada.sar[key];
+		return actor?.system?.skada?.sar?.[key] ?? 0;
 	});
 
 	// skickar ut en egenskapslista i läsbart skick
 	Handlebars.registerHelper("getPropertyList", function(lista) {
+		if (!Array.isArray(lista)) {
+			return "";
+		}
+
 		let text = "";
 
 		for (const item of lista) {
@@ -962,65 +1001,85 @@ export const RegisterHandlebarsHelpers = function () {
 
 		let html = ``;
 
-		// Loopa igenom dessa
+		// Rubrik: [+] namn 230 | antal 70 | vikt 70 | total
+		// Rad: [edit][share][active] namn 180 | antal 70 | vikt 70 | total
+		const COL_NAMN = 180;
+		const COL_ANTAL = 70;
+		const COL_VIKT = 70;
+		const COL_TOTAL = 80;
+
 		for (const forvaring of items) {
-			// html för inkapsling av raden
 			const headerhtml = `<div class="item-row container item-listrow" data-itemid="${forvaring._id}" data-actor-id="${actor?._id}">`;
-			// slutet av raden
 			const footerhtml = `</div>`;
 
-			let descriptionhtml = ``;
+			const editeraUtrustning = game.i18n.localize("eon.sheets.item.editeraUtrustning");
+			const beskrivningSaknas = game.i18n.localize("eon.sheets.item.beskrivningSaknas");
+			const skickaBeskrivning = game.i18n.localize("eon.sheets.item.skickaBeskrivning");
+			const burenTitle = game.i18n.localize("eon.sheets.item.burenUtrustning");
 
-			// skapa beskrivning rutan
-			if (forvaring.system.beskrivning == "") {
-				descriptionhtml = `<div class="weapon-icon"><i class="icon fa-regular fa-share" title="Beskrivning saknas"></i></div>`;
-			}
-			else {
-				descriptionhtml = `<div class="weapon-icon"><a class="item-send" title="Skicka beskrivning" data-source="description" data-itemid="${forvaring._id}"><i class="icon fa-solid fa-share"></i></a></div>`;
-			}
-			
-			// skapa edit icon rutan
-			const edithtml = `<div class="weapon-icon"><a class="item-edit" title="Editera utrustning" data-source="utrustning" data-itemid="${forvaring._id}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>`;
+			const descriptionhtml = forvaring.system.beskrivning === ""
+				? `<div class="item-listbox weapon-icon"><i class="icon fa-regular fa-share" title="${beskrivningSaknas}"></i></div>`
+				: `<div class="item-listbox weapon-icon"><a class="item-send" title="${skickaBeskrivning}" data-source="description" data-itemid="${forvaring._id}"><i class="icon fa-solid fa-share"></i></a></div>`;
 
-			// skapa active icon rutan
-			let isChecked = forvaring.system.installningar.buren ? "checked" : "";
-			const activehtml = `<div class="active-icon"><input class="pointer item-active" name="foremal.system.installningar.buren" type="checkbox" data-itemid="${forvaring._id}" data-property="buren" ${isChecked} title="Buren utrustning" /></div>`;
+			const edithtml = `<div class="item-listbox weapon-icon"><a class="item-edit" title="${editeraUtrustning}" data-source="utrustning" data-itemid="${forvaring._id}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>`;
 
-			// skapa namn rutan
-			const namehtml = `<div class="draggable" style="width: 180px;" data-itemid="${forvaring._id}">${forvaring.name}</div>`;
+			const isChecked = forvaring.system.installningar.buren ? "checked" : "";
+			const activehtml = `<div class="item-listbox active-icon"><input class="pointer item-active" name="foremal.system.installningar.buren" type="checkbox" data-itemid="${forvaring._id}" data-property="buren" ${isChecked} title="${burenTitle}" /></div>`;
 
-			// skapa antal rutan
-			// TODO skall verkligen antal vara mer än 1?
-			const numberhtml = `<div style="width: 50px;">
-									<i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="${forvaring._id}"></i>
-									${forvaring.system.antal}
-									<i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="${forvaring._id}"></i>
-								</div>`;
+			const namehtml = `<div class="item-listbox draggable" style="width: ${COL_NAMN}px;" data-itemid="${forvaring._id}">${forvaring.name}</div>`;
 
-			// skapa vikt rutan
-			let weighthtml = `<div style="width: 50px;">-</div>`;
+			const numberhtml = `<div class="item-listbox centerText" style="width: ${COL_ANTAL}px;">
+				<i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="${forvaring._id}"></i>
+				<span class="number-of-text">${forvaring.system.antal}</span>
+				<i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="${forvaring._id}"></i>
+			</div>`;
+
 			let weight = 0;
-
+			let weighthtml = `<div class="item-listbox centerText" style="width: ${COL_VIKT}px;">-</div>`;
 			if (forvaring.system.vikt > 0) {
 				weight = forvaring.system.vikt * forvaring.system.antal;
-				weighthtml = `<div style="width: 50px;">${weight.toFixed(2)}</div>`;
+				weighthtml = `<div class="item-listbox centerText" style="width: ${COL_VIKT}px;">${weight.toFixed(2)}</div>`;
 			}
 
 			let containerWeight = weight;
 
-			// hämta eventuell utrustning som ligger i denna förvaring
-			//const containedItems = (actor?.items || []).filter(item => item.type === "Utrustning" && item.system.installningar.forvaringid == forvaring._id);
+			const containedItems = (actor?.items || []).filter(
+				item => item.type === "Utrustning" && item.system.installningar.forvaringid === forvaring._id
+			);
+			containedItems.sort((a, b) => a.name.localeCompare(b.name));
+
 			let containedItemshtml = ``;
 
-			// for (const item of containedItems) {
-			// 	let weight = item.system.vikt * item.system.antal;
-			// 	containerWeight += weight;
+			for (const item of containedItems) {
+				const itemWeight = Number(item.system.vikt ?? 0) * Number(item.system.antal ?? 0);
+				containerWeight += itemWeight;
 
-			// 	containedItemshtml += `<div>${item.name}</div>`;
-			// }
+				const itemShareHtml = item.system.beskrivning === ""
+					? `<div class="item-listbox weapon-icon"><i class="icon fa-regular fa-share" title="${beskrivningSaknas}"></i></div>`
+					: `<div class="item-listbox weapon-icon"><a class="item-send" title="${skickaBeskrivning}" data-source="description" data-itemid="${item._id}"><i class="icon fa-solid fa-share"></i></a></div>`;
 
-			// beräkna total vikt
-			let totalweighthtml = `<div style="width: 50px;">${containerWeight.toFixed(2)}</div>`;;
+				const itemEditHtml = `<div class="item-listbox weapon-icon"><a class="item-edit" title="${editeraUtrustning}" data-source="utrustning" data-itemid="${item._id}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>`;
+
+				let itemWeightHtml = `<div class="item-listbox centerText" style="width: ${COL_VIKT}px;">-</div>`;
+				if (Number(item.system.vikt ?? 0) > 0) {
+					itemWeightHtml = `<div class="item-listbox centerText" style="width: ${COL_VIKT}px;">${itemWeight.toFixed(2)}</div>`;
+				}
+
+				containedItemshtml += `<div class="item-row container-contents item-listrow">
+					${itemEditHtml}
+					${itemShareHtml}
+					<div class="item-listbox active-icon" aria-hidden="true"></div>
+					<div class="item-listbox draggable container-contents-name" style="width: ${COL_NAMN}px;" data-source="utrustning" data-itemid="${item._id}">${item.name}</div>
+					<div class="item-listbox centerText" style="width: ${COL_ANTAL}px;">
+						<i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="${item._id}"></i>
+						<span class="number-of-text">${item.system.antal}</span>
+						<i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="${item._id}"></i>
+					</div>
+					${itemWeightHtml}
+				</div>`;
+			}
+
+			const totalweighthtml = `<div class="item-listbox centerText" style="width: ${COL_TOTAL}px;">${containerWeight.toFixed(2)}</div>`;
 
 			html += headerhtml + edithtml + descriptionhtml + activehtml + namehtml + numberhtml + weighthtml + totalweighthtml + footerhtml + containedItemshtml;
 		}

@@ -18,7 +18,9 @@ export class SubcombatManager {
     }
 
     static _groupMembers(combat, groupId) {
-        return combat.combatants.contents.filter((c) => (this._flags(c).groupId ?? "main") === groupId);
+        return combat.combatants.contents.filter(
+            (combatant) => (this._flags(combatant).groupId ?? "main") === groupId
+        );
     }
 
     static _newGroupId(combat) {
@@ -50,15 +52,15 @@ export class SubcombatManager {
 
         const validTargets = targetIds
             .map((id) => combat.combatants.get(id))
-            .filter((c) => c && !c.defeated);
+            .filter((combatant) => combatant && !combatant.defeated);
         if (!validTargets.length) return null;
 
         const existingGroupIds = new Set();
         const ownGroup = flags.groupId ?? "main";
         if (ownGroup !== "main") existingGroupIds.add(ownGroup);
-        for (const t of validTargets) {
-            const gid = this._flags(t).groupId ?? "main";
-            if (gid !== "main") existingGroupIds.add(gid);
+        for (const target of validTargets) {
+            const groupIdFromTarget = this._flags(target).groupId ?? "main";
+            if (groupIdFromTarget !== "main") existingGroupIds.add(groupIdFromTarget);
         }
 
         const groupId = existingGroupIds.size ? [...existingGroupIds][0] : this._newGroupId(combat);
@@ -68,7 +70,7 @@ export class SubcombatManager {
             for (const member of this._groupMembers(combat, groupId)) members.set(member.id, member);
         }
         members.set(combatant.id, combatant);
-        for (const t of validTargets) members.set(t.id, t);
+        for (const target of validTargets) members.set(target.id, target);
 
         const totalMembers = members.size;
         if (totalMembers > 5) {
@@ -110,7 +112,7 @@ export class SubcombatManager {
         const groupId = flags.groupId ?? "main";
         if (groupId === "main") return;
 
-        const others = this._groupMembers(combat, groupId).filter((c) => c.id !== combatant.id);
+        const others = this._groupMembers(combat, groupId).filter((member) => member.id !== combatant.id);
 
         await combatant.update({
             flags: {
@@ -125,13 +127,13 @@ export class SubcombatManager {
         });
 
         if (others.length < 2) {
-            const updates = others.map((c) => {
-                const f = this._flags(c);
+            const updates = others.map((member) => {
+                const memberFlags = this._flags(member);
                 return {
-                    _id: c.id,
+                    _id: member.id,
                     flags: {
                         "eon-rpg": {
-                            ...f,
+                            ...memberFlags,
                             groupId: "main",
                             groupType: "main",
                             subcombatRole: null,

@@ -1,3 +1,5 @@
+import { formatT6Pool } from "./apps/eon5-weapon-kroppsbyggnad.js";
+
 export default class DiceHelper {
     static async BeraknaMedelvarde(tarning1, tarning2) {
         let totalTarning = parseInt(tarning1.tvarde) + parseInt(tarning2.tvarde);
@@ -182,11 +184,123 @@ export class DiceRollContainer {
 		this.dicetype = "d6";
 		this.obRoll = true;
         this.actorName = actor.name;
+        /** @type {object|null} flags för ChatMessage (eon-rpg stridsflöde) */
+        this.chatFlags = null;
     }
 }
 
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * @param {number} number
+ * @param {string} dicetype
+ * @param {number} bonus
+ * @param {{ ob?: boolean }} [options]
+ */
+export function buildRollDiceTitle(number, dicetype, bonus, options = {}) {
+    const dt = dicetype.replace("d", "T");
+    const ob = (options.ob && dicetype === "d6") ? game.i18n.localize("eon.roll.ob") : "";
+    const dice = `${ob}${number}${dt}`;
+
+    if (bonus > 0) {
+        return game.i18n.format("eon.roll.slarWithBonus", { dice, bonus });
+    }
+    if (bonus < 0) {
+        return game.i18n.format("eon.roll.slarWithPenalty", { dice, bonus: Math.abs(bonus) });
+    }
+
+    return game.i18n.format("eon.roll.slar", { dice });
+}
+
+/**
+ * @param {number} difficulty
+ * @param {number} result
+ */
+export function buildRollResultText(difficulty, result) {
+    if (!(difficulty > 0)) return "";
+    if (result >= difficulty) {
+        const advantage = Math.floor((result - difficulty) / 5);
+        if (advantage > 0) {
+            return game.i18n.format("eon.roll.successAdvantage", { advantage });
+        }
+        return game.i18n.localize("eon.roll.success");
+    }
+
+    return game.i18n.localize("eon.roll.failure");
+}
+
+/** @param {Actor} actor */
+export function buildBelastningModifierHtml(actor) {
+    const avdrag = actor.system?.berakning?.belastning?.totaltavdrag;
+
+    if (!avdrag || (avdrag.tvarde <= 0 && avdrag.bonus <= 0)) 
+        return "";
+
+    const line = game.i18n.format("eon.roll.modifierLine", {
+        dice: formatT6Pool(avdrag),
+        label: game.i18n.localize("eon.sheets.actor.belastning")
+    });
+
+    return `${line}<br />`;
+}
+
+/** @param {Actor} actor */
+export function buildSmartaModifierHtml(actor) {
+    const smarta = actor.system?.berakning?.svarighet?.smarta;
+
+    if (!smarta || smarta <= 0) 
+        return "";
+
+    const line = game.i18n.format("eon.roll.modifierLine", {
+        dice: `${smarta}T6`,
+        label: game.i18n.localize("eon.sheets.actor.smarta")
+    });
+
+    return `${line}<br />`;
+}
+
+/**
+ * @param {number} count
+ * @param {"RightLeg"|"LeftLeg"|"RightArm"|"LeftArm"} limbKey
+ */
+export function buildWoundInLimbHtml(count, limbKey) {
+    if (!count || count <= 0) return "";
+
+    const limb = game.i18n.localize(`eon.roll.limb${limbKey}`);
+
+    return `${game.i18n.format("eon.roll.woundInLimb", {
+        count,
+        limb,
+        dice: `${count}T6`
+    })}<br />`;
+}
+
+/** @param {Actor} actor */
+export function buildWoundsBodyHtml(actor) {
+    const count = actor.system?.berakning?.svarighet?.antalsar ?? 0;
+
+    if (count <= 0) 
+        return "";
+
+    return `${game.i18n.format("eon.roll.woundsBody", {
+        count,
+        dice: `${count}T6`
+    })}<br />`;
+}
+
+/**
+ * @param {number} count
+ * @param {"RightLeg"|"LeftLeg"|"RightArm"|"LeftArm"} limbKey
+ */
+export function buildWoundIgnoredHtml(count, limbKey) {
+    if (!count || count <= 0) 
+        return "";
+
+    const limb = game.i18n.localize(`eon.roll.limb${limbKey}`);
+    
+    return `${game.i18n.format("eon.roll.woundIgnored", { count, limb })}<br />`;
 }
 
 /* Slår ett antal tärningar */
@@ -283,38 +397,15 @@ export async function RollDice(diceRoll) {
         result = parseInt(bonus);
     }
 
-    dicetype = dicetype.replace("d", "T");
-    let text = `Slår ${number}${dicetype}`;
-
-    if (bonus > 0) {
-        text = `Slår ${number}${dicetype}+${bonus}`;
-    }
-    else if (bonus < 0) {
-        let sbonus = bonus * -1;
-        text = `Slår ${number}${dicetype}-${sbonus}`;
-    }
+    let text = buildRollDiceTitle(number, dicetype, bonus, { ob: obRoll });
 
     if (diceRoll.grundvarde != undefined) {
         if (diceRoll.grundvarde != "") {
             text = `${text} (${diceRoll.grundvarde})`;
         }
-    }    
-
-    if ((difficulty > 0) && (result >= difficulty)) {
-        let advetanges = Math.floor((result - difficulty) / 5);
-
-        if (advetanges > 0) {
-            resulttext = "LYCKAT SLAG (+" + advetanges + " övertag)";
-        }
-        else {
-            resulttext = "LYCKAT SLAG";
-        }
-
-        
     }
-    else if ((difficulty > 0) && (result < difficulty)) {
-        resulttext = "MISSLYCKAT SLAG";
-    }
+
+    resulttext = buildRollResultText(difficulty, result);
 
     const templateData = {
         data: {
@@ -350,10 +441,66 @@ export async function RollDice(diceRoll) {
         content: html,
         rollMode: game.settings.get("core", "rollMode")        
     };
+    if (diceRoll.chatFlags && typeof diceRoll.chatFlags === "object") {
+        chatData.flags = { "eon-rpg": foundry.utils.duplicate(diceRoll.chatFlags) };
+    }
     ChatMessage.applyRollMode(chatData, "roll");
-    ChatMessage.create(chatData);
+    const created = await ChatMessage.create(chatData);
+    if (diceRoll && typeof diceRoll === "object") {
+        diceRoll._createdMessageId = created?.id ?? null;
+    }
 
     return result;
+}
+
+/**
+ * Postar stridsflödesmeddelande med samma tray-mall som tärningsslag.
+ * @param {{ actor?: Actor, title: string, sections?: string[], result?: string, diceTitle?: string, diceresult?: number[]|null, total?: number|null, flags?: object }} options
+ * @returns {Promise<ChatMessage>}
+ */
+export async function postTrayChatMessage({
+    actor,
+    title,
+    sections = [],
+    result = "",
+    diceTitle = "",
+    diceresult = null,
+    total = null,
+    flags = null
+}) {
+    const config = game.EON?.CONFIG ?? CONFIG.EON;
+    const color = game.settings.get("eon-rpg", "diceColor");
+    const templateData = {
+        data: {
+            type: "combatFlow",
+            config,
+            actor,
+            title,
+            sections: sections.filter(Boolean),
+            result,
+            diceTitle,
+            diceresult: Array.isArray(diceresult) ? diceresult : null,
+            total: total != null ? total : null,
+            dicecolor: color
+        }
+    };
+
+    const template = "systems/eon-rpg/templates/dice/roll-template.html";
+    const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
+
+    const chatData = {
+        user: game.user.id,
+        speaker: ChatMessage.getSpeaker({ actor }),
+        content: html,
+        rollMode: game.settings.get("core", "rollMode")
+    };
+
+    if (flags && typeof flags === "object") {
+        chatData.flags = { "eon-rpg": foundry.utils.duplicate(flags) };
+    }
+
+    ChatMessage.applyRollMode(chatData, "roll");
+    return ChatMessage.create(chatData);
 }
 
 export async function SendMessage(actor, config, headline, message) {

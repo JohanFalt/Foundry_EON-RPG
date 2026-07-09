@@ -6,17 +6,17 @@
 
                 <div class="large-main-headline centerText">{{localize object.namn}}</div>
                 <div class="centerText">
-                    Ob{{getDiceValue object.tarningar}}
+                    {{localize "eon.roll.ob"}}{{getDiceValue object.tarningar}}
                 </div>
 
                 {{#if object.harBelastning}}
-                    <div class="centerText">Belastning (-{{getDiceValue object.actor.system.berakning.belastning.totaltavdrag}})</div>
+                    <div class="centerText">{{localize "eon.sheets.actor.belastning"}} (-{{getDiceValue object.actor.system.berakning.belastning.totaltavdrag}})</div>
                 {{/if}}
                 {{#if object.harSmarta}}
-                    <div class="centerText">Smärta (-{{object.actor.system.berakning.svarighet.smarta}}T6)</div>
+                    <div class="centerText">{{localize "eon.sheets.actor.smarta"}} (-{{object.actor.system.berakning.svarighet.smarta}}T6)</div>
                 {{/if}}
                 {{#if object.harSar}}
-                    <div class="centerText">Sår (-{{object.hamtaAntalSar}}T6)</div>
+                    <div class="centerText">{{localize "eon.sheets.actor.sar"}} (-{{object.hamtaAntalSar}}T6)</div>
                 {{/if}}
 
             </div>
@@ -37,14 +37,14 @@
                         <button class="four-column dialog-event-button eventbutton" data-source="bonus" data-action="remove" data-value="1">-1</button>
                     </div>
                 </div>
-                <div class="centerText">Totalt: 
+                <div class="centerText">{{localize "eon.sheets.actor.totalt"}}: 
                     {{#if (lt object.visaTarning.bonus 0)}}
-                        Ob{{object.visaTarning.tvarde}}T6{{object.visaTarning.bonus}}
+                        {{localize "eon.roll.ob"}}{{object.visaTarning.tvarde}}T6{{object.visaTarning.bonus}}
 
                     {{else if (gt object.visaTarning.bonus 0)}}
-                        Ob{{object.visaTarning.tvarde}}T6+{{object.visaTarning.bonus}}
+                        {{localize "eon.roll.ob"}}{{object.visaTarning.tvarde}}T6+{{object.visaTarning.bonus}}
                     {{else}}
-                        Ob{{object.visaTarning.tvarde}}T6
+                        {{localize "eon.roll.ob"}}{{object.visaTarning.tvarde}}T6
                     {{/if}}                    
                 </div>
                 

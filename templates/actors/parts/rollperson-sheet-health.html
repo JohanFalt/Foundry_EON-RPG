@@ -75,7 +75,7 @@
         {{#each EON.CONFIG.kroppsdelar.grund as |kroppsdel key|}}
             <div class="item-row">
                 <div style="width: 75px;">{{localize kroppsdel}}</div>
-                <div class="resource-box" data-value="{{getActorSar ../data key}}" data-name="skada">
+                <div class="resource-box" data-value="{{getActorSar ../actor key}}" data-name="skada">
                     {{#numFromLoop 1 3}}
                         <span class="resource-box resource-value" data-index="{{this}}" data-type="sar" data-value="{{key}}"></span>
                     {{/numFromLoop}}

@@ -1,5 +1,35 @@
-import { DiceRollContainer } from "../dice-helper.js";
-import { RollDice } from "../dice-helper.js";
+import {
+    DiceRollContainer,
+    RollDice,
+    buildBelastningModifierHtml,
+    buildSmartaModifierHtml,
+    buildWoundInLimbHtml,
+    buildWoundsBodyHtml,
+    buildWoundIgnoredHtml
+} from "../dice-helper.js";
+import { CombatAttackFlow } from "../combat-attack-flow.js";
+import CalculateHelper from "../calculate-helper.js";
+
+function isChockOrDodRollTitle(title) {
+    return title === game.i18n.localize("eon.sheets.actor.chockslag")
+        || title === game.i18n.localize("eon.sheets.actor.dodsslag");
+}
+
+function getActorSmarta(actor) {
+    return Number(
+        actor?.system?.berakning?.svarighet?.smarta
+        ?? actor?.system?.skada?.smarta
+        ?? 0
+    );
+}
+
+function getBelastningAvdrag(actor) {
+    const totaltAvdrag = actor?.system?.berakning?.belastning?.totaltavdrag;
+    return {
+        tvarde: Number(totaltAvdrag?.tvarde ?? 0),
+        bonus: Number(totaltAvdrag?.bonus ?? 0)
+    };
+}
 
 export class AttributeRoll {
 
@@ -21,6 +51,10 @@ export class AttributeRoll {
         * @param title - title of the roll
     */
     constructor(actor, type, key, title) {
+        if (CombatAttackFlow.isFolkslagActor(actor)) {
+            actor.system.berakning = CalculateHelper.byggRollBerakning(actor);
+        }
+
         this.actor = actor;
         this.namn = actor.name;
         this.title = title;
@@ -29,28 +63,31 @@ export class AttributeRoll {
         this.close = false;
 
         if ((type == "harleddegenskaper") && ((key == "forflyttning") || (key == "reaktion"))) {
-            if ((actor.system.berakning?.belastning?.totaltavdrag?.tvarde > 0) || (actor.system.berakning?.belastning?.totaltavdrag?.bonus > 0)) {
+            const avdrag = getBelastningAvdrag(actor);
+            if (avdrag.tvarde > 0 || avdrag.bonus > 0) {
                 this.#_harBelastning = true;
-            }            
-        }
-        
-        if ((type == "harleddegenskaper") && ((key == "forflyttning") || (key == "kroppsbyggnad") || (key == "reaktion") || (key == "vaksamhet"))) {
-            if (actor.system.berakning?.svarighet?.smarta > 0) {
-                this.#_harSmarta = true;
-            }            
+            }
         }
 
-        if (((type == "harleddegenskaper") && (key == "forflyttning")) || (title == "Chockslag") || (title == "Dödsslag")) {
+        if ((type == "harleddegenskaper") && ((key == "forflyttning") || (key == "kroppsbyggnad") || (key == "reaktion") || (key == "vaksamhet"))) {
+            if (getActorSmarta(actor) > 0) {
+                this.#_harSmarta = true;
+            }
+        }
+
+        if (((type == "harleddegenskaper") && (key == "forflyttning")) || isChockOrDodRollTitle(title)) {
             if (this.hamtaAntalSar > 0) {
                 this.#_harSar = true;
             }
         }
 
-        this.#_tarningar = actor.system[type][key].totalt;
+        this.#_tarningar = (type === "strid" && key === "anfallForsvar")
+            ? actor.system.strid.anfallForsvar
+            : actor.system[type][key].totalt;
         this.#_grundTarning = this.#_tarningar.tvarde;
-        this.#_grundBonus = this.tarningar.bonus;
+        this.#_grundBonus = this.#_tarningar.bonus;
         this.#_totalTarning = this.#_tarningar.tvarde;
-        this.#_totalBonus = this.#_tarningar.bonus;        
+        this.#_totalBonus = this.#_tarningar.bonus;
     }
 
     get visaTarning() {
@@ -75,27 +112,28 @@ export class AttributeRoll {
         }
 
         if (this.#_harSmarta) {
-            tarning.tvarde = tarning.tvarde - this.actor.system.berakning.svarighet.smarta;
+            tarning.tvarde = tarning.tvarde - getActorSmarta(this.actor);
 
             if (tarning.tvarde < 0) {
                 tarning.tvarde = 0;
                 tarning.bonus = 0;
-            }  
+            }
         }
 
         if (this.#_harSar) {
-            if ((this.title == "Chockslag") || (this.title == "Dödsslag")) {
-                tarning.tvarde = tarning.tvarde - this.actor.system.berakning.svarighet.antalsar;
+            const sar = this.actor.system?.skada?.sar ?? {};
+            if (isChockOrDodRollTitle(this.title)) {
+                tarning.tvarde = tarning.tvarde - this.hamtaAntalSar;
             }
             else {
-                tarning.tvarde = tarning.tvarde - this.actor.system.skada.sar.hogerben;
-                tarning.tvarde = tarning.tvarde - this.actor.system.skada.sar.vansterben;
-            }                
+                tarning.tvarde = tarning.tvarde - Number(sar.hogerben ?? 0);
+                tarning.tvarde = tarning.tvarde - Number(sar.vansterben ?? 0);
+            }
 
             if (tarning.tvarde < 0) {
                 tarning.tvarde = 0;
                 tarning.bonus = 0;
-            }     
+            }
         }
 
         return tarning;
@@ -134,15 +172,18 @@ export class AttributeRoll {
     }
 
     get hamtaAntalSar() {
-        if ((this.actor.type.toLowerCase().replace(" ", "") != "rollperson") && (this.actor.type.toLowerCase().replace(" ", "") != "rollperson5")) {
+        if (!CombatAttackFlow.isFolkslagActor(this.actor)) {
             return 0;
         }
 
-        if ((this.title == "Chockslag") || (this.title == "Dödsslag")) {
-            return this.actor.system.berakning.svarighet.antalsar;
+        const sar = this.actor.system?.skada?.sar ?? {};
+
+        if (isChockOrDodRollTitle(this.title)) {
+            return Number(this.actor.system?.berakning?.svarighet?.antalsar ?? 0)
+                || Object.values(sar).reduce((sum, val) => sum + Number(val ?? 0), 0);
         }
 
-        return this.actor.system.skada?.sar?.hogerben + this.actor.system.skada.sar.vansterben;
+        return Number(sar.hogerben ?? 0) + Number(sar.vansterben ?? 0);
     }
 
     addTicToTarning() {
@@ -210,7 +251,7 @@ export class DialogAttributeRoll extends FormApplication {
             headline = actor.system[roll.type][roll.key].namn;
         }
 
-        this.options.title = `Slå ${headline}`;
+        this.options.title = game.i18n.format("eon.roll.rollTitle", { name: headline });
     }
 
     /** @override */
@@ -289,11 +330,11 @@ export class DialogAttributeRoll extends FormApplication {
             }
         }
         if (dataset?.source == "difficulty") {
-            var e = document.getElementById("difficulty");
+            const difficultyInput = document.getElementById("difficulty");
             let value = "";
 
             if (dataset.value != "clear") {
-                value = e.value + dataset.value;
+                value = difficultyInput.value + dataset.value;
             }            
 
             this.object.svarighet = value;
@@ -311,39 +352,27 @@ export class DialogAttributeRoll extends FormApplication {
             return;
         }
 
-        var info = [];
-        var grundvarde = "";
-        var visadeTarningar = this.object.visaTarning;
-        var description = "";
+        let info = [];
+        let grundvarde = "";
+        const visadeTarningar = this.object.visaTarning;
+        let description = "";
 
         if (this.object.harBelastning) {
-            if (this.actor.system.berakning.belastning.totaltavdrag.bonus == 0) {
-                description += `${this.actor.system.berakning.belastning.totaltavdrag.tvarde}T6 belastning<br />`;
-            }
-            else if (this.actor.system.berakning.belastning.totaltavdrag.bonus > 0) {
-                description += `${this.actor.system.berakning.belastning.totaltavdrag.tvarde}T6+${this.actor.system.berakning.belastning.totaltavdrag.bonus} belastning<br />`;
-            }
-            else {
-                description += `${this.actor.system.berakning.belastning.totaltavdrag.tvarde}T6-${this.actor.system.berakning.belastning.totaltavdrag.bonus} belastning<br />`;
-            }            
+            description += buildBelastningModifierHtml(this.actor);
         }
 
         if (this.object.harSmarta) {
-            description += `${this.actor.system.berakning.svarighet.smarta}T6 smärta<br />`;
+            description += buildSmartaModifierHtml(this.actor);
         }
 
         if (this.object.harSar) {
-            if ((this.object.title == "Chockslag") || (this.object.title == "Dödsslag")) {
-                description += `Har ${this.actor.system.berakning.svarighet.antalsar} sår i kroppen (${this.actor.system.berakning.svarighet.antalsar}T6)<br />`;
+            if (isChockOrDodRollTitle(this.object.title)) {
+                description += buildWoundsBodyHtml(this.actor);
             }
             else {
-                if (this.actor.system.skada.sar.hogerben > 0) {
-                    description += `Har ${this.actor.system.skada.sar.hogerben} sår i höger ben (${this.actor.system.skada.sar.hogerben}T6)<br />`;
-                }
-                if (this.actor.system.skada.sar.vansterben > 0) {
-                    description += `Har ${this.actor.system.skada.sar.vansterben} sår i vänster ben (${this.actor.system.skada.sar.vansterben}T6)<br />`;
-                }
-            }                
+                description += buildWoundInLimbHtml(this.actor.system.skada.sar.hogerben, "RightLeg");
+                description += buildWoundInLimbHtml(this.actor.system.skada.sar.vansterben, "LeftLeg");
+            }
         }
 
         if ((visadeTarningar.tvarde != this.object.grundTarning) || (visadeTarningar.bonus != this.object.grundBonus)) {
@@ -412,15 +441,22 @@ export class SkillRoll {
         * @param actor - the actual actor in question        
     */
     constructor(item, actor) {
+        if (CombatAttackFlow.isFolkslagActor(actor)) {
+            actor.system.berakning = CalculateHelper.byggRollBerakning(actor);
+        }
+
+        const belastningAvdrag = getBelastningAvdrag(actor);
+        const sar = actor?.system?.skada?.sar;
+
         if (item.type == "Färdighet") {
 
             if ((item.system.grupp == "rorelse") && (CONFIG.EON.settings.hinderenceSkillGroupMovement)) { 
-                if ((actor.system.berakning.belastning.totaltavdrag.tvarde > 0) || (actor.system.berakning.belastning.totaltavdrag.bonus > 0)) {
+                if ((belastningAvdrag.tvarde > 0) || (belastningAvdrag.bonus > 0)) {
                     this.#_harBelastning = true;
                 }                
             }
             if ((item.system.attribut == "rorlighet") && (CONFIG.EON.settings.hinderenceAttributeMovement)) { 
-                if ((actor.system.berakning.belastning.totaltavdrag.tvarde > 0) || (actor.system.berakning.belastning.totaltavdrag.bonus > 0)) {
+                if ((belastningAvdrag.tvarde > 0) || (belastningAvdrag.bonus > 0)) {
                     this.#_harBelastning = true;
                 }  
             }
@@ -428,22 +464,22 @@ export class SkillRoll {
 
         if (item.type == "Färdighet") {
             if ((item.system.grupp == "rorelse") || (item.system.grupp == "mystik") || (item.system.grupp == "strid")) {
-                if (actor.system.berakning.svarighet.smarta > 0) {
+                if (getActorSmarta(actor) > 0) {
                     this.#_harSmarta = true;
                 }
             }
         }
 
         if (item.type == "Färdighet") {
-            if (actor.system.skada.sar == undefined) {
+            if (!sar) {
                 this.#_harSar = false;
                 this.#_visaSar = false;
             }
-            else if (((actor.system.skada.sar.hogerben > 0) || (actor.system.skada.sar.vansterben > 0)) && (item.system.grupp == "rorelse")) {
+            else if (((sar.hogerben > 0) || (sar.vansterben > 0)) && (item.system.grupp == "rorelse")) {
                 this.#_harSar = true;
                 this.#_visaSar = true;
             }
-            else if (((actor.system.skada.sar.hogerarm > 0) || (actor.system.skada.sar.vansterarm > 0)) && (item.system.grupp == "strid")) {
+            else if (((sar.hogerarm > 0) || (sar.vansterarm > 0)) && (item.system.grupp == "strid")) {
                 this.#_visaSar = true;
             }
         } 
@@ -452,6 +488,16 @@ export class SkillRoll {
         this.#_grundBonus = item.system.varde["bonus"];
         this.#_totalTarning = item.system.varde["tvarde"];
         this.#_totalBonus = item.system.varde["bonus"];
+
+        if (CombatAttackFlow.isMotstandareActor(actor)
+            && item.type === "Färdighet"
+            && String(item.system?.id ?? "").toLowerCase() === "undvika") {
+            const resolved = CalculateHelper.resolveMotstandareUndvika(actor, item.system.varde);
+            this.#_grundTarning = resolved.tvarde;
+            this.#_grundBonus = resolved.bonus;
+            this.#_totalTarning = resolved.tvarde;
+            this.#_totalBonus = resolved.bonus;
+        }
 
         this.close = false;
         this.actor = actor;
@@ -472,8 +518,9 @@ export class SkillRoll {
         };
 
         if (this.#_harBelastning) {
-            tarning.tvarde = tarning.tvarde - this.actor.system.berakning.belastning.totaltavdrag.tvarde;
-            tarning.bonus = tarning.bonus - this.actor.system.berakning.belastning.totaltavdrag.bonus;
+            const avdrag = getBelastningAvdrag(this.actor);
+            tarning.tvarde = tarning.tvarde - avdrag.tvarde;
+            tarning.bonus = tarning.bonus - avdrag.bonus;
 
             if (tarning.bonus < -1) {
                 tarning.tvarde -= 1;
@@ -488,7 +535,7 @@ export class SkillRoll {
         }
 
         if (this.#_harSmarta) {
-            tarning.tvarde = tarning.tvarde - this.actor.system.berakning.svarighet.smarta;
+            tarning.tvarde = tarning.tvarde - getActorSmarta(this.actor);
 
             if (tarning.tvarde < 0) {
                 tarning.tvarde = 0;
@@ -497,13 +544,14 @@ export class SkillRoll {
         }
 
         if (this.#_harSar) {
+            const sar = this.actor?.system?.skada?.sar ?? {};
             if (this.grupp == "rorelse") {
-                tarning.tvarde = tarning.tvarde - this.actor.system.skada.sar.hogerben;
-                tarning.tvarde = tarning.tvarde - this.actor.system.skada.sar.vansterben;
+                tarning.tvarde = tarning.tvarde - Number(sar.hogerben ?? 0);
+                tarning.tvarde = tarning.tvarde - Number(sar.vansterben ?? 0);
             }         
             if (this.grupp == "strid") {
-                tarning.tvarde = tarning.tvarde - this.actor.system.skada.sar.hogerarm;
-                tarning.tvarde = tarning.tvarde - this.actor.system.skada.sar.vansterarm;
+                tarning.tvarde = tarning.tvarde - Number(sar.hogerarm ?? 0);
+                tarning.tvarde = tarning.tvarde - Number(sar.vansterarm ?? 0);
             }
 
             if (tarning.tvarde < 0) {
@@ -603,12 +651,15 @@ export class DialogSkillRoll extends FormApplication {
         });
     }
 
-    constructor(actor, roll) {
+    constructor(actor, roll, options = {}) {
         super(roll, {submitOnChange: true, closeOnSubmit: false});
         this.actor = actor;     
         this.config = game.EON.CONFIG;      
-        this.isDialog = true;  
-        this.options.title = `Slå ${roll.namn.toLowerCase()}`;
+        this.isDialog = true;
+        this.onRollComplete = typeof options.onRollComplete === "function" ? options.onRollComplete : null;
+        this.onRollCancelled = typeof options.onRollCancelled === "function" ? options.onRollCancelled : null;
+        this.combatContext = options.combatContext ?? null;
+        this.options.title = game.i18n.format("eon.roll.rollTitle", { name: roll.namn.toLowerCase() });
     }
 
     /** @override */
@@ -677,11 +728,11 @@ export class DialogSkillRoll extends FormApplication {
             }
         }
         if (dataset?.source == "difficulty") {
-            var e = document.getElementById("difficulty");
+            const difficultyInput = document.getElementById("difficulty");
             let value = "";
 
             if (dataset.value != "clear") {
-                value = e.value + dataset.value;
+                value = difficultyInput.value + dataset.value;
             }            
 
             this.object.svarighet = value;
@@ -697,65 +748,59 @@ export class DialogSkillRoll extends FormApplication {
             return;
         }
 
-        var info = [];
+        let info = [];
         let description = "";
 
         if (this.object.hantverk) {
-            info.push("Hantverk");
+            info.push(game.i18n.localize("eon.sheets.actor.hantverk"));
         }
         if (this.object.kannetecken) {
-            info.push("Kännetecken");
+            info.push(game.i18n.localize("eon.sheets.actor.kannetecken"));
         }
         if (this.object.expertis) {
-            info.push("Expertis");
+            info.push(game.i18n.localize("eon.sheets.actor.expertis"));
         }
 
         if (this.object.harBelastning) {
-            if (this.actor.system.berakning.belastning.totaltavdrag.bonus == 0) {
-                description += `${this.actor.system.berakning.belastning.totaltavdrag.tvarde}T6 belastning</br >`;
-            }
-            else if (this.actor.system.berakning.belastning.totaltavdrag.bonus > 0) {
-                description += `${this.actor.system.berakning.belastning.totaltavdrag.tvarde}T6+${this.actor.system.berakning.belastning.totaltavdrag.bonus} belastning</br >`;
-            }
-            else {
-                description += `${this.actor.system.berakning.belastning.totaltavdrag.tvarde}T6-${this.actor.system.berakning.belastning.totaltavdrag.bonus} belastning</br >`;
-            } 
+            description += buildBelastningModifierHtml(this.actor);
         }
 
         if (this.object.harSmarta) {
-            description += `${this.actor.system.berakning.svarighet.smarta}T6 smärta</br >`;
+            description += buildSmartaModifierHtml(this.actor);
         }
 
         if (this.object.harSar) {
-            if ((this.actor.system.skada.sar.hogerben > 0) && (this.object.grupp == "rorelse")) {
-                description += `Har ${this.actor.system.skada.sar.hogerben} sår i höger ben (${this.actor.system.skada.sar.hogerben}T6)<br />`;
+            const sar = this.actor?.system?.skada?.sar ?? {};
+            if ((sar.hogerben > 0) && (this.object.grupp == "rorelse")) {
+                description += buildWoundInLimbHtml(sar.hogerben, "RightLeg");
             }
-            if ((this.actor.system.skada.sar.vansterben > 0) && (this.object.grupp == "rorelse")) {
-                description += `Har ${this.actor.system.skada.sar.vansterben} sår i vänster ben (${this.actor.system.skada.sar.vansterben}T6)<br />`;
+            if ((sar.vansterben > 0) && (this.object.grupp == "rorelse")) {
+                description += buildWoundInLimbHtml(sar.vansterben, "LeftLeg");
             }
-            if ((this.actor.system.skada.sar.hogerarm > 0) && (this.object.grupp == "strid")) {
-                description += `Har ${this.actor.system.skada.sar.hogerarm} sår i höger arm (${this.actor.system.skada.sar.hogerarm}T6)<br />`;
+            if ((sar.hogerarm > 0) && (this.object.grupp == "strid")) {
+                description += buildWoundInLimbHtml(sar.hogerarm, "RightArm");
             }
-            if ((this.actor.system.skada.sar.vansterarm > 0) && (this.object.grupp == "strid")) {
-                description += `Har ${this.actor.system.skada.sar.vansterarm} sår i vänster arm (${this.actor.system.skada.sar.vansterarm}T6)<br />`;
+            if ((sar.vansterarm > 0) && (this.object.grupp == "strid")) {
+                description += buildWoundInLimbHtml(sar.vansterarm, "LeftArm");
             }
         }
         if ((this.object.visaSar) && (!this.object.harSar)) {
-            if ((this.actor.system.skada.sar.hogerben > 0) && (this.object.grupp == "rorelse")) {
-                description += `Ignorerar ${this.actor.system.skada.sar.hogerben} sår i höger ben<br />`;
+            const sar = this.actor?.system?.skada?.sar ?? {};
+            if ((sar.hogerben > 0) && (this.object.grupp == "rorelse")) {
+                description += buildWoundIgnoredHtml(sar.hogerben, "RightLeg");
             }
-            if ((this.actor.system.skada.sar.vansterben > 0) && (this.object.grupp == "rorelse")) {
-                description += `Ignorerar ${this.actor.system.skada.sar.vansterben} sår i vänster ben<br />`;
+            if ((sar.vansterben > 0) && (this.object.grupp == "rorelse")) {
+                description += buildWoundIgnoredHtml(sar.vansterben, "LeftLeg");
             }
-            if ((this.actor.system.skada.sar.hogerarm > 0) && (this.object.grupp == "strid")) {
-                description += `Ignorerar ${this.actor.system.skada.sar.hogerarm} sår i höger arm<br />`;
+            if ((sar.hogerarm > 0) && (this.object.grupp == "strid")) {
+                description += buildWoundIgnoredHtml(sar.hogerarm, "RightArm");
             }
-            if ((this.actor.system.skada.sar.vansterarm > 0) && (this.object.grupp == "strid")) {
-                description += `Ignorerar ${this.actor.system.skada.sar.vansterarm} sår i vänster arm<br />`;
+            if ((sar.vansterarm > 0) && (this.object.grupp == "strid")) {
+                description += buildWoundIgnoredHtml(sar.vansterarm, "LeftArm");
             }
         }
 
-        var grundvarde = "";
+        let grundvarde = "";
 
         if ((this.object.visaTarning.tvarde != this.object.grundTarning) || (this.object.visaTarning.bonus != this.object.grundBonus)) {
             if (this.object.grundBonus == 0) {
@@ -771,7 +816,20 @@ export class DialogSkillRoll extends FormApplication {
 
         const roll = new DiceRollContainer(this.actor, this.config);
         roll.typeroll = CONFIG.EON.slag.fardighet;
-        roll.action = this.object.namn;
+
+        if (this.combatContext) {
+            roll.action = game.i18n.format("eon.combatAttack.defenseUndvikaAgainst", {
+                skill: this.object.namn.toLowerCase(),
+                attacker: this.combatContext.attackerName
+            });
+            const attackLine = game.i18n.format("eon.combatAttack.defenseAgainstAttackResult", {
+                result: this.combatContext.attackResult
+            });
+            description += `${attackLine}<br />`;
+        } else {
+            roll.action = this.object.namn;
+        }
+
         roll.number = this.object.visaTarning.tvarde;
         roll.bonus = this.object.visaTarning.bonus;
 
@@ -784,12 +842,24 @@ export class DialogSkillRoll extends FormApplication {
         roll.grundvarde = grundvarde;  
 
         const result = await RollDice(roll);
+        if (this.onRollComplete) {
+            await this.onRollComplete({
+                result: Number(result),
+                dice: this.object.visaTarning,
+                roll
+            });
+        }
         this.close();
     }
 
     /* clicked to close form */
     _closeForm(event) {
+        event?.preventDefault();
         this.object.close = true;
+        if (this.onRollCancelled) {
+            this.onRollCancelled();
+        }
+        this.close();
     }    
 
 }
@@ -878,7 +948,7 @@ export class DialogMysteryRoll extends FormApplication {
         }        
 
         let success = true;
-        var grundvarde = "";
+        let grundvarde = "";
 
         for (const diceroll of this.object.moment) {
             grundvarde = "";
@@ -922,10 +992,10 @@ export class DialogMysteryRoll extends FormApplication {
                 }
             }
 
-            var info = [];
+            let info = [];
 
             if (this.actor.system.berakning.svarighet.smarta > 0) {
-                roll.description = `${this.actor.system.berakning.svarighet.smarta}T6 smärta</br >`;
+                roll.description = buildSmartaModifierHtml(this.actor);
             }
 
             roll.grundvarde = grundvarde; 
@@ -950,6 +1020,8 @@ export class DialogMysteryRoll extends FormApplication {
 
     /* clicked to close form */
     _closeForm(event) {
+        event?.preventDefault();
         this.object.close = true;
-    }    
+        this.close();
+    }
 }

@@ -59,23 +59,16 @@ export class EonActor extends Actor {
 EonActor.createDialog = function (data = {}, createOptions = [], options = {}) {
   // Add your custom types or UI modifications
   
-  const types = ["Rollperson", "Rollperson5", "Varelse"];
-  options.types = types;
-
-  //options.types = ["white", "listed", "types"];
-
   const version = game.settings.get("eon-rpg", "bookEon");
 
   if (version === "eon4") {
+    options.types = ["Rollperson", "Varelse"];
     data.type = data.type || "Rollperson";
-  }
-
-  if (version === "eon5") {
+  } 
+  else {
+    options.types = ["Rollperson5", "Motstandare5", "Varelse"];
     data.type = data.type || "Rollperson5";
-  }  
-
-  // Optionally log to confirm this runs
-  console.log("Custom createDialog triggered for EonActor");
+  }
 
   // Call the original method from the base Actor class
   return Actor.createDialog.call(this, data, createOptions, options);

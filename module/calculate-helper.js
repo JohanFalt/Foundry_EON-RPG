@@ -1,4 +1,6 @@
 import DiceHelper from "./dice-helper.js";
+import { harleddT6AttributTillAttributVarde } from "./apps/ccw/ccw-fardighet-rules.js";
+import { getGrundrustningOchGrundskadaFromKroppsbyggnadVarde } from "./apps/eon5-kroppsbyggnad-derived.js";
 
 export default class CalculateHelper {
     /**
@@ -14,20 +16,95 @@ export default class CalculateHelper {
     }
 
     /**
+     * Eon 5-rollperson, motståndare eller annan aktör med installningar.eon === "eon5".
+     * @param {Actor|object} actorOrData
+     */
+    static isEon5Actor(actorOrData) {
+        if (!actorOrData) return false;
+        if (actorOrData.system?.installningar?.eon === "eon5") return true;
+        const type = (actorOrData.type ?? "").toLowerCase().replace(/\s/g, "");
+        return type === "rollperson5" || type === "motstandare5";
+    }
+
+    /**
+     * Eon 5: grundrustning och grundskada från kroppsbyggnad (tabell i regelboken).
+     * @param {object} actorData duplicerad aktördata med .system
+     */
+    static async beraknaGrundrustningOchGrundskadaEon5(actorData) {
+        if (!CalculateHelper.isEon5Actor(actorData)) return;
+
+        const harleddegenskaper = actorData.system?.harleddegenskaper;
+        const kroppsbyggnad = harleddegenskaper?.kroppsbyggnad;
+        if (!harleddegenskaper || !kroppsbyggnad) return;
+
+        if (!kroppsbyggnad.totalt || typeof kroppsbyggnad.totalt !== "object") {
+            kroppsbyggnad.totalt = await CalculateHelper.BeraknaTotaltVarde(kroppsbyggnad);
+        }
+
+        let kroppsbyggnadAttributvarde = harleddT6AttributTillAttributVarde(kroppsbyggnad.totalt);
+        if (kroppsbyggnadAttributvarde < 4) {
+            kroppsbyggnadAttributvarde = 4;
+        }
+
+        const kroppsbyggnadTabell = getGrundrustningOchGrundskadaFromKroppsbyggnadVarde(kroppsbyggnadAttributvarde);
+        const grundrustning = harleddegenskaper.grundrustning;
+        const grundskada = harleddegenskaper.grundskada;
+
+        if (grundrustning) {
+            const rustningFranTabell = kroppsbyggnadTabell.rustning;
+            if (!grundrustning.bonuslista?.length) {
+                grundrustning.varde = rustningFranTabell;
+                grundrustning.totalt = rustningFranTabell;
+            } else {
+                grundrustning.varde = rustningFranTabell;
+                grundrustning.totalt = await CalculateHelper.BeraknaTotaltVarde(grundrustning);
+            }
+        }
+
+        if (!grundskada?.grund) return;
+
+        grundskada.bonuslista = grundskada.bonuslista ?? [];
+        grundskada.grund.tvarde = kroppsbyggnadTabell.grundskada.tvarde;
+        grundskada.grund.bonus = kroppsbyggnadTabell.grundskada.bonus;
+
+        if (grundskada.modifierare) {
+            grundskada.grund.tvarde += parseInt(grundskada.modifierare.tvarde ?? 0, 10) || 0;
+            grundskada.grund.bonus += parseInt(grundskada.modifierare.bonus ?? 0, 10) || 0;
+        }
+
+        const grundskadaTotalt = await CalculateHelper.BeraknaTotaltVarde(grundskada);
+        if (grundskadaTotalt && typeof grundskadaTotalt === "object") {
+            grundskada.totalt = grundskadaTotalt;
+        }
+    }
+
+    /**
+     * Efter ändring av härledda attribut — uppdaterar beroende värden per version.
+     * @param {object} actorData
+     */
+    static async efterHarleddAttributAndring(actorData) {
+        if (CalculateHelper.isEon5Actor(actorData)) {
+            await CalculateHelper.beraknaGrundrustningOchGrundskadaEon5(actorData);
+        } else if (actorData.type?.toLowerCase().replace(/\s/g, "") === "rollperson") {
+            await CalculateHelper.BeraknaHarleddEgenskaper(actorData);
+        }
+    }
+
+    /**
      * Ordinarie Eon: +4 bonus → +1 tärning (obegränsat antal tärningar).
      */
     static _normaliseraTarningBonusOrdinarie(totalTarning, totalBonus) {
-        let t = totalTarning;
-        let b = totalBonus;
-        while (b > 3) {
-            t += 1;
-            b -= 4;
+        let tarning = totalTarning;
+        let bonus = totalBonus;
+        while (bonus > 3) {
+            tarning += 1;
+            bonus -= 4;
         }
-        while (b < -1 && t > 0) {
-            t -= 1;
-            b += 4;
+        while (bonus < -1 && tarning > 0) {
+            tarning -= 1;
+            bonus += 4;
         }
-        return { tvarde: t, bonus: b };
+        return { tvarde: tarning, bonus };
     }
 
     /**
@@ -35,21 +112,21 @@ export default class CalculateHelper {
      * Bonus → tärning bara medan tärningar < 6.
      */
     static _normaliseraVarelseEon4Grundegenskap(totalTarning, totalBonus) {
-        let t = totalTarning;
-        let b = totalBonus;
-        while (b > 3 && t < 6) {
-            t += 1;
-            b -= 4;
+        let tarning = totalTarning;
+        let bonus = totalBonus;
+        while (bonus > 3 && tarning < 6) {
+            tarning += 1;
+            bonus -= 4;
         }
-        while (b < -1 && t > 0) {
-            t -= 1;
-            b += 4;
+        while (bonus < -1 && tarning > 0) {
+            tarning -= 1;
+            bonus += 4;
         }
-        while (t > 6) {
-            t -= 1;
-            b += 4;
+        while (tarning > 6) {
+            tarning -= 1;
+            bonus += 4;
         }
-        return { tvarde: t, bonus: b };
+        return { tvarde: tarning, bonus };
     }
 
     /**
@@ -146,11 +223,13 @@ export default class CalculateHelper {
             actorData.system.skada.infektion = 0;
         }
 
-        const rustning = actorData.items.filter(rustning => rustning.type === "Rustning" && rustning.system.installningar.buren);
+        const burnaRustningar = actorData.items.filter(
+            (item) => item.type === "Rustning" && item.system.installningar.buren
+        );
         let rustningBelastning = 0;
-            
-        for (const i of rustning) {
-            rustningBelastning += i.system.belastning;
+
+        for (const rustning of burnaRustningar) {
+            rustningBelastning += rustning.system.belastning;
         }
 
         const grundUtmattningRustning = this._beraknaRustningBelastning(rustningBelastning, actorData.system.installningar.eon);
@@ -163,6 +242,8 @@ export default class CalculateHelper {
         if (actorData.system.skada.utmattning.varde < actorData.system.skada.utmattning.grund) {
             actorData.system.skada.utmattning.varde = parseInt(actorData.system.skada.utmattning.grund);
         }
+
+        await CalculateHelper.beraknaGrundrustningOchGrundskadaEon5(actorData);
     }
 
     static async BeraknaHarleddEgenskaper(actorData) {
@@ -443,5 +524,167 @@ export default class CalculateHelper {
                !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
     }
 
-    
+    /**
+     * Beräknar tillfällig rollkontext (smärta, sår, belastning) för folkslagsaktörer.
+     * @param {Actor} actor
+     */
+    static byggRollBerakning(actor) {
+        const skada = actor.system?.skada ?? {};
+        const sar = skada.sar ?? {};
+        let antalsar = 0;
+
+        for (const kroppsdel of Object.keys(sar)) {
+            antalsar += Number(sar[kroppsdel] ?? 0);
+        }
+
+        let rustningBelastning = 0;
+        let vapenVikt = 0;
+        let utrustningVikt = 0;
+
+        for (const item of actor.items ?? []) {
+            if (item.type === "Rustning" && item.system?.installningar?.buren) {
+                rustningBelastning += Number(item.system?.belastning ?? 0);
+            }
+            if (CONFIG.EON?.settings?.weightRules && item.system?.installningar?.buren) {
+                if (item.type === "Närstridsvapen" || item.type === "Avståndsvapen" || item.type === "Sköld") {
+                    vapenVikt += Number(item.system?.vikt ?? 0);
+                }
+                if (item.type === "Utrustning" || item.type === "Valuta") {
+                    utrustningVikt += Number(item.system?.vikt ?? 0) * Number(item.system?.antal ?? 1);
+                }
+            }
+        }
+
+        const eon = actor.system?.installningar?.eon ?? "eon5";
+        const belastning = {
+            vapen: Math.round(vapenVikt),
+            utrustning: Math.round(utrustningVikt),
+            rustning: rustningBelastning,
+            riddjur: 0
+        };
+
+        const totalVarde = CONFIG.EON?.settings?.weightRules
+            ? belastning.vapen + belastning.rustning + belastning.utrustning
+            : belastning.rustning;
+
+        belastning.totaltavdrag = CalculateHelper.BeraknaBelastningAvdrag(totalVarde, eon);
+
+        return {
+            utmattning: { perrunda: Number(skada.blodning ?? 0) },
+            svarighet: {
+                smarta: Number(skada.smarta ?? 0),
+                antalsar
+            },
+            belastning
+        };
+    }
+
+    /**
+     * @param {{ tvarde?: number, bonus?: number }|null|undefined} ob
+     * @returns {{ tvarde: number, bonus: number }}
+     */
+    static normaliseraOb(ob) {
+        const antalTarningar = Number.parseInt(ob?.tvarde ?? 0, 10) || 0;
+        const bonus = Number.parseInt(ob?.bonus ?? 0, 10) || 0;
+        return CalculateHelper._normaliseraTarningBonusOrdinarie(antalTarningar, bonus);
+    }
+
+    /**
+     * Jämförbar rang för tärnings-Ob (högre tärning, sedan högre bonus).
+     * @param {{ tvarde?: number, bonus?: number }} ob
+     * @returns {number}
+     */
+    static tarningObRank(ob) {
+        const normaliserat = CalculateHelper.normaliseraOb(ob);
+        return normaliserat.tvarde * 4 + normaliserat.bonus;
+    }
+
+    /**
+     * Returnerar det högre av två Ob-värden.
+     * @param {{ tvarde?: number, bonus?: number }|null|undefined} a
+     * @param {{ tvarde?: number, bonus?: number }|null|undefined} b
+     * @returns {{ tvarde: number, bonus: number }}
+     */
+    static hogreTarningOb(a, b) {
+        const normaliseratA = CalculateHelper.normaliseraOb(a);
+        const normaliseratB = CalculateHelper.normaliseraOb(b);
+        return CalculateHelper.tarningObRank(normaliseratA) >= CalculateHelper.tarningObRank(normaliseratB)
+            ? normaliseratA
+            : normaliseratB;
+    }
+
+    /** @param {Actor} actor */
+    static motstandareAnfallForsvar(actor) {
+        return CalculateHelper.normaliseraOb(actor?.system?.strid?.anfallForsvar);
+    }
+
+    /**
+     * Motståndare: träffa med vapen = max(stridsfärdighet, anfall & försvar).
+     * @param {Actor} actor
+     * @param {{ tvarde?: number, bonus?: number }|null|undefined} skillVarde
+     * @returns {{ varde: { tvarde: number, bonus: number }, useAnfallForsvar: boolean }}
+     */
+    static resolveMotstandareStridTraffa(actor, skillVarde) {
+        const anfallForsvar = CalculateHelper.motstandareAnfallForsvar(actor);
+        if (!skillVarde) {
+            return { varde: anfallForsvar, useAnfallForsvar: true };
+        }
+        const normaliseradFardighet = CalculateHelper.normaliseraOb(skillVarde);
+        if (CalculateHelper.tarningObRank(normaliseradFardighet) > CalculateHelper.tarningObRank(anfallForsvar)) {
+            return { varde: normaliseradFardighet, useAnfallForsvar: false };
+        }
+        return { varde: anfallForsvar, useAnfallForsvar: true };
+    }
+
+    /**
+     * Motståndare: undvika = max(undvika-färdighet, anfall & försvar).
+     * @param {Actor} actor
+     * @param {{ tvarde?: number, bonus?: number }|null|undefined} skillVarde
+     * @returns {{ tvarde: number, bonus: number }}
+     */
+    static resolveMotstandareUndvika(actor, skillVarde) {
+        const anfallForsvar = CalculateHelper.motstandareAnfallForsvar(actor);
+        if (!skillVarde) return anfallForsvar;
+        return CalculateHelper.hogreTarningOb(skillVarde, anfallForsvar);
+    }
+
+    /**
+     * Grundskada för vapenrullning — använder totalt om det finns, annars beräknar från grund/modifierare.
+     * @param {Actor|object} actorOrData
+     * @param {{ tvarde?: number, bonus?: number }|null|undefined} [cachedTotalt]
+     * @returns {{ tvarde: number, bonus: number }}
+     */
+    static grundskadaTotaltForRoll(actorOrData, cachedTotalt = null) {
+        if (cachedTotalt?.tvarde !== undefined) {
+            return CalculateHelper.normaliseraOb(cachedTotalt);
+        }
+
+        const grundskada = actorOrData?.system?.harleddegenskaper?.grundskada;
+        if (!grundskada) {
+            return { tvarde: 0, bonus: 0 };
+        }
+
+        if (grundskada.totalt && typeof grundskada.totalt === "object" && grundskada.totalt.tvarde !== undefined) {
+            return CalculateHelper.normaliseraOb(grundskada.totalt);
+        }
+
+        if (!grundskada.grund) {
+            return { tvarde: 0, bonus: 0 };
+        }
+
+        let totalTarning = Number.parseInt(grundskada.grund.tvarde ?? 0, 10) || 0;
+        let totalBonus = Number.parseInt(grundskada.grund.bonus ?? 0, 10) || 0;
+
+        if (grundskada.modifierare) {
+            totalTarning += Number.parseInt(grundskada.modifierare.tvarde ?? 0, 10) || 0;
+            totalBonus += Number.parseInt(grundskada.modifierare.bonus ?? 0, 10) || 0;
+        }
+
+        for (const bonus of grundskada.bonuslista ?? []) {
+            totalTarning += Number.parseInt(bonus.tvarde ?? 0, 10) || 0;
+            totalBonus += Number.parseInt(bonus.bonus ?? 0, 10) || 0;
+        }
+
+        return CalculateHelper._normaliseraTarningBonusOrdinarie(totalTarning, totalBonus);
+    }
 }

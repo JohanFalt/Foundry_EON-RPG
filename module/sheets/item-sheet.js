@@ -34,7 +34,7 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		this.isPC = false;
 
 		if (this.actor != undefined) {
-			if ((this.actor.type.toLowerCase().replace(" ", "") == "rollperson") || (this.actor.type.toLowerCase().replace(" ", "") == "rollperson5")) {
+			if ((this.actor.type.toLowerCase().replace(" ", "") == "rollperson") || (this.actor.type.toLowerCase().replace(" ", "") == "rollperson5") || (this.actor.type.toLowerCase().replace(" ", "") == "motstandare5")) {
 				this.isPC = true;
 			}
 		}
@@ -194,15 +194,19 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 				}
 			}
 			if ((this.item.type.toLowerCase() == "närstridsvapen") || (this.item.type.toLowerCase() == "avståndsvapen")) {
-				let egenskaper = this.actor.items.filter((i) => (i.type.toLowerCase() === "egenskap") && (i.system.installningar?.vapen));
+				let egenskaper = this.actor.items.filter(
+					(item) => item.type.toLowerCase() === "egenskap" && item.system.installningar?.vapen
+				);
 				let lista = [];
-				
-				for (const i in egenskaper) {
-					let found = this.item.system.egenskaper.filter((egenskap) => (egenskap._id == egenskaper[i]._id));
+
+				for (const actorEgenskap of egenskaper) {
+					let found = this.item.system.egenskaper.filter(
+						(egenskap) => egenskap._id == actorEgenskap._id
+					);
 
 					if (found.length == 0) {
-						lista.push(egenskaper[i]);
-					} 
+						lista.push(actorEgenskap);
+					}
 				}
 				
 				data.listData.vapenegenskaper = lista;
@@ -227,7 +231,10 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 
 		if (this.item.type.toLowerCase() === "rustning") {
 			const reduction = data.item.system.belastning_reduction || 0;
-			const baseWeight = data.item.system.kroppsdel.reduce((sum, del) => sum + (del.belastning || 0), 0);
+			const baseWeight = data.item.system.kroppsdel.reduce(
+				(sum, kroppsdel) => sum + (kroppsdel.belastning || 0),
+				0
+			);
 			data.item.system.belastning = Math.max(0, baseWeight - reduction);
 			
 			if (data.system) {
@@ -286,6 +293,10 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		html
 			.find(".item-pull")
 			.click(this._onItemPull.bind(this));
+
+		html
+			.find(".weapon-count")
+			.click(this._onWeaponCountChange.bind(this));
 
 		html
 			.find(".skill-improve")
@@ -720,6 +731,31 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		this.render();
 	}
 
+	async _onWeaponCountChange(event) {
+		event.preventDefault();
+
+		if (!this.actor) return;
+
+		const element = event.currentTarget;
+		const dataset = element.dataset;
+		const itemId = dataset.itemid;
+		const action = dataset.action;
+
+		const item = this.actor.items.get(itemId);
+		if (!item) return;
+
+		const itemData = item.toObject();
+
+		if (action === "increase") {
+			itemData.system.antal += 1;
+		} else if (action === "decrease" && itemData.system.antal > 0) {
+			itemData.system.antal -= 1;
+		}
+
+		await item.update(itemData);
+		this.render();
+	}
+
 	async _ticValueUp(event) {
 		event.preventDefault();
 		const element = event.currentTarget;
@@ -960,8 +996,8 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 				for (const egenskap of itemData.system.egenskaper) {
 					if (egenskap.namn == dataset.name) {
 						const component = "egenskap_" + dataset.name;
-        				var e = document.getElementById(component);
-						egenskap.varde = parseInt(e.value);
+        				const egenskapInput = document.getElementById(component);
+						egenskap.varde = parseInt(egenskapInput.value);
 					}
 
 					egenskaper.push(egenskap);
@@ -989,22 +1025,22 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		const property = dataset.egenskap;
 
 		const component = "object." + property + "_" + key;
-        var e = document.getElementById(component);
+        const momentInput = document.getElementById(component);
 
-        var newvalue = "";
-		
+        let newValue = "";
+
 		if (property == "svarighet") {
-			newvalue = parseInt(e.value);
+			newValue = parseInt(momentInput.value);
 		}
 		else if (property == "huvud") {
-			newvalue = !(e.value == "true");
+			newValue = !(momentInput.value == "true");
 		}
 		else {
-			newvalue = e.value;
+			newValue = momentInput.value;
 		}
 
 		const itemData = foundry.utils.duplicate(this.item);
-		itemData.system.moment[key][property] = newvalue;
+		itemData.system.moment[key][property] = newValue;
 		await this.item.update(itemData);
 
 		this.render();
@@ -1146,23 +1182,23 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 				namn = rustning.namn;
 			}
 
-			for (const del of itemData.system.kroppsdel) {
-				if (del.kroppsdel == kroppsdel) {
-					del.material = rustningsmall;
-					del.hugg = hugg;
-					del.kross = kross;
-					del.stick = stick;
-					del.belastning = belastning;
+			for (const kroppsdelRad of itemData.system.kroppsdel) {
+				if (kroppsdelRad.kroppsdel == kroppsdel) {
+					kroppsdelRad.material = rustningsmall;
+					kroppsdelRad.hugg = hugg;
+					kroppsdelRad.kross = kross;
+					kroppsdelRad.stick = stick;
+					kroppsdelRad.belastning = belastning;
 				}
 
-				itemData.system.belastning += del.belastning;
-				if (del.material != "") {
+				itemData.system.belastning += kroppsdelRad.belastning;
+				if (kroppsdelRad.material != "") {
 					if (itemData.system.tacker == "") {
-						itemData.system.tacker = game.i18n.localize(del.namn);
+						itemData.system.tacker = game.i18n.localize(kroppsdelRad.namn);
 					}
 					else {
-						itemData.system.tacker += ", " + game.i18n.localize(del.namn).toLowerCase();
-					}					
+						itemData.system.tacker += ", " + game.i18n.localize(kroppsdelRad.namn).toLowerCase();
+					}
 				}
 			}
 
@@ -1427,7 +1463,10 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		itemData.system.belastning_reduction = newReduction;
 		
 		// Calculate total belastning
-		const baseWeight = this.item.system.kroppsdel.reduce((sum, del) => sum + (del.belastning || 0), 0);
+		const baseWeight = this.item.system.kroppsdel.reduce(
+			(sum, kroppsdel) => sum + (kroppsdel.belastning || 0),
+			0
+		);
 		itemData.system.belastning = Math.max(0, baseWeight - newReduction);
 		
 		// Update both the item and the display

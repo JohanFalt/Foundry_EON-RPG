@@ -29,8 +29,8 @@ export class EonCombatantPortrait {
     }
 
     get roleLabel() {
-        if (this.role === "attacker") return "Anfallare";
-        if (this.role === "defender") return "Försvarare";
+        if (this.role === "attacker") return "eon.dialogs.anfallare";
+        if (this.role === "defender") return "eon.dialogs.forsvarare";
         return "";
     }
 
@@ -75,6 +75,7 @@ export class EonCombatantPortrait {
             id: this.combatant?.id,
             name: this.combatant?.name ?? actor?.name ?? "Okänd",
             img: this.combatant?.img ?? actor?.img ?? "icons/svg/mystery-man.svg",
+            hasActor: Boolean(actor),
             phase: this.phase,
             phaseLabel,
             role: this.role,

@@ -23,7 +23,8 @@ export default class Eon5Rollperson extends foundry.abstract.DataModel {
 
         schema.installningar = new fields.SchemaField({
             ...installningar(),
-            eon: new fields.StringField({required: true, initial: "eon5"})
+            eon: new fields.StringField({required: true, initial: "eon5"}),
+            motstandare: new fields.BooleanField({required: true, initial: false})
         });
 
         // schema.grundegenskaper = new fields.SchemaField({
@@ -63,6 +64,10 @@ export default class Eon5Rollperson extends foundry.abstract.DataModel {
 
         schema.strid = new fields.SchemaField({
             vapenarm: new fields.StringField({required: true, nullable: false, initial: ""}),
+            anfallForsvar: new fields.SchemaField({
+                tvarde: new fields.NumberField({...valueInteger, initial: 0}),
+                bonus: new fields.NumberField({...bonusInteger})
+            }),
             lakningstakt: new fields.SchemaField({
                 varde: new fields.NumberField({...valueInteger}),
                 totalt: new fields.NumberField({...valueInteger}),
@@ -137,6 +142,9 @@ export default class Eon5Rollperson extends foundry.abstract.DataModel {
             titel: new fields.StringField({ required: true, nullable: false, initial: "" }),
             utseende: new fields.HTMLField(),
             relationer: new fields.HTMLField(),
+            tackmantel: new fields.StringField({required: true, nullable: false, initial: ""}),
+            hemlighet: new fields.StringField({required: true, nullable: false, initial: ""}),
+            agenda: new fields.StringField({required: true, nullable: false, initial: ""}),
             /** Fria anteckningar (motsvarar rubriken Anteckningar på bio-fliken). */
             beskrivning: new fields.HTMLField(),
         });
@@ -157,38 +165,38 @@ export default class Eon5Rollperson extends foundry.abstract.DataModel {
     }
 
     static migrateData(source) {
-        const bg = source.bakgrund ?? (source.bakgrund = {});
+        const bakgrund = source.bakgrund ?? (source.bakgrund = {});
         const kretsTom = !Array.isArray(source.kretsar) || source.kretsar.length === 0;
-        if (kretsTom && Array.isArray(bg.kretsar) && bg.kretsar.length) {
-            source.kretsar = foundry.utils.duplicate(bg.kretsar);
+        if (kretsTom && Array.isArray(bakgrund.kretsar) && bakgrund.kretsar.length) {
+            source.kretsar = foundry.utils.duplicate(bakgrund.kretsar);
         }
-        if ("kretsar" in bg) delete bg.kretsar;
+        if ("kretsar" in bakgrund) delete bakgrund.kretsar;
         const foljeTom = !Array.isArray(source.foljeslagare) || source.foljeslagare.length === 0;
-        if (foljeTom && Array.isArray(bg.foljeslagare) && bg.foljeslagare.length) {
-            source.foljeslagare = foundry.utils.duplicate(bg.foljeslagare);
+        if (foljeTom && Array.isArray(bakgrund.foljeslagare) && bakgrund.foljeslagare.length) {
+            source.foljeslagare = foundry.utils.duplicate(bakgrund.foljeslagare);
         }
-        if ("foljeslagare" in bg) delete bg.foljeslagare;
+        if ("foljeslagare" in bakgrund) delete bakgrund.foljeslagare;
 
-        if (Array.isArray(bg.doktrinRader) && bg.doktrinRader.length) {
-            const fromArr = bg.doktrinRader
-                .map((r) => (r?.beskrivning ?? "").toString().trim())
+        if (Array.isArray(bakgrund.doktrinRader) && bakgrund.doktrinRader.length) {
+            const doktrinFranRader = bakgrund.doktrinRader
+                .map((rad) => (rad?.beskrivning ?? "").toString().trim())
                 .filter(Boolean)
                 .join("\n");
-            if (fromArr) {
-                const cur = (bg.doktriner ?? "").toString().trim();
-                bg.doktriner = cur ? `${cur}\n${fromArr}` : fromArr;
+            if (doktrinFranRader) {
+                const befintligDoktriner = (bakgrund.doktriner ?? "").toString().trim();
+                bakgrund.doktriner = befintligDoktriner ? `${befintligDoktriner}\n${doktrinFranRader}` : doktrinFranRader;
             }
-            delete bg.doktrinRader;
+            delete bakgrund.doktrinRader;
         }
-        const d1 = (bg.doktrin1 ?? "").toString().trim();
-        const d2 = (bg.doktrin2 ?? "").toString().trim();
-        if (d1 || d2) {
-            const legacy = [d1, d2].filter(Boolean).join("\n");
-            const cur = (bg.doktriner ?? "").toString().trim();
-            bg.doktriner = cur ? `${cur}\n${legacy}` : legacy;
+        const doktrin1 = (bakgrund.doktrin1 ?? "").toString().trim();
+        const doktrin2 = (bakgrund.doktrin2 ?? "").toString().trim();
+        if (doktrin1 || doktrin2) {
+            const legacy = [doktrin1, doktrin2].filter(Boolean).join("\n");
+            const befintligDoktriner = (bakgrund.doktriner ?? "").toString().trim();
+            bakgrund.doktriner = befintligDoktriner ? `${befintligDoktriner}\n${legacy}` : legacy;
         }
-        delete bg.doktrin1;
-        delete bg.doktrin2;
+        delete bakgrund.doktrin1;
+        delete bakgrund.doktrin2;
 
         let version310 = CompareVersion(source.installningar?.version, "3.1.0");
 

@@ -2,6 +2,8 @@
  * Inbyggd tärningsbricka och grafikinställningar (tidigare modulen eon-dice-roller).
  */
 
+import { buildRollDiceTitle } from "../dice-helper.js";
+
 const EON_DICE_TEMPLATES = {
     tray: "systems/eon-rpg/templates/dice/tray.html",
     roll: "systems/eon-rpg/templates/dice/roll-template.html",
@@ -420,11 +422,7 @@ async function rollDice(number, bonus, type, obRollActive) {
         result += parseInt(bonus, 10);
     }
 
-    const dicetypeLabel = type.replace("d", "T");
-    let text = `Slår ${number}${dicetypeLabel}`;
-
-    if (bonus > 0) text = `Slår ${number}${dicetypeLabel}+${bonus}`;
-    else if (bonus < 0) text = `Slår ${number}${dicetypeLabel}${bonus}`;
+    const text = buildRollDiceTitle(number, type, bonus, { ob: obRollActive });
 
     const templateData = {
         data: {
@@ -433,7 +431,7 @@ async function rollDice(number, bonus, type, obRollActive) {
             dicecolor: game.settings.get("eon-rpg", "diceColor"),
             isrollable: canRoll,
             type: "general",
-            action: "Slår generella tärningar",
+            action: game.i18n.localize("eon.roll.genericDiceAction"),
             title: text,
             diceresult: diceList,
             result,

@@ -1,5 +1,4 @@
-import { DiceRollContainer } from "../dice-helper.js";
-import { RollDice } from "../dice-helper.js";
+import { DiceRollContainer, RollDice, buildSmartaModifierHtml } from "../dice-helper.js";
 import CalculateHelper from "../calculate-helper.js";
 
 export class SpellRoll {
@@ -480,13 +479,13 @@ export class DialogSpellRoll extends FormApplication {
             return;
         }        
 
-        var info = [];
-        var grundvarde = "";
-        var visadeTarningar = this.object.visaTarning;
-        var description = "";
+        let info = [];
+        let grundvarde = "";
+        const visadeTarningar = this.object.visaTarning;
+        let description = "";
 
         if (this.object.harSmarta) {
-            description += `${this.actor.system.berakning.svarighet.smarta}T6 smärta<br />`;
+            description += buildSmartaModifierHtml(this.actor);
         }
 
         if ((visadeTarningar.tvarde != this.object.grundTarning) || (visadeTarningar.bonus != this.object.grundBonus)) {
@@ -542,6 +541,8 @@ export class DialogSpellRoll extends FormApplication {
 
     /* clicked to close form */
     _closeForm(event) {
+        event?.preventDefault();
         this.object.close = true;
-    }    
+        this.close();
+    }
 }

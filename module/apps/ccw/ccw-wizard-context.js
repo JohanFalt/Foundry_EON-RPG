@@ -102,9 +102,9 @@ export async function buildCharacterCreationWizardContext(wizard, context, _opti
         tabellOptionsHtml: buildHandelseTabellOptionsHtml(row?.tabell ?? "", index)
     }));
 
-    const fardighetFd = wizardDraft.fardighetFordelning ?? {};
+    const fardighetFordelning = wizardDraft.fardighetFordelning ?? {};
     context.fardighetFordelningSections = ENHETER_FARDIGHET_GRUPP_KEYS.map((fardighetsGruppKey) => {
-        const rows = Array.isArray(fardighetFd[fardighetsGruppKey]) ? [...fardighetFd[fardighetsGruppKey]] : [];
+        const rows = Array.isArray(fardighetFordelning[fardighetsGruppKey]) ? [...fardighetFordelning[fardighetsGruppKey]] : [];
         const isOvrigWizardTyp = WIZARD_OVRIGA_ENHET_KEYS.includes(fardighetsGruppKey);
         const isMystikFardighetGrupp = fardighetsGruppKey === "mystik";
         return {
@@ -115,8 +115,8 @@ export async function buildCharacterCreationWizardContext(wizard, context, _opti
             isMystikFardighetGrupp,
             rows: rows.map((row, index) => {
                 const itemIdStr = (row?.itemId ?? "").toString().trim();
-                const inkR = !!(row?.inkompetent === true || row?.inkompetent === "true");
-                const blockR = !!(row?.blockering === true || row?.blockering === "true");
+                const inkompetent = !!(row?.inkompetent === true || row?.inkompetent === "true");
+                const blockering = !!(row?.blockering === true || row?.blockering === "true");
                 const itemIdsTakenByOtherRows = new Set();
                 for (let peerIndex = 0; peerIndex < rows.length; peerIndex += 1) {
                     if (peerIndex === index) continue;
@@ -134,8 +134,8 @@ export async function buildCharacterCreationWizardContext(wizard, context, _opti
                     poang: row?.poang ?? "0",
                     grundvarde: row?.grundvarde ?? "0",
                     talang: !!(row?.talang === true || row?.talang === "true"),
-                    inkompetent: inkR,
-                    blockering: blockR,
+                    inkompetent,
+                    blockering,
                     index,
                     itemLabelHtml,
                     itemNamePlain,
@@ -147,8 +147,8 @@ export async function buildCharacterCreationWizardContext(wizard, context, _opti
                         {
                             ovrigWizardTyp: isOvrigWizardTyp,
                             sprak: false,
-                            inkompetent: isOvrigWizardTyp ? false : inkR,
-                            blockering: isOvrigWizardTyp ? false : blockR
+                            inkompetent: isOvrigWizardTyp ? false : inkompetent,
+                            blockering: isOvrigWizardTyp ? false : blockering
                         }
                     ),
                     itemOptionsHtml:
@@ -310,7 +310,7 @@ export async function buildCharacterCreationWizardContext(wizard, context, _opti
     }));
     context.sprakListaAllRows = [
         ...startSprakTabellRader,
-        ...context.sprakFordelningRows.map((r) => ({ isStartSprak: false, ...r }))
+        ...context.sprakFordelningRows.map((row) => ({ isStartSprak: false, ...row }))
     ];
     context.sprakListaHarInget = context.sprakListaAllRows.length === 0;
 

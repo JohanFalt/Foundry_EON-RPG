@@ -221,9 +221,9 @@ export default class classActorHelper {
         const actorData = foundry.utils.duplicate(actor);
 
         if (source == "miljo") {
-            var e = document.getElementById("miljo");
+            const miljoSelect = document.getElementById("miljo");
 
-            if (e.value == "custom") {
+            if (miljoSelect.value == "custom") {
                 DialogHelper.AttributeEditDialog(actor, "bakgrund", source);
                 return;
             }
@@ -231,9 +231,9 @@ export default class classActorHelper {
             return;
         }
         if (source == "arketyp") {
-            var e = document.getElementById("arketyp");
+            const arketypSelect = document.getElementById("arketyp");
             
-            if (e.value == "custom") {
+            if (arketypSelect.value == "custom") {
                 DialogHelper.AttributeEditDialog(actor, "bakgrund", source);
                 return;
             }
@@ -269,20 +269,24 @@ export default class classActorHelper {
                     const value2 = properties[1];
                     property = property.replace(".", "_");
 
-                    let e = document.getElementById(actor._id + "_" + source + "_" + property + "_" + index);
-                    const newvalue = e.value
+                    const karaktarsdragInput = document.getElementById(
+                        actor._id + "_" + source + "_" + property + "_" + index
+                    );
+                    const newValue = karaktarsdragInput.value;
 
-                    actorData.system.egenskap.karaktärsdrag[index][value1][value2] = newvalue;
+                    actorData.system.egenskap.karaktärsdrag[index][value1][value2] = newValue;
                 }
                 else {
                     return;
                 }                
             }
             else {
-                let e = document.getElementById(actor._id + "_" + source + "_" + property + "_" + index);
-                const newvalue = e.value
-    
-                actorData.system.egenskap.karaktärsdrag[index][property] = newvalue;
+                const karaktarsdragInput = document.getElementById(
+                    actor._id + "_" + source + "_" + property + "_" + index
+                );
+                const newValue = karaktarsdragInput.value;
+
+                actorData.system.egenskap.karaktärsdrag[index][property] = newValue;
             }
             
             await actor.update(actorData);

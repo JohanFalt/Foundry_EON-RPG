@@ -1,8 +1,52 @@
-import { DiceRollContainer } from "../dice-helper.js";
-import DiceHelper from "../dice-helper.js";
-import { RollDice } from "../dice-helper.js";
+import DiceHelper, {
+    DiceRollContainer,
+    RollDice,
+    buildSmartaModifierHtml,
+    buildWoundInLimbHtml
+} from "../dice-helper.js";
+import {
+    appliceraKroppsbyggnadVapenAvdrag,
+    formatT6Pool,
+    getKroppsbyggnadVapenAvdragContext,
+    resolveDefaultFattning
+} from "../apps/eon5-weapon-kroppsbyggnad.js";
+import { CombatAttackFlow, EON_ATTACK_FLAG } from "../combat-attack-flow.js";
+import { CombatAttackChat } from "../combat-attack-chat.js";
+import CalculateHelper from "../calculate-helper.js";
 
 export class WeaponRoll {
+
+    /**
+     * Smärtavdrag (berakning sätts bara när rollformulär renderas).
+     * @param {Actor} actor
+     */
+    static getActorSmarta(actor) {
+        return Number(
+            actor?.system?.berakning?.svarighet?.smarta
+            ?? actor?.system?.skada?.smarta
+            ?? 0
+        );
+    }
+
+    /**
+     * @param {Actor} actor
+     * @returns {Item[]}
+     */
+    static getStridSkills(actor) {
+        const fromSheet = actor?.system?.listdata?.fardigheter?.strid;
+        if (Array.isArray(fromSheet) && fromSheet.length) return fromSheet;
+        return actor?.items?.filter((item) => item.type === "Färdighet" && item.system?.grupp === "strid") ?? [];
+    }
+
+    /**
+     * @param {Actor} actor
+     * @returns {Item[]}
+     */
+    static getCreatureSkills(actor) {
+        const fromSheet = actor?.system?.listdata?.fardigheter;
+        if (Array.isArray(fromSheet) && fromSheet.length) return fromSheet;
+        return actor?.items?.filter((item) => item.type === "Färdighet") ?? [];
+    }
 
     #_isPC = false;
 
@@ -29,6 +73,9 @@ export class WeaponRoll {
         "bonus": 0
     };
 
+    /** @type {{ tvarde: number, bonus: number }|null} */
+    #_cachedGrundskadaTotalt = null;
+
     #_harSmarta = false;
     #_harSar = false;
     #_visaSar = false;
@@ -37,11 +84,21 @@ export class WeaponRoll {
 
     #_lastAttackType = 'normal';
 
+    /** @type {"enhand"|"tvahand"|null} */
+    #_fattning = null;
+
+    #_valbarFattning = false;
+
     constructor(actor, item) {
-        if (actor.type.toLowerCase().replace(" ", "") == "rollperson") {
-            this.#_isPC = true;
+        if (!item) {
+            throw new Error("WeaponRoll requires a weapon item");
         }
-        else if (actor.type.toLowerCase().replace(" ", "") == "rollperson5") {
+
+        if (CombatAttackFlow.isFolkslagActor(actor)) {
+            actor.system.berakning = CalculateHelper.byggRollBerakning(actor);
+        }
+
+        if (CombatAttackFlow.isPlayerCharacter(actor)) {
             this.#_isPC = true;
         }
 
@@ -61,9 +118,6 @@ export class WeaponRoll {
         this.vapennamn = item["name"];
 
         const weaponData = item.system;
-        /*this.vapen.isRangedWeapon = weaponData.grupp === "bage" || 
-                                    weaponData.grupp === "kastvapen" || 
-                                    (weaponData?.rackvidd && ["kort", "medellangt", "langt", "mycketlangt"].includes(weaponData?.rackvidd));    */
 
         this.vapen.isRangedWeapon = item.type === "Avståndsvapen";
 
@@ -72,44 +126,64 @@ export class WeaponRoll {
             this.#_isdefence = true;             
         }
 
-        this.actorAttribut = item.system.traffa;
+        this.actorAttribut = item.system?.traffa ?? { tvarde: 0, bonus: 0 };
         this.actorAttributNamn = item.name;
 
-        if (this.#_isPC) {
-            if (actor.system.berakning.svarighet.smarta > 0) {
+        if (CombatAttackFlow.isFolkslagActor(actor)) {
+            if (WeaponRoll.getActorSmarta(actor) > 0) {
                 this.#_harSmarta = true;
             }
 
-            if ((actor.system.skada.sar.hogerarm > 0) || (actor.system.skada.sar.vansterarm > 0)) {
-                this.#_harSar = false;
-                this.#_visaSar = true;
+            const sar = actor.system?.skada?.sar ?? {};
+            const harArmsar = Number(sar.hogerarm) > 0 || Number(sar.vansterarm) > 0;
+            if (harArmsar) {
+                if (CombatAttackFlow.isPlayerCharacter(actor)) {
+                    this.#_harSar = false;
+                    this.#_visaSar = true;
+                } else {
+                    this.#_harSar = true;
+                    this.#_visaSar = false;
+                }
             }
 
-            // läs in värdena för vapenfärdigheten
-            if (actor.system.listdata?.fardigheter?.strid != undefined) {
-                for (const fardighet of actor.system.listdata?.fardigheter?.strid) {
+            if (CombatAttackFlow.isMotstandareActor(actor)) {
+                let skillVal = null;
+                let skillNamn = "";
+                for (const fardighet of WeaponRoll.getStridSkills(actor)) {
+                    if (fardighet.system.id === item.system.grupp) {
+                        skillVal = fardighet.system.varde;
+                        skillNamn = game.i18n.has(fardighet.name)
+                            ? game.i18n.localize(fardighet.name)
+                            : fardighet.name;
+                        break;
+                    }
+                }
+                const resolved = CalculateHelper.resolveMotstandareStridTraffa(actor, skillVal);
+                this.actorAttribut = resolved.varde;
+                this.actorAttributNamn = resolved.useAnfallForsvar
+                    ? game.i18n.localize("eon.sheets.motstandare.anfallForsvar")
+                    : skillNamn;
+            } else {
+                for (const fardighet of WeaponRoll.getStridSkills(actor)) {
                     if (fardighet.system.id == item.system.grupp) {
                         this.actorAttribut = fardighet.system.varde;
                         this.actorAttributNamn = game.i18n.has(fardighet.name) ? game.i18n.localize(fardighet.name) : fardighet.name;
                         break;
                     }
-                }     
+                }
             }
         }
         else if (item.system.grupp !== "") {
-            if (actor.system.listdata?.fardigheter != undefined) {
-                for (const fardighet of actor.system.listdata?.fardigheter) {
-                    if (fardighet.system.id == item.system.grupp) {
-                        this.actorAttribut = fardighet.system.varde;
-                        this.actorAttributNamn = game.i18n.has(fardighet.name) ? game.i18n.localize(fardighet.name) : fardighet.name;
-                        break;
-                    }
-                }     
+            for (const fardighet of WeaponRoll.getCreatureSkills(actor)) {
+                if (fardighet.system.id == item.system.grupp) {
+                    this.actorAttribut = fardighet.system.varde;
+                    this.actorAttributNamn = game.i18n.has(fardighet.name) ? game.i18n.localize(fardighet.name) : fardighet.name;
+                    break;
+                }
             }
         }
         else {
-            // kontrollera om färdighet finns
-            this.actorAttribut = item.system.traffa;
+            this.actorAttribut = item.system?.traffa ?? { tvarde: 0, bonus: 0 };
             this.actorAttributNamn = item.name;
         }    
 
@@ -120,7 +194,46 @@ export class WeaponRoll {
         }
         else {
             this.setCombatmode("attack");
-        }        
+        }
+
+        const fattningInit = resolveDefaultFattning(weaponData);
+        this.#_fattning = fattningInit.fattning;
+        this.#_valbarFattning = fattningInit.valbarFattning;
+    }
+
+    get fattning() {
+        return this.#_fattning;
+    }
+
+    set fattning(value) {
+        if (value !== "enhand" && value !== "tvahand") return;
+        this.#_fattning = value;
+    }
+
+    get valbarFattning() {
+        return this.#_valbarFattning;
+    }
+
+    get kroppsbyggnadAvdragContext() {
+        return getKroppsbyggnadVapenAvdragContext(this.actor, this.vapen, this.#_fattning);
+    }
+
+    get harKroppsbyggnadAvdrag() {
+        return this.kroppsbyggnadAvdragContext.aktiv;
+    }
+
+    get kroppsbyggnadAvdragT6() {
+        return this.kroppsbyggnadAvdragContext.avdragT6;
+    }
+
+    #applyKroppsbyggnadToPool(pool) {
+        const { pool: adjusted } = appliceraKroppsbyggnadVapenAvdrag(
+            pool,
+            this.actor,
+            this.vapen,
+            this.#_fattning
+        );
+        return adjusted;
     }
 
     get visaTarning() {
@@ -129,9 +242,11 @@ export class WeaponRoll {
             bonus: this.#_totalBonus
         };
 
+        tarning = this.#applyKroppsbyggnadToPool(tarning);
+
         if (!this.#_isdamage) {
             if (this.#_harSmarta) {
-                tarning.tvarde = tarning.tvarde - this.actor.system.berakning.svarighet.smarta;
+                tarning.tvarde = tarning.tvarde - WeaponRoll.getActorSmarta(this.actor);
     
                 if (tarning.tvarde < 0) {
                     tarning.tvarde = 0;
@@ -208,14 +323,6 @@ export class WeaponRoll {
         return this.#_harSmarta;
     }
 
-    get harSar() {
-        return this.#_harSar;
-    }
-
-    set harSar(aktiv) {
-        this.#_harSar = aktiv;
-    }
-
     get visaSar() {
         return this.#_visaSar;
     }
@@ -257,11 +364,12 @@ export class WeaponRoll {
     }
 
     get hamtaAntalSar() {
-        if (!this.#_isPC) {
+        if (!CombatAttackFlow.isFolkslagActor(this.actor)) {
             return 0;
         }
 
-        return this.actor.system.skada.sar.hogerarm + this.actor.system.skada.sar.vansterarm;
+        const sar = this.actor.system?.skada?.sar ?? {};
+        return Number(sar.hogerarm ?? 0) + Number(sar.vansterarm ?? 0);
     }
 
     get harSar() {
@@ -305,6 +413,26 @@ export class WeaponRoll {
         }
     }
 
+    setGrundskadaTotalt(totalt) {
+        if (totalt && typeof totalt === "object" && totalt.tvarde !== undefined) {
+            this.#_cachedGrundskadaTotalt = totalt;
+        }
+    }
+
+    refreshWeaponDamage() {
+        if (!this.#_isdamage) return;
+
+        if (this.#_usehugg) {
+            this.setWeaponDamage("hugg");
+        } else if (this.#_usekross) {
+            this.setWeaponDamage("kross");
+        } else if (this.#_usestick) {
+            this.setWeaponDamage("stick");
+        } else {
+            this.setWeaponDamage();
+        }
+    }
+
     setCombatmode(type = "") {
         if (type == "attack") {
             this.#_lastAttackType = 'normal';
@@ -312,42 +440,6 @@ export class WeaponRoll {
         }
         else if (type == "damage") {
             this.#_lastAttackType = this.#_attacktype;
-            
-            if (this.vapen.type == "Avståndsvapen" || this.vapen.type == "Sköld") {
-                this.setDamageType();
-                this.setWeaponDamage();
-            }
-            else if (this.vapen.type == "Närstridsvapen") {
-                let highestDamage = -1;
-                let bestDamageType = "";
-                
-                if (this.vapen.system.hugg.aktiv) {
-                    const damage = this.vapen.system.hugg.tvarde + (this.vapen.system.hugg.bonus / 3);
-                    if (damage > highestDamage) {
-                        highestDamage = damage;
-                        bestDamageType = "hugg";
-                    }
-                }
-                if (this.vapen.system.kross.aktiv) {
-                    const damage = this.vapen.system.kross.tvarde + (this.vapen.system.kross.bonus / 3);
-                    if (damage > highestDamage) {
-                        highestDamage = damage;
-                        bestDamageType = "kross";
-                    }
-                }
-                if (this.vapen.system.stick.aktiv) {
-                    const damage = this.vapen.system.stick.tvarde + (this.vapen.system.stick.bonus / 3);
-                    if (damage > highestDamage) {
-                        highestDamage = damage;
-                        bestDamageType = "stick";
-                    }
-                }
-                
-                if (bestDamageType) {
-                    this.setDamageType(bestDamageType);
-                    this.setWeaponDamage(bestDamageType);
-                }
-            }
         }
 
         this.#_isattack = false;
@@ -375,6 +467,20 @@ export class WeaponRoll {
             this.#_isdefence = true;
         }
 
+        if (type == "damage") {
+            if (this.vapen.type == "Avståndsvapen" || this.vapen.type == "Sköld") {
+                this.setDamageType();
+                this.setWeaponDamage();
+            }
+            else if (this.vapen.type == "Närstridsvapen") {
+                const bestDamageType = this.#hamtaBastaSkadetyp();
+                if (bestDamageType) {
+                    this.setDamageType(bestDamageType);
+                    this.setWeaponDamage(bestDamageType);
+                }
+            }
+        }
+
         this.#_grundTarning = this.grundTarning;
         this.#_grundBonus = this.grundBonus;
 
@@ -382,6 +488,35 @@ export class WeaponRoll {
         this.#_totalBonus = this.#_grundBonus;
 
         this.updateAttackModifiers();
+    }
+
+    #hamtaBastaSkadetyp() {
+        let highestDamage = -1;
+        let bestDamageType = "";
+
+        if (this.vapen.system.hugg.aktiv) {
+            const damage = this.vapen.system.hugg.tvarde + (this.vapen.system.hugg.bonus / 3);
+            if (damage > highestDamage) {
+                highestDamage = damage;
+                bestDamageType = "hugg";
+            }
+        }
+        if (this.vapen.system.kross.aktiv) {
+            const damage = this.vapen.system.kross.tvarde + (this.vapen.system.kross.bonus / 3);
+            if (damage > highestDamage) {
+                highestDamage = damage;
+                bestDamageType = "kross";
+            }
+        }
+        if (this.vapen.system.stick.aktiv) {
+            const damage = this.vapen.system.stick.tvarde + (this.vapen.system.stick.bonus / 3);
+            if (damage > highestDamage) {
+                highestDamage = damage;
+                bestDamageType = "stick";
+            }
+        }
+
+        return bestDamageType;
     }
 
     setDamageType(type = "") {
@@ -394,6 +529,10 @@ export class WeaponRoll {
             if (type === "hugg") this.#_usehugg = true;
             else if (type === "kross") this.#_usekross = true;
             else if (type === "stick") this.#_usestick = true;
+
+            if (this.#_isdamage) {
+                this.setWeaponDamage(type);
+            }
             return;
         }
 
@@ -411,32 +550,7 @@ export class WeaponRoll {
 
         // For melee weapons, find the highest damage
         if (this.vapen.type == "Närstridsvapen") {
-            let highestDamage = -1;
-            let bestDamageType = null;
-
-            if (this.vapen.system.hugg.aktiv) {
-                const damage = this.vapen.system.hugg.tvarde + (this.vapen.system.hugg.bonus / 3);
-                if (damage > highestDamage) {
-                    highestDamage = damage;
-                    bestDamageType = "hugg";
-                }
-            }
-            if (this.vapen.system.kross.aktiv) {
-                const damage = this.vapen.system.kross.tvarde + (this.vapen.system.kross.bonus / 3);
-                if (damage > highestDamage) {
-                    highestDamage = damage;
-                    bestDamageType = "kross";
-                }
-            }
-            if (this.vapen.system.stick.aktiv) {
-                const damage = this.vapen.system.stick.tvarde + (this.vapen.system.stick.bonus / 3);
-                if (damage > highestDamage) {
-                    highestDamage = damage;
-                    bestDamageType = "stick";
-                }
-            }
-
-            // Set only the highest damage type as active
+            const bestDamageType = this.#hamtaBastaSkadetyp();
             if (bestDamageType === "hugg") this.#_usehugg = true;
             else if (bestDamageType === "kross") this.#_usekross = true;
             else if (bestDamageType === "stick") this.#_usestick = true;
@@ -448,12 +562,7 @@ export class WeaponRoll {
     }
 
     setWeaponDamage(type = "") {
-        this.#_actorGrundskada = {
-            "tvarde": 0,
-            "bonus": 0
-        };
-
-        this.#_actorGrundskada = this.actor.system.harleddegenskaper.grundskada.totalt;
+        this.#_actorGrundskada = CalculateHelper.grundskadaTotaltForRoll(this.actor, this.#_cachedGrundskadaTotalt);
 
         if (this.vapen.type == "Avståndsvapen") {
             this.#_vapenskada = this.vapen.system.skada;
@@ -474,26 +583,15 @@ export class WeaponRoll {
             }
         }   
 
-        if (this.#_isdamage) {
-            switch(this.#_lastAttackType) {
-                case 'tungt':
-                    this.#_vapenskada.tvarde += 2;
-                    break;
-                case 'snabbt':
-                    this.#_vapenskada.tvarde -= 1;
-                    break;
-            }
-            
-            if (this.#_vapenskada.tvarde < 0) {
-                this.#_vapenskada.tvarde = 0;
-            }
-        }
-
         this.#_grundTarning = this.#_vapenskada.tvarde;
         this.#_grundBonus = this.#_vapenskada.bonus;
 
         this.#_totalTarning = this.#_grundTarning;
         this.#_totalBonus = this.#_grundBonus;
+
+        if (this.#_isdamage) {
+            this.updateAttackModifiers();
+        }
     }
 
     get attacktype() {
@@ -540,18 +638,18 @@ export class WeaponRoll {
 
         if (this.#_isdamage) {
             let damageDice = this.#_vapenskada.tvarde;
-            
-            switch(this.#_attacktype) {
+
+            switch (this.#_lastAttackType) {
                 case 'tungt':
-                    damageDice += 2;  // +2T6 skada
+                    damageDice += 2;
                     break;
                 case 'snabbt':
-                    damageDice -= 1;  // -1T6 skada
+                    damageDice -= 1;
                     break;
             }
-            
-            this.#_vapenskada.tvarde = Math.max(0, damageDice);
-            this.#_totalTarning = this.#_vapenskada.tvarde;
+
+            this.#_totalTarning = Math.max(0, damageDice);
+            this.#_totalBonus = this.#_vapenskada.bonus;
         }
         
         if (this.#_totalTarning < 0) {
@@ -568,13 +666,28 @@ export class DialogWeaponRoll extends FormApplication {
 
     #_isPC = false;
 
+    /** @type {string|null} */
+    linkedAttackMessageId = null;
+
+    /** @type {number|null} */
+    linkedAttackResult = null;
+
+    /** @type {string|null} */
+    linkedFlowId = null;
+
+    /** @type {object|null} */
+    _targetContext = null;
+
+    /** @type {string|null} */
+    selectedTargetCombatantId = null;
+
+    /** @type {{ flowId: string, defenderActorId: string, defenderName: string }|null} */
+    _combatAttackFlow = null;
+
     constructor(actor, roll) {
         super(roll, {submitOnChange: true, closeOnSubmit: false});
 
-        if (actor.type.toLowerCase().replace(" ", "") == "rollperson") {
-            this.#_isPC = true;
-        }
-        else if (actor.type.toLowerCase().replace(" ", "") == "rollperson5") {
+        if (CombatAttackFlow.isPlayerCharacter(actor)) {
             this.#_isPC = true;
         }
 
@@ -589,7 +702,7 @@ export class DialogWeaponRoll extends FormApplication {
         let mode = " eon-theme-light ";
 
         return foundry.utils.mergeObject(super.defaultOptions, {
-            classes: ["EON general-dialog" + mode],
+            classes: ["EON general-dialog eon-weapon-roll-dialog" + mode],
             template: "systems/eon-rpg/templates/dialogs/dialog-weapon-roll.html",
             closeOnSubmit: false,
             submitOnChange: true,
@@ -600,12 +713,44 @@ export class DialogWeaponRoll extends FormApplication {
     }
 
     async getData() {
-        const data = super.getData();
+        if (CalculateHelper.isEon5Actor(this.actor)) {
+            const actorData = foundry.utils.duplicate(this.actor.toObject());
+            await CalculateHelper.beraknaGrundrustningOchGrundskadaEon5(actorData);
+            const grundskadaTotalt = actorData.system?.harleddegenskaper?.grundskada?.totalt;
+            if (grundskadaTotalt) {
+                this.object.setGrundskadaTotalt(grundskadaTotalt);
+                this.object.refreshWeaponDamage();
+            }
+        }
+
+        const data = await super.getData();
+        if (this.object.isattack && !this.linkedAttackMessageId) {
+            this._targetContext = await CombatAttackFlow.buildTargetContext(this.actor, this.object.vapen);
+            if (!this.selectedTargetCombatantId && this._targetContext?.defaultTargetId) {
+                this.selectedTargetCombatantId = this._targetContext.defaultTargetId;
+            }
+            data.targetContext = this._targetContext;
+            data.selectedTargetCombatantId = this.selectedTargetCombatantId;
+        }
+        if (!this._combatAttackFlow) {
+            const pending = CombatAttackFlow.findPendingHitLocationForAttacker(this.actor.id);
+            if (pending) {
+                this._combatAttackFlow = pending;
+                if (pending.weaponFattning === "enhand" || pending.weaponFattning === "tvahand") {
+                    this.object.fattning = pending.weaponFattning;
+                }
+            }
+        }
+        data.hasPendingDamageFlow = Boolean(this._combatAttackFlow?.flowId);
         return data;
     }
 
     activateListeners(html) {
         super.activateListeners(html);
+
+        html.find(".eon-attack-target-select").on("change", (event) => {
+            this.selectedTargetCombatantId = event.currentTarget.value || null;
+        });
 
         html
             .find('.mode')
@@ -614,6 +759,10 @@ export class DialogWeaponRoll extends FormApplication {
         html
             .find('.attacktype')
             .click(this._setAttackType.bind(this));
+
+        html
+            .find('.fattning')
+            .click(this._setFattning.bind(this));
 
         html
             .find('.actionbutton')
@@ -661,9 +810,16 @@ export class DialogWeaponRoll extends FormApplication {
 
         if (this.object.isdamage) {     
             this.object.setDamageType(type);
-            this.object.setWeaponDamage(type); 
         }
 
+        this.render();
+    }
+
+    _setFattning(event) {
+        event.preventDefault();
+        const type = event.currentTarget.dataset.type;
+        if (type !== "enhand" && type !== "tvahand") return;
+        this.object.fattning = type;
         this.render();
     }
 
@@ -676,6 +832,10 @@ export class DialogWeaponRoll extends FormApplication {
 
         if (dataset?.type && element.classList.contains('attacktype')) {
             this.object.attacktype = dataset.type;
+        }
+
+        if (dataset?.type && element.classList.contains('fattning')) {
+            this.object.fattning = dataset.type;
         }
 
         if (dataset?.source == "set") {
@@ -702,11 +862,11 @@ export class DialogWeaponRoll extends FormApplication {
             }
         }
         if (dataset?.source == "difficulty") {
-            var e = document.getElementById("difficulty");
+            const difficultyInput = document.getElementById("difficulty");
             let value = "";
 
             if (dataset.value != "clear") {
-                value = e.value + dataset.value;
+                value = difficultyInput.value + dataset.value;
             }            
 
             this.object.svarighet = value;
@@ -724,17 +884,13 @@ export class DialogWeaponRoll extends FormApplication {
 
         let description = "";
 
-        if ((this.object.harSmarta) && (!this.object.isdamage) && (this.#_isPC)) {
-            description += `${this.actor.system.berakning.svarighet.smarta}T6 smärta</br >`;
+        if ((this.object.harSmarta) && (!this.object.isdamage)) {
+            description += buildSmartaModifierHtml(this.actor);
         }
 
-        if ((this.object.harSar) && (this.#_isPC)) {
-            if (this.actor.system.skada.sar.hogerarm > 0) {
-                description += `Har ${this.actor.system.skada.sar.hogerarm} sår i höger arm (${this.actor.system.skada.sar.hogerarm}T6)<br />`;
-            }
-            if (this.actor.system.skada.sar.vansterarm > 0) {
-                description += `Har ${this.actor.system.skada.sar.vansterarm} sår i vänster arm (${this.actor.system.skada.sar.vansterarm}T6)<br />`;
-            }
+        if ((this.object.harSar) && (!this.object.isdamage)) {
+            description += buildWoundInLimbHtml(this.actor.system.skada.sar.hogerarm, "RightArm");
+            description += buildWoundInLimbHtml(this.actor.system.skada.sar.vansterarm, "LeftArm");
         }
         if ((this.object.visaSar) && (!this.object.harSar) && (this.#_isPC)) {
             if (this.actor.system.skada.sar.hogerarm > 0) {
@@ -745,6 +901,18 @@ export class DialogWeaponRoll extends FormApplication {
             }
         }
 
+        if (this.object.harKroppsbyggnadAvdrag) {
+            const kroppsbyggnadContext = this.object.kroppsbyggnadAvdragContext;
+            const kravText = formatT6Pool(kroppsbyggnadContext.krav);
+            const harText = formatT6Pool(kroppsbyggnadContext.aktorKb);
+            description += game.i18n.format("eon.dialogs.kroppsbyggnadVapenAvdragChat", {
+                avdrag: kroppsbyggnadContext.avdragT6,
+                krav: kravText,
+                har: harText
+            });
+            description += "<br />";
+        }
+
         const roll = new DiceRollContainer(this.actor, this.config);
         roll.typeroll = CONFIG.EON.slag.vapen;
         roll.action = this.object.vapennamn;                       
@@ -752,7 +920,7 @@ export class DialogWeaponRoll extends FormApplication {
         roll.info = this.object.vapen.system.egenskaper;
         roll.actorName = this.actor.name;
 
-        var grundvarde = "";
+        let grundvarde = "";
 
         if ((this.object.visaTarning.tvarde != this.object.grundTarning) || (this.object.visaTarning.bonus != this.object.grundBonus)) {
             if (this.object.grundBonus == 0) {
@@ -777,7 +945,14 @@ export class DialogWeaponRoll extends FormApplication {
         }
 
         if (this.object.isattack)  {
-            roll.action = `Anfaller ${this.object.attacktype} med ${this.object.vapennamn.toLowerCase()}`; 
+            const targetName = this._resolveTargetName();
+            roll.action = targetName
+                ? game.i18n.format("eon.combatAttack.attackAgainst", {
+                    type: this.object.attacktype,
+                    weapon: this.object.vapennamn.toLowerCase(),
+                    target: targetName
+                })
+                : `Anfaller ${this.object.attacktype} med ${this.object.vapennamn.toLowerCase()}`;
         }
         else if ((this.object.isdamage) && ((this.object.usehugg) || (this.object.usekross) || (this.object.usestick))) {
             let skadetyp = "";
@@ -817,29 +992,40 @@ export class DialogWeaponRoll extends FormApplication {
         }
         else if (this.object.isdefence) {
             let utmattningIncrease = 0;
-            let defenseType = "";
+            let tacticKey = "defenseTacticStandard";
 
             switch(this.object.attacktype) {
                 case 'defensivt':
                     utmattningIncrease = 1;
-                    defenseType = "Defensivt";
+                    tacticKey = "defenseTacticDefensivt";
                     break;
                 case 'kontring':
                     utmattningIncrease = 1;
-                    defenseType = "Kontrings";
+                    tacticKey = "defenseTacticKontring";
                     break;
                 default:
-                    defenseType = "Standard";
+                    tacticKey = "defenseTacticStandard";
             }
 
             if (utmattningIncrease > 0) {
-                const currentUtmattning = this.actor.system.skada.utmattning.varde;
+                const currentUtmattning = Number(this.actor.system?.skada?.utmattning?.varde ?? 0);
                 await this.actor.update({
-                    "system.skada.utmattning.varde": Number(currentUtmattning) + utmattningIncrease
+                    "system.skada.utmattning.varde": currentUtmattning + utmattningIncrease
                 });
             }
 
-            roll.action = `${defenseType} försvar med ${this.object.vapennamn.toLowerCase()}`;            
+            let attackerName = "?";
+            if (this.linkedAttackMessageId) {
+                const attackFlags = game.messages.get(this.linkedAttackMessageId)?.flags?.[EON_ATTACK_FLAG];
+                attackerName = attackFlags?.attackerName ?? "?";
+            }
+
+            const tactic = game.i18n.localize(`eon.combatAttack.${tacticKey}`);
+            roll.action = game.i18n.format("eon.combatAttack.defenseWithWeaponAgainst", {
+                tactic,
+                weapon: this.object.vapennamn.toLowerCase(),
+                attacker: attackerName
+            });
         }
         else {
             ui.notifications.error(game.i18n.localize("eon.messages.valdVapenanvandning"));
@@ -850,8 +1036,72 @@ export class DialogWeaponRoll extends FormApplication {
         if ((this.object.svarighet != "") && (this.object.svarighet != undefined)) {
             roll.svarighet = parseInt(this.object.svarighet);
         }
+
+        if (this.object.isattack && !this._targetContext) {
+            this._targetContext = await CombatAttackFlow.buildTargetContext(this.actor, this.object.vapen);
+            if (!this.selectedTargetCombatantId && this._targetContext?.defaultTargetId) {
+                this.selectedTargetCombatantId = this._targetContext.defaultTargetId;
+            }
+        }
+
+        if (this.object.isattack && this._targetContext?.requireTarget) {
+            const selectEl = this.element?.find?.(".eon-attack-target-select")?.[0]
+                ?? this.element?.[0]?.querySelector?.(".eon-attack-target-select");
+            const selected = selectEl?.value ?? this.selectedTargetCombatantId;
+            if (!selected) {
+                ui.notifications.warn(game.i18n.localize("eon.combatAttack.selectTargetRequired"));
+                this.object.close = false;
+                return;
+            }
+            this.selectedTargetCombatantId = selected;
+        }
+
+        const attackFlowMeta = await this._buildAttackChatFlags();
+        if (attackFlowMeta) {
+            roll.chatFlags = attackFlowMeta.flags;
+            this._combatAttackFlow = attackFlowMeta.flowState;
+        }
+
+        let allvarligBaseRoll = null;
+        if (this.object.isdamage && this._combatAttackFlow?.flowId) {
+            try {
+                const allvarligRoll = await (new Roll("1d10")).evaluate();
+                allvarligBaseRoll = Number(allvarligRoll.total);
+                if (Number.isFinite(allvarligBaseRoll)) {
+                    roll.description += game.i18n.format("eon.combatAttack.damageRollAllvarligBase", {
+                        roll: allvarligBaseRoll
+                    }) + "<br />";
+                }
+            } catch (err) {
+                console.warn("eon-rpg | Kunde inte slå 1T10 för allvarlig skada", err);
+            }
+        }
         
         const result = await RollDice(roll);
+
+        if (this.linkedAttackMessageId && this.object.isdefence) {
+            const attackMsg = game.messages.get(this.linkedAttackMessageId);
+            if (attackMsg) {
+                await CombatAttackChat.resolveDefense(attackMsg, result, roll.action);
+            }
+            this.close();
+            return;
+        }
+
+        if (this.object.isdamage && this._combatAttackFlow?.flowId) {
+            let damageType = "hugg";
+            if (this.object.usekross) damageType = "kross";
+            if (this.object.usestick) damageType = "stick";
+            const hitMsgId = this._combatAttackFlow.hitLocationMessageId;
+            const hitMsg = hitMsgId
+                ? game.messages.get(hitMsgId)
+                : this._findHitLocationMessage(this._combatAttackFlow.flowId);
+            if (hitMsg) {
+                await CombatAttackChat.attachDamageCalculation(hitMsg.id, result, damageType, allvarligBaseRoll);
+            }
+            this.close();
+            return;
+        }
 
         if (this.object.isattack) {
             let utmattningIncrease = 0;
@@ -866,10 +1116,23 @@ export class DialogWeaponRoll extends FormApplication {
             }
 
             if (utmattningIncrease > 0) {
-                const currentUtmattning = this.actor.system.skada.utmattning.varde;
+                const currentUtmattning = Number(this.actor.system?.skada?.utmattning?.varde ?? 0);
                 await this.actor.update({
-                    "system.skada.utmattning.varde": Number(currentUtmattning) + utmattningIncrease
+                    "system.skada.utmattning.varde": currentUtmattning + utmattningIncrease
                 });
+            }
+
+            if (attackFlowMeta) {
+                const msg = roll._createdMessageId
+                    ? game.messages.get(roll._createdMessageId)
+                    : CombatAttackChat.findAttackMessageByFlowId(attackFlowMeta.flowState.flowId);
+                if (msg) {
+                    await CombatAttackChat.afterAttackRolled(msg, result);
+                } else {
+                    ui.notifications.warn(game.i18n.localize("eon.combatAttack.attackMessageNotFound"));
+                }
+                this.close();
+                return;
             }
 
             this.object.setCombatmode("damage");
@@ -886,14 +1149,94 @@ export class DialogWeaponRoll extends FormApplication {
 
     /* clicked to close form */
     _closeForm(event) {
+        event?.preventDefault();
         this.object.close = true;
-    }    
+        this.close();
+    }
 
     _onAttackTypeClick(event) {
         event.preventDefault();
+        if (this.object.isdamage) return;
+
         const button = event.currentTarget;
         const type = button.dataset.type;
         this.object.attacktype = type;
         this.render(true);
+    }
+
+    _resolveTargetName() {
+        const targetContext = this._targetContext;
+        if (!targetContext?.candidates?.length || !this.selectedTargetCombatantId) return "";
+        const targetCandidate = targetContext.candidates.find(
+            (candidate) => candidate.id === this.selectedTargetCombatantId
+        );
+        return targetCandidate?.name ?? "";
+    }
+
+    /**
+     * @returns {Promise<{ flags: object, flowState: object }|null>}
+     */
+    async _buildAttackChatFlags() {
+        if (!this.object.isattack || !this._targetContext?.showSelector) return null;
+        if (!this.selectedTargetCombatantId) return null;
+
+        const combat = game.combat;
+        const attackerCombatant = CombatAttackFlow.findCombatantForActor(this.actor);
+        const candidate = this._targetContext.candidates.find(
+            (combatant) => combatant.id === this.selectedTargetCombatantId
+        );
+        if (!candidate || !combat) return null;
+
+        if (attackerCombatant) {
+            await CombatAttackFlow.saveLastTarget(combat, attackerCombatant.id, candidate.id);
+        }
+
+        const flowId = CombatAttackFlow.createFlowId();
+        const defenderActor = candidate.actorId ? game.actors.get(candidate.actorId) : null;
+
+        return {
+            flowState: {
+                flowId,
+                defenderActorId: candidate.actorId,
+                defenderName: candidate.name
+            },
+            flags: {
+                attackFlowId: flowId,
+                flowType: "attack",
+                waitingForDefense: true,
+                attackerActorId: this.actor.id,
+                attackerName: this.actor.name,
+                attackerCombatantId: attackerCombatant?.id ?? null,
+                defenderCombatantId: candidate.id,
+                defenderActorId: candidate.actorId,
+                defenderName: candidate.name,
+                weaponItemId: this.object.vapen?.id ?? null,
+                weaponName: this.object.vapennamn,
+                weaponType: this._targetContext.weaponType,
+                weaponFattning: (this.object.fattning === "enhand" || this.object.fattning === "tvahand")
+                    ? this.object.fattning
+                    : null,
+                attackResult: null
+            }
+        };
+    }
+
+    /**
+     * @param {string} flowId
+     * @returns {ChatMessage|undefined}
+     */
+    _findHitLocationMessage(flowId) {
+        for (let messageIndex = game.messages.size - 1; messageIndex >= 0; messageIndex--) {
+            const message = game.messages.contents[messageIndex];
+            const attackFlags = message.flags?.[EON_ATTACK_FLAG];
+            if (
+                attackFlags?.attackFlowId === flowId
+                && (attackFlags?.flowType === "resolution" || attackFlags?.flowType === "hitLocation")
+                && attackFlags?.hit === true
+            ) {
+                return message;
+            }
+        }
+        return undefined;
     }
 }

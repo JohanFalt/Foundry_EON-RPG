@@ -98,6 +98,20 @@
     height: 900px;
 }
 
+.EON.motstandare:not(.minimized) {
+    min-width: 750px;
+    width: 750px;
+    min-height: 900px;
+    height: 900px;
+}
+
+.EON.motstandare.application:not(.minimized) {
+    min-width: 900px;
+    width: 1024px;
+    min-height: 720px;
+    height: 720px;
+}
+
 .EON.itemsheet:not(.minimized) {
     min-width: 500px;
     width: 500px;
@@ -145,6 +159,7 @@
 
 .EON.rollperson .window-content,
 .EON.varelse .window-content,
+.EON.motstandare .window-content,
 .EON.general-dialog .window-content {
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -154,6 +169,7 @@
 
 .eon-theme-light.EON.rollperson .window-content,
 .eon-theme-light.EON.varelse .window-content,
+.eon-theme-light.EON.motstandare .window-content,
 .eon-theme-light.EON.general-dialog .window-content {
     background: var(--eon-sheet-background-color) no-repeat;
     color: var(--eon-text-normal-color);
@@ -161,6 +177,7 @@
 
 .eon-theme-dark.EON.rollperson .window-content,
 .eon-theme-dark.EON.varelse .window-content,
+.eon-theme-dark.EON.motstandare .window-content,
 .eon-theme-dark.EON.general-dialog .window-content {
     background: var(--eon-sheet-background-color-dark) no-repeat;
     color: var(--eon-text-normal-color-dark);
@@ -198,12 +215,14 @@
 }
 
 .eon-theme-light.EON .sheet-item,
-.eon-theme-light.EON .sheet-character {    
+.eon-theme-light.EON .sheet-character,
+.eon-theme-light.EON.sheet-character {    
     color: var(--eon-sheet-text-color);
 }
 
 .eon-theme-dark.EON .sheet-item,
-.eon-theme-dark.EON .sheet-character {    
+.eon-theme-dark.EON .sheet-character,
+.eon-theme-dark.EON.sheet-character {    
     color: var(--eon-sheet-text-color-dark);
 }
 
@@ -315,6 +334,7 @@
 }
 
 .EON .sheet-character,
+.EON.sheet-character,
 .EON .sheet-item {
     font-size: var(--eon-font-small);
     font-weight: normal;
@@ -329,6 +349,7 @@
 }
 
 .EON .sheet-character,
+.EON.sheet-character,
 .EON .sheet-item {
     width: 100%;
 }
@@ -355,6 +376,11 @@
     transition: all 0.2s ease;
     margin-left: 2px;
     height: 25px;
+}
+
+.EON .container-contents .container-contents-name {
+    padding-left: 12px;
+    box-sizing: border-box;
 }
 
 /* Sortering */
@@ -770,7 +796,246 @@
 
 .EON.itemsheet .tabButton,
 .EON.varelse .tabButton {
-    width: 33%;
+    width: 25%;
+}
+
+.EON.motstandare nav.sheet-tabs.tabs {
+    display: flex !important;
+    flex-wrap: nowrap;
+    width: 100%;
+    gap: 0;
+    grid-template-columns: unset;
+    box-sizing: border-box;
+}
+
+.EON.motstandare nav.sheet-tabs.tabs.headlineTabs {
+    width: 100%;
+    min-height: 32px;
+    height: auto;
+}
+
+.EON.motstandare nav.sheet-tabs.tabs > [data-tab].tabButton {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+    width: auto;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    cursor: pointer;
+    height: 100%;
+    min-height: 30px;
+    padding: 4px 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+.EON.motstandare nav.sheet-tabs.tabs > [data-tab].tabButton i {
+    flex-shrink: 0;
+}
+
+.EON.motstandare nav.sheet-tabs.tabs > [data-tab].tabButton .tab-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.EON.motstandare nav.sheet-tabs.tabs > [data-tab].tabButton.active {
+    font-weight: bold;
+}
+
+/* ApplicationV2 (Motstandare5 m.fl.): header-kontroller ska vara ljusa som titeln (appv1-rollperson) */
+.eon-theme-light.EON.application .window-header {
+    color: var(--color-text-light-highlight, #f0f0e0);
+}
+
+.eon-theme-light.EON.application .window-header .window-title,
+.eon-theme-light.EON.application .window-header .window-icon,
+.eon-theme-light.EON.application .window-header .header-control {
+    color: var(--color-text-light-highlight, #f0f0e0);
+}
+
+.eon-theme-light.EON.application .window-header .header-control:hover,
+.eon-theme-light.EON.application .window-header .header-control:focus {
+    color: var(--color-text-light-highlight, #f0f0e0);
+    filter: brightness(1.15);
+}
+
+/* Motstandare5 — ApplicationV2: PARTS som direkta barn till form */
+.EON.motstandare.application .window-content {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+    height: 100%;
+}
+
+.EON.motstandare.application form {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.EON.motstandare.application [data-application-part="header"] {
+    flex: 0 0 auto;
+    flex-shrink: 0;
+    padding: 8px 8px 0;
+}
+
+.EON.motstandare.application [data-application-part="header"] .two-column,
+.EON.motstandare.application [data-application-part="header"] .three-column {
+    margin-top: 4px;
+}
+
+.EON.motstandare.application [data-application-part="header"] .item-row {
+    align-items: flex-start;
+}
+
+.EON.motstandare.application [data-application-part="header"] .item-column {
+    flex-wrap: nowrap;
+    align-self: flex-start;
+    height: auto;
+}
+
+.EON.motstandare.application [data-application-part="header"] .headline {
+    flex: 0 0 auto;
+    height: auto;
+    line-height: var(--eon-line-height-default);
+    margin-bottom: 5px;
+}
+
+.EON.motstandare.application [data-application-part="header"] .headline .attribute-area {
+    line-height: var(--eon-line-height-default);
+}
+
+.EON.motstandare.application [data-application-part="tabs"] {
+    flex: 0 0 auto;
+    flex-shrink: 0;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 0 8px;
+    box-sizing: border-box;
+}
+
+.EON.motstandare.application [data-application-part="tabs"] .navigation {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    overflow: visible !important;
+}
+
+.EON.motstandare.application [data-application-part="tabs"] .navigation .tab-area {
+    width: 100%;
+}
+
+.EON.motstandare.application section.tab:not(.active) {
+    display: none;
+}
+
+.EON.motstandare.application [data-application-part="fardigheter"],
+.EON.motstandare.application [data-application-part="strid"],
+.EON.motstandare.application [data-application-part="magi"],
+.EON.motstandare.application [data-application-part="religion"],
+.EON.motstandare.application [data-application-part="anteckningar"] {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 8px 8px;
+    width: 100%;
+}
+
+.EON.motstandare.application .bio textarea.text-value {
+    min-height: 4.5rem;
+    width: 100%;
+}
+
+.EON.motstandare.application [data-application-part="anteckningar"] .bio-box {
+    margin-bottom: 12px;
+}
+
+.EON.motstandare.application [data-application-part="anteckningar"] .bio-box .bio {
+    flex-grow: 0;
+    max-height: none;
+    line-height: normal;
+}
+
+.EON.motstandare.application [data-application-part="anteckningar"] .bio-box .bio.item-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+.EON.motstandare.application [data-application-part="anteckningar"] .bio-box .floating-label-group .floating-label {
+    top: 0;
+}
+
+.EON.motstandare .motstandare-fardigheter-row {
+    width: 100%;
+    align-items: flex-start;
+}
+
+.EON.motstandare .motstandare-fardigheter-row .item-box.skill-area {
+    margin-bottom: 0;
+    min-height: 0;
+    box-sizing: border-box;
+}
+
+/* Motstandare — färdighetsrader med fasta kolumner så redigeringsikonen linjerar */
+.EON.motstandare .skill-area .skill-row.skill {
+    display: grid;
+    grid-template-columns: 10px minmax(0, 1fr) 65px 2.5em 22px;
+    column-gap: 4px;
+    align-items: center;
+    flex-wrap: nowrap;
+    max-height: none;
+}
+
+.EON.motstandare .skill-area .skill-row.skill > div:first-child {
+    width: 10px;
+    min-width: 10px;
+}
+
+.EON.motstandare .skill-area .skill-row.skill .normalskill {
+    width: auto;
+    margin-left: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.EON.motstandare .skill-area .skill-row.skill .dice-value {
+    margin-left: 0;
+    margin-right: 0;
+    justify-self: center;
+}
+
+.EON.motstandare .skill-area .skill-row.skill .skill-markers {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.EON.motstandare .skill-area .skill-row.skill .resource-box {
+    width: 65px;
+    min-width: 65px;
+    justify-self: center;
+    white-space: nowrap;
+}
+
+.EON.motstandare .skill-area .skill-row.skill .skill-icon {
+    margin-left: 0;
+    justify-self: end;
 }
 
 .EON .tabIcon {
@@ -1107,13 +1372,15 @@
     width: 98%;
 }
 
-.EON .sheet-character .navigation {
+.EON .sheet-character .navigation,
+.EON.sheet-character .navigation {
     width: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.EON .sheet-character .profile-img {
+.EON .sheet-character .profile-img,
+.EON.sheet-character .profile-img {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 100px;
     flex: 0 0 100px;
@@ -1547,6 +1814,298 @@ input.skill-value {
     padding-right: 2px;
 }
 
+/* Weapon roll dialog */
+
+.EON.eon-weapon-roll-dialog .window-content {
+    padding: 10px 12px 12px;
+}
+
+.EON.eon-weapon-roll-dialog .eon-weapon-roll-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: 10px;
+    align-items: start;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-panel {
+    border-radius: 6px;
+    padding: 12px 14px;
+}
+
+.eon-theme-light.EON.eon-weapon-roll-dialog .eon-wr-panel {
+    background: var(--eon-back-color-inputs);
+    border: 1px solid var(--eon-border-color);
+}
+
+.eon-theme-dark.EON.eon-weapon-roll-dialog .eon-wr-panel {
+    background: var(--eon-back-color-inputs-dark);
+    border: 1px solid var(--eon-border-color-dark);
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-panel--full {
+    width: 100%;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-weapon-header {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-weapon-name {
+    margin: 0 0 4px;
+    line-height: 1.2;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-dice-pool {
+    margin: 0;
+    font-size: 1.15em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-status-list {
+    list-style: none;
+    margin: 0 0 10px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-status-item {
+    font-size: 0.92em;
+    opacity: 0.92;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-status-item--warning {
+    opacity: 1;
+    font-weight: 600;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-check-row {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-check-row input {
+    margin: 0;
+    cursor: pointer;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-tactic-info {
+    margin: 0 0 12px;
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.eon-theme-light.EON.eon-weapon-roll-dialog .eon-wr-tactic-info {
+    background: rgba(0, 0, 0, 0.06);
+    border-left: 3px solid var(--eon-border-color);
+}
+
+.eon-theme-dark.EON.eon-weapon-roll-dialog .eon-wr-tactic-info {
+    background: rgba(255, 255, 255, 0.06);
+    border-left: 3px solid var(--eon-border-color-dark);
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-tactic-label {
+    display: block;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.75;
+    margin-bottom: 4px;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-tactic-list {
+    margin: 0;
+    padding-left: 1.1em;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-tactic-list li {
+    margin: 2px 0;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-block {
+    margin-left: 0;
+    margin-bottom: 0;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-block-label {
+    display: block;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+    margin: 10px 0 6px;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-block-label:first-child {
+    margin-top: 0;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-btn-row .eon-wr-tab,
+.EON.eon-weapon-roll-dialog .eon-wr-btn-row .dialog-event-button {
+    flex: 1 1 calc(33.333% - 6px);
+    min-width: 72px;
+    width: auto;
+    max-width: none;
+    height: 32px;
+    margin: 0;
+    line-height: 1.2;
+    padding: 4px 8px;
+    white-space: normal;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-btn-row--mode .eon-wr-tab {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-btn-row--compact .dialog-event-button {
+    flex: 1 1 calc(50% - 6px);
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-bonus-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-bonus-col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-bonus-col .headline {
+    text-align: center;
+    margin: 0;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-total-pool {
+    margin: 12px 0 0;
+    text-align: center;
+    font-size: 1.05em;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-total-label {
+    opacity: 0.75;
+    margin-right: 4px;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-panel--modifiers.dialog-section {
+    min-height: 0;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-target-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.EON.eon-weapon-roll-dialog .eon-attack-target-select {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-hint {
+    margin: 0;
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 0.9em;
+    border-radius: 4px;
+    opacity: 0.9;
+}
+
+.eon-theme-light.EON.eon-weapon-roll-dialog .eon-wr-hint {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.eon-theme-dark.EON.eon-weapon-roll-dialog .eon-wr-hint {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-difficulty-block {
+    text-align: center;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-difficulty-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-difficulty-header .floating-label-group {
+    width: 120px;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-difficulty-pad {
+    display: grid;
+    grid-template-columns: repeat(11, minmax(0, 1fr));
+    gap: 4px;
+    max-width: 440px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-difficulty-pad.dice-row {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-difficulty-pad .dialog-event-button {
+    width: 100%;
+    min-width: 0;
+    flex: unset;
+    height: 30px;
+    padding: 2px 0;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    padding-top: 4px;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-footer .dialog-button {
+    flex: 1 1 0;
+    max-width: 220px;
+    height: 36px;
+    margin: 0;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-action-primary {
+    font-weight: 600;
+}
+
+@media all and (max-width: 560px) {
+    .EON.eon-weapon-roll-dialog .eon-wr-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Migration Wizard - Fixed button layout */
 .EON.migration-wizard-dialog .centerText {
     text-align: center;
@@ -1714,3 +2273,5 @@ input.skill-value {
         min-width: 700px;
     }
 }
+}
+

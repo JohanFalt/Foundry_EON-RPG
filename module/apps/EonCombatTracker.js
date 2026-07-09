@@ -41,10 +41,10 @@ export class EonCombatTracker extends HandlebarsApplicationMixin(ApplicationV2) 
 
     get areAllPhasesSelected() {
         const combatants = this.combat?.combatants?.contents ?? [];
-        const active = combatants.filter((c) => !c.defeated);
+        const active = combatants.filter((combatant) => !combatant.defeated);
         if (active.length === 0) return true;
-        return active.every((c) => {
-            const phase = c.flags?.["eon-rpg"]?.phase;
+        return active.every((combatant) => {
+            const phase = combatant.flags?.["eon-rpg"]?.phase;
             return typeof phase === "string" && phase.length > 0;
         });
     }
@@ -73,7 +73,7 @@ export class EonCombatTracker extends HandlebarsApplicationMixin(ApplicationV2) 
         if (!combat?.combatants?.contents?.length) return [];
 
         const eonOrder = CombatHelper.getEonTurnOrder(combat);
-        const byId = new Map(combat.combatants.contents.map((c) => [c.id, c]));
+        const byId = new Map(combat.combatants.contents.map((combatant) => [combatant.id, combatant]));
         return eonOrder.map((id) => byId.get(id)).filter(Boolean);
     }
 
@@ -286,6 +286,32 @@ export class EonCombatTracker extends HandlebarsApplicationMixin(ApplicationV2) 
             return;
         }
 
+        if (action === "remove-from-combat") {
+            const name = combatant.name ?? combatant.actor?.name ?? "?";
+            const ok = await Dialog.confirm({
+                title: game.i18n.localize("eon.combat.taBortFranStridenTitle"),
+                content: `<p>${game.i18n.format("eon.combat.taBortFranStridenBekraftelse", { name })}</p>`,
+                defaultYes: false
+            });
+            if (!ok) return;
+            if ((combatant.flags?.["eon-rpg"]?.groupId ?? "main") !== "main") {
+                await SubcombatManager.leaveSubcombat(combatant);
+            }
+            await combatant.delete();
+            await this.render(true);
+            return;
+        }
+
+        if (action === "open-sheet") {
+            const actor = combatant.actor;
+            if (!actor) {
+                ui.notifications.warn(game.i18n.localize("eon.combat.ingaActorKopplad"));
+                return;
+            }
+            await actor.sheet.render(true);
+            return;
+        }
+
         if (action === "roll-initiative") {
             const hasPhase = (combatant.flags?.["eon-rpg"]?.phase ?? "") !== "";
             if (!hasPhase) {
@@ -378,14 +404,16 @@ export class EonCombatTracker extends HandlebarsApplicationMixin(ApplicationV2) 
 
         const groupId = combatant.flags?.["eon-rpg"]?.groupId ?? "main";
         const groupHasAttacker = groupId === "main" || combat.combatants.contents.some(
-            (c) => (c.flags?.["eon-rpg"]?.groupId === groupId && c.flags?.["eon-rpg"]?.subcombatRole === "attacker")
+            (member) => member.flags?.["eon-rpg"]?.groupId === groupId && member.flags?.["eon-rpg"]?.subcombatRole === "attacker"
         );
         if (groupId !== "main" && groupHasAttacker) {
             ui.notifications.warn(game.i18n.localize("eon.combat.lamnaDelstridForst"));
             return;
         }
 
-        const candidates = combat.combatants.contents.filter((c) => c.id !== combatant.id && !c.defeated);
+        const candidates = combat.combatants.contents.filter(
+            (other) => other.id !== combatant.id && !other.defeated
+        );
         if (!candidates.length) {
             ui.notifications.warn(game.i18n.localize("eon.combat.ingaAndraDeltagare"));
             return;
@@ -396,9 +424,9 @@ export class EonCombatTracker extends HandlebarsApplicationMixin(ApplicationV2) 
         }
 
         const selected = new Set(combatant.flags?.["eon-rpg"]?.pendingSubcombatTargets ?? []);
-        const rows = candidates.map((c) => {
-            const checked = selected.has(c.id) ? "checked" : "";
-            return `<label style="display:block;margin:4px 0;"><input type="checkbox" name="target" value="${c.id}" ${checked}> ${c.name}</label>`;
+        const rows = candidates.map((candidate) => {
+            const checked = selected.has(candidate.id) ? "checked" : "";
+            return `<label style="display:block;margin:4px 0;"><input type="checkbox" name="target" value="${candidate.id}" ${checked}> ${candidate.name}</label>`;
         }).join("");
 
         const dialog = new foundry.applications.api.DialogV2({

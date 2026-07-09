@@ -7,8 +7,8 @@
  */
 export function normalizeEgenskapRefKey(ref) {
     if (!ref) return "";
-    const u = (ref.uuid ?? "").toString().trim();
-    if (u) return u;
+    const uuid = (ref.uuid ?? "").toString().trim();
+    if (uuid) return uuid;
     return (ref._id ?? "").toString().trim();
 }
 

@@ -5,7 +5,7 @@ import ItemHelper from "../item-helper.js";
 import CalculateHelper from "../calculate-helper.js";
 import SelectHelper from "../select-helpers.js"
 import { SendMessage } from "../dice-helper.js";
-import { datavaluta } from '../../packs/valuta.js';
+import { datavaluta } from '../../data/valuta.js';
 import { ensureRollperson5StartingItems } from "../apps/character-creation-helper.js";
 
 export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
@@ -197,8 +197,8 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
                 data.actor.system.listdata.utrustning.rustning.push(item);
                 if (item.system.installningar.buren) {
                     data.actor.system.listdata.kroppsdelar = [];
-                    for (const del of item.system.kroppsdel) {
-                        data.actor.system.listdata.kroppsdelar.push(del);
+                    for (const kroppsdel of item.system.kroppsdel) {
+                        data.actor.system.listdata.kroppsdelar.push(kroppsdel);
                     }                   
                 }
             }
@@ -276,8 +276,8 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
             const items = data.actor.system.listdata.utrustning.rustning.filter(rustning => rustning.type === "Rustning" && rustning.system.installningar.buren);
             let varde = 0;
             
-            for (const i of items) {
-                varde += i.system.belastning;
+            for (const rustning of items) {
+                varde += rustning.system.belastning;
             }
 
             data.actor.system.berakning.belastning.rustning = varde;
@@ -300,14 +300,17 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
 
         data.listData = SelectHelper.SetupActor(data.actor);
         const bg5 = this.actor.system.bakgrund ?? {};
-        const enrich = async (html) =>
-            foundry.applications.ux.TextEditor.implementation.enrichHTML((html ?? "").toString());
-        data.enrichedBeskrivning = await enrich(bg5.beskrivning);
-        data.enrichedUtseende = await enrich(bg5.utseende);
-        data.enrichedRelationer = await enrich(bg5.relationer);
+
+        data.enrichedBeskrivning = await foundry.applications.ux.TextEditor.implementation.enrichHTML((bg5.beskrivning ?? "").toString());
+        data.enrichedUtseende = await foundry.applications.ux.TextEditor.implementation.enrichHTML((bg5.utseende ?? "").toString());
+        data.enrichedRelationer = await foundry.applications.ux.TextEditor.implementation.enrichHTML((bg5.relationer ?? "").toString());
 
         // sortering
         data.sheet = this;
+
+        console.log(data.actor.name);
+        console.log(data.actor);
+        console.log(data.EON);    
 
         return data;
     }
@@ -626,7 +629,7 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
             const fieldStrings = dataset.property;
             const fields = fieldStrings.split(".");
 
-            var value = element.value;
+            let value = element.value;
 
             if (dataset.datatype == "Integer") {
                 value = parseInt(value);
@@ -835,23 +838,23 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
         if (type != undefined) {
             if (type == "karaktarsdrag") {
                 let fields = dataset.name.split(".");
-                let newvalue = Number(dataset.value);
+                let newValue = Number(dataset.value);
 
-                if (newvalue == 0) {
-                    newvalue = 1;
+                if (newValue == 0) {
+                    newValue = 1;
                 }
                 else {
-                    newvalue = 0;
+                    newValue = 0;
                 }
 
                 if (fields.length == 2) {
                     const setting = fields[0];
                     const property = fields[1];
-                    actorData.system.egenskap.karaktärsdrag[index][setting][property] = newvalue;
+                    actorData.system.egenskap.karaktärsdrag[index][setting][property] = newValue;
                 }
                 else {
                     const property = fields;
-                    actorData.system.egenskap.karaktärsdrag[index][property] = newvalue;
+                    actorData.system.egenskap.karaktärsdrag[index][property] = newValue;
                 }    
                 
                 await this.actor.update(actorData);

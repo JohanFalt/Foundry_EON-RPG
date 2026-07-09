@@ -1,0 +1,48 @@
+<section class="dialog-pick-fardighet">
+    {{#if isGroupStep}}
+        <p class="hint">{{localize "eon.dialogs.valjFardighetsgrupp"}}</p>
+        <div class="form-group">
+            <label for="eon-pick-fardighet-grupp">{{localize "eon.dialogs.fardighetsgrupp"}}</label>
+            <select name="grupp" id="eon-pick-fardighet-grupp">
+                {{#each grupper as |grupp|}}
+                    <option value="{{grupp.key}}" {{#if (eq grupp.key ../selectedGroup)}}selected{{/if}}>{{localize grupp.label}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <footer class="form-footer">
+            <button type="button" data-action="next">
+                <i class="fa-solid fa-arrow-right"></i> {{localize "eon.dialogs.fortsatt"}}
+            </button>
+            <button type="button" data-action="cancel">
+                {{localize "eon.dialogs.avbryt"}}
+            </button>
+        </footer>
+    {{else}}
+        <p class="hint">{{localize "eon.dialogs.valjFardighet"}} — {{localize selectedGroupLabel}}</p>
+        {{#if hasFardigheter}}
+            <div class="form-group">
+                <label for="eon-pick-fardighet-skill">{{localize "eon.sheets.actor.fardigheter"}}</label>
+                <select name="fardighet" id="eon-pick-fardighet-skill">
+                    {{#each fardigheter as |fardighet|}}
+                        <option value="{{fardighet.key}}" {{#if (eq fardighet.key ../selectedSkill)}}selected{{/if}}>{{localize fardighet.namn}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        {{else}}
+            <p>{{localize "eon.dialogs.allaFardigheterTillagda"}}</p>
+        {{/if}}
+        <footer class="form-footer">
+            <button type="button" data-action="back">
+                <i class="fa-solid fa-arrow-left"></i> {{localize "eon.dialogs.tillbaka"}}
+            </button>
+            {{#if hasFardigheter}}
+                <button type="button" data-action="save">
+                    <i class="fa-solid fa-floppy-disk"></i> {{localize "eon.dialogs.spara"}}
+                </button>
+            {{/if}}
+            <button type="button" data-action="cancel">
+                {{localize "eon.dialogs.avbryt"}}
+            </button>
+        </footer>
+    {{/if}}
+</section>

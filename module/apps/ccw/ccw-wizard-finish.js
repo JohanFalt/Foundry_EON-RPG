@@ -14,7 +14,6 @@ import {
     SPRAK5_PACK,
     CCW_EGENSKAP_SOURCE_UUID_FLAG
 } from "../folkslag-wizard-helper.js";
-import { getGrundrustningOchGrundskadaFromKroppsbyggnadVarde } from "../eon5-kroppsbyggnad-derived.js";
 import {
     EON_CCW_FLAG_SCOPE,
     HARLEDDA_KEYS,
@@ -133,16 +132,16 @@ function buildEon5KaraktarsdragFromWizardRows(rows) {
     for (const row of rows) {
         if (!row || typeof row !== "object") continue;
         const namn = (row.namn ?? "").toString().trim();
-        const n1 = (row.niva1 ?? "").toString().trim();
-        const n2 = (row.niva2 ?? "").toString().trim();
-        const n3 = (row.niva3 ?? "").toString().trim();
-        if (!namn && !n1 && !n2 && !n3) continue;
-        const d = emptyDrag();
-        d.namn = namn;
-        d.niva1.text = n1;
-        d.niva2.text = n2;
-        d.niva3.text = n3;
-        out.push(d);
+        const niva1Text = (row.niva1 ?? "").toString().trim();
+        const niva2Text = (row.niva2 ?? "").toString().trim();
+        const niva3Text = (row.niva3 ?? "").toString().trim();
+        if (!namn && !niva1Text && !niva2Text && !niva3Text) continue;
+        const karaktarsdrag = emptyDrag();
+        karaktarsdrag.namn = namn;
+        karaktarsdrag.niva1.text = niva1Text;
+        karaktarsdrag.niva2.text = niva2Text;
+        karaktarsdrag.niva3.text = niva3Text;
+        out.push(karaktarsdrag);
     }
     return out;
 }
@@ -183,49 +182,49 @@ export async function applyCharacterCreationFinish(actor, wizardData) {
         actorData.system.installningar.eon = "eon5";
     }
 
-    const bg = actorData.system.bakgrund;
-    bg.koncept = mergedDraft.koncept ?? "";
-    bg.hemland = mergedDraft.hemland ?? "";
-    bg.hemort = mergedDraft.hemort ?? "";
-    bg.folkslag = await buildBakgrundFolkslagString(mergedDraft);
+    const bakgrund = actorData.system.bakgrund;
+    bakgrund.koncept = mergedDraft.koncept ?? "";
+    bakgrund.hemland = mergedDraft.hemland ?? "";
+    bakgrund.hemort = mergedDraft.hemort ?? "";
+    bakgrund.folkslag = await buildBakgrundFolkslagString(mergedDraft);
     const kultDocFin = mergedDraft.harKulturfolkslag ? await loadFolkslag5Doc(mergedDraft.kulturfolkslag) : null;
-    bg.kulturfolkslag = mergedDraft.harKulturfolkslag && kultDocFin ? (kultDocFin.name ?? "").trim() : "";
-    bg.religion = mergedDraft.religion ?? "";
+    bakgrund.kulturfolkslag = mergedDraft.harKulturfolkslag && kultDocFin ? (kultDocFin.name ?? "").trim() : "";
+    bakgrund.religion = mergedDraft.religion ?? "";
     const wizardDoktrin = Array.isArray(mergedDraft.doktrinRader) ? mergedDraft.doktrinRader : [];
-    bg.doktriner = wizardDoktrin
+    bakgrund.doktriner = wizardDoktrin
         .map((rad) => (rad?.beskrivning ?? "").toString().trim())
         .filter((rad) => rad.length > 0)
         .join("\n");
-    bg.arketyp = mergedDraft.arketyp ?? "";
-    bg.varv = mergedDraft.varv ?? "";
-    bg.miljo = mergedDraft.miljo ?? "";
-    bg.levnadsstandard = mergedDraft.levnadsstandard ?? "";
-    bg.alder = mergedDraft.alder ?? "";
-    bg.kon = (mergedDraft.kon ?? "").toString().trim();
-    bg.titel = (mergedDraft.titel ?? "").toString().trim();
-    bg.utseende = (mergedDraft.utseende ?? "").toString();
-    bg.relationer = (mergedDraft.relationer ?? "").toString();
+    bakgrund.arketyp = mergedDraft.arketyp ?? "";
+    bakgrund.varv = mergedDraft.varv ?? "";
+    bakgrund.miljo = mergedDraft.miljo ?? "";
+    bakgrund.levnadsstandard = mergedDraft.levnadsstandard ?? "";
+    bakgrund.alder = mergedDraft.alder ?? "";
+    bakgrund.kon = (mergedDraft.kon ?? "").toString().trim();
+    bakgrund.titel = (mergedDraft.titel ?? "").toString().trim();
+    bakgrund.utseende = (mergedDraft.utseende ?? "").toString();
+    bakgrund.relationer = (mergedDraft.relationer ?? "").toString();
 
     const rollNamn = (mergedDraft.rollpersonNamn ?? "").toString().trim();
     if (rollNamn) actorData.name = rollNamn;
 
     if (!actorData.system.strid) actorData.system.strid = {};
-    const va = (mergedDraft.vapenarm ?? "").toString().trim();
-    if (va === "hoger" || va === "vanster" || va === "annat") {
-        actorData.system.strid.vapenarm = va;
+    const vapenarm = (mergedDraft.vapenarm ?? "").toString().trim();
+    if (vapenarm === "hoger" || vapenarm === "vanster" || vapenarm === "annat") {
+        actorData.system.strid.vapenarm = vapenarm;
     }
     actorData.system.kretsar = (Array.isArray(mergedDraft.kretsarRader) ? mergedDraft.kretsarRader : [])
-        .map((r) => ({
-            namn: (r?.namn ?? "").toString().trim(),
-            anteckning: (r?.anteckning ?? "").toString().trim()
+        .map((rad) => ({
+            namn: (rad?.namn ?? "").toString().trim(),
+            anteckning: (rad?.anteckning ?? "").toString().trim()
         }))
-        .filter((r) => r.namn.length > 0 || r.anteckning.length > 0);
+        .filter((rad) => rad.namn.length > 0 || rad.anteckning.length > 0);
     actorData.system.foljeslagare = (Array.isArray(mergedDraft.foljeslagareRader) ? mergedDraft.foljeslagareRader : [])
-        .map((r) => ({
-            namn: (r?.namn ?? "").toString().trim(),
-            anteckning: (r?.anteckning ?? "").toString().trim()
+        .map((rad) => ({
+            namn: (rad?.namn ?? "").toString().trim(),
+            anteckning: (rad?.anteckning ?? "").toString().trim()
         }))
-        .filter((r) => r.namn.length > 0 || r.anteckning.length > 0);
+        .filter((rad) => rad.namn.length > 0 || rad.anteckning.length > 0);
 
     const beskrivBits = [];
     if ((mergedDraft.bakgrund ?? "").trim()) beskrivBits.push(mergedDraft.bakgrund.trim());
@@ -241,20 +240,20 @@ export async function applyCharacterCreationFinish(actor, wizardData) {
     if ((mergedDraft.detaljer ?? "").trim()) beskrivBits.push(mergedDraft.detaljer.trim());
 
     if (beskrivBits.length) {
-        const block = beskrivBits.join("\n\n");
-        const existing = (bg.beskrivning ?? "").toString();
-        bg.beskrivning = existing ? `${existing}\n\n${block}` : block;
+        const beskrivningsBlock = beskrivBits.join("\n\n");
+        const existing = (bakgrund.beskrivning ?? "").toString();
+        bakgrund.beskrivning = existing ? `${existing}\n\n${beskrivningsBlock}` : beskrivningsBlock;
     }
 
-    const avt = actorData.system.egenskap.avtrubbning;
+    const avtrubbning = actorData.system.egenskap.avtrubbning;
     // Schema: utsatthet, vald, övernaturligt — mockup: Valfri kategori, Utsatthet, Våld, Övernaturligt
-    avt.utsatthet = parseIntSafe(mergedDraft.avtrubbning?.utsatthet);
-    avt.vald = parseIntSafe(mergedDraft.avtrubbning?.vald);
-    avt.overnaturligt = parseIntSafe(mergedDraft.avtrubbning?.overnaturligt);
+    avtrubbning.utsatthet = parseIntSafe(mergedDraft.avtrubbning?.utsatthet);
+    avtrubbning.vald = parseIntSafe(mergedDraft.avtrubbning?.vald);
+    avtrubbning.overnaturligt = parseIntSafe(mergedDraft.avtrubbning?.overnaturligt);
     const valfriKat = parseIntSafe(mergedDraft.avtrubbning?.valfriKategori);
     if (valfriKat) {
         const note = `${game.i18n.localize("eon.sheets.actor.avtrubbningValfriKategoriNote")}: ${valfriKat}`;
-        bg.beskrivning = (bg.beskrivning ?? "").toString() ? `${bg.beskrivning}\n\n${note}` : note;
+        bakgrund.beskrivning = (bakgrund.beskrivning ?? "").toString() ? `${bakgrund.beskrivning}\n\n${note}` : note;
     }
 
     const handelseLabel = (tabKey) => {
@@ -275,39 +274,39 @@ export async function applyCharacterCreationFinish(actor, wizardData) {
     const handelseRader = Array.isArray(mergedDraft.handelseResultat) ? mergedDraft.handelseResultat : [];
     const handelseLines = handelseRader
         .map((rad) => {
-            const tab = (rad.tabell ?? "").toString().trim();
-            const nr = (rad.nummer ?? "").toString().trim();
-            const ant = (rad.anteckning ?? "").toString().trim();
-            if (!tab && !nr && !ant) return "";
-            const tabellNamn = tab ? handelseLabel(tab) : "";
-            const nrDel = nr ? `#${nr}` : "";
-            const delar = [tabellNamn, nrDel, ant].filter(Boolean);
+            const tabellId = (rad.tabell ?? "").toString().trim();
+            const nummer = (rad.nummer ?? "").toString().trim();
+            const anteckning = (rad.anteckning ?? "").toString().trim();
+            if (!tabellId && !nummer && !anteckning) return "";
+            const tabellNamn = tabellId ? handelseLabel(tabellId) : "";
+            const nummerDel = nummer ? `#${nummer}` : "";
+            const delar = [tabellNamn, nummerDel, anteckning].filter(Boolean);
             return delar.join(" — ");
         })
         .filter(Boolean);
     if (handelseLines.length) {
         const rubrik = game.i18n.localize("eon.wizard.handelseResultatRubrik");
         const note = `${rubrik}\n${handelseLines.join("\n")}`;
-        bg.beskrivning = (bg.beskrivning ?? "").toString() ? `${bg.beskrivning}\n\n${note}` : note;
+        bakgrund.beskrivning = (bakgrund.beskrivning ?? "").toString() ? `${bakgrund.beskrivning}\n\n${note}` : note;
     }
 
-    const hd = actorData.system.harleddegenskaper;
+    const harleddegenskaper = actorData.system.harleddegenskaper;
     for (const key of HARLEDDA_KEYS) {
-        const row = mergedDraft.harledd?.[key] ?? {};
-        const grundVarde = parseIntSafe(row.grund);
-        const bonusVarde = parseIntSafe(row.bonus);
+        const harleddRad = mergedDraft.harledd?.[key] ?? {};
+        const grundVarde = parseIntSafe(harleddRad.grund);
+        const bonusVarde = parseIntSafe(harleddRad.bonus);
         if (key === "visdom") {
-            hd.visdom = grundVarde + bonusVarde;
+            harleddegenskaper.visdom = grundVarde + bonusVarde;
             continue;
         }
-        const pool = attributVardeTillHarleddT6Attribut(grundVarde + bonusVarde);
-        const attr = hd[key];
-        if (attr?.grund) {
-            attr.grund.tvarde = pool.tvarde;
-            attr.grund.bonus = pool.bonus;
-            attr.bonuslista = Array.isArray(attr.bonuslista) ? attr.bonuslista : [];
-            const tot = await CalculateHelper.BeraknaTotaltVarde(attr);
-            if (tot && typeof tot === "object") attr.totalt = tot;
+        const t6Pool = attributVardeTillHarleddT6Attribut(grundVarde + bonusVarde);
+        const attribut = harleddegenskaper[key];
+        if (attribut?.grund) {
+            attribut.grund.tvarde = t6Pool.tvarde;
+            attribut.grund.bonus = t6Pool.bonus;
+            attribut.bonuslista = Array.isArray(attribut.bonuslista) ? attribut.bonuslista : [];
+            const totalt = await CalculateHelper.BeraknaTotaltVarde(attribut);
+            if (totalt && typeof totalt === "object") attribut.totalt = totalt;
         }
     }
     const extraAttr = parseIntSafe(mergedDraft.extraAttributPoang);
@@ -315,56 +314,29 @@ export async function applyCharacterCreationFinish(actor, wizardData) {
         // Ingen dedikerad slot i schema — anteckna i beskrivning
         if (extraAttr) {
             const note = `${game.i18n.localize("eon.wizard.valfriaAttributPoangLabel")}: ${extraAttr}`;
-            bg.beskrivning = (bg.beskrivning ?? "").toString() ? `${bg.beskrivning}\n\n${note}` : note;
+            bakgrund.beskrivning = (bakgrund.beskrivning ?? "").toString() ? `${bakgrund.beskrivning}\n\n${note}` : note;
         }
     }
 
-    // Grundrustning och grundskada från kroppsbyggnad (tabell); modifierare/bonuslista på grundskada och bonuslista på rustning appliceras efter.
-    const kbRow = mergedDraft.harledd?.kroppsbyggnad ?? {};
-    let kbVarde = parseIntSafe(kbRow.grund) + parseIntSafe(kbRow.bonus);
-    if (kbVarde < 4) kbVarde = 4;
-    const { rustning, grundskada: grundskadaTabell } = getGrundrustningOchGrundskadaFromKroppsbyggnadVarde(kbVarde);
-    const hdPost = actorData.system.harleddegenskaper;
-    if (hdPost?.grundrustning) {
-        if (!hdPost.grundrustning.bonuslista?.length) {
-            hdPost.grundrustning.varde = rustning;
-            hdPost.grundrustning.totalt = rustning;
-        } else {
-            hdPost.grundrustning.varde = rustning;
-            hdPost.grundrustning.totalt = await CalculateHelper.BeraknaTotaltVarde(hdPost.grundrustning);
-        }
-    }
-    if (hdPost?.grundskada?.grund) {
-        hdPost.grundskada.bonuslista = hdPost.grundskada.bonuslista ?? [];
-        hdPost.grundskada.grund.tvarde = grundskadaTabell.tvarde;
-        hdPost.grundskada.grund.bonus = grundskadaTabell.bonus;
-        if (hdPost.grundskada.modifierare) {
-            hdPost.grundskada.grund.tvarde += parseInt(hdPost.grundskada.modifierare.tvarde ?? 0, 10) || 0;
-            hdPost.grundskada.grund.bonus += parseInt(hdPost.grundskada.modifierare.bonus ?? 0, 10) || 0;
-        }
-        const grundskadaTotalt = await CalculateHelper.BeraknaTotaltVarde(hdPost.grundskada);
-        if (grundskadaTotalt && typeof grundskadaTotalt === "object") {
-            hdPost.grundskada.totalt = grundskadaTotalt;
-        }
-    }
+    await CalculateHelper.beraknaGrundrustningOchGrundskadaEon5(actorData);
 
     await ensureRollperson5StartingItems(actor);
 
     {
-        const fd = mergedDraft.fardighetFordelning ?? {};
+        const fardighetFordelning = mergedDraft.fardighetFordelning ?? {};
         /** @type {{ _id: string, system: Record<string, unknown> }[]} */
         const updates = [];
-        for (const gKey of ENHETER_FARDIGHET_GRUPP_KEYS) {
-            const rows = Array.isArray(fd[gKey]) ? fd[gKey] : [];
+        for (const fardighetsGruppKey of ENHETER_FARDIGHET_GRUPP_KEYS) {
+            const rows = Array.isArray(fardighetFordelning[fardighetsGruppKey]) ? fardighetFordelning[fardighetsGruppKey] : [];
             for (const row of rows) {
-                const id = (row.itemId ?? "").toString().trim();
-                if (!id) continue;
-                const itemDoc = actor.items.get(id);
-                if (!itemDoc || !wizardFardighetItemMatchesWizardKey(gKey, itemDoc)) continue;
-                if (WIZARD_OVRIGA_ENHET_KEYS.includes(gKey)) {
-                    const p = clampWizardFardighetPoangValue(row.poang, false);
-                    const combinedFv = Math.min(CCW_FARDIGHET_ENHETER_MAX, p);
-                    const pool = fardighetsvardeToTvardeBonus(combinedFv);
+                const itemId = (row.itemId ?? "").toString().trim();
+                if (!itemId) continue;
+                const itemDoc = actor.items.get(itemId);
+                if (!itemDoc || !wizardFardighetItemMatchesWizardKey(fardighetsGruppKey, itemDoc)) continue;
+                if (WIZARD_OVRIGA_ENHET_KEYS.includes(fardighetsGruppKey)) {
+                    const poang = clampWizardFardighetPoangValue(row.poang, false);
+                    const combinedFv = Math.min(CCW_FARDIGHET_ENHETER_MAX, poang);
+                    const t6Pool = fardighetsvardeToTvardeBonus(combinedFv);
                     const instPrev = foundry.utils.duplicate(itemDoc.system?.installningar ?? {});
                     const installningar = foundry.utils.mergeObject(
                         instPrev,
@@ -372,39 +344,39 @@ export async function applyCharacterCreationFinish(actor, wizardData) {
                         { inplace: false, recursive: true }
                     );
                     updates.push({
-                        _id: id,
+                        _id: itemId,
                         system: {
                             varde: {
-                                tvarde: pool.tvarde,
-                                bonus: pool.bonus
+                                tvarde: t6Pool.tvarde,
+                                bonus: t6Pool.bonus
                             },
                             installningar
                         }
                     });
                     continue;
                 }
-                const inkR = !!row.inkompetent;
-                const blockR = !!row.blockering;
-                const g0 = clampWizardFardighetGrundvardeForInkompetentValue(row.grundvarde, inkR);
-                const p = clampWizardFardighetPoangValueForRow(row.poang, inkR, blockR, g0);
-                const capFv = inkR ? 1 : CCW_FARDIGHET_ENHETER_MAX;
-                const combinedFv = Math.min(capFv, g0 + p);
-                const pool = fardighetsvardeToTvardeBonus(combinedFv);
+                const inkompetent = !!row.inkompetent;
+                const blockering = !!row.blockering;
+                const grundvarde = clampWizardFardighetGrundvardeForInkompetentValue(row.grundvarde, inkompetent);
+                const poang = clampWizardFardighetPoangValueForRow(row.poang, inkompetent, blockering, grundvarde);
+                const maxFardighetsvarde = inkompetent ? 1 : CCW_FARDIGHET_ENHETER_MAX;
+                const combinedFv = Math.min(maxFardighetsvarde, grundvarde + poang);
+                const t6Pool = fardighetsvardeToTvardeBonus(combinedFv);
                 /** @type {Record<string, unknown>} */
-                const sys = {
+                const systemUpdate = {
                     varde: {
-                        tvarde: pool.tvarde,
-                        bonus: pool.bonus
+                        tvarde: t6Pool.tvarde,
+                        bonus: t6Pool.bonus
                     },
                     installningar: {
                         talang: !!row.talang,
-                        inkompetent: !!row.inkompetent,
-                        blockering: !!row.blockering
+                        inkompetent,
+                        blockering
                     }
                 };
                 updates.push({
-                    _id: id,
-                    system: sys
+                    _id: itemId,
+                    system: systemUpdate
                 });
             }
         }
@@ -412,7 +384,7 @@ export async function applyCharacterCreationFinish(actor, wizardData) {
     }
 
     {
-        const sf = Array.isArray(mergedDraft.sprakFordelning) ? mergedDraft.sprakFordelning : [];
+        const sprakFordelning = Array.isArray(mergedDraft.sprakFordelning) ? mergedDraft.sprakFordelning : [];
         const pack = game.packs.get(SPRAK5_PACK);
         /** @type {Item[]} */
         let sprakDocs = [];
@@ -426,23 +398,23 @@ export async function applyCharacterCreationFinish(actor, wizardData) {
         /** @type {{ _id: string, system: Record<string, unknown> }[]} */
         const sprakUpdates = [];
         const scope = EON_CCW_FLAG_SCOPE;
-        for (const row of sf) {
-            const id = (row.itemId ?? "").toString().trim();
-            if (!id) continue;
-            const itemDoc = actor.items.get(id);
+        for (const row of sprakFordelning) {
+            const itemId = (row.itemId ?? "").toString().trim();
+            if (!itemId) continue;
+            const itemDoc = actor.items.get(itemId);
             if (!itemDoc || itemDoc.type !== "Språk") continue;
             const uuid = (itemDoc.getFlag(scope, CCW_EGENSKAP_SOURCE_UUID_FLAG) ?? "").toString().trim();
-            const src = uuid ? sprakDocs.find((d) => d.uuid === uuid) : null;
-            const fv = src
-                ? defaultWizardFardighetGrundFardighetsvarde(src, "sprak", false)
+            const kallaSprakDoc = uuid ? sprakDocs.find((doc) => doc.uuid === uuid) : null;
+            const fardighetsvarde = kallaSprakDoc
+                ? defaultWizardFardighetGrundFardighetsvarde(kallaSprakDoc, "sprak", false)
                 : defaultWizardFardighetGrundFardighetsvarde(itemDoc, "sprak", false);
-            const pool = fardighetsvardeToTvardeBonus(fv);
+            const t6Pool = fardighetsvardeToTvardeBonus(fardighetsvarde);
             sprakUpdates.push({
-                _id: id,
+                _id: itemId,
                 system: {
                     varde: {
-                        tvarde: pool.tvarde,
-                        bonus: pool.bonus,
+                        tvarde: t6Pool.tvarde,
+                        bonus: t6Pool.bonus,
                         bonuslista: []
                     }
                 }

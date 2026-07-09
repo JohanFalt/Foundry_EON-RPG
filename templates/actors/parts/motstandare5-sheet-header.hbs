@@ -1,0 +1,17 @@
+<div class="sheet-top clear">
+    <div class="remaining-width">
+        {{> "systems/eon-rpg/templates/actors/parts/motstandare5-sheet-stats.hbs"}}
+    </div>
+
+    <div class="image-column pullRight">
+        <div class="image-column">
+            <img class="profile-img pointer" src="{{actor.img}}" title="{{actor.name}}" data-edit="img" data-action="editImage" alt="{{actor.name}}" />
+        </div>
+        
+        <div class="centerText">{{localize "eon.sheets.motstandare.typEtikett"}}</div>
+        <div>
+            <img class="pullLeft macroBtn pointer" src="{{EON.CONFIG.ikoner.slag_chock}}" data-source="attribute" data-type="harleddegenskaper" data-key="livskraft" data-title="{{localize 'eon.sheets.actor.chockslag'}}" title="{{localize 'eon.sheets.actor.chockslag'}}">
+            <img class="pullLeft macroBtn pointer" src="{{EON.CONFIG.ikoner.slag_dod}}" data-source="attribute" data-type="harleddegenskaper" data-key="livskraft" data-title="{{localize 'eon.sheets.actor.dodsslag'}}" title="{{localize 'eon.sheets.actor.dodsslag'}}">
+        </div>
+    </div>
+</div>

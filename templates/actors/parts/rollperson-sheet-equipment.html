@@ -41,9 +41,9 @@
                 </a>
             </div>
             <div class="item-listbox" style="width: 230px;">{{localize "eon.sheets.item.namn"}}</div>
-            <div class="item-listbox" style="width: 70px;">{{localize "eon.sheets.item.antal"}}</div>
-            <div class="item-listbox" style="width: 70px;">{{localize "eon.sheets.actor.vikt"}}</div>
-            <div class="item-listbox">{{localize "eon.sheets.actor.totalVikt"}}</div>
+            <div class="item-listbox centerText" style="width: 70px;">{{localize "eon.sheets.item.antal"}}</div>
+            <div class="item-listbox centerText" style="width: 70px;">{{localize "eon.sheets.actor.vikt"}}</div>
+            <div class="item-listbox centerText" style="width: 80px;">{{localize "eon.sheets.actor.totalVikt"}}</div>
         </div>    
 
         {{{getEquipmentContainers actor}}}
@@ -80,9 +80,9 @@
                     <i class="fa-solid fa-arrows-up-down"></i>
                 {{/if}}
             </div>
-            <div class="item-listbox" style="width: 70px;">{{localize "eon.sheets.item.antal"}}</div>
-            <div class="item-listbox" style="width: 70px;">{{localize "eon.sheets.actor.vikt"}}</div>
-            <div class="item-listbox">{{localize "eon.sheets.item.antalPerEnhet"}}</div>
+            <div class="item-listbox centerText" style="width: 70px;">{{localize "eon.sheets.item.antal"}}</div>
+            <div class="item-listbox centerText" style="width: 70px;">{{localize "eon.sheets.actor.vikt"}}</div>
+            <div class="item-listbox centerText" style="width: 150px;">{{localize "eon.sheets.item.antalPerEnhet"}}</div>
         </div>
 
         {{#each actor.system.listdata.utrustning.foremal as |foremal key|}}
@@ -98,21 +98,23 @@
                     <div class="item-listbox active-icon"><input class="pointer item-active" name="foremal.system.installningar.buren" type="checkbox" data-itemid="{{foremal._id}}" data-property="buren" {{isChecked foremal.system.installningar.buren}} title="{{localize 'eon.sheets.item.burenUtrustning'}}" /></div>
                     <div class="item-listbox draggable" style="width: 180px;" data-source="utrustning" data-itemid="{{foremal._id}}">{{foremal.name}}</div>
                     <div class="item-listbox" style="width: 150px;">{{localize (getEquipmentGroupName foremal.system.grupp)}}</div>
-                    <div class="item-listbox" style="width: 50px;">
+                    <div class="item-listbox centerText" style="width: 70px;">
                         <i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="{{foremal._id}}"></i>
                         <span class="number-of-text">{{foremal.system.antal}}</span>
                         <i class="fa-solid fa-square-minus red pointer weapon-count" data-action="decrease" data-itemid="{{foremal._id}}"></i>
                     </div>
-                    <div class="item-listbox" style="width: 50px;">
+                    <div class="item-listbox centerText" style="width: 70px;">
                         {{#if (eq foremal.system.vikt 0)}}
                             -
                         {{else}}
-                            {{round (multiplicate foremal.system.vikt foremal.system.antal) 2}}kg
+                            {{round (multiplicate foremal.system.vikt foremal.system.antal) 2}}
                         {{/if}}
                     </div>
-                    {{#if foremal.system.installningar.behallare}}
-                        <div class="item-listbox">{{foremal.system.volym.antal}} {{foremal.system.volym.enhet}}</div>
-                    {{/if}}
+                    <div class="item-listbox centerText" style="width: 150px;">
+                        {{#if foremal.system.installningar.behallare}}
+                            {{foremal.system.volym.antal}} {{foremal.system.volym.enhet}}
+                        {{/if}}
+                    </div>
                 </div>
             {{/if}}
         {{/each}}
