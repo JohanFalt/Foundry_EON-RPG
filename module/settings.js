@@ -1,3 +1,5 @@
+import { applyUiLanguage } from "./language-helper.js";
+
 /**
  * Översätt inställningens etikett/hjälptext (och ev. val) vid render — inte vid register(),
  * eftersom init ofta körs innan lang-paket är laddade och localize() då returnerar nyckeln.
@@ -45,6 +47,23 @@ export const systemSettings = function() {
 		default: "1",
 		type: String,
 	});
+
+    game.settings.register("eon-rpg", "uiLanguage", {
+        name: L("eon.settings.uiLanguage"),
+        hint: L("eon.settings.uiLanguageHint"),
+        scope: "user",
+        config: true,
+        default: "",
+        type: String,
+        choices: {
+            "sv": L("eon.settings.uiLanguageSv"),
+            "en": L("eon.settings.uiLanguageEn")
+        },
+        onChange: (value) => {
+            if (value !== "sv" && value !== "en") return;
+            applyUiLanguage(value, { reload: true });
+        }
+    });
 
     /* Messages */
     game.settings.register("eon-rpg", "eoncombattrackerbeta", {

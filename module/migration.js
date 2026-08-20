@@ -500,6 +500,16 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         `;
     } 
 
+    if (await CompareVersion(installedVersion, '5.4.1', isDemo)) {
+         partMessage += `
+         <p>
+             <p>Fixat till grafiken i chattrutorna.</p>
+             <p>Hanterat så att varje spelare fastställer sitt språk första gången de loggar in och därefter håller sig Foundry till detta. Finns som inte ställning i Världsinställningarna ifall man vill ändra detta i efterhand.</p>
+             <p>Eon 5: Förbättrat hur listningen av Händelsetabellerna listas på rollformuläret. Gäller bara nya rollpersoner från och med denna version.</p>
+         </p>           
+          `;
+    }
+
     // if (await CompareVersion(installedVersion, '5.3.1', isDemo)) {
     //      partMessage += `
     //      <p>

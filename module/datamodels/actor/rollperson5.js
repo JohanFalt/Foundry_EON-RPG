@@ -158,6 +158,26 @@ export default class Eon5Rollperson extends foundry.abstract.DataModel {
         schema.kretsar = new fields.ArrayField(kontaktRadSchema());
         schema.foljeslagare = new fields.ArrayField(kontaktRadSchema());
 
+        /** Händelseresultat från karaktärsskapande (Eon 5). Tom default — ingen migration från Anteckningar. */
+        schema.handelseresultat = new fields.ArrayField(
+            new fields.SchemaField({
+                tabell: new fields.StringField({ required: true, nullable: false, initial: "" }),
+                nummer: new fields.StringField({ required: true, nullable: false, initial: "" }),
+                anteckning: new fields.StringField({ required: true, nullable: false, initial: "" })
+            })
+        );
+
+        const handelseSlagField = () => new fields.NumberField({ ...valueInteger });
+        schema.handelseSlag = new fields.SchemaField({
+            valfri: handelseSlagField(),
+            farder: handelseSlagField(),
+            intriger: handelseSlagField(),
+            mirakel: handelseSlagField(),
+            strider: handelseSlagField(),
+            studier: handelseSlagField(),
+            trolldom: handelseSlagField()
+        });
+
         return schema;
     }
 

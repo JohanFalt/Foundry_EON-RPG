@@ -18,6 +18,7 @@ import { CombatAttackChat } from "./combat-attack-chat.js";
 
 import ItemHelper from "./item-helper.js";
 import MigrationWizard from "./ui/migration-wizard-helper.js";
+import { ensureUiLanguage } from "./language-helper.js";
 import "./ui/eon-dice-tray.js";
 
 let eonCombatTrackerApp = null;
@@ -279,6 +280,9 @@ Hooks.once("setup", function () {
 /* 3. When ready						*/
 /* ------------------------------------ */
 Hooks.once("ready", async () => {
+    // Per-spelarspråk: förstaval + återställ preferens vid inloggning i Eon-världen
+    await ensureUiLanguage();
+
 	const installedVersion = game.settings.get("eon-rpg", "systemVersion");
     const systemVersion = game.system.version;
     const isDemo = false;
@@ -362,16 +366,6 @@ Hooks.once("ready", async () => {
                     </ul>
                     <p style="margin-top: 12px;">Mål väljs automatiskt från trackern vid närstrid (delstrid) och avståndsvapen. Bekräfta delstrid i trackern innan närstridsanfall.</p>`
                 ], 'eoncombattracker');
-            }
-
-            if (!game.settings.get('eon-rpg', 'eontranslation')) {
-                await MigrationWizard.show([
-                        // Sida 1
-                        `<h2>Språk och översättning</h2>
-                        <p>Eon-systemet stödjer både <strong>svenska</strong> och <strong>engelska</strong>. För att använda systemet på svenska går du till <strong>Foundry-inställningarna</strong> (kugghjulen) och ändrar <strong>Språk</strong> från engelska till svenska.</p>
-                        <p>Språkvalet är en <strong>spelarnivåinställning</strong>. Det innebär att varje användare kan välja språk för sin egen klient. Om en spelare vill se gränssnittet på engelska kan de ställa in det hos sig utan att det påverkar andra – resten av gruppen kan fortsätta använda svenska.</p>
-                        <p style="margin-top: 12px;">Efter att du bytt språk laddas Eon-gränssnittet om med valt språk.</p>`
-                ], 'eontranslation');
             }
 
             if (!game.settings.get('eon-rpg', 'eoncreationwizard')) {

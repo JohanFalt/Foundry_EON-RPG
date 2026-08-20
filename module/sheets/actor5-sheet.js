@@ -7,6 +7,86 @@ import SelectHelper from "../select-helpers.js"
 import { SendMessage } from "../dice-helper.js";
 import { datavaluta } from '../../data/valuta.js';
 import { ensureRollperson5StartingItems } from "../apps/character-creation-helper.js";
+import { HANDELSE_SIDEBAR_SLAG_KEYS } from "../apps/ccw/ccw-constants-keys.js";
+
+/** @type {Record<string, string>} */
+const HANDELSE_TABELL_I18N = {
+    valfri: "eon.wizard.htValfri",
+    farder: "eon.wizard.htFarder",
+    intriger: "eon.wizard.htIntriger",
+    mirakel: "eon.wizard.htMirakel",
+    strider: "eon.wizard.htStrider",
+    studier: "eon.wizard.htStudier",
+    trolldom: "eon.wizard.htTrolldom"
+};
+
+/**
+ * @param {string} tabellKey
+ * @returns {string}
+ */
+function localizeHandelseTabell(tabellKey) {
+    const key = (tabellKey ?? "").toString().trim();
+    const path = HANDELSE_TABELL_I18N[key];
+    if (path) return game.i18n.localize(path);
+    if (!key) return game.i18n.localize("eon.sheets.actor.handelseTabellSaknas");
+    return key;
+}
+
+/**
+ * @param {string} text
+ * @param {number} maxLen
+ * @returns {string}
+ */
+function truncateHandelsePreview(text, maxLen = 72) {
+    const cleaned = (text ?? "").toString().replace(/\s+/g, " ").trim();
+    if (cleaned.length <= maxLen) return cleaned;
+    return `${cleaned.slice(0, maxLen - 1)}…`;
+}
+
+/**
+ * Gruppera händelseresultat efter tabell; behåll originalindex för formulärfält.
+ * @param {Array<{ tabell?: string, nummer?: string, anteckning?: string }>} rows
+ * @returns {{ tabellKey: string, label: string, rows: object[] }[]}
+ */
+function buildHandelseGrupper(rows) {
+    /** @type {Map<string, object[]>} */
+    const byTabell = new Map();
+    (Array.isArray(rows) ? rows : []).forEach((rad, index) => {
+        const tabellKey = (rad?.tabell ?? "").toString().trim();
+        if (!byTabell.has(tabellKey)) byTabell.set(tabellKey, []);
+        const anteckning = (rad?.anteckning ?? "").toString();
+        byTabell.get(tabellKey).push({
+            index,
+            tabell: tabellKey,
+            nummer: (rad?.nummer ?? "").toString(),
+            anteckning,
+            anteckningPreview: truncateHandelsePreview(anteckning)
+        });
+    });
+
+    const orderedKeys = [...HANDELSE_SIDEBAR_SLAG_KEYS, ""];
+    /** @type {{ tabellKey: string, label: string, rows: object[] }[]} */
+    const groups = [];
+    const seen = new Set();
+    for (const key of orderedKeys) {
+        if (!byTabell.has(key)) continue;
+        seen.add(key);
+        groups.push({
+            tabellKey: key,
+            label: localizeHandelseTabell(key),
+            rows: byTabell.get(key)
+        });
+    }
+    for (const [key, groupRows] of byTabell.entries()) {
+        if (seen.has(key)) continue;
+        groups.push({
+            tabellKey: key,
+            label: localizeHandelseTabell(key),
+            rows: groupRows
+        });
+    }
+    return groups;
+}
 
 export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
 
@@ -305,6 +385,16 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
         data.enrichedUtseende = await foundry.applications.ux.TextEditor.implementation.enrichHTML((bg5.utseende ?? "").toString());
         data.enrichedRelationer = await foundry.applications.ux.TextEditor.implementation.enrichHTML((bg5.relationer ?? "").toString());
 
+        const handelseRader = Array.isArray(this.actor.system.handelseresultat)
+            ? this.actor.system.handelseresultat
+            : [];
+        data.handelseCount = handelseRader.length;
+        data.handelseGrupper = buildHandelseGrupper(handelseRader);
+        data.handelseTabellOptions = Object.fromEntries(
+            HANDELSE_SIDEBAR_SLAG_KEYS.map((key) => [key, HANDELSE_TABELL_I18N[key]])
+        );
+        data.kretsCount = Array.isArray(this.actor.system.kretsar) ? this.actor.system.kretsar.length : 0;
+
         // sortering
         data.sheet = this;
 
@@ -394,6 +484,8 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
 
         html.find(".eon-sheet-kontakt-add").click(this._onKontaktListAdd.bind(this));
         html.find(".eon-sheet-kontakt-remove").click(this._onKontaktListRemove.bind(this));
+        html.find(".eon-sheet-handelse-add").click(this._onHandelseListAdd.bind(this));
+        html.find(".eon-sheet-handelse-remove").click(this._onHandelseListRemove.bind(this));
     }
 
     /**
@@ -432,6 +524,40 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
         if (index >= current.length) return;
         current.splice(index, 1);
         await this.actor.update({ [`system.${list}`]: current });
+    }
+
+    /**
+     * Lägg till tom händelserad (Eon 5).
+     * @param {Event} event
+     */
+    async _onHandelseListAdd(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!this.isEditable) return;
+        const current = foundry.utils.duplicate(this.actor.system.handelseresultat ?? []);
+        current.push({ tabell: "", nummer: "", anteckning: "" });
+        await this.actor.update({ "system.handelseresultat": current });
+    }
+
+    /**
+     * Ta bort händelserad (Eon 5).
+     * @param {Event} event
+     */
+    async _onHandelseListRemove(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!this.isEditable) return;
+        const index = Number(event.currentTarget?.dataset?.index);
+        if (!Number.isInteger(index) || index < 0) return;
+        const ok = await Dialog.confirm({
+            title: game.i18n.localize("eon.dialogs.tarBort"),
+            content: `<p>${game.i18n.localize("eon.sheets.actor.handelseRadTaBortBekraftelse")}</p>`
+        });
+        if (!ok) return;
+        const current = foundry.utils.duplicate(this.actor.system.handelseresultat ?? []);
+        if (index >= current.length) return;
+        current.splice(index, 1);
+        await this.actor.update({ "system.handelseresultat": current });
     }
  
     /** @override */

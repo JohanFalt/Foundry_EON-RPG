@@ -231,12 +231,6 @@ export async function applyCharacterCreationFinish(actor, wizardData) {
     if ((mergedDraft.startkapital ?? "").trim()) {
         beskrivBits.push(`${game.i18n.localize("eon.sheets.actor.startkapital")}: ${mergedDraft.startkapital.trim()}`);
     }
-    const utseendeTxt = (mergedDraft.utseende ?? "").toString().trim();
-    if (utseendeTxt) {
-        beskrivBits.push(
-            `${game.i18n.localize("eon.sheets.actor.utseende")}\n${utseendeTxt}`
-        );
-    }
     if ((mergedDraft.detaljer ?? "").trim()) beskrivBits.push(mergedDraft.detaljer.trim());
 
     if (beskrivBits.length) {
@@ -256,39 +250,24 @@ export async function applyCharacterCreationFinish(actor, wizardData) {
         bakgrund.beskrivning = (bakgrund.beskrivning ?? "").toString() ? `${bakgrund.beskrivning}\n\n${note}` : note;
     }
 
-    const handelseLabel = (tabKey) => {
-        const tabellKey = (tabKey ?? "").toString().trim();
-        /** @type {Record<string, string>} */
-        const labels = {
-            valfri: "eon.wizard.htValfri",
-            farder: "eon.wizard.htFarder",
-            intriger: "eon.wizard.htIntriger",
-            mirakel: "eon.wizard.htMirakel",
-            strider: "eon.wizard.htStrider",
-            studier: "eon.wizard.htStudier",
-            trolldom: "eon.wizard.htTrolldom"
-        };
-        const path = labels[tabellKey];
-        return path ? game.i18n.localize(path) : tabellKey;
+    actorData.system.handelseresultat = (Array.isArray(mergedDraft.handelseResultat) ? mergedDraft.handelseResultat : [])
+        .map((rad) => ({
+            tabell: (rad?.tabell ?? "").toString().trim(),
+            nummer: (rad?.nummer ?? "").toString().trim(),
+            anteckning: (rad?.anteckning ?? "").toString().trim()
+        }))
+        .filter((rad) => rad.tabell.length > 0 || rad.nummer.length > 0 || rad.anteckning.length > 0);
+
+    const handelseSlagDraft = mergedDraft.handelseSlag ?? {};
+    actorData.system.handelseSlag = {
+        valfri: parseIntSafe(handelseSlagDraft.valfri),
+        farder: parseIntSafe(handelseSlagDraft.farder),
+        intriger: parseIntSafe(handelseSlagDraft.intriger),
+        mirakel: parseIntSafe(handelseSlagDraft.mirakel),
+        strider: parseIntSafe(handelseSlagDraft.strider),
+        studier: parseIntSafe(handelseSlagDraft.studier),
+        trolldom: parseIntSafe(handelseSlagDraft.trolldom)
     };
-    const handelseRader = Array.isArray(mergedDraft.handelseResultat) ? mergedDraft.handelseResultat : [];
-    const handelseLines = handelseRader
-        .map((rad) => {
-            const tabellId = (rad.tabell ?? "").toString().trim();
-            const nummer = (rad.nummer ?? "").toString().trim();
-            const anteckning = (rad.anteckning ?? "").toString().trim();
-            if (!tabellId && !nummer && !anteckning) return "";
-            const tabellNamn = tabellId ? handelseLabel(tabellId) : "";
-            const nummerDel = nummer ? `#${nummer}` : "";
-            const delar = [tabellNamn, nummerDel, anteckning].filter(Boolean);
-            return delar.join(" — ");
-        })
-        .filter(Boolean);
-    if (handelseLines.length) {
-        const rubrik = game.i18n.localize("eon.wizard.handelseResultatRubrik");
-        const note = `${rubrik}\n${handelseLines.join("\n")}`;
-        bakgrund.beskrivning = (bakgrund.beskrivning ?? "").toString() ? `${bakgrund.beskrivning}\n\n${note}` : note;
-    }
 
     const harleddegenskaper = actorData.system.harleddegenskaper;
     for (const key of HARLEDDA_KEYS) {
@@ -439,7 +418,9 @@ export async function applyCharacterCreationFinish(actor, wizardData) {
             egenskap: actorData.system.egenskap,
             harleddegenskaper: actorData.system.harleddegenskaper,
             kretsar: actorData.system.kretsar,
-            foljeslagare: actorData.system.foljeslagare
+            foljeslagare: actorData.system.foljeslagare,
+            handelseresultat: actorData.system.handelseresultat,
+            handelseSlag: actorData.system.handelseSlag
         }
     });
 

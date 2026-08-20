@@ -1,4 +1,5 @@
 {{#if (eq data.type "general")}}
+<div class="eon-chat-card eon-chat-card--general">
     <div class="tray-title-area">{{localize data.action}}</div>
     <div class="tray-action-area">
         {{data.title}}
@@ -23,30 +24,30 @@
         </div>
     {{/if}}
 
-    {{log data}}
-
     {{#if (eq data.dicetype "d6")}}
 
         <div class="tray-roll-area">
             {{#each data.diceresult as |dice key|}}
-                {{#if (eq dice 1)}}<i class="fa-solid fa-dice-one tray-dice {{../data.dicecolor}}"></i>{{/if}}
-                {{#if (eq dice 2)}}<i class="fa-solid fa-dice-two tray-dice {{../data.dicecolor}}"></i>{{/if}}
-                {{#if (eq dice 3)}}<i class="fa-solid fa-dice-three tray-dice {{../data.dicecolor}}"></i>{{/if}}
-                {{#if (eq dice 4)}}<i class="fa-solid fa-dice-four tray-dice {{../data.dicecolor}}"></i>{{/if}}
-                {{#if (eq dice 5)}}<i class="fa-solid fa-dice-five tray-dice {{../data.dicecolor}}"></i>{{/if}}
-                {{#if (and (eq ../data.obroll false) (eq dice 6))}}<i class="fa-solid fa-dice-six tray-dice tray-dice-max {{../data.dicecolor}}"></i>{{/if}}
-                {{#if (and (eq ../data.obroll true) (eq dice 6))}}<i class="fa-solid fa-dice-six tray-dice tray-dice-max ob-roll {{../data.dicecolor}}"></i>{{/if}}
+                {{#if (eq dice 1)}}<i class="fa-light fa-dice-one tray-dice {{../data.dicecolor}}"></i>{{/if}}
+                {{#if (eq dice 2)}}<i class="fa-light fa-dice-two tray-dice {{../data.dicecolor}}"></i>{{/if}}
+                {{#if (eq dice 3)}}<i class="fa-light fa-dice-three tray-dice {{../data.dicecolor}}"></i>{{/if}}
+                {{#if (eq dice 4)}}<i class="fa-light fa-dice-four tray-dice {{../data.dicecolor}}"></i>{{/if}}
+                {{#if (eq dice 5)}}<i class="fa-light fa-dice-five tray-dice {{../data.dicecolor}}"></i>{{/if}}
+                {{#if (and (eq ../data.obroll false) (eq dice 6))}}<i class="fa-light fa-dice-six tray-dice tray-dice-max {{../data.dicecolor}}"></i>{{/if}}
+                {{#if (and (eq ../data.obroll true) (eq dice 6))}}<i class="fa-light fa-dice-six tray-dice tray-dice-max ob-roll {{../data.dicecolor}}"></i>{{/if}}
             {{/each}}
         </div>
 
     {{/if}}
 
     <div class="tray-result-area">
-        {{localize "eon.sheets.actor.totalt"}}: {{data.result}}
+        <i class="fa-solid fa-dice" title="{{localize 'eon.sheets.actor.totalt'}}"></i> {{data.result}}
     </div>
+</div>
 {{/if}}
 
 {{#if (eqAny data.type data.config.slag.grundegenskap data.config.slag.fardighet)}}
+<div class="eon-chat-card eon-chat-card--slag">
     <div class="tray-title-area">{{localize data.action}}</div>
 
     {{#if (ne data.description "")}}
@@ -72,22 +73,24 @@
 
     <div class="tray-roll-area">
         {{#each data.diceresult as |dice key|}}
-            {{#if (eq dice 1)}}<i class="fa-solid fa-dice-one tray-dice {{../data.dicecolor}}"></i>{{/if}}
-            {{#if (eq dice 2)}}<i class="fa-solid fa-dice-two tray-dice {{../data.dicecolor}}"></i>{{/if}}
-            {{#if (eq dice 3)}}<i class="fa-solid fa-dice-three tray-dice {{../data.dicecolor}}"></i>{{/if}}
-            {{#if (eq dice 4)}}<i class="fa-solid fa-dice-four tray-dice {{../data.dicecolor}}"></i>{{/if}}
-            {{#if (eq dice 5)}}<i class="fa-solid fa-dice-five tray-dice {{../data.dicecolor}}"></i>{{/if}}
-            {{#if (and (eq ../data.obroll false) (eq dice 6))}}<i class="fa-solid fa-dice-six tray-dice tray-dice-max {{../data.dicecolor}}"></i>{{/if}}
-            {{#if (and (eq ../data.obroll true) (eq dice 6))}}<i class="exploding fa-solid fa-dice-six tray-dice tray-dice-max ob-roll {{../data.dicecolor}}"></i>{{/if}}
+            {{#if (eq dice 1)}}<i class="fa-light fa-dice-one tray-dice {{../data.dicecolor}}"></i>{{/if}}
+            {{#if (eq dice 2)}}<i class="fa-light fa-dice-two tray-dice {{../data.dicecolor}}"></i>{{/if}}
+            {{#if (eq dice 3)}}<i class="fa-light fa-dice-three tray-dice {{../data.dicecolor}}"></i>{{/if}}
+            {{#if (eq dice 4)}}<i class="fa-light fa-dice-four tray-dice {{../data.dicecolor}}"></i>{{/if}}
+            {{#if (eq dice 5)}}<i class="fa-light fa-dice-five tray-dice {{../data.dicecolor}}"></i>{{/if}}
+            {{#if (and (eq ../data.obroll false) (eq dice 6))}}<i class="fa-light fa-dice-six tray-dice tray-dice-max {{../data.dicecolor}}"></i>{{/if}}
+            {{#if (and (eq ../data.obroll true) (eq dice 6))}}<i class="exploding fa-light fa-dice-six tray-dice tray-dice-max ob-roll {{../data.dicecolor}}"></i>{{/if}}
         {{/each}}
     </div>
 
     <div class="tray-result-area">
-        {{localize "eon.sheets.actor.totalt"}}: {{data.result}}
+        <i class="fa-solid fa-dice" title="{{localize 'eon.sheets.actor.totalt'}}"></i> {{data.result}}
     </div>
+</div>
 {{/if}}
 
 {{#if (eq data.type data.config.slag.vapen)}}
+<div class="eon-chat-card eon-chat-card--vapen">
     <div class="tray-title-area">{{localize data.action}}</div>
 
     {{#if (ne data.description "")}}
@@ -112,22 +115,24 @@
 
     <div class="tray-roll-area">
         {{#each data.diceresult as |dice key|}}
-            {{#if (eq dice 1)}}<i class="fa-solid fa-dice-one tray-dice {{../data.dicecolor}}"></i>{{/if}}
-            {{#if (eq dice 2)}}<i class="fa-solid fa-dice-two tray-dice {{../data.dicecolor}}"></i>{{/if}}
-            {{#if (eq dice 3)}}<i class="fa-solid fa-dice-three tray-dice {{../data.dicecolor}}"></i>{{/if}}
-            {{#if (eq dice 4)}}<i class="fa-solid fa-dice-four tray-dice {{../data.dicecolor}}"></i>{{/if}}
-            {{#if (eq dice 5)}}<i class="fa-solid fa-dice-five tray-dice {{../data.dicecolor}}"></i>{{/if}}
-            {{#if (and (eq ../data.obroll false) (eq dice 6))}}<i class="fa-solid fa-dice-six tray-dice tray-dice-max {{../data.dicecolor}}"></i>{{/if}}
-            {{#if (and (eq ../data.obroll true) (eq dice 6))}}<i class="fa-solid fa-dice-six tray-dice tray-dice-max ob-roll {{../data.dicecolor}}"></i>{{/if}}
+            {{#if (eq dice 1)}}<i class="fa-light fa-dice-one tray-dice {{../data.dicecolor}}"></i>{{/if}}
+            {{#if (eq dice 2)}}<i class="fa-light fa-dice-two tray-dice {{../data.dicecolor}}"></i>{{/if}}
+            {{#if (eq dice 3)}}<i class="fa-light fa-dice-three tray-dice {{../data.dicecolor}}"></i>{{/if}}
+            {{#if (eq dice 4)}}<i class="fa-light fa-dice-four tray-dice {{../data.dicecolor}}"></i>{{/if}}
+            {{#if (eq dice 5)}}<i class="fa-light fa-dice-five tray-dice {{../data.dicecolor}}"></i>{{/if}}
+            {{#if (and (eq ../data.obroll false) (eq dice 6))}}<i class="fa-light fa-dice-six tray-dice tray-dice-max {{../data.dicecolor}}"></i>{{/if}}
+            {{#if (and (eq ../data.obroll true) (eq dice 6))}}<i class="fa-light fa-dice-six tray-dice tray-dice-max ob-roll {{../data.dicecolor}}"></i>{{/if}}
         {{/each}}
     </div>
 
     <div class="tray-result-area">
-        {{localize "eon.sheets.actor.totalt"}}: {{data.result}}
+        <i class="fa-solid fa-dice" title="{{localize 'eon.sheets.actor.totalt'}}"></i> {{data.result}}
     </div>
+</div>
 {{/if}}
 
 {{#if (eq data.type "combatFlow")}}
+<div class="eon-chat-card eon-chat-card--combatFlow">
     <div class="tray-title-area">{{data.title}}</div>
     {{#each data.sections}}
         {{#if this}}
@@ -145,14 +150,18 @@
         </div>
     {{/if}}
     {{#if data.total}}
-        <div class="tray-result-area">{{localize "eon.sheets.actor.totalt"}}: {{data.total}}</div>
+        <div class="tray-result-area">
+            <i class="fa-solid fa-dice" title="{{localize 'eon.sheets.actor.totalt'}}"></i> {{data.total}}
+        </div>
     {{/if}}
     {{#if data.result}}
         <div class="tray-result-area">{{{data.result}}}</div>
     {{/if}}
+</div>
 {{/if}}
 
 {{#if (eq data.type "message")}}
+<div class="eon-chat-card eon-chat-card--message">
     <div class="tray-title-area">{{localize "eon.sheets.item.beskrivning"}}</div>
 
     <div class="tray-action-area">{{data.title}}</div>
@@ -162,4 +171,5 @@
             {{{data.description}}}
         </div>
     {{/if}} 
+</div>
 {{/if}}

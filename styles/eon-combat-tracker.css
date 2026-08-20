@@ -567,27 +567,30 @@
     color: inherit !important;
 }
 
-/* Stridsflöde – knappar i chatt */
+/* Stridsflöde – knappar i chatt (pergament) */
 .chat-message .eon-combat-attack-controls {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-top: 8px;
-    padding-top: 6px;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    margin: 8px 10px 10px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(108, 71, 55, 0.35);
 }
 
 .chat-message .eon-combat-attack-btn {
+    font-family: var(--main-chat-rubrik, "rubrik", Arial, Helvetica, sans-serif);
     font-size: 12px;
-    padding: 4px 10px;
+    padding: 5px 12px;
     cursor: pointer;
-    border-radius: 4px;
-    border: 1px solid rgba(242, 211, 107, 0.45);
-    background: rgba(30, 40, 55, 0.85);
-    color: #f2d36b;
+    border-radius: 3px;
+    border: 1px solid var(--eon-chat-wood, #6c4737);
+    background: var(--eon-chat-paper, #efe4d0);
+    color: var(--eon-chat-accent, #790813);
+    box-shadow: 0 1px 2px rgba(42, 31, 22, 0.15);
 }
 
 .chat-message .eon-combat-attack-btn:hover {
-    background: rgba(242, 211, 107, 0.2);
-    border-color: #f2d36b;
+    background: #f7f0e4;
+    border-color: var(--eon-chat-accent, #790813);
+    color: var(--eon-chat-accent, #790813);
 }

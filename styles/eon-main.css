@@ -259,6 +259,7 @@
 .eon-theme-light.EON input[type="text"],
 .eon-theme-light.EON input[type="number"],
 .eon-theme-light.EON select,
+.eon-theme-light.EON textarea,
 .eon-theme-light.EON button {
     color: var(--eon-text-normal-color);    
 }
@@ -267,6 +268,7 @@
 .eon-theme-dark.EON input[type="text"],
 .eon-theme-dark.EON input[type="number"],
 .eon-theme-dark.EON select,
+.eon-theme-dark.EON textarea,
 .eon-theme-dark.EON button {
     color: var(--eon-text-normal-color-dark);    
 }
@@ -274,7 +276,8 @@
 .eon-theme-light.EON span.resource-value,
 .eon-theme-light.EON input[type="text"],
 .eon-theme-light.EON input[type="number"],
-.eon-theme-light.EON select {
+.eon-theme-light.EON select,
+.eon-theme-light.EON textarea {
     background: var(--eon-back-color-inputs);
     background-color: var(--eon-back-color-inputs);
 }
@@ -282,7 +285,8 @@
 .eon-theme-dark.EON span.resource-value,
 .eon-theme-dark.EON input[type="text"],
 .eon-theme-dark.EON input[type="number"],
-.eon-theme-dark.EON select {
+.eon-theme-dark.EON select,
+.eon-theme-dark.EON textarea {
     background: var(--eon-back-color-inputs-dark);
     background-color: var(--eon-back-color-inputs-dark);
 }
@@ -1392,7 +1396,8 @@
 }
 
 .EON input.editable,
-.EON select.editable {
+.EON select.editable,
+.EON textarea.editable {
     border-bottom-style: solid;
     border-bottom-width: 1px;
     border-right-style: solid;
@@ -1502,6 +1507,121 @@ input.skill-value {
 .EON .bio.trait-stats-eon5 {
     max-height: none;
     align-self: stretch;
+}
+
+/* Eon 5 bio: händelseresultat (kompakt lista med expanderad anteckning) */
+.EON .eon-handelse-tom {
+    margin: 0.25rem 0 0.75rem;
+}
+
+.EON .eon-handelse-grupp {
+    margin: 0 0 0.75rem;
+    max-width: 640px;
+}
+
+.EON .eon-handelse-grupp__rubrik {
+    font-size: var(--eon-font-small, 0.85em);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    opacity: 0.85;
+    margin: 0.35rem 0 0.25rem;
+}
+
+.EON .eon-handelse-rad {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    max-height: none;
+    line-height: normal;
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
+
+.EON .eon-handelse-rad__primary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.EON .eon-handelse-rad__primary .weapon-icon {
+    flex: 0 0 auto;
+    align-self: flex-end;
+    padding-bottom: 2px;
+}
+
+.EON .eon-handelse-rad__tabell {
+    flex: 2 1 200px;
+    min-width: 160px;
+}
+
+.EON .eon-handelse-rad__tabell select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.EON .eon-handelse-rad__nummer {
+    flex: 0 1 88px;
+    min-width: 64px;
+}
+
+.EON .eon-handelse-rad__nummer input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.EON .eon-handelse-rad__detalj {
+    margin-left: 1.5rem;
+    width: calc(100% - 1.5rem);
+}
+
+.EON .eon-handelse-rad__summary {
+    cursor: pointer;
+    list-style: none;
+    font-size: var(--eon-font-small, 0.9em);
+    opacity: 0.9;
+}
+
+.EON .eon-handelse-rad__summary::-webkit-details-marker {
+    display: none;
+}
+
+.EON .eon-handelse-rad__summary::before {
+    content: "▸";
+    display: inline-block;
+    margin-right: 0.35rem;
+    transition: transform 0.15s ease;
+}
+
+.EON .eon-handelse-rad__detalj[open] > .eon-handelse-rad__summary::before {
+    transform: rotate(90deg);
+}
+
+.EON .eon-handelse-rad__preview {
+    display: inline;
+}
+
+.EON .eon-handelse-rad__preview--tom {
+    font-style: italic;
+    opacity: 0.7;
+}
+
+.EON .eon-handelse-rad__anteckning {
+    margin-top: 0.35rem;
+}
+
+.EON .eon-handelse-rad__anteckning textarea {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 3.5em;
+    resize: vertical;
+    padding: 6px 7px;
+    font: inherit;
+    color: inherit;
+    border-top: none;
+    border-left: none;
 }
 
 .EON .skill-headline.headline {
@@ -1740,14 +1860,17 @@ input.skill-value {
 .floating-label-group input:disabled ~ .floating-label,
 .floating-label-group input:not(:focus):valid ~ .floating-label,
 .floating-label-group select:focus ~ .floating-label,
-.floating-label-group select:not(:focus):valid ~ .floating-label {  
+.floating-label-group select:not(:focus):valid ~ .floating-label,
+.floating-label-group textarea:focus ~ .floating-label,
+.floating-label-group textarea:not(:focus):valid ~ .floating-label {  
   border-width: 0px;
   border: none;
   box-shadow: none;
   outline: none !important;
 }
 .floating-label-group input:focus,
-.floating-label-group select:focus {
+.floating-label-group select:focus,
+.floating-label-group textarea:focus {
   outline: none !important;
 }
 .floating-label-group input,
@@ -1755,6 +1878,10 @@ input.skill-value {
   padding-left: 7px;
   padding-top: 6px;
   height: var(--eon-line-height-floattext);
+}
+.floating-label-group textarea {
+  padding-left: 7px;
+  padding-top: 6px;
 }
 
 /* Dialogs */

@@ -330,11 +330,63 @@
 
     <div class="headline headline-background item-row">
         <div class="weapon-icon pointer">
+            <a class="eon-sheet-handelse-add" title="{{localize 'eon.sheets.actor.handelseLaggTill'}}">
+                <i class="fa-solid fa-square-plus green"></i>
+            </a>
+        </div>
+        <div class="large-headline">{{localize "eon.wizard.handelseResultatRubrik"}} ({{handelseCount}})</div>
+    </div>
+
+    {{#unless handelseCount}}
+        <div class="information-area information-box eon-handelse-tom">{{localize "eon.sheets.actor.handelseTom"}}</div>
+    {{/unless}}
+
+    {{#each handelseGrupper as |grupp|}}
+        <div class="eon-handelse-grupp">
+            <div class="eon-handelse-grupp__rubrik">{{grupp.label}}</div>
+            {{#each grupp.rows as |rad|}}
+                <div class="eon-handelse-rad bio item-row">
+                    <div class="eon-handelse-rad__primary">
+                        <div class="weapon-icon">
+                            <a class="pointer red eon-sheet-handelse-remove" title="{{localize 'eon.wizard.handelseTaBortRad'}}" data-index="{{rad.index}}"><i class="icon fa-solid fa-trash-can"></i></a>
+                        </div>
+                        <div class="floating-label-group eon-handelse-rad__tabell">
+                            <select class="text-value editable" name="system.handelseresultat.{{rad.index}}.tabell" data-dtype="String">
+                                <option value="">{{localize "eon.wizard.handelseTabellValj"}}</option>
+                                {{selectOptions ../../handelseTabellOptions selected=rad.tabell localize=true}}
+                            </select>
+                            <span class="floating-label">{{localize "eon.sheets.actor.handelseTabell"}}</span>
+                        </div>
+                        <div class="floating-label-group eon-handelse-rad__nummer">
+                            <input class="text-value editable" type="text" data-dtype="String" name="system.handelseresultat.{{rad.index}}.nummer" value="{{rad.nummer}}" />
+                            <span class="floating-label">{{localize "eon.wizard.handelseResultatNummer"}}</span>
+                        </div>
+                    </div>
+                    <details class="eon-handelse-rad__detalj">
+                        <summary class="eon-handelse-rad__summary">
+                            {{#if rad.anteckningPreview}}
+                                <span class="eon-handelse-rad__preview">{{rad.anteckningPreview}}</span>
+                            {{else}}
+                                <span class="eon-handelse-rad__preview eon-handelse-rad__preview--tom">{{localize "eon.sheets.actor.handelseVisaAnteckning"}}</span>
+                            {{/if}}
+                        </summary>
+                        <div class="floating-label-group eon-handelse-rad__anteckning">
+                            <textarea class="text-value editable" data-dtype="String" name="system.handelseresultat.{{rad.index}}.anteckning" rows="3">{{rad.anteckning}}</textarea>
+                            <span class="floating-label">{{localize "eon.sheets.actor.anteckning"}}</span>
+                        </div>
+                    </details>
+                </div>
+            {{/each}}
+        </div>
+    {{/each}}
+
+    <div class="headline headline-background item-row">
+        <div class="weapon-icon pointer">
             <a class="eon-sheet-kontakt-add" title="{{localize 'eon.wizard.kretsLaggTill'}}" data-list="kretsar">
                 <i class="fa-solid fa-square-plus green"></i>
             </a>
         </div>
-        <div class="large-headline">{{localize "eon.wizard.kretsarRubrik"}}</div>
+        <div class="large-headline">{{localize "eon.wizard.kretsarRubrik"}} ({{kretsCount}})</div>
     </div>
 
     {{#each data.system.kretsar}}
