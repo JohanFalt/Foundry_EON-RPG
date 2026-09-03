@@ -9,8 +9,19 @@ import {
 } from "../dice-helper.js";
 import { CombatAttackFlow } from "../combat-attack-flow.js";
 import CalculateHelper from "../calculate-helper.js";
+import EffectHelper from "../effect-helper.js";
 
-function isChockOrDodRollTitle(title) {
+/**
+ * Chock- och dödsslag identifieras via stabil slagnyckel. Titeljämförelsen finns
+ * kvar för anrop som saknar nyckel (t.ex. äldre makron) och kan tas bort när
+ * alla anropsvägar skickar rollKey.
+ * @param {string} rollKey
+ * @param {string} title
+ * @returns {boolean}
+ */
+function isChockOrDodRoll(rollKey, title) {
+    if (rollKey === "chock" || rollKey === "dod") return true;
+    if (rollKey) return false;
     return title === game.i18n.localize("eon.sheets.actor.chockslag")
         || title === game.i18n.localize("eon.sheets.actor.dodsslag");
 }
@@ -49,8 +60,9 @@ export class AttributeRoll {
         * @param type - what type of attribute
         * @param key - what attribute
         * @param title - title of the roll
+        * @param rollKey - stabil slagnyckel, t.ex. "chock" eller "dod"
     */
-    constructor(actor, type, key, title) {
+    constructor(actor, type, key, title, rollKey = "") {
         if (CombatAttackFlow.isFolkslagActor(actor)) {
             actor.system.berakning = CalculateHelper.byggRollBerakning(actor);
         }
@@ -60,6 +72,7 @@ export class AttributeRoll {
         this.title = title;
         this.type = type;
         this.key = key;
+        this.rollKey = rollKey;
         this.close = false;
 
         if ((type == "harleddegenskaper") && ((key == "forflyttning") || (key == "reaktion"))) {
@@ -75,7 +88,7 @@ export class AttributeRoll {
             }
         }
 
-        if (((type == "harleddegenskaper") && (key == "forflyttning")) || isChockOrDodRollTitle(title)) {
+        if (((type == "harleddegenskaper") && (key == "forflyttning")) || isChockOrDodRoll(rollKey, title)) {
             if (this.hamtaAntalSar > 0) {
                 this.#_harSar = true;
             }
@@ -122,7 +135,7 @@ export class AttributeRoll {
 
         if (this.#_harSar) {
             const sar = this.actor.system?.skada?.sar ?? {};
-            if (isChockOrDodRollTitle(this.title)) {
+            if (isChockOrDodRoll(this.rollKey, this.title)) {
                 tarning.tvarde = tarning.tvarde - this.hamtaAntalSar;
             }
             else {
@@ -134,6 +147,13 @@ export class AttributeRoll {
                 tarning.tvarde = 0;
                 tarning.bonus = 0;
             }
+        }
+
+        if (this.actor.isEon5) {
+            const context = EffectHelper.buildAttributeContext(this.actor, this.key, this.rollKey);
+            const effects = EffectHelper.getMatchingEffects(this.actor, context, { types: ["tvarde"] });
+            this._matchedEffects = effects;
+            tarning = EffectHelper.applyToPool(tarning, effects);
         }
 
         return tarning;
@@ -178,7 +198,7 @@ export class AttributeRoll {
 
         const sar = this.actor.system?.skada?.sar ?? {};
 
-        if (isChockOrDodRollTitle(this.title)) {
+        if (isChockOrDodRoll(this.rollKey, this.title)) {
             return Number(this.actor.system?.berakning?.svarighet?.antalsar ?? 0)
                 || Object.values(sar).reduce((sum, val) => sum + Number(val ?? 0), 0);
         }
@@ -366,13 +386,19 @@ export class DialogAttributeRoll extends FormApplication {
         }
 
         if (this.object.harSar) {
-            if (isChockOrDodRollTitle(this.object.title)) {
+            if (isChockOrDodRoll(this.object.rollKey, this.object.title)) {
                 description += buildWoundsBodyHtml(this.actor);
             }
             else {
                 description += buildWoundInLimbHtml(this.actor.system.skada.sar.hogerben, "RightLeg");
                 description += buildWoundInLimbHtml(this.actor.system.skada.sar.vansterben, "LeftLeg");
             }
+        }
+
+        if (this.actor.isEon5) {
+            const context = EffectHelper.buildAttributeContext(this.actor, this.object.key, this.object.rollKey);
+            const effects = EffectHelper.getMatchingEffects(this.actor, context);
+            description += EffectHelper.describeEffects(effects);
         }
 
         if ((visadeTarningar.tvarde != this.object.grundTarning) || (visadeTarningar.bonus != this.object.grundBonus)) {
@@ -501,14 +527,43 @@ export class SkillRoll {
 
         this.close = false;
         this.actor = actor;
+        this.item = item;
         this.typ = "skill";
         this.grupp = item.system.grupp;
+        this.effectRollKind = "";
+        this._externalEffects = [];
 
         this.namn = game.i18n.has(item.name) ? game.i18n.localize(item.name) : item.name;
         this.svarighet = "";
         this.hantverk = item.system["hantverk"];
         this.kannetecken = item.system["kannetecken"];
         this.expertis = item.system["expertis"];   
+    }
+
+    /**
+     * Matcha egna aktörseffekter och externa effekter mot varsin målkontext.
+     * Externa effekter kommer exempelvis från anfallarens vapenegenskaper.
+     * @param {string[]} [types]
+     * @returns {object[]}
+     */
+    getMatchedEffects(types) {
+        const ownContext = EffectHelper.buildSkillContext(this.actor, this.item, {
+            rollKind: this.effectRollKind,
+            mal: "aktor"
+        });
+        const ownEffects = EffectHelper.getMatchingEffects(this.actor, ownContext, { types });
+
+        const externalContext = EffectHelper.buildSkillContext(this.actor, this.item, {
+            rollKind: this.effectRollKind,
+            mal: "forsvarare"
+        });
+        const externalEffects = EffectHelper.getMatchingEffects(this.actor, externalContext, {
+            types,
+            extraEffects: this._externalEffects,
+            includeActorEffects: false
+        });
+
+        return [...ownEffects, ...externalEffects];
     }
 
     get visaTarning() {
@@ -558,6 +613,11 @@ export class SkillRoll {
                 tarning.tvarde = 0;
                 tarning.bonus = 0;
             }   
+        }
+
+        if (this.actor.isEon5) {
+            const effects = this.getMatchedEffects(["tvarde"]);
+            tarning = EffectHelper.applyToPool(tarning, effects);
         }
 
         return tarning;
@@ -800,6 +860,11 @@ export class DialogSkillRoll extends FormApplication {
             }
         }
 
+        if (this.actor.isEon5) {
+            const effects = this.object.getMatchedEffects();
+            description += EffectHelper.describeEffects(effects);
+        }
+
         let grundvarde = "";
 
         if ((this.object.visaTarning.tvarde != this.object.grundTarning) || (this.object.visaTarning.bonus != this.object.grundBonus)) {
@@ -956,10 +1021,10 @@ export class DialogMysteryRoll extends FormApplication {
             const roll = new DiceRollContainer(this.actor, this.config);
             roll.typeroll = CONFIG.EON.slag.fardighet;
 
-            if (this.actor.system.installningar.eon === "eon4") {
+            if (!this.actor.isEon5) {
                 roll.action = game.EON.fardigheter.mystik[diceroll.fardighet].namn;
             }
-            else if (this.actor.system.installningar.eon === "eon5") {
+            else {
                 roll.action = game.EON.fardigheter5.mystik[diceroll.fardighet].namn;
             }
 

@@ -438,13 +438,12 @@ export async function RollDice(diceRoll) {
             token: diceRoll.actor?.token?.id,
             alias: diceRoll.actorName
         },
-        content: html,
-        rollMode: game.settings.get("core", "rollMode")        
+        content: html
     };
     if (diceRoll.chatFlags && typeof diceRoll.chatFlags === "object") {
         chatData.flags = { "eon-rpg": foundry.utils.duplicate(diceRoll.chatFlags) };
     }
-    ChatMessage.applyRollMode(chatData, "roll");
+    ChatMessage.applyMode(chatData);
     const created = await ChatMessage.create(chatData);
     if (diceRoll && typeof diceRoll === "object") {
         diceRoll._createdMessageId = created?.id ?? null;
@@ -491,15 +490,14 @@ export async function postTrayChatMessage({
     const chatData = {
         user: game.user.id,
         speaker: ChatMessage.getSpeaker({ actor }),
-        content: html,
-        rollMode: game.settings.get("core", "rollMode")
+        content: html
     };
 
     if (flags && typeof flags === "object") {
         chatData.flags = { "eon-rpg": foundry.utils.duplicate(flags) };
     }
 
-    ChatMessage.applyRollMode(chatData, "roll");
+    ChatMessage.applyMode(chatData);
     return ChatMessage.create(chatData);
 }
 
@@ -521,9 +519,8 @@ export async function SendMessage(actor, config, headline, message) {
 
     const chatData = {
         content: html,
-        speaker: ChatMessage.getSpeaker(),
-        rollMode: game.settings.get("core", "rollMode")        
+        speaker: ChatMessage.getSpeaker()
     };
-    ChatMessage.applyRollMode(chatData, "roll");
+    ChatMessage.applyMode(chatData);
     ChatMessage.create(chatData);
 }

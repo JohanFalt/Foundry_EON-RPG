@@ -5,7 +5,7 @@
 
 @font-face {
   font-family: "eon-font";
-  src: url('../assets/fonts/OFLGoudyStMTT.ttf') format("opentype");
+  src: url('../assets/fonts/OFLGoudyStMTT.ttf') format("truetype");
 }
 
 @font-face {
@@ -322,6 +322,20 @@ section.eon-roller {
   font-size: 14px;
   line-height: 1.4;
   color: var(--eon-chat-ink);
+}
+
+#chat-log .tray-section-header,
+#chat .tray-section-header {
+  display: block;
+  font-family: var(--main-chat-rubrik);
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+  color: var(--eon-chat-accent);
+  text-transform: uppercase;
+  margin-top: 4px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--eon-chat-wood);
 }
 
 #chat-log .tray-roll-area,

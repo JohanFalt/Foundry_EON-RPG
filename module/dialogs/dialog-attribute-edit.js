@@ -76,7 +76,7 @@ export class DialogAttribute {
             if ((this.#_isPC) && (this.#_attributeType == 'harleddegenskaper')) {
                 this.#_canTic = false;
             }
-            if ((this.#_isPC) && (this.#_attributeType == 'harleddegenskaper') && (actor.system.installningar.eon === "eon5")) {
+            if ((this.#_isPC) && (this.#_attributeType == 'harleddegenskaper') && (actor.isEon5)) {
                 this.#_canTic = true;
             }
         }

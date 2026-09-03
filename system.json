@@ -1,7 +1,7 @@
 {
     "id": "eon-rpg",
     "title": "Eon RPG",
-    "version": "5.4.1",
+    "version": "5.5.0",
     "compatibility": {
         "minimum": "14",
         "verified": "14",
@@ -417,6 +417,24 @@
             }
         },
         {
+            "name": "efterverkningar5",
+            "label": "Efterverkningar",
+            "system": "eon-rpg",
+            "path": "packs/efterverkningar5",
+            "type": "Item",
+            "private": false,
+            "flags": {
+                "eon": {
+                    "types": [
+                        "eon5",
+                        "grundbok",
+                        "skador",
+                        "efterverkningar"
+                    ]
+                }
+            }
+        },
+        {
             "name": "djur5",
             "label": "Djur",
             "system": "eon-rpg",
@@ -544,6 +562,13 @@
                 ]
             },
             {
+                "name": "Efterverkningar",
+                "sorting": "m",
+                "packs": [
+                    "efterverkningar5"
+                ]
+            },
+            {
                 "name": "Varelser",
                 "sorting": "m",
                 "packs": [
@@ -561,8 +586,8 @@
         "gridUnits": "m"
     },  
     "url": "https://github.com/JohanFalt/Foundry_EON-RPG",
-    "manifest": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.4.1/system.json",  
-    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.4.1/v5.4.1.zip",
+    "manifest": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.5.0/system.json",  
+    "download": "https://github.com/JohanFalt/Foundry_EON-RPG/releases/download/v5.5.0/v5.5.0.zip",
     "bugs": "https://github.com/JohanFalt/Foundry_EON-RPG/issues",
     "license": "LICENSE.txt"
 }

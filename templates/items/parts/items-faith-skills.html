@@ -12,7 +12,7 @@
         <div class="item-listbox"><input class="weapon-icon pointer item-active" type="checkbox" id="object.huvud_{{key}}" title="{{localize 'eon.sheets.item.huvudmomentet'}}" value="{{item.huvud}}" data-source="moment" data-key="{{key}}" data-egenskap="huvud" {{isChecked item.huvud}} /></div>
         <div class="item-listbox" style="width: 150px;">
 
-            {{#if (eq item.system.installningar.eon "eon4")}}
+            {{#unless (isEon5Item @root.item)}}
                 <select class="inputdata" id="object.fardighet_{{key}}" data-source="moment" data-key="{{key}}" data-egenskap="fardighet" style="width: 140px;">
                     <option value="">{{localize "eon.sheets.item.valjOption"}}</option>
                     {{selectOptions ../EON.fardigheter.mystik selected=item.fardighet labelAttr="namn" localize=true}}
@@ -22,7 +22,7 @@
                     <option value="">{{localize "eon.sheets.item.valjOption"}}</option>
                     {{selectOptions ../EON.fardigheter5.mystik selected=item.fardighet labelAttr="namn" localize=true}}
                 </select>
-            {{/if}}
+            {{/unless}}
         </div>        
         <div class="item-listbox" style="width: 100px;"><input class="inputdata" type="text" value="{{item.svarighet}}" id="object.svarighet_{{key}}" data-source="moment"data-key="{{key}}" data-egenskap="svarighet" style="width: 90px;" /></div>
         <div class="item-listbox" style="width: 100px;"><input class="inputdata" type="text" value="{{item.tid}}" id="object.tid_{{key}}" data-source="moment"data-key="{{key}}" data-egenskap="tid" style="width: 90px;" /></div>

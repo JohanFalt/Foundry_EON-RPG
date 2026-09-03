@@ -8,6 +8,7 @@ import { SendMessage } from "../dice-helper.js";
 import { datavaluta } from '../../data/valuta.js';
 import { ensureRollperson5StartingItems } from "../apps/character-creation-helper.js";
 import { HANDELSE_SIDEBAR_SLAG_KEYS } from "../apps/ccw/ccw-constants-keys.js";
+import EffectHelper from "../effect-helper.js";
 
 /** @type {Record<string, string>} */
 const HANDELSE_TABELL_I18N = {
@@ -227,6 +228,7 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
         data.actor.system.listdata.kroppsdelar = [];
         data.actor.system.listdata.kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, version);
         data.actor.system.listdata.skador = [];
+        data.actor.system.listdata.tillstand = [];
         data.actor.system.listdata.datavaluta = this.datavaluta;
 
         data.actor.system.listdata.valuta = [];
@@ -303,11 +305,12 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
                 }
             }
             if (item.type == "Skada") {    
-                if (item.system.typ == "skada") {
-                    data.actor.system.listdata.skador.push(item);
-                }
-                else if (item.system.typ == "faltstorning") {
+                if (item.system.typ == "faltstorning") {
                     data.actor.system.listdata.magi.faltstorning.push(item);
+                } else if (EffectHelper.isTillstandItem(item)) {
+                    data.actor.system.listdata.tillstand.push(item);
+                } else if (EffectHelper.isAllvarligSkadaItem(item)) {
+                    data.actor.system.listdata.skador.push(item);
                 }
             }
             // if ((item.type == "Folkslag") && (data.actor.system.bakgrund.folkslag == "custom")) {
@@ -324,6 +327,8 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
         data.actor.system.listdata.utrustning.vapen.avstand = data.actor.system.listdata.utrustning.vapen.avstand.sort((a, b) => a.name.localeCompare(b.name));
         data.actor.system.listdata.utrustning.vapen.skold = data.actor.system.listdata.utrustning.vapen.skold.sort((a, b) => a.name.localeCompare(b.name));
         data.actor.system.listdata.utrustning.rustning = data.actor.system.listdata.utrustning.rustning.sort((a, b) => a.name.localeCompare(b.name));
+        data.actor.system.listdata.skador = data.actor.system.listdata.skador.sort((a, b) => a.name.localeCompare(b.name));
+        data.actor.system.listdata.tillstand = data.actor.system.listdata.tillstand.sort((a, b) => a.name.localeCompare(b.name));
         data.actor.system.listdata.utrustning.foremal = sortList(
             data.actor.system.listdata.utrustning.foremal,
             this.sortState.utrustning_foremal
@@ -601,8 +606,16 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
         if (itemData == undefined) {
             itemData = foundry.utils.duplicate(droppedItem);            
         }
+        itemData = EffectHelper.normalizeSkadaItemData(itemData);
         itemData.system.installningar.eon = "eon5";
-        await this.actor.createEmbeddedDocuments('Item', [itemData])
+        const created = await this.actor.createEmbeddedDocuments('Item', [itemData]);
+        const item = created?.[0];
+        if (item && EffectHelper.isSkadaEffectItem(item) && item.system?.varaktighetFormel) {
+            const total = await EffectHelper.rollDurationIfNeeded(item);
+            if (total != null) {
+                ui.notifications.info(game.i18n.format("eon.effects.varaktighetResultat", { total }));
+            }
+        }
     }
 
     /** @override */
@@ -639,7 +652,7 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
             if (dataset.title != undefined) {
                 title = dataset.title
             }
-            DialogHelper.AttributeDialog(this.actor, dataset.type, dataset.key, title);
+            DialogHelper.AttributeDialog(this.actor, dataset.type, dataset.key, title, dataset.rollkey ?? "");
             return;
         }
 

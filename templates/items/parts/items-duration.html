@@ -1,0 +1,30 @@
+<div class="item-box effect-duration-box" style="margin-top: 8px;">
+    <div class="headline">{{localize "eon.effects.varaktighet"}}</div>
+    <div class="item-row effect-duration-row">
+        <div class="item-property-area floating-label-group effect-col-varaktighet">
+            <select class="text-value" name="system.varaktighet" data-dtype="String" required>
+                {{selectOptions EON.CONFIG.effektVaraktighet selected=item.system.varaktighet localize=true}}
+            </select>
+            <span class="floating-label">{{localize "eon.effects.varaktighet"}}</span>
+        </div>
+        <div class="item-property-area floating-label-group effect-col-rundor">
+            <input class="text-value editable" type="number" name="system.rundorKvar" value="{{item.system.rundorKvar}}" data-dtype="Number" />
+            <span class="floating-label">{{localize "eon.effects.rundorKvar"}}</span>
+        </div>
+        <div class="item-property-area floating-label-group effect-col-formel">
+            <input class="text-value editable" type="text" name="system.varaktighetFormel" value="{{item.system.varaktighetFormel}}" data-dtype="String" />
+            <span class="floating-label">{{localize "eon.effects.varaktighetFormel"}}</span>
+        </div>
+        <div class="item-property-area floating-label-group effect-col-kalla">
+            <input class="text-value editable" type="text" name="system.kalla" value="{{item.system.kalla}}" data-dtype="String" />
+            <span class="floating-label">{{localize "eon.effects.kalla"}}</span>
+        </div>
+        {{#if hasActor}}
+            <div class="weapon-icon effect-duration-roll">
+                <a class="roll-duration" title="{{localize 'eon.effects.slaVaraktighet'}}">
+                    <i class="fa-solid fa-dice"></i>
+                </a>
+            </div>
+        {{/if}}
+    </div>
+</div>

@@ -522,7 +522,7 @@ export default class EonActorSheet extends foundry.appv1.sheets.ActorSheet {
             if (dataset.title != undefined) {
                 title = dataset.title
             }
-            DialogHelper.AttributeDialog(this.actor, dataset.type, dataset.key, title);
+            DialogHelper.AttributeDialog(this.actor, dataset.type, dataset.key, title, dataset.rollkey ?? "");
             return;
         }
 

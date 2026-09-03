@@ -1,5 +1,6 @@
 import DiceHelper from "./dice-helper.js";
 import CalculateHelper from "./calculate-helper.js";
+import EffectHelper from "./effect-helper.js";
 import { CombatAttackFlow } from "./combat-attack-flow.js";
 import { dataskapa } from "../data/skapa.js";
 import { datafardigheter } from "../data/fardigheter.js";
@@ -51,6 +52,7 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/items/parts/navigation-weapon.html",
 		"systems/eon-rpg/templates/items/parts/navigation-faith.html",
 		"systems/eon-rpg/templates/items/parts/navigation-spell.html",
+		"systems/eon-rpg/templates/items/parts/navigation-effect.html",
 
 		"systems/eon-rpg/templates/items/parts/items-melee-weapon-data.html",
 		"systems/eon-rpg/templates/items/parts/items-missile-weapon-data.html",
@@ -69,6 +71,8 @@ export const PreloadHandlebarsTemplates = async function () {
 		"systems/eon-rpg/templates/items/parts/items-spell-ritual.html",		
 
 		"systems/eon-rpg/templates/items/parts/items-description.html",
+		"systems/eon-rpg/templates/items/parts/items-effects.html",
+		"systems/eon-rpg/templates/items/parts/items-duration.html",
 		"systems/eon-rpg/templates/items/valuta-sheet.html",
 		"systems/eon-rpg/templates/combat/eon-combat-tracker.html",
 		"systems/eon-rpg/templates/combat/eon-combatant-portrait.html",
@@ -423,7 +427,7 @@ export const RegisterHandlebarsHelpers = function () {
 					continue;
 				}
 
-				if (actor.system.installningar.eon === "eon4") {
+				if (!CalculateHelper.isEon5Actor(actor)) {
 					// First try to get from game.EON.fardigheter
 					skillName = game.EON.fardigheter?.[moment.grupp]?.[moment.fardighet]?.namn;
 					
@@ -432,7 +436,7 @@ export const RegisterHandlebarsHelpers = function () {
 						skillName = CONFIG.EON.fardigheter?.[moment.grupp]?.[moment.fardighet]?.namn;
 					}
 				}
-				else if (actor.system.installningar.eon === "eon5") {
+				else {
 					// First try to get from game.EON.fardigheter5
 					skillName = game.EON.fardigheter5?.[moment.grupp]?.[moment.fardighet]?.namn;
 					
@@ -669,14 +673,11 @@ export const RegisterHandlebarsHelpers = function () {
 		let list = "";
 		let skillList = "";
 
-		if (actor.system.installningar.eon === "eon4") {
+		if (!CalculateHelper.isEon5Actor(actor)) {
 			skillList = game.EON.fardigheter;
 		}
-		else if (actor.system.installningar.eon === "eon5") {
-			skillList = game.EON.fardigheter5;
-		}
 		else {
-			return "";
+			skillList = game.EON.fardigheter5;
 		}
 
 		for (const skill of skills) {
@@ -796,10 +797,9 @@ export const RegisterHandlebarsHelpers = function () {
 		if (armor == "") {
 			return "";
 		}
-		const isEon5 = actorOrEon5?.type?.toLowerCase?.().replace?.(" ", "") === "rollperson5"
-			|| actorOrEon5?.system?.installningar?.eon === "eon5"
-			|| actorOrEon5 === "eon5"
-			|| actorOrEon5 === true;
+		const isEon5 = actorOrEon5 === "eon5"
+			|| actorOrEon5 === true
+			|| CalculateHelper.isEon5Actor(actorOrEon5);
 		const rustningsmaterial = isEon5 ? CONFIG.EON?.forsvar5?.rustningsmaterial : CONFIG.EON?.forsvar?.rustningsmaterial;
 		const entry = rustningsmaterial?.[armor];
 		return entry?.namn ?? armor;
@@ -821,6 +821,14 @@ export const RegisterHandlebarsHelpers = function () {
 		}
 
 		return "";
+	});
+
+	Handlebars.registerHelper("isEon5", function(doc) {
+		return CalculateHelper.isEon5Actor(doc);
+	});
+
+	Handlebars.registerHelper("isEon5Item", function(item) {
+		return item?.isEon5 === true || EffectHelper.isEon5Item(item);
 	});
 
 	Handlebars.registerHelper("setVariable", function(varName, varValue, options) {

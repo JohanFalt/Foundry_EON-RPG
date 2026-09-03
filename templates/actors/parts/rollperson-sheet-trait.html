@@ -55,7 +55,7 @@
                 </div>
             </div>
 
-            {{#if (eq ../actor.system.installningar.eon "eon4")}}
+            {{#unless (isEon5 ../actor)}}
                 <div class="bio">
                     <div class="item-row">
                         <div class="item-row three-inner-column">                        
@@ -78,7 +78,7 @@
                         </div>
                     </div>
                 </div>
-            {{else if (eq ../actor.system.installningar.eon "eon5")}}
+            {{else}}
                 <div class="bio trait-stats-eon5">
                     <div class="item-row">
                         <div class="item-row two-column">                        
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-            {{/if}}
+            {{/unless}}
 
         </div>
     {{/each}}
@@ -120,11 +120,11 @@
     <div>{{localize "eon.sheets.actor.egenskaper"}}</div>     
 </div>
 
-{{#if (eq actor.system.installningar.eon "eon4")}}
+{{#unless (isEon5 actor)}}
     {{#if (eq actor.system.bakgrund.folkslag "")}}
         <div class="information-area information-box">{{localize "eon.sheets.info.valjFolkslagKompendium"}}</div>
     {{/if}}
-{{/if}}
+{{/unless}}
 
 <div class="info-box item-column">
     {{#each (getAncestryProperties actor) as |property id|}}

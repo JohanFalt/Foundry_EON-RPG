@@ -1,11 +1,14 @@
 <form class="{{cssClass}}" autocomplete="off">
 
-	<div class="sheet-item">
+	<div class="sheet-item effect-item-sheet">
 		<header class="sheet-header item-top">
 
             <div style="display: flex;">
                 <div class="pullLeft">
                     {{#if (eq data.system.typ "skada")}}
+                        <img src="{{EON.CONFIG.ikoner.skada}}" class="item img-block" />
+                    {{/if}}
+                    {{#if (eq data.system.typ "tillstand")}}
                         <img src="{{EON.CONFIG.ikoner.skada}}" class="item img-block" />
                     {{/if}}
                     {{#if (eq data.system.typ "faltstorning")}}
@@ -21,7 +24,7 @@
                                     <option value="">{{localize "eon.sheets.item.valjOption"}}</option>
                                     {{selectOptions EON.CONFIG.aspekter selected=item.system.id localize=true}}
                                 </select>
-                            {{else if (eq data.system.typ "skada")}}
+                            {{else}}
                                 <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
                             {{/if}}
                             <span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
@@ -38,10 +41,25 @@
                         {{/if}}
 
                         <div class="item-property-area floating-label-group">
-                            <input class="text-value editable" type="text" name="system.referens" value="{{data.system.referens}}" data-dtype="String" autocomplete="off" autofocus required />
+                            <input class="text-value editable" type="text" name="system.referens" value="{{item.system.referens}}" data-dtype="String" autocomplete="off" />
                             <span class="floating-label">{{localize "eon.sheets.item.referens"}}</span>
                         </div>
 
+                        {{#if (eqAny data.system.typ "skada" "tillstand")}}
+                            <div class="item-property-area floating-label-group">
+                                <input class="text-value editable" type="text" name="system.id" value="{{item.system.id}}" data-dtype="String" autocomplete="off" />
+                                <span class="floating-label">{{localize "eon.sheets.item.systemId"}}</span>
+                            </div>
+                            
+                        {{/if}}
+                        
+                        <div class="item-property-area floating-label-group">
+                            <select class="text-value" name="system.typ">
+                                <option value="">{{localize "eon.sheets.item.valjOption"}}</option>
+                                {{selectOptions EON.CONFIG.skadetyp selected=item.system.typ localize=true}}
+                            </select>
+                            <span class="floating-label">{{localize "eon.effects.skadetyp"}}</span>
+                        </div>
                     </div>       
                 </div>	
 
@@ -53,18 +71,37 @@
                     {{#if (eq data.system.typ "skada")}}
                         <div class="information-area top-sidetext">{{localize "eon.sheets.item.skadaSheetLabel"}}</div>
                     {{/if}}
+                    {{#if (eq data.system.typ "tillstand")}}
+                        <div class="information-area top-sidetext">{{localize "eon.sheets.item.tillstand"}}</div>
+                    {{/if}}
                     {{#if (eq data.system.typ "faltstorning")}}
                         <div class="information-area top-sidetext">{{localize "eon.sheets.item.faltstorningSheetLabel"}}</div>
                     {{/if}}
                 </div>
             </div>	
-			
+
+            {{#if hasEffects}}
+                <div class="tab effect-sheet-body" data-group="primary" data-tab="values">
+                    {{> "systems/eon-rpg/templates/items/parts/items-duration.html"}}
+                    {{> "systems/eon-rpg/templates/items/parts/items-effects.html"}}
+                </div>
+                <div class="tab effect-sheet-body" data-group="primary" data-tab="description">
+                    {{> "systems/eon-rpg/templates/items/parts/items-description.html"}}
+                </div>
+            {{else}}
+                <div class="effect-sheet-body">
+                    {{> "systems/eon-rpg/templates/items/parts/items-description.html"}}
+                </div>
+            {{/if}}
+
 		</header>
-		
-		<section class="item-body">   
-            <div style="width: 450px;">
-                {{> "systems/eon-rpg/templates/items/parts/items-description.html"}}
-            </div>         
-		</section>
+
+		{{#if hasEffects}}
+			<section class="item-body effect-item-footer">
+				<div>
+					{{> "systems/eon-rpg/templates/items/parts/navigation-effect.html"}}
+				</div>
+			</section>
+		{{/if}}
 	</div>
 </form>

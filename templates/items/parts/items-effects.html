@@ -1,0 +1,85 @@
+<div class="item-box effect-editor-box" style="margin-top: 8px;">
+    <div class="item-row headline effect-editor-headline">
+        <div class="weapon-icon">
+            <a class="item-create-effect" title="{{localize 'eon.effects.laggTillEffekt'}}">
+                <i class="fa-solid fa-square-plus green"></i>
+            </a>
+        </div>
+        <div>{{localize "eon.effects.effekter"}}</div>
+    </div>
+
+    {{#if (eq effectsUi.length 0)}}
+        <div class="item-row effect-editor-row information-area">
+            {{localize "eon.effects.ingaEffekter"}}
+        </div>
+    {{/if}}
+
+    {{#each effectsUi as |effect index|}}
+        <div class="effect-editor-row" data-effect-index="{{index}}">
+            <div class="item-row">
+                <div class="item-listbox weapon-icon">
+                    <a class="item-delete-effect" data-index="{{index}}" title="{{localize 'eon.effects.taBortEffekt'}}">
+                        <i class="icon fa-solid fa-trash-can red"></i>
+                    </a>
+                </div>
+                <div class="item-property-area floating-label-group effect-col-typ">
+                    <select class="text-value" name="system.effekter.{{index}}.typ" data-dtype="String" required>
+                        {{selectOptions @root.EON.CONFIG.effektTyper selected=effect.typ labelAttr="label" localize=true}}
+                    </select>
+                    <span class="floating-label">{{localize "eon.effects.typ"}}</span>
+                </div>
+                <div class="item-property-area floating-label-group effect-col-mode">
+                    <select class="text-value" name="system.effekter.{{index}}.mode" data-dtype="String" required>
+                        {{selectOptions @root.EON.CONFIG.effektMode selected=effect.mode localize=true}}
+                    </select>
+                    <span class="floating-label">{{localize "eon.effects.mode"}}</span>
+                </div>
+                <div class="item-property-area floating-label-group effect-col-num">
+                    <input class="text-value editable" type="number" name="system.effekter.{{index}}.tvarde" value="{{effect.tvarde}}" data-dtype="Number" required />
+                    <span class="floating-label">{{localize "eon.effects.tvarde"}}</span>
+                </div>
+                <div class="item-property-area floating-label-group effect-col-num">
+                    <input class="text-value editable" type="number" name="system.effekter.{{index}}.bonus" value="{{effect.bonus}}" data-dtype="Number" required />
+                    <span class="floating-label">{{localize "eon.effects.bonus"}}</span>
+                </div>
+                <div class="item-property-area effect-col-check" title="{{localize 'eon.effects.aktiv'}}">
+                    <label>
+                        <input type="checkbox" name="system.effekter.{{index}}.aktiv" {{#if effect.aktiv}}checked{{/if}} data-dtype="Boolean" />
+                    </label>
+                </div>
+            </div>
+            <div class="item-row effect-list-row">
+                <div class="item-property-area floating-label-group effect-col-list">
+                    <multi-select class="effect-multi-select" name="system.effekter.{{index}}.targets">
+                        {{selectOptions effect.targetChoices selected=effect.targets localize=true}}
+                    </multi-select>
+                    <span class="floating-label">{{localize "eon.effects.targets"}}</span>
+                </div>
+                <div class="item-property-area floating-label-group effect-col-list">
+                    <multi-select class="effect-multi-select" name="system.effekter.{{index}}.predicates">
+                        {{selectOptions effect.predicateChoices selected=effect.predicates localize=true}}
+                    </multi-select>
+                    <span class="floating-label">{{localize "eon.effects.predicates"}}</span>
+                </div>
+                <div class="item-property-area floating-label-group effect-col-list">
+                    <multi-select class="effect-multi-select" name="system.effekter.{{index}}.exclusions">
+                        {{selectOptions effect.exclusionChoices selected=effect.exclusions localize=true}}
+                    </multi-select>
+                    <span class="floating-label">{{localize "eon.effects.exclusions"}}</span>
+                </div>
+            </div>
+            <div class="item-row">
+                <div class="item-property-area floating-label-group effect-col-skadetyp">
+                    <select class="text-value" name="system.effekter.{{index}}.skadetyp" data-dtype="String">
+                        {{selectOptions @root.EON.CONFIG.skadetabeller selected=effect.skadetyp blank=(localize "eon.effects.skadetypAlla") localize=true}}
+                    </select>
+                    <span class="floating-label">{{localize "eon.effects.skadetyp"}}</span>
+                </div>
+                <div class="item-property-area floating-label-group effect-col-wide">
+                    <input class="text-value editable" type="text" name="system.effekter.{{index}}.referens" value="{{effect.referens}}" data-dtype="String" />
+                    <span class="floating-label">{{localize "eon.effects.referens"}}</span>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</div>

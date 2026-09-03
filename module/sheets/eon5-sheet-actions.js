@@ -197,7 +197,7 @@ export async function onRollDialog(event, target) {
         const title = dataset.title
             ? dataset.title
             : game.i18n.localize(CONFIG.EON.harleddegenskaper?.[dataset.key]?.namn ?? dataset.key);
-        DialogHelper.AttributeDialog(this.actor, dataset.type, dataset.key, title);
+        DialogHelper.AttributeDialog(this.actor, dataset.type, dataset.key, title, dataset.rollkey ?? "");
     } else if (dataset.type === "vapen") {
         const itemId = dataset.itemId ?? dataset.itemid;
         if (!itemId) return;

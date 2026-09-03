@@ -424,15 +424,16 @@ export class EonCombatTracker extends HandlebarsApplicationMixin(ApplicationV2) 
         }
 
         const selected = new Set(combatant.flags?.["eon-rpg"]?.pendingSubcombatTargets ?? []);
+        const autoSelectSingle = candidates.length === 1;
         const rows = candidates.map((candidate) => {
-            const checked = selected.has(candidate.id) ? "checked" : "";
-            return `<label style="display:block;margin:4px 0;"><input type="checkbox" name="target" value="${candidate.id}" ${checked}> ${candidate.name}</label>`;
+            const checked = (autoSelectSingle || selected.has(candidate.id)) ? "checked" : "";
+            return `<label class="eon-select-opponent-option"><input type="checkbox" name="target" value="${candidate.id}" ${checked}> ${candidate.name}</label>`;
         }).join("");
 
         const dialog = new foundry.applications.api.DialogV2({
             classes: ["eon-select-opponent-dialog"],
             window: { title: game.i18n.localize("eon.combat.valjMotstandareTitle") },
-            content: `<form><p>Välj en eller flera motståndare:</p>${rows}</form>`,
+            content: `<form><p>${game.i18n.localize("eon.combat.valjMotstandarePrompt")}</p>${rows}</form>`,
             buttons: [
                 {
                     action: "save",

@@ -1,3 +1,5 @@
+import CalculateHelper from "../../../calculate-helper.js";
+
 /**
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
@@ -21,6 +23,14 @@ export class EonActor extends Actor {
         // Make separate methods for each Actor type (character, npc, etc.) to keep
         // things organized.
         this._prepareCharacterData(actorData);
+    }
+
+    /**
+     * Eon 5-rollperson, motståndare eller annan aktör med installningar.eon === "eon5".
+     * @returns {boolean}
+     */
+    get isEon5() {
+        return CalculateHelper.isEon5Actor(this);
     }
 
   /**

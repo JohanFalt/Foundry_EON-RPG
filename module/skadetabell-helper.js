@@ -52,11 +52,13 @@ export function getIntervalBonus(finalDamage) {
     return 2 * Math.floor((slutskada - 10) / 5);
 }
 
-export function computeTableRoll(allvarligBaseRoll, finalDamage) {
-    return Math.floor(Number(allvarligBaseRoll) || 0) + getIntervalBonus(finalDamage);
+export function computeTableRoll(allvarligBaseRoll, finalDamage, effektbonus = 0) {
+    return Math.floor(Number(allvarligBaseRoll) || 0)
+        + getIntervalBonus(finalDamage)
+        + Math.floor(Number(effektbonus) || 0);
 }
 
-export function resolveAllvarligSkada(defender, damageType, bodyPartKey, allvarligBaseRoll, finalDamage) {
+export function resolveAllvarligSkada(defender, damageType, bodyPartKey, allvarligBaseRoll, finalDamage, effektbonus = 0) {
     const eon = getActorEonVersion(defender);
 
     if (eon !== "eon5") return { ok: false, error: "eon4" };
@@ -70,7 +72,7 @@ export function resolveAllvarligSkada(defender, damageType, bodyPartKey, allvarl
 
     if (!rows?.length) return { ok: false, error: "noLocation" };
 
-    const tableRoll = computeTableRoll(allvarligBaseRoll, finalDamage);
+    const tableRoll = computeTableRoll(allvarligBaseRoll, finalDamage, effektbonus);
     const row = lookupRow(rows, tableRoll);
 
     if (!row) return { ok: false, error: "noRow", tableRoll };

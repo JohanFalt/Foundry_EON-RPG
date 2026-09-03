@@ -4,6 +4,32 @@ import SelectHelper from "../select-helpers.js"
 import { DiceRollContainer } from "../dice-helper.js";
 import { RollDice } from "../dice-helper.js";
 import ItemHelper from "../item-helper.js";
+import EffectHelper from "../effect-helper.js";
+
+/**
+ * Slå ihop config-alternativ med redan sparade värden som saknas i listan.
+ * @param {Record<string, string>} configChoices
+ * @param {string[]} values
+ * @returns {Record<string, string>}
+ */
+function mergeEffectChoices(configChoices, values) {
+	const merged = foundry.utils.duplicate(configChoices ?? {});
+	for (const value of values ?? []) {
+		const key = String(value).trim();
+		if (key && merged[key] == null) merged[key] = key;
+	}
+	return merged;
+}
+
+/**
+ * Läsbara etiketter för valda värden, för sammanfattningen under flervalsfälten.
+ * @param {Record<string, string>} choices
+ * @param {string[]} values
+ * @returns {string[]}
+ */
+function effectChoiceLabels(choices, values) {
+	return (values ?? []).map((value) => choices?.[value] ?? value);
+}
 
 export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 
@@ -174,6 +200,34 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 
 		data.EON = game.EON;
 		data.EON.CONFIG = CONFIG.EON;
+
+		data.hasEffects = this.item.hasEffects;
+		data.isEon5 = this.item.isEon5;
+
+		const effectRows = Array.isArray(this.item.system?.effekter) ? this.item.system.effekter : [];
+		const targetConfig = data.EON.CONFIG.effektTargetExempel ?? {};
+		const predicateConfig = data.EON.CONFIG.effektPredicateExempel ?? {};
+		data.effectsUi = effectRows.map((effect) => {
+			const targets = Array.isArray(effect.targets) ? effect.targets : [];
+			const predicates = Array.isArray(effect.predicates) ? effect.predicates : [];
+			const exclusions = Array.isArray(effect.exclusions) ? effect.exclusions : [];
+			const targetChoices = mergeEffectChoices(targetConfig, targets);
+			const predicateChoices = mergeEffectChoices(predicateConfig, predicates);
+			const exclusionChoices = mergeEffectChoices(targetConfig, exclusions);
+			return {
+				...effect,
+				targets,
+				predicates,
+				exclusions,
+				targetChoices,
+				predicateChoices,
+				exclusionChoices,
+				targetLabels: effectChoiceLabels(targetChoices, targets),
+				predicateLabels: effectChoiceLabels(predicateChoices, predicates),
+				exclusionLabels: effectChoiceLabels(exclusionChoices, exclusions)
+			};
+		});
+
 		//data.equipmentData = (this.actor && this.actor.type.toLowerCase().replace(" ", "") === "rollperson5" && game.EON.utrustning5) ? game.EON.utrustning5.utrustning5 : game.EON.utrustning;
 
 		if ((this.item.actor != null) && (data.isPC)) {
@@ -185,7 +239,7 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 				data.nameIsI18nKey = game.i18n.has(this.item.name);
 
 				//if (this.item.actor.type.toLowerCase().replace(" ", "") == "rollperson") {
-				if (this.item.system.installningar.eon === "eon4") {
+				if (!this.item.actor.isEon5) {
 					data.hasExperience = this.item.actor.system.fardigheter[this.item.system.grupp].erf > 0;
 				}		
 
@@ -241,10 +295,9 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 				data.system.belastning = data.item.system.belastning;
 			}
 			// Rustningsmaterial från config: forsvar5 för Eon 5, annars forsvar
-			const isEon5 = this.item.actor?.type?.toLowerCase().replace(" ", "") === "rollperson5"
-				|| this.item.system?.installningar?.eon === "eon5"
-				|| CONFIG.EON.settings?.bookEon === "eon5";
-			data.rustningsmaterial = (isEon5 ? CONFIG.EON?.forsvar5?.rustningsmaterial : CONFIG.EON?.forsvar?.rustningsmaterial) ?? {};
+			data.rustningsmaterial = (this.item.isEon5
+				? CONFIG.EON?.forsvar5?.rustningsmaterial
+				: CONFIG.EON?.forsvar?.rustningsmaterial) ?? {};
 		}
 
 		console.log(data.item.type);
@@ -273,6 +326,18 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		html
 			.find(".item-create")
 			.click(this._onItemCreate.bind(this));
+
+		html
+			.find(".item-create-effect")
+			.click(this._onEffectCreate.bind(this));
+
+		html
+			.find(".item-delete-effect")
+			.click(this._onEffectDelete.bind(this));
+
+		html
+			.find(".roll-duration")
+			.click(this._onRollDuration.bind(this));
 
 		html
 			.find(".item-edit")
@@ -484,6 +549,75 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 			this.item.update(itemData);
 			this.selectedRitual = -1;
 		}
+	}
+
+	async _onEffectCreate(event) {
+		event.preventDefault();
+		const effekter = foundry.utils.duplicate(this.item.system.effekter ?? []);
+		effekter.push({
+			typ: "tvarde",
+			targets: [],
+			mode: "add",
+			tvarde: 0,
+			bonus: 0,
+			skadetyp: "",
+			referens: "",
+			predicates: [],
+			exclusions: [],
+			aktiv: true
+		});
+		await this.item.update({ "system.effekter": effekter });
+		this.render();
+	}
+
+	async _onEffectDelete(event) {
+		event.preventDefault();
+		const index = Number(event.currentTarget.dataset.index);
+		if (!Number.isFinite(index)) return;
+		const effekter = foundry.utils.duplicate(this.item.system.effekter ?? []);
+		effekter.splice(index, 1);
+		await this.item.update({ "system.effekter": effekter });
+		this.render();
+	}
+
+	async _onRollDuration(event) {
+		event.preventDefault();
+		const total = await EffectHelper.rollDurationIfNeeded(this.item);
+		if (total != null) {
+			ui.notifications.info(game.i18n.format("eon.effects.varaktighetResultat", { total }));
+		}
+		this.render();
+	}
+
+	/** @override */
+	async _updateObject(event, formData) {
+		const expanded = foundry.utils.expandObject(formData);
+		if (expanded.system?.effekter && typeof expanded.system.effekter === "object") {
+			const asArray = Array.isArray(expanded.system.effekter)
+				? expanded.system.effekter
+				: Object.keys(expanded.system.effekter)
+					.sort((a, b) => Number(a) - Number(b))
+					.map((key) => expanded.system.effekter[key]);
+
+			for (const effect of asArray) {
+				if (!effect || typeof effect !== "object") continue;
+				for (const key of ["targets", "predicates", "exclusions"]) {
+					const value = effect[key];
+					if (value == null || value === "") {
+						effect[key] = [];
+					} else if (typeof value === "string") {
+						effect[key] = value
+							.split(",")
+							.map((part) => part.trim())
+							.filter(Boolean);
+					} else if (Array.isArray(value) || value instanceof Set) {
+						effect[key] = Array.from(value).map((part) => String(part).trim()).filter(Boolean);
+					}
+				}
+			}
+			expanded.system.effekter = asArray;
+		}
+		return this.item.update(expanded);
 	}
 
 	async _onItemCreate(event) {
@@ -812,6 +946,9 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		}
 
 		const property = dataset.property;
+		// Plusikonen återanvänds av knappar som inte styr ett värde, t.ex. "lägg till effekt".
+		if (!property) return;
+
 		const fields = property.split(".");
 
 		// bonus
@@ -862,6 +999,8 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		}
 
 		const property = dataset.property;
+		if (!property) return;
+
 		const fields = property.split(".");
 
 		// bonus
@@ -903,7 +1042,7 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		const dataset = element.dataset;
 		const itemData = foundry.utils.duplicate(this.item);
 
-		if (itemData.system.installningar.eon === "eon4") {
+		if (!this.item.isEon5) {
 			itemData.system.installningar.lattlard = false;
 			itemData.system.installningar.svarlard = false;
 			itemData.system.installningar.normal = true;
@@ -917,7 +1056,7 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 				itemData.system.installningar.normal = false;
 			}
 		}
-		if (itemData.system.installningar.eon === "eon5") {
+		else {
 			if (dataset.value == "T") {
 				itemData.system.installningar.talang = !itemData.system.installningar.talang;
 			}
@@ -1165,10 +1304,9 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 			itemData.system.tacker = "";
 
 			if (rustningsmall != "") {
-				const isEon5 = this.item.actor?.type?.toLowerCase().replace(" ", "") === "rollperson5"
-					|| this.item.system?.installningar?.eon === "eon5"
-					|| CONFIG.EON.settings?.bookEon === "eon5";
-				const rustningsmaterial = isEon5 ? CONFIG.EON?.forsvar5?.rustningsmaterial : CONFIG.EON?.forsvar?.rustningsmaterial;
+				const rustningsmaterial = this.item.isEon5
+					? CONFIG.EON?.forsvar5?.rustningsmaterial
+					: CONFIG.EON?.forsvar?.rustningsmaterial;
 				const rustning = rustningsmaterial?.[rustningsmall];
 				if (!rustning) {
 					ui.notifications.warn(game.i18n.localize("eon.messages.rustningsmaterialSaknas") || "Rustningsmaterial hittades inte.");

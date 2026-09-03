@@ -27,47 +27,15 @@
                 {{/if}}
             </ul>
 
-            {{#if object.isattack}}
-                {{#if (or (eq object.attacktype 'tungt') (eq object.attacktype 'snabbt') (eq object.attacktype 'grupp'))}}
-                <aside class="eon-wr-tactic-info attack-info" aria-live="polite">
-                    <span class="eon-wr-tactic-label">{{localize "eon.dialogs.weaponRollTacticEffects"}}</span>
-                    <ul class="eon-wr-tactic-list">
-                        {{#if (eq object.attacktype 'tungt')}}
-                        <li>Utmattning +2</li>
-                        <li>Skada +2T6</li>
-                        <li>Färdighetstärningar −1T6</li>
-                        {{else if (eq object.attacktype 'snabbt')}}
-                        <li>Utmattning +1</li>
-                        <li>Skada −1T6</li>
-                        <li>Färdighetstärningar +1T6</li>
-                        {{else if (eq object.attacktype 'grupp')}}
-                        <li>Utmattning +1</li>
-                        <li>Färdighetstärningar −1T6</li>
-                        {{/if}}
-                    </ul>
-                </aside>
-                {{/if}}
-            {{/if}}
-
-            {{#if object.isdefence}}
-                {{#if (or (eq object.attacktype 'defensivt') (eq object.attacktype 'kontring') (eq object.attacktype 'normal'))}}
-                <aside class="eon-wr-tactic-info attack-info" aria-live="polite">
-                    <span class="eon-wr-tactic-label">{{localize "eon.dialogs.weaponRollTacticEffects"}}</span>
-                    <ul class="eon-wr-tactic-list">
-                        {{#if (eq object.attacktype 'defensivt')}}
-                        <li>Utmattning +1</li>
-                        <li>Färdighetstärningar +1T6</li>
-                        <li>Lyckas med minst 2 Övertag för att bli anfallare</li>
-                        {{else if (eq object.attacktype 'kontring')}}
-                        <li>Utmattning +1</li>
-                        <li>Färdighetstärningar −1T6</li>
-                        <li>Blir alltid anfallare, oavsett utfall</li>
-                        {{else if (eq object.attacktype 'normal')}}
-                        <li>{{localize "eon.dialogs.lyckasForsvara"}}</li>
-                        {{/if}}
-                    </ul>
-                </aside>
-                {{/if}}
+            {{#if showTacticInfo}}
+            <aside class="eon-wr-tactic-info attack-info" aria-live="polite">
+                <span class="eon-wr-tactic-label">{{localize "eon.dialogs.weaponRollTacticEffects"}}</span>
+                <ul class="eon-wr-tactic-list">
+                    {{#each tacticRows as |row|}}
+                    <li>{{row}}</li>
+                    {{/each}}
+                </ul>
+            </aside>
             {{/if}}
 
             <div class="eon-wr-block dialog-area">
@@ -104,28 +72,28 @@
                             {{#unless object.vapen.isRangedWeapon}}
                             <button type="button" class="attacktype eon-wr-tab {{#if (or (not object.attacktype) (eq object.attacktype 'normal'))}}active{{/if}}"
                                     data-type="normal"
-                                    title="{{localize 'eon.dialogs.weaponRollStandardTitle'}}">{{localize 'eon.dialogs.weaponRollStandard'}}</button>
+                                    title="{{tacticTitles.normal}}">{{localize 'eon.dialogs.weaponRollStandard'}}</button>
                             <button type="button" class="attacktype eon-wr-tab {{#if (eq object.attacktype 'tungt')}}active{{/if}}"
                                     data-type="tungt"
-                                    title="{{localize 'eon.dialogs.weaponRollKraftfulltTitle'}}">{{localize 'eon.dialogs.weaponRollKraftfullt'}}</button>
+                                    title="{{tacticTitles.tungt}}">{{localize 'eon.dialogs.weaponRollKraftfullt'}}</button>
                             <button type="button" class="attacktype eon-wr-tab {{#if (eq object.attacktype 'snabbt')}}active{{/if}}"
                                     data-type="snabbt"
-                                    title="{{localize 'eon.dialogs.weaponRollSnabbtTitle'}}">{{localize 'eon.dialogs.weaponRollSnabbt'}}</button>
+                                    title="{{tacticTitles.snabbt}}">{{localize 'eon.dialogs.weaponRollSnabbt'}}</button>
                             <button type="button" class="attacktype eon-wr-tab {{#if (eq object.attacktype 'grupp')}}active{{/if}}"
                                     data-type="grupp"
-                                    title="{{localize 'eon.dialogs.weaponRollGruppanfallTitle'}}">{{localize 'eon.dialogs.weaponRollGruppanfall'}}</button>
+                                    title="{{tacticTitles.grupp}}">{{localize 'eon.dialogs.weaponRollGruppanfall'}}</button>
                             {{/unless}}
                         {{/if}}
                         {{#if object.isdefence}}
                         <button type="button" class="attacktype eon-wr-tab {{#if (or (not object.attacktype) (eq object.attacktype 'normal'))}}active{{/if}}"
                                 data-type="normal"
-                                title="{{localize 'eon.dialogs.weaponRollStandardTitle'}}">{{localize 'eon.dialogs.weaponRollStandard'}}</button>
+                                title="{{tacticTitles.normal}}">{{localize 'eon.dialogs.weaponRollStandard'}}</button>
                         <button type="button" class="attacktype eon-wr-tab {{#if (eq object.attacktype 'defensivt')}}active{{/if}}"
                                 data-type="defensivt"
-                                title="{{localize 'eon.dialogs.weaponRollDefensivtTitle'}}">{{localize 'eon.dialogs.weaponRollDefensivt'}}</button>
+                                title="{{tacticTitles.defensivt}}">{{localize 'eon.dialogs.weaponRollDefensivt'}}</button>
                         <button type="button" class="attacktype eon-wr-tab {{#if (eq object.attacktype 'kontring')}}active{{/if}}"
                                 data-type="kontring"
-                                title="{{localize 'eon.dialogs.weaponRollKontringTitle'}}">{{localize 'eon.dialogs.weaponRollKontring'}}</button>
+                                title="{{tacticTitles.kontring}}">{{localize 'eon.dialogs.weaponRollKontring'}}</button>
                         {{/if}}
                     {{/if}}
                 </div>

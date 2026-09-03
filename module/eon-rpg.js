@@ -1,5 +1,6 @@
 // Import Modules
 import { EonActor } from "./datamodels/actor/data/eonactor.js";
+import { EonItem } from "./datamodels/item/data/eonitem.js";
 
 import * as models from "./datamodels/_module.js";
 import * as sheets from "./sheets/_module.js";
@@ -79,6 +80,12 @@ function localizeEonConfig(eon) {
     if (eon.vapenskador) {
         for (const skadetypKey of Object.keys(eon.vapenskador)) {
             eon.vapenskador[skadetypKey] = localizeKey(`eon.config.vapenskador.${skadetypKey}`);
+        }
+    }
+
+    if (eon.skadetabeller) {
+        for (const tabellKey of Object.keys(eon.skadetabeller)) {
+            eon.skadetabeller[tabellKey] = localizeKey(`eon.config.vapenskador.${tabellKey}`);
         }
     }
 
@@ -178,6 +185,40 @@ function localizeEonConfig(eon) {
         eon.strid.lakningstakt.namn = localizeKey("eon.config.strid.lakningstakt.namn");
     }
 
+    // effektkataloger
+    if (eon.effektTyper) {
+        for (const key of Object.keys(eon.effektTyper)) {
+            const entry = eon.effektTyper[key];
+            if (entry?.label) entry.label = localizeKey(`eon.config.effektTyper.${key}`);
+        }
+    }
+    if (eon.effektMode) {
+        for (const key of Object.keys(eon.effektMode)) {
+            eon.effektMode[key] = localizeKey(`eon.config.effektMode.${key}`);
+        }
+    }
+    if (eon.effektVaraktighet) {
+        for (const key of Object.keys(eon.effektVaraktighet)) {
+            eon.effektVaraktighet[key] = localizeKey(`eon.config.effektVaraktighet.${key}`);
+        }
+    }
+    if (eon.effektTargetExempel) {
+        for (const key of Object.keys(eon.effektTargetExempel)) {
+            const label = eon.effektTargetExempel[key];
+            if (typeof label === "string" && label.startsWith("eon.")) {
+                eon.effektTargetExempel[key] = localizeKey(label);
+            }
+        }
+    }
+    if (eon.effektPredicateExempel) {
+        for (const key of Object.keys(eon.effektPredicateExempel)) {
+            const label = eon.effektPredicateExempel[key];
+            if (typeof label === "string" && label.startsWith("eon.")) {
+                eon.effektPredicateExempel[key] = localizeKey(label);
+            }
+        }
+    }
+
     // combatPhases
     if (eon.combatPhases) {
         for (const fasKey of Object.keys(eon.combatPhases)) {
@@ -194,6 +235,7 @@ function localizeEonConfig(eon) {
 /* ------------------------------------ */
 Hooks.once("init", async function() {
     CONFIG.Actor.documentClass = EonActor;
+    CONFIG.Item.documentClass = EonItem;
 
     CONFIG.Actor.dataModels.Rollperson = models.EonRollperson;
     CONFIG.Actor.dataModels.Rollperson5 = models.Eon5Rollperson;
@@ -386,6 +428,16 @@ Hooks.once("ready", async () => {
                         <p>All funktion som den modulen hade är nu en del av systemets grundfunktioner.</p>`
                 ], 'eondiceremoval');
             }
+
+            if (!game.settings.get('eon-rpg', 'eonstates')) {
+                await MigrationWizard.show([
+                     `<h2>Nytt: Tillstånd i Eon 5</h2>
+                     <p>Från och med denna versionen har vi lagt till en ny funktion som heter Tillstånd. Tillstånd är en samling av olika effekter som kan påverka en rollperson eller varelse. Du kan lägga till, ta bort och hantera tillstånd direkt från rollpersonens ark.</p>
+                     <p>För att lägga till ett tillstånd, öppna rollpersonens ark, gå in på Vapen fliken. Under Allvarliga skador listas de Tillstånd som är aktiva på rollformuläret. Antingen kan man lägga till egna Tillstånd eller hämta från Kompendiet.</p>
+                     <p>Skillnaden mellan Allvarlig Skada och ett Tillstånd är att Allvarlig Skada är en skada som inte försvinner av sig själv, medan ett Tillstånd går över med tiden.</p>
+                     `
+                ], 'eonstates');
+            }
         };
         setTimeout(() => showWizards(), 100);
     } 
@@ -543,6 +595,9 @@ Hooks.on("renderItemSheet", (sheet) => {
     if ((sheet.object.type.toLowerCase().replace(" ", "") == "folkslag") || (sheet.object.type.toLowerCase().replace(" ", "") == "folkslag5")) {
         sheet.element[0].classList.add("folkslag");
     }
+    if (sheet.object.hasEffects) {
+        sheet.element[0].classList.add("effekt");
+    }
 });
 
 Hooks.on("renderItemSheetV2", (sheet) => {
@@ -582,6 +637,9 @@ Hooks.on("renderItemSheetV2", (sheet) => {
     }
     if (itemType === "folkslag" || itemType === "folkslag5") {
         root.classList.add("folkslag");
+    }
+    if (item.hasEffects) {
+        root.classList.add("effekt");
     }
 });
 

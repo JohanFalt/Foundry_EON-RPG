@@ -122,9 +122,42 @@
                     </a>
                 </div>
                 <div class="item-listbox" style="width: 125px;">{{skada.name}}</div>
+                {{#if skada.system.rundorKvar}}
+                    <div class="item-listbox information-area">({{skada.system.rundorKvar}})</div>
+                {{/if}}
             </div>
         {{/each}}
     </div>
 </div>
 
+<div class="item-box">
+    <div class="item-row headline" style="line-height: 25px; width:100%; border-bottom-style: solid; border-bottom-width: 1px; border-top-style: solid; border-top-width: 1px;">
+        <div class="weapon-icon">
+            <a data-action="itemCreate" data-type="tillstand" title="{{localize 'eon.sheets.actor.laggTillTillstand'}}">
+                <i class="fa-solid fa-square-plus green"></i>
+            </a>
+        </div>
+        <div>{{localize "eon.sheets.actor.tillstand"}}</div>
+    </div>
+    <div>
+        {{#if (eq listdata.tillstand.length 0)}}
+            <div class="item-row item-listrow">
+                {{localize "eon.sheets.actor.ingaTillstand"}}
+            </div>
+        {{/if}}
+        {{#each listdata.tillstand as |tillstand|}}
+            <div class="item-row item-listrow">
+                <div class="item-listbox weapon-icon">
+                    <a data-action="itemEdit" data-item-id="{{tillstand._id}}" title="{{localize 'eon.sheets.actor.editeraTillstand'}}">
+                        <i class="icon fa-solid fa-pen-to-square"></i>
+                    </a>
+                </div>
+                <div class="item-listbox" style="width: 125px;">{{tillstand.name}}</div>
+                {{#if tillstand.system.rundorKvar}}
+                    <div class="item-listbox information-area">({{tillstand.system.rundorKvar}})</div>
+                {{/if}}
+            </div>
+        {{/each}}
+    </div>
+</div>
 

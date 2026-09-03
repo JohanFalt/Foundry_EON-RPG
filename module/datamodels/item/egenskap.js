@@ -1,9 +1,9 @@
 import basforemal from "./base/_basforemal.js";
 import installningar from "./base/installningar.js";
-import bonus from "./base/bonus.js";
+import effekter from "./base/effekter.js";
 
 /**
- * Data schema, attributes, and methods specific to Rollperson type Actors.
+ * Data schema for Egenskap items (vapen / folkslag / allmänt).
  */
 export default class EonEgenskap extends basforemal {
     /* -------------------------------------------- */
@@ -21,13 +21,8 @@ export default class EonEgenskap extends basforemal {
             harniva: new fields.BooleanField({initial: false})
         });
 
-        schema.niva = new fields.NumberField({...valueInteger});        
-
-        // schema.bonus = new fields.ArrayField(
-        //     new fields.SchemaField({
-        //         ...bonus()
-        //     })
-        // );
+        schema.niva = new fields.NumberField({...valueInteger});
+        schema.effekter = effekter();
 
         return schema;
     }

@@ -129,6 +129,13 @@
     height: 500px;
 }
 
+.EON.itemsheet.effekt:not(.minimized) {
+    min-width: 700px;
+    width: 700px;
+    min-height: 620px;
+    height: 620px;
+}
+
 .EON.itemsheet.rustning:not(.minimized) {
     min-height: 700px;
     height: 700px;
@@ -720,7 +727,218 @@
     height: 25px;
 }
 
-.EON .item-listbox {
+/* Skada/tillstånd: effekteditor (flera rader per post) */
+.EON.itemsheet .effect-sheet-body {
+    width: 100%;
+    max-width: 660px;
+}
+
+.EON.itemsheet .effect-editor-row {
+    line-height: normal;
+    width: 100%;
+    height: auto;
+    min-height: 25px;
+    padding: 10px 0 12px;
+    border-bottom: 1px solid var(--eon-border-color, #ccc);
+}
+
+.EON.itemsheet .effect-editor-row:last-child {
+    border-bottom: none;
+}
+
+.EON.itemsheet .effect-editor-headline {
+    line-height: 25px;
+    width: 100%;
+    border-bottom: 1px solid var(--eon-border-color, #ccc);
+    border-top: 1px solid var(--eon-border-color, #ccc);
+    margin-bottom: 4px;
+}
+
+.EON.itemsheet .effect-editor-row .item-row,
+.EON.itemsheet .effect-duration-row {
+    gap: 8px;
+    align-items: flex-end;
+    margin-bottom: 6px;
+}
+
+.EON.itemsheet .effect-editor-row .item-row:last-child,
+.EON.itemsheet .effect-duration-row {
+    margin-bottom: 0;
+}
+
+.EON.itemsheet .effect-editor-row .item-property-area,
+.EON.itemsheet .effect-duration-row .item-property-area {
+    width: auto;
+    height: auto;
+    flex: 0 0 auto;
+    min-width: 0;
+}
+
+.EON.itemsheet .effect-editor-row .item-property-area.effect-col-typ {
+    width: 150px;
+}
+
+.EON.itemsheet .effect-editor-row .item-property-area.effect-col-mode {
+    width: 115px;
+}
+
+.EON.itemsheet .effect-editor-row .item-property-area.effect-col-num {
+    width: 72px;
+}
+
+.EON.itemsheet .effect-editor-row .item-property-area.effect-col-skadetyp {
+    width: 110px;
+}
+
+.EON.itemsheet .effect-editor-row .item-property-area.effect-col-check {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.EON.itemsheet .effect-editor-row .item-property-area.effect-col-wide {
+    flex: 1 1 220px;
+    width: auto;
+    min-width: 180px;
+}
+
+.EON.itemsheet .effect-editor-row .item-property-area.effect-col-medium {
+    flex: 1 1 160px;
+    width: auto;
+    min-width: 140px;
+}
+
+/* Mål / villkor / undantag: tre lika breda flervalslistor på egen rad */
+.EON.itemsheet .effect-editor-row .item-row.effect-list-row {
+    align-items: stretch;
+    margin-top: 6px;
+    margin-bottom: 10px;
+}
+
+.EON.itemsheet .effect-editor-row .item-property-area.effect-col-list {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 120px;
+}
+
+/* Foundrys multi-select: valda värden visas som taggar ovanför dropdownen */
+.EON.itemsheet multi-select.effect-multi-select {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 7px;
+    padding-top: 6px;
+    min-height: var(--eon-line-height-floattext);
+}
+
+.EON.itemsheet multi-select.effect-multi-select > select {
+    width: 100%;
+    margin: 0;
+    padding-left: 0;
+    height: var(--eon-line-height-floattext);
+    order: 1;
+}
+
+.EON.itemsheet .floating-label-group multi-select.effect-multi-select ~ .floating-label {
+    top: 8px;
+}
+
+.EON.itemsheet multi-select.effect-multi-select .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    order: 2;
+}
+
+.EON.itemsheet multi-select.effect-multi-select .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    line-height: normal;
+    white-space: nowrap;
+}
+
+.eon-theme-light.EON.itemsheet multi-select.effect-multi-select .tag {
+    background: var(--eon-back-color-inputs);
+    border: 1px solid var(--eon-border-color);
+    color: var(--eon-text-normal-color);
+}
+
+.eon-theme-dark.EON.itemsheet multi-select.effect-multi-select .tag {
+    background: var(--eon-back-color-inputs-dark);
+    border: 1px solid var(--eon-border-color-dark);
+    color: var(--eon-text-normal-color-dark);
+}
+
+.EON.itemsheet multi-select.effect-multi-select .tag a.remove {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.EON.itemsheet multi-select.effect-multi-select .tag a.remove:hover {
+    opacity: 1;
+    color: var(--eon-color-bad);
+}
+
+/* Sammanfattning under varje flervalsfält: rubrik + valda värden */
+.EON.itemsheet .effect-selected-box {
+    margin-top: 6px;
+    line-height: normal;
+}
+
+.EON.itemsheet .effect-selected-headline {
+    font-family: var(--eon-main-headline-norm);
+    font-size: var(--eon-box-headline-size);
+    border-bottom: 1px solid var(--eon-border-color, #ccc);
+    margin-bottom: 2px;
+}
+
+.EON.itemsheet .effect-selected-value {
+    word-break: break-word;
+}
+
+.EON.itemsheet .effect-selected-empty {
+    opacity: 0.6;
+    font-style: italic;
+}
+
+.EON.itemsheet .effect-duration-row .item-property-area.effect-col-varaktighet {
+    width: 190px;
+}
+
+.EON.itemsheet .effect-duration-row .item-property-area.effect-col-rundor {
+    width: 84px;
+}
+
+.EON.itemsheet .effect-duration-row .item-property-area.effect-col-formel {
+    width: 120px;
+}
+
+.EON.itemsheet .effect-duration-row .item-property-area.effect-col-kalla {
+    flex: 1 1 180px;
+    width: auto;
+    min-width: 140px;
+}
+
+.EON.itemsheet .effect-duration-row {
+    margin-top: 10px;
+}
+
+.EON.itemsheet .effect-duration-roll {
+    align-self: center;
+    margin-bottom: 4px;
+}
+
+.EON.itemsheet .item-listbox {
     line-height: 25px;
     height: 25px;
     display: inline-flex;
@@ -801,6 +1019,10 @@
 .EON.itemsheet .tabButton,
 .EON.varelse .tabButton {
     width: 25%;
+}
+
+.EON.itemsheet.effekt .tabButton {
+    width: 50%;
 }
 
 .EON.motstandare nav.sheet-tabs.tabs {
@@ -1076,6 +1298,7 @@
 }
 
 /* Folkslag-item: flikar längst ner i dialogen (flex), scroll bara i innehållsdelen */
+.EON.itemsheet .window-content:has(.effect-item-sheet),
 .EON.itemsheet .window-content:has(.ancestry-folkslag-sheet) {
     display: flex;
     flex-direction: column;
@@ -1085,6 +1308,7 @@
     height: 100%;
 }
 
+.EON.itemsheet .window-content:has(.effect-item-sheet) form,
 .EON.itemsheet .window-content:has(.ancestry-folkslag-sheet) form {
     display: flex;
     flex-direction: column;
@@ -1095,6 +1319,7 @@
     box-sizing: border-box;
 }
 
+.EON.itemsheet .sheet-item.effect-item-sheet,
 .EON.itemsheet .sheet-item.ancestry-folkslag-sheet {
     display: flex;
     flex-direction: column;
@@ -1103,6 +1328,7 @@
     overflow: hidden;
 }
 
+.EON.itemsheet .effect-item-sheet .sheet-header.item-top,
 .EON.itemsheet .ancestry-folkslag-sheet .sheet-header.item-top {
     flex: 1 1 auto;
     min-height: 0;
@@ -1111,6 +1337,7 @@
     padding-bottom: 12px;
 }
 
+.EON.itemsheet .item-body.effect-item-footer,
 .EON.itemsheet .item-body.ancestry-item-footer {
     flex: 0 0 auto;
     position: relative;
@@ -1123,18 +1350,22 @@
     box-shadow: 0 -6px 12px rgba(0, 0, 0, 0.12);
 }
 
+.eon-theme-light.EON.itemsheet .item-body.effect-item-footer,
 .eon-theme-light.EON.itemsheet .item-body.ancestry-item-footer {
     background-color: var(--eon-information-background);
 }
 
+.eon-theme-dark.EON.itemsheet .item-body.effect-item-footer,
 .eon-theme-dark.EON.itemsheet .item-body.ancestry-item-footer {
     background-color: var(--eon-information-background-dark);
 }
 
+.eon-theme-light.EON.itemsheet .item-body.effect-item-footer .headlineTabs,
 .eon-theme-light.EON.itemsheet .item-body.ancestry-item-footer .headlineTabs {
     background-color: var(--eon-information-background);
 }
 
+.eon-theme-dark.EON.itemsheet .item-body.effect-item-footer .headlineTabs,
 .eon-theme-dark.EON.itemsheet .item-body.ancestry-item-footer .headlineTabs {
     background-color: var(--eon-information-background-dark);
 }
@@ -2400,5 +2631,3 @@ input.skill-value {
         min-width: 700px;
     }
 }
-}
-

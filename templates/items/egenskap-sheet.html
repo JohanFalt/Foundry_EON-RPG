@@ -1,17 +1,17 @@
 <form class="{{cssClass}}" autocomplete="off">
 
-	<div class="sheet-item">
+	<div class="sheet-item effect-item-sheet">
 		<header class="sheet-header item-top">
 
             <div style="display: flex;">
                 <div class="pullLeft">
                     <img src="{{EON.CONFIG.ikoner.fardighet}}" class="item img-block" />
                 
-                    {{#if (eq item.system.installningar.eon "eon4")}}
+                    {{#unless (isEon5Item item)}}
                         <div>{{localize "eon.sheets.item.eon4Kort"}}</div>
                     {{else}}
                         <div>{{localize "eon.sheets.item.eon5Kort"}}</div>
-                    {{/if}}
+                    {{/unless}}
                 </div>
 
                 <div class="item-area pullLeft">
@@ -19,6 +19,11 @@
                         <div class="item-property-area floating-label-group">
                             <input class="text-value editable" type="text" name="name" value="{{item.name}}" data-dtype="String" autocomplete="off" autofocus required />
                             <span class="floating-label">{{localize "eon.sheets.item.namn"}}</span>
+                        </div>
+
+                        <div class="item-property-area floating-label-group">
+                            <input class="text-value editable" type="text" name="system.id" value="{{item.system.id}}" data-dtype="String" autocomplete="off" autofocus required />
+                            <span class="floating-label">ID</span>
                         </div>
 
                         <div class="item-property-area floating-label-group">
@@ -65,13 +70,28 @@
 					<div class="information-area top-sidetext">{{localize "eon.sheets.item.egenskap"}}</div>
 				</div>
             </div>	
-			
+
+            {{#if hasEffects}}
+                <div class="tab effect-sheet-body" data-group="primary" data-tab="values">
+                    {{> "systems/eon-rpg/templates/items/parts/items-effects.html"}}
+                </div>
+                <div class="tab effect-sheet-body" data-group="primary" data-tab="description">
+                    {{> "systems/eon-rpg/templates/items/parts/items-description.html"}}
+                </div>
+            {{else}}
+                <div class="effect-sheet-body">
+                    {{> "systems/eon-rpg/templates/items/parts/items-description.html"}}
+                </div>
+            {{/if}}
+
 		</header>
-		
-		<section class="item-body">   
-            <div style="width: 450px;">
-                {{> "systems/eon-rpg/templates/items/parts/items-description.html"}}
-            </div> 
-		</section>
+
+		{{#if hasEffects}}
+			<section class="item-body effect-item-footer">
+				<div>
+					{{> "systems/eon-rpg/templates/items/parts/navigation-effect.html"}}
+				</div>
+			</section>
+		{{/if}}
 	</div>
 </form>

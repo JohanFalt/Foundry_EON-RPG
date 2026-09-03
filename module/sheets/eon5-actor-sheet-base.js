@@ -1,6 +1,7 @@
 import CalculateHelper from "../calculate-helper.js";
 import CreateHelper from "../create-helper.js";
 import DialogHelper from "../dialog-helper.js";
+import EffectHelper from "../effect-helper.js";
 import {
     onAttributeEdit,
     onItemActive,
@@ -105,7 +106,8 @@ export default class Eon5ActorSheetBase extends HandlebarsApplicationMixin(found
                 besvarjelse: [],
                 kongelat: []
             },
-            skador: []
+            skador: [],
+            tillstand: []
         };
 
         for (const item of actor.items) {
@@ -128,7 +130,11 @@ export default class Eon5ActorSheetBase extends HandlebarsApplicationMixin(found
                 listdata.utrustning.rustning.push(item);
             }
             if (item.type === "Skada") {
-                listdata.skador.push(item);
+                if (EffectHelper.isAllvarligSkadaItem(item)) {
+                    listdata.skador.push(item);
+                } else if (EffectHelper.isTillstandItem(item)) {
+                    listdata.tillstand.push(item);
+                }
             }
             if (item.type === "Mysterie") {
                 listdata.religion.mysterie.push(item);
@@ -158,6 +164,7 @@ export default class Eon5ActorSheetBase extends HandlebarsApplicationMixin(found
         listdata.magi.besvarjelse.sort((a, b) => a.name.localeCompare(b.name));
         listdata.magi.kongelat.sort((a, b) => a.name.localeCompare(b.name));
         listdata.skador.sort((a, b) => a.name.localeCompare(b.name));
+        listdata.tillstand.sort((a, b) => a.name.localeCompare(b.name));
 
         const fardigheterFlat = [];
         for (const item of actor.items) {
@@ -317,7 +324,7 @@ export default class Eon5ActorSheetBase extends HandlebarsApplicationMixin(found
                 const dataset = btn.dataset;
                 if (dataset.source !== "attribute") return;
                 const title = dataset.title ?? "";
-                DialogHelper.AttributeDialog(this.actor, dataset.type, dataset.key, title);
+                DialogHelper.AttributeDialog(this.actor, dataset.type, dataset.key, title, dataset.rollkey ?? "");
             });
         }
     }
@@ -370,9 +377,16 @@ export default class Eon5ActorSheetBase extends HandlebarsApplicationMixin(found
             return;
         }
 
-        const itemData = foundry.utils.duplicate(dropped.toObject());
+        const itemData = EffectHelper.normalizeSkadaItemData(foundry.utils.duplicate(dropped.toObject()));
         itemData.system.installningar = itemData.system.installningar ?? {};
         itemData.system.installningar.eon = "eon5";
-        await this.actor.createEmbeddedDocuments("Item", [itemData]);
+        const created = await this.actor.createEmbeddedDocuments("Item", [itemData]);
+        const item = created?.[0];
+        if (item && EffectHelper.isSkadaEffectItem(item) && item.system?.varaktighetFormel) {
+            const total = await EffectHelper.rollDurationIfNeeded(item);
+            if (total != null) {
+                ui.notifications.info(game.i18n.format("eon.effects.varaktighetResultat", { total }));
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@
  */
 
 import { postTrayChatMessage } from "./dice-helper.js";
+import EffectHelper from "./effect-helper.js";
 
 export const EON_ATTACK_FLAG = "eon-rpg";
 
@@ -276,6 +277,29 @@ export class CombatAttackFlow {
     }
 
     /**
+     * Bär försvararen rustning eller pansar på träffplatsen? Grundrustning och
+     * varelsers naturliga skydd räknas inte som rustning — de är kroppsliga och är
+     * just det som egenskaper som Skärande är byggda för att skära igenom.
+     * @param {Actor} defender
+     * @param {string} bodyPartKey
+     * @returns {boolean}
+     */
+    static hasWornArmorAt(defender, bodyPartKey) {
+        for (const item of defender?.items ?? []) {
+            if (item.type !== "Rustning") continue;
+            if (!item.system?.installningar?.buren) continue;
+
+            for (const kroppsdelRad of item.system?.kroppsdel ?? []) {
+                if ((kroppsdelRad.kroppsdel ?? kroppsdelRad.namn) !== bodyPartKey) continue;
+                const skydd = ["hugg", "kross", "stick"]
+                    .reduce((summa, typ) => summa + (Number(kroppsdelRad[typ]) || 0), 0);
+                if (skydd > 0) return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @param {number} rawDamage
      * @param {number} armor
      * @returns {number}
@@ -287,21 +311,57 @@ export class CombatAttackFlow {
     /**
      * Slutskada → utmattning enligt referensmall (förenklad tabell).
      * @param {number} finalDamage
-     * @returns {{ utmattning: number, allvarlig: boolean, allvarligRoll: string|null }}
+     * @param {{ utmattningEffects?: object[] }} [options]
+     * @returns {{ utmattning: number, baseUtmattning: number, utmattningEffectApplications: object[], allvarlig: boolean, allvarligRoll: string|null }}
      */
-    static damageIntervalEffects(finalDamage) {
+    static damageIntervalEffects(finalDamage, options = {}) {
         const slutskada = Math.floor(Number(finalDamage) || 0);
-        if (slutskada <= 0) return { utmattning: 0, allvarlig: false, allvarligRoll: null };
-        if (slutskada <= 4) return { utmattning: 1, allvarlig: false, allvarligRoll: null };
-        if (slutskada <= 9) return { utmattning: 2, allvarlig: false, allvarligRoll: null };
-        const allvarligRoll = this.getAllvarligSkadaRoll(slutskada);
-        if (slutskada <= 14) return { utmattning: 4, allvarlig: true, allvarligRoll };
-        if (slutskada <= 19) return { utmattning: 6, allvarlig: true, allvarligRoll };
-        if (slutskada <= 24) return { utmattning: 8, allvarlig: true, allvarligRoll };
-        if (slutskada <= 29) return { utmattning: 10, allvarlig: true, allvarligRoll };
-        // Slutskada ≥ 30: +2 utmattning per 5 (EON_SKADOR_REGLER_EON4_EON5.md tabell)
-        const extraUtmattning = 2 * Math.floor((slutskada - 30) / 5);
-        return { utmattning: 12 + extraUtmattning, allvarlig: true, allvarligRoll };
+        if (slutskada <= 0) {
+            return {
+                utmattning: 0,
+                baseUtmattning: 0,
+                utmattningEffectApplications: [],
+                allvarlig: false,
+                allvarligRoll: null
+            };
+        }
+
+        let baseUtmattning = 0;
+        let allvarlig = false;
+        let allvarligRoll = null;
+
+        if (slutskada <= 4) baseUtmattning = 1;
+        else if (slutskada <= 9) baseUtmattning = 2;
+        else {
+            allvarligRoll = this.getAllvarligSkadaRoll(slutskada);
+            allvarlig = true;
+            if (slutskada <= 14) baseUtmattning = 4;
+            else if (slutskada <= 19) baseUtmattning = 6;
+            else if (slutskada <= 24) baseUtmattning = 8;
+            else if (slutskada <= 29) baseUtmattning = 10;
+            else {
+                const extraUtmattning = 2 * Math.floor((slutskada - 30) / 5);
+                baseUtmattning = 12 + extraUtmattning;
+            }
+        }
+
+        const utmattningResult = EffectHelper.applyUtmattningEffects(
+            baseUtmattning,
+            options.utmattningEffects ?? []
+        );
+
+        if (options.blockAllvarlig) {
+            allvarlig = false;
+            allvarligRoll = null;
+        }
+
+        return {
+            utmattning: utmattningResult.value,
+            baseUtmattning,
+            utmattningEffectApplications: utmattningResult.applications,
+            allvarlig,
+            allvarligRoll
+        };
     }
 
     /**
@@ -320,10 +380,17 @@ export class CombatAttackFlow {
      * @param {Actor} defender
      * @param {string} bodyPartKey
      * @param {number} finalDamage
+     * @param {{ utmattningEffects?: object[] }} [options]
      */
-    static async applyDamageToDefender(defender, bodyPartKey, finalDamage) {
+    static async applyDamageToDefender(defender, bodyPartKey, finalDamage, options = {}) {
         if (!defender || finalDamage <= 0) return;
-        const { utmattning, allvarlig, allvarligRoll } = this.damageIntervalEffects(finalDamage);
+        const {
+            utmattning,
+            baseUtmattning,
+            utmattningEffectApplications,
+            allvarlig,
+            allvarligRoll
+        } = this.damageIntervalEffects(finalDamage, options);
         const partKey = this.normalizeBodyPartKey(bodyPartKey) ?? "torso";
         const updates = {};
         if (utmattning > 0) {
@@ -331,7 +398,15 @@ export class CombatAttackFlow {
             updates["system.skada.utmattning.varde"] = cur + utmattning;
         }
         if (Object.keys(updates).length) await defender.update(updates);
-        return { utmattning, allvarlig, allvarligRoll, applied: true, bodyPartKey: partKey };
+        return {
+            utmattning,
+            baseUtmattning,
+            utmattningEffectApplications,
+            allvarlig,
+            allvarligRoll,
+            applied: true,
+            bodyPartKey: partKey
+        };
     }
 
     /**
@@ -347,14 +422,24 @@ export class CombatAttackFlow {
      * @param {Actor} defender
      * @param {string} bodyPartKey
      * @param {number} finalDamage
+     * @param {string} [damageType]
+     * @param {{ utmattningEffects?: object[] }} [options]
      */
-    static previewDamageApplication(defender, bodyPartKey, finalDamage, damageType = "hugg") {
-        const { utmattning, allvarlig, allvarligRoll } = this.damageIntervalEffects(finalDamage);
+    static previewDamageApplication(defender, bodyPartKey, finalDamage, damageType = "hugg", options = {}) {
+        const {
+            utmattning,
+            baseUtmattning,
+            utmattningEffectApplications,
+            allvarlig,
+            allvarligRoll
+        } = this.damageIntervalEffects(finalDamage, options);
         const partKey = this.normalizeBodyPartKey(bodyPartKey) ?? "torso";
         const dtypeKey = CONFIG?.EON?.vapenskador?.[damageType] ?? damageType;
         const damageTypeLabel = game.i18n.has(dtypeKey) ? game.i18n.localize(dtypeKey) : damageType;
         return {
             utmattning,
+            baseUtmattning,
+            utmattningEffectApplications,
             allvarlig,
             allvarligRoll,
             damageTypeLabel,
@@ -516,7 +601,8 @@ export class CombatAttackFlow {
                     defenderActorId: attackFlags.defenderActorId,
                     defenderName: attackFlags.defenderName,
                     hitLocationMessageId: message.id,
-                    weaponFattning: attackFlags.weaponFattning ?? null
+                    weaponFattning: attackFlags.weaponFattning ?? null,
+                    weaponAttackType: attackFlags.weaponAttackType ?? null
                 };
             }
         }

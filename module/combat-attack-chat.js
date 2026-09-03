@@ -8,6 +8,7 @@ import { DialogWeaponRoll, WeaponRoll } from "./dialogs/dialog-weapon-roll.js";
 import { DialogSkillRoll, SkillRoll } from "./dialogs/dialog-skill-roll.js";
 import { SkadetabellHelper } from "./skadetabell-helper.js";
 import CalculateHelper from "./calculate-helper.js";
+import EffectHelper from "./effect-helper.js";
 
 export class CombatAttackChat {
     static _clickListenerBound = false;
@@ -41,6 +42,7 @@ export class CombatAttackChat {
         else if (action === "rollDamage") await this.openDamageRoll(message);
         else if (action === "applyDamage") await this.applyDamage(message);
         else if (action === "rollAllvarlig") await this.rollAllvarligSkada(message);
+        else if (action === "applyAftereffects") await this.applyAllvarligAftereffects(message);
     }
 
     /**
@@ -115,17 +117,6 @@ export class CombatAttackChat {
         ) {
             addBtn("rollDamage", "eon.combatAttack.chatRollDamageButton", "fa-solid fa-gavel");
         }
-        if (
-            flags.flowType === "damageCalc" &&
-            Number(flags.finalDamage) > 0 &&
-            !flags.damageApplied
-        ) {
-            addBtn("applyDamage", "eon.combatAttack.chatApplyDamageButton", "fa-solid fa-heart-crack");
-        }
-        if (this._canRollAllvarligSkada(flags)) {
-            addBtn("rollAllvarlig", "eon.combatAttack.chatRollAllvarligButton", "fa-solid fa-skull");
-        }
-
         if (wrap.children.length) content.appendChild(wrap);
     }
 
@@ -135,6 +126,7 @@ export class CombatAttackChat {
      */
     static _canRollAllvarligSkada(flags) {
         if (!flags || flags.allvarligResolved) return false;
+        if (flags.blockAllvarlig) return false;
         if (Number(flags.finalDamage) < 10) return false;
         if (flags.allvarligBaseRoll == null) return false;
         if (!flags.damageApplied) return false;
@@ -364,6 +356,11 @@ export class CombatAttackChat {
      */
     static async openDefenseRoll(defender, attackMessage, option) {
         const flags = attackMessage.flags?.[EON_ATTACK_FLAG];
+        const attackerWeaponEffects = await this._collectAttackerWeaponEffects(flags);
+        const attacker = game.actors.get(flags?.attackerActorId);
+        const attackerWeapon = flags?.weaponItemId && attacker
+            ? attacker.items.get(flags.weaponItemId)
+            : null;
 
         const combatContext = {
             attackerName: flags.attackerName ?? "?",
@@ -385,6 +382,8 @@ export class CombatAttackChat {
                 };
             }
             const roll = new SkillRoll(item, defender);
+            roll.effectRollKind = "forsvar";
+            roll._externalEffects = attackerWeaponEffects;
             roll.svarighet = String(combatContext.attackResult ?? "");
             const dialog = new DialogSkillRoll(defender, roll, {
                 combatContext,
@@ -405,12 +404,35 @@ export class CombatAttackChat {
 
         const roll = new WeaponRoll(defender, option.item);
         roll.setCombatmode("defence");
+        roll._externalEffects = attackerWeaponEffects;
+        roll.bevapnad = EffectHelper.isArmedWeapon(attackerWeapon);
         roll.svarighet = String(flags?.attackResult ?? "");
         const dialog = new DialogWeaponRoll(defender, roll);
         dialog.linkedAttackMessageId = attackMessage.id;
         dialog.linkedAttackResult = Number(flags?.attackResult ?? 0);
         dialog.linkedFlowId = flags?.attackFlowId;
         await dialog.render(true);
+    }
+
+    /**
+     * Samla effekter från vapenegenskaperna på vapnet som skapade anfallskortet.
+     * Actor- och item-id kommer från stridsflödets flags; egenskapseffekterna
+     * löses därefter av EffectHelper via sina stabila länkar/system-id.
+     * @param {object} flags
+     * @returns {Promise<object[]>}
+     */
+    static async _collectAttackerWeaponEffects(flags) {
+        if (Array.isArray(flags?.weaponEffects)) {
+            return foundry.utils.duplicate(flags.weaponEffects);
+        }
+
+        const attacker = game.actors.get(flags?.attackerActorId);
+        if (!attacker?.isEon5) return [];
+
+        const weapon = flags?.weaponItemId ? attacker.items.get(flags.weaponItemId) : null;
+        if (!weapon) return [];
+
+        return EffectHelper.collectWeaponEffects(weapon, attacker);
     }
 
     /**
@@ -505,6 +527,7 @@ export class CombatAttackChat {
             roll.fattning = flags.weaponFattning;
         }
         roll.setCombatmode("damage");
+        roll.restoreAttackType(flags.weaponAttackType);
         const dialog = new DialogWeaponRoll(attacker, roll);
         dialog._combatAttackFlow = {
             flowId: flags.attackFlowId,
@@ -513,6 +536,216 @@ export class CombatAttackChat {
             hitLocationMessageId: carrierMessage.id
         };
         await dialog.render(true);
+    }
+
+    /**
+     * Saknar försvararen buren rustning på träffplatsen? Villkoret `orustad` bygger på
+     * detta, så egenskaper som Skärande bara biter på den som inte bär pansar.
+     * Utan känd försvarare räknas målet som rustat, så effekten inte slår till av misstag.
+     * @param {object} flags
+     * @returns {boolean}
+     */
+    static _isDefenderUnarmored(flags) {
+        const defender = game.actors.get(flags?.defenderActorId);
+        if (!defender) return false;
+
+        const bodyKey = CombatAttackFlow.resolveBodyPartFromFlags(flags).key;
+        return !CombatAttackFlow.hasWornArmorAt(defender, bodyKey);
+    }
+
+    /**
+     * Samla alla matchande utmattningseffekter från anfallaren och det använda vapnet.
+     * Regelmotorn bryr sig inte om effektens eller källans namn.
+     * @param {object} flags
+     * @returns {Promise<object[]>}
+     */
+    static async _collectDamageUtmattningEffects(flags) {
+        const attacker = game.actors.get(flags?.attackerActorId);
+        if (!attacker?.isEon5) return [];
+
+        const weapon = flags.weaponItemId ? attacker.items.get(flags.weaponItemId) : null;
+        const weaponEffects = weapon
+            ? await EffectHelper.collectWeaponEffects(weapon, attacker)
+            : [];
+        const context = EffectHelper.buildWeaponContext(attacker, weapon, "skada", {
+            fattning: flags.weaponFattning || "",
+            taktik: flags.weaponAttackType || "",
+            orustad: this._isDefenderUnarmored(flags),
+            mal: "aktor"
+        });
+
+        return EffectHelper.getMatchingEffects(attacker, context, {
+            types: ["utmattning"],
+            extraEffects: weaponEffects
+        });
+    }
+
+    /**
+     * Samla matchande rustningseffekter (t.ex. Genomslag) från anfallaren och vapnet.
+     * Skadetypen avgör vilka effekter som gäller; namnet på källan spelar ingen roll.
+     * @param {object} flags
+     * @param {string} damageType
+     * @returns {Promise<object[]>}
+     */
+    static async _collectDamageRustningEffects(flags, damageType) {
+        const attacker = game.actors.get(flags?.attackerActorId);
+        if (!attacker?.isEon5) return [];
+
+        const weapon = flags.weaponItemId ? attacker.items.get(flags.weaponItemId) : null;
+        const weaponEffects = weapon
+            ? await EffectHelper.collectWeaponEffects(weapon, attacker)
+            : [];
+        const context = EffectHelper.buildWeaponContext(attacker, weapon, "skada", {
+            fattning: flags.weaponFattning || "",
+            taktik: flags.weaponAttackType || "",
+            skadetyp: damageType || "",
+            orustad: this._isDefenderUnarmored(flags),
+            mal: "aktor"
+        });
+
+        return EffectHelper.getMatchingEffects(attacker, context, {
+            types: ["rustning"],
+            extraEffects: weaponEffects
+        });
+    }
+
+    /**
+     * Effekter som byter tabell för allvarlig skada (t.ex. Obeväpnad → slagsmål).
+     * @param {object} flags
+     * @returns {Promise<object[]>}
+     */
+    static async _collectAllvarligTableEffects(flags) {
+        const attacker = game.actors.get(flags?.attackerActorId);
+        if (!attacker?.isEon5) return [];
+
+        const weapon = flags.weaponItemId ? attacker.items.get(flags.weaponItemId) : null;
+        const weaponEffects = weapon
+            ? await EffectHelper.collectWeaponEffects(weapon, attacker)
+            : [];
+        const context = EffectHelper.buildWeaponContext(attacker, weapon, "skada", {
+            fattning: flags.weaponFattning || "",
+            taktik: flags.weaponAttackType || "",
+            orustad: this._isDefenderUnarmored(flags),
+            mal: "aktor"
+        });
+
+        return EffectHelper.getMatchingEffects(attacker, context, {
+            types: ["skadetabell"],
+            extraEffects: weaponEffects
+        });
+    }
+
+    /**
+     * Samla effekter som ändrar själva tabellslaget vid allvarlig skada (t.ex. Sargande X).
+     * @param {object} flags
+     * @returns {Promise<object[]>}
+     */
+    static async _collectAllvarligTableBonusEffects(flags) {
+        const attacker = game.actors.get(flags?.attackerActorId);
+        if (!attacker?.isEon5) return [];
+
+        const weapon = flags.weaponItemId ? attacker.items.get(flags.weaponItemId) : null;
+        const weaponEffects = weapon
+            ? await EffectHelper.collectWeaponEffects(weapon, attacker)
+            : [];
+        const context = EffectHelper.buildWeaponContext(attacker, weapon, "skada", {
+            fattning: flags.weaponFattning || "",
+            taktik: flags.weaponAttackType || "",
+            skadetyp: flags.damageType || "",
+            orustad: this._isDefenderUnarmored(flags),
+            mal: "aktor"
+        });
+
+        return EffectHelper.getMatchingEffects(attacker, context, {
+            types: ["tabellbonus"],
+            extraEffects: weaponEffects
+        });
+    }
+
+    /**
+     * Effekter som förbjuder allvarlig skada (t.ex. Ytlig).
+     * @param {object} flags
+     * @returns {Promise<object[]>}
+     */
+    static async _collectAllvarligBlockEffects(flags) {
+        const attacker = game.actors.get(flags?.attackerActorId);
+        if (!attacker?.isEon5) return [];
+
+        const weapon = flags.weaponItemId ? attacker.items.get(flags.weaponItemId) : null;
+        const weaponEffects = weapon
+            ? await EffectHelper.collectWeaponEffects(weapon, attacker)
+            : [];
+        const context = EffectHelper.buildWeaponContext(attacker, weapon, "skada", {
+            fattning: flags.weaponFattning || "",
+            taktik: flags.weaponAttackType || "",
+            skadetyp: flags.damageType || "",
+            orustad: this._isDefenderUnarmored(flags),
+            mal: "aktor"
+        });
+
+        return EffectHelper.getMatchingEffects(attacker, context, {
+            types: ["allvarlig"],
+            extraEffects: weaponEffects
+        });
+    }
+
+    /**
+     * Tabellbonusen sparas i flags vid skadeberäkningen så uppslaget och förhandsvisningen
+     * alltid använder samma värde.
+     * @param {object} flags
+     * @returns {Promise<{ value: number, applications: object[] }>}
+     */
+    static async _resolveAllvarligTableBonus(flags) {
+        const fromFlags = Number(flags?.allvarligTableBonus);
+        if (Number.isFinite(fromFlags)) {
+            return {
+                value: Math.floor(fromFlags),
+                applications: Array.isArray(flags.allvarligTableBonusApplications)
+                    ? flags.allvarligTableBonusApplications
+                    : []
+            };
+        }
+
+        const effects = await this._collectAllvarligTableBonusEffects(flags);
+        return EffectHelper.applyTabellbonusEffects(effects);
+    }
+
+    /**
+     * @param {string} tableType
+     * @returns {string}
+     */
+    static _allvarligTableLabel(tableType) {
+        const fromTables = CONFIG?.EON?.skadetabeller?.[tableType];
+        const fromDamage = CONFIG?.EON?.vapenskador?.[tableType];
+        const keyOrLabel = fromTables ?? fromDamage ?? tableType;
+        if (typeof keyOrLabel === "string" && keyOrLabel.startsWith("eon.")) {
+            return game.i18n.has(keyOrLabel) ? game.i18n.localize(keyOrLabel) : tableType;
+        }
+        return keyOrLabel;
+    }
+
+    /**
+     * @param {object} flags
+     * @param {string} armorDamageType
+     * @returns {Promise<{ tableType: string, sourceName: string, tableLabel: string }>}
+     */
+    static async _resolveAllvarligTable(flags, armorDamageType) {
+        const fromFlags = String(flags?.allvarligDamageType || "").trim().toLowerCase();
+        if (fromFlags) {
+            return {
+                tableType: fromFlags,
+                sourceName: flags.allvarligTableSource || "",
+                tableLabel: this._allvarligTableLabel(fromFlags)
+            };
+        }
+
+        const effects = await this._collectAllvarligTableEffects(flags);
+        const resolved = EffectHelper.resolveAllvarligTableType(armorDamageType, effects);
+        return {
+            tableType: resolved.tableType,
+            sourceName: resolved.sourceName,
+            tableLabel: this._allvarligTableLabel(resolved.tableType)
+        };
     }
 
     /**
@@ -528,13 +761,22 @@ export class CombatAttackChat {
         if (!defender) return;
 
         const body = CombatAttackFlow.resolveBodyPartFromFlags(flags);
-        const result = await CombatAttackFlow.applyDamageToDefender(defender, body.key, finalDamage);
+        const utmattningEffects = Array.isArray(flags.utmattningEffects)
+            ? flags.utmattningEffects
+            : EffectHelper.serializeEffects(await this._collectDamageUtmattningEffects(flags));
+        const result = await CombatAttackFlow.applyDamageToDefender(
+            defender,
+            body.key,
+            finalDamage,
+            { utmattningEffects, blockAllvarlig: Boolean(flags.blockAllvarlig) }
+        );
 
         await message.update({
             [`flags.${EON_ATTACK_FLAG}.damageApplied`]: true,
             [`flags.${EON_ATTACK_FLAG}.flowType`]: "damageApplied",
             [`flags.${EON_ATTACK_FLAG}.bodyPartKey`]: result?.bodyPartKey ?? body.key,
-            [`flags.${EON_ATTACK_FLAG}.bodyPartLabel`]: body.label
+            [`flags.${EON_ATTACK_FLAG}.bodyPartLabel`]: body.label,
+            [`flags.${EON_ATTACK_FLAG}.appliedUtmattning`]: result?.utmattning ?? 0
         });
 
         if (defender.sheet?.rendered) defender.sheet.render(false);
@@ -560,14 +802,17 @@ export class CombatAttackChat {
         const body = CombatAttackFlow.resolveBodyPartFromFlags(flags);
         const finalDamage = Number(flags.finalDamage ?? 0);
         const allvarligBaseRoll = Number(flags.allvarligBaseRoll);
-        const damageType = flags.damageType || "hugg";
+        const armorDamageType = flags.damageType || "hugg";
+        const table = await this._resolveAllvarligTable(flags, armorDamageType);
+        const tableBonus = await this._resolveAllvarligTableBonus(flags);
 
         const resolved = SkadetabellHelper.resolveAllvarligSkada(
             defender,
-            damageType,
+            table.tableType,
             body.key,
             allvarligBaseRoll,
-            finalDamage
+            finalDamage,
+            tableBonus.value
         );
 
         if (!resolved.ok) {
@@ -578,11 +823,13 @@ export class CombatAttackChat {
             return;
         }
 
-        const dtypeKey = CONFIG?.EON?.vapenskador?.[damageType] ?? damageType;
-        const damageTypeLabel = game.i18n.has(dtypeKey) ? game.i18n.localize(dtypeKey) : damageType;
+        const dtypeKey = CONFIG?.EON?.vapenskador?.[table.tableType] ?? table.tableLabel;
+        const damageTypeLabel = table.tableLabel
+            || (game.i18n.has(dtypeKey) ? game.i18n.localize(dtypeKey) : table.tableType);
         const sections = SkadetabellHelper.formatAllvarligSections(resolved.row, {
             tableRoll: resolved.tableRoll
         });
+        const effectStrings = Array.isArray(resolved.row?.effects) ? resolved.row.effects : [];
 
         await CombatAttackFlow.postSystemMessage({
             actor: defender,
@@ -593,9 +840,14 @@ export class CombatAttackChat {
                     type: damageTypeLabel,
                     location: body.label,
                     base: allvarligBaseRoll,
-                    bonus: SkadetabellHelper.getIntervalBonus(finalDamage),
+                    bonus: SkadetabellHelper.getIntervalBonus(finalDamage) + tableBonus.value,
                     total: resolved.tableRoll
                 }),
+                ...(tableBonus.applications.length > 0
+                    ? [game.i18n.format("eon.combatAttack.allvarligTabellbonusEffekter", {
+                        effects: EffectHelper.formatEffectApplications(tableBonus.applications)
+                    })]
+                    : []),
                 ...sections
             ],
             result: `<em>${game.i18n.localize("eon.combatAttack.allvarligResultHint")}</em>`,
@@ -603,6 +855,8 @@ export class CombatAttackChat {
                 ...foundry.utils.mergeObject(flags, {
                     flowType: "allvarligSkada",
                     allvarligTableRoll: resolved.tableRoll,
+                    allvarligEffects: effectStrings,
+                    aftereffectsApplied: false,
                     parentMessageId: message.id
                 })
             }
@@ -611,6 +865,48 @@ export class CombatAttackChat {
         await message.update({
             [`flags.${EON_ATTACK_FLAG}.allvarligResolved`]: true,
             [`flags.${EON_ATTACK_FLAG}.flowType`]: "damageApplied"
+        });
+        await this.rerenderChatMessage(message);
+    }
+
+    /**
+     * Applicera efterverkningar från allvarlig-skada-chatt via kompendium / system.skada.
+     * @param {ChatMessage} message
+     */
+    static async applyAllvarligAftereffects(message) {
+        const flags = message.flags?.[EON_ATTACK_FLAG];
+        if (!flags || flags.flowType !== "allvarligSkada" || flags.aftereffectsApplied) return;
+
+        const defender = game.actors.get(flags.defenderActorId);
+        if (!defender || !defender.isEon5) {
+            ui.notifications.warn(game.i18n.localize("eon.effects.ingaEfterverkningarAttApplicera"));
+            return;
+        }
+
+        const effects = Array.isArray(flags.allvarligEffects) ? flags.allvarligEffects : [];
+        if (!effects.length) {
+            ui.notifications.info(game.i18n.localize("eon.effects.ingaEfterverkningarAttApplicera"));
+            return;
+        }
+
+        const body = CombatAttackFlow.resolveBodyPartFromFlags(flags);
+        const result = await EffectHelper.applyNormalizedTableEffects(defender, effects, {
+            bodyPartKey: body?.key ?? flags.bodyPartKey ?? null
+        });
+
+        if (result.applied.length) {
+            ui.notifications.info(game.i18n.format("eon.effects.efterverkningarApplicerade", {
+                list: result.applied.join(", ")
+            }));
+        }
+        if (result.skipped.length) {
+            ui.notifications.warn(game.i18n.format("eon.effects.efterverkningarEjFunna", {
+                list: result.skipped.join(", ")
+            }));
+        }
+
+        await message.update({
+            [`flags.${EON_ATTACK_FLAG}.aftereffectsApplied`]: true
         });
         await this.rerenderChatMessage(message);
     }
@@ -632,20 +928,46 @@ export class CombatAttackChat {
         const body = CombatAttackFlow.resolveBodyPartFromFlags(flags);
         const bodyKey = body.key;
         const dtype = damageType || "hugg";
-        const armor = CombatAttackFlow.getArmorProtection(defender, bodyKey, dtype);
+        const baseArmor = CombatAttackFlow.getArmorProtection(defender, bodyKey, dtype);
+        const rustningEffects = await this._collectDamageRustningEffects(flags, dtype);
+        const rustning = EffectHelper.applyRustningEffects(baseArmor, rustningEffects);
+        const armor = rustning.value;
         const finalDamage = CombatAttackFlow.computeFinalDamage(rawDamage, armor);
+        const utmattningEffects = EffectHelper.serializeEffects(
+            await this._collectDamageUtmattningEffects(flags)
+        );
+        const allvarligTable = await this._resolveAllvarligTable(flags, dtype);
+        const allvarligTableBonus = EffectHelper.applyTabellbonusEffects(
+            await this._collectAllvarligTableBonusEffects({ ...flags, damageType: dtype })
+        );
+        const allvarligBlockEffects = await this._collectAllvarligBlockEffects({ ...flags, damageType: dtype });
+        const blockAllvarlig = EffectHelper.blocksAllvarlig(allvarligBlockEffects);
+        if (blockAllvarlig) allvarligBaseRoll = null;
 
         await msg.update({
             [`flags.${EON_ATTACK_FLAG}.rawDamage`]: rawDamage,
             [`flags.${EON_ATTACK_FLAG}.armor`]: armor,
             [`flags.${EON_ATTACK_FLAG}.finalDamage`]: finalDamage,
             [`flags.${EON_ATTACK_FLAG}.damageType`]: dtype,
+            [`flags.${EON_ATTACK_FLAG}.allvarligDamageType`]: allvarligTable.tableType,
+            [`flags.${EON_ATTACK_FLAG}.allvarligTableSource`]: allvarligTable.sourceName,
+            [`flags.${EON_ATTACK_FLAG}.allvarligTableBonus`]: allvarligTableBonus.value,
+            [`flags.${EON_ATTACK_FLAG}.allvarligTableBonusApplications`]: allvarligTableBonus.applications,
+            [`flags.${EON_ATTACK_FLAG}.blockAllvarlig`]: blockAllvarlig,
+            [`flags.${EON_ATTACK_FLAG}.allvarligBaseRoll`]: allvarligBaseRoll,
             [`flags.${EON_ATTACK_FLAG}.bodyPartKey`]: bodyKey,
             [`flags.${EON_ATTACK_FLAG}.bodyPartLabel`]: body.label,
             [`flags.${EON_ATTACK_FLAG}.hitLocationRoll`]: body.roll ?? flags.hitLocationRoll ?? null
         });
 
-        const preview = CombatAttackFlow.previewDamageApplication(defender, bodyKey, finalDamage, dtype);
+        const preview = CombatAttackFlow.previewDamageApplication(
+            defender,
+            bodyKey,
+            finalDamage,
+            dtype,
+            { utmattningEffects, blockAllvarlig }
+        );
+
         const sections = [
             game.i18n.format("eon.combatAttack.damageCalcSummary", {
                 raw: rawDamage,
@@ -655,48 +977,122 @@ export class CombatAttackChat {
             })
         ];
 
-        if (preview.utmattning > 0) {
-            sections.push(game.i18n.format("eon.combatAttack.damagePreviewUtmattning", {
-                utmattning: preview.utmattning
+        if (rustning.applications.length > 0) {
+            sections.push(game.i18n.format("eon.combatAttack.damageCalcRustningEffects", {
+                base: baseArmor,
+                armor,
+                effects: EffectHelper.formatEffectApplications(rustning.applications)
             }));
         }
-        if (preview.allvarlig && allvarligBaseRoll != null) {
-            const bonus = SkadetabellHelper.getIntervalBonus(finalDamage);
-            const tableRoll = SkadetabellHelper.computeTableRoll(allvarligBaseRoll, finalDamage);
-            sections.push(game.i18n.format("eon.combatAttack.damagePreviewAllvarligRoll", {
-                base: allvarligBaseRoll,
-                bonus,
-                total: tableRoll,
-                type: preview.damageTypeLabel,
-                location: preview.bodyPartLabel
+
+        if (preview.utmattning > 0) {
+            if (preview.utmattningEffectApplications.length > 0) {
+                sections.push(game.i18n.format("eon.combatAttack.damagePreviewUtmattningEffects", {
+                    utmattning: preview.utmattning,
+                    base: preview.baseUtmattning,
+                    effects: EffectHelper.formatEffectApplications(
+                        preview.utmattningEffectApplications
+                    )
+                }));
+            } else {
+                sections.push(game.i18n.format("eon.combatAttack.damagePreviewUtmattning", {
+                    utmattning: preview.utmattning
+                }));
+            }
+        }
+
+        if (blockAllvarlig && finalDamage >= 10) {
+            const allvarligHeader = `<strong class="tray-section-header">${game.i18n.localize("eon.combatAttack.allvarligResultTitle")}</strong>`;
+            sections.push(allvarligHeader);
+            const sources = allvarligBlockEffects
+                .map((effect) => effect.sourceName)
+                .filter(Boolean)
+                .join(", ");
+            sections.push(game.i18n.format("eon.combatAttack.damagePreviewAllvarligBlockerad", {
+                sources: sources || game.i18n.localize("eon.effects.okandKalla")
             }));
-            sections.push(game.i18n.localize("eon.combatAttack.damagePreviewSarFromTable"));
-        } else if (preview.allvarlig && preview.allvarligRoll) {
-            sections.push(game.i18n.format("eon.combatAttack.damagePreviewAllvarlig", {
-                roll: preview.allvarligRoll,
-                type: preview.damageTypeLabel,
-                location: preview.bodyPartLabel
-            }));
-            sections.push(game.i18n.localize("eon.combatAttack.damagePreviewSarFromTable"));
+        } else if (preview.allvarlig) {
+            const allvarligHeader = `<strong class="tray-section-header">${game.i18n.localize("eon.combatAttack.allvarligResultTitle")}</strong>`;
+            sections.push(allvarligHeader);
+
+            if (allvarligBaseRoll != null) {
+                const resolved = SkadetabellHelper.resolveAllvarligSkada(
+                    defender, allvarligTable.tableType, bodyKey, allvarligBaseRoll, finalDamage,
+                    allvarligTableBonus.value
+                );
+                const bonus = SkadetabellHelper.getIntervalBonus(finalDamage) + allvarligTableBonus.value;
+                const tableRoll = SkadetabellHelper.computeTableRoll(
+                    allvarligBaseRoll, finalDamage, allvarligTableBonus.value
+                );
+
+                if (allvarligTable.sourceName && allvarligTable.tableType !== dtype) {
+                    sections.push(game.i18n.format("eon.combatAttack.damagePreviewAllvarligTabellEffekt", {
+                        source: allvarligTable.sourceName,
+                        type: allvarligTable.tableLabel
+                    }));
+                }
+
+                if (allvarligTableBonus.applications.length > 0) {
+                    sections.push(game.i18n.format("eon.combatAttack.allvarligTabellbonusEffekter", {
+                        effects: EffectHelper.formatEffectApplications(allvarligTableBonus.applications)
+                    }));
+                }
+
+                sections.push(game.i18n.format("eon.combatAttack.damagePreviewAllvarligRoll", {
+                    base: allvarligBaseRoll,
+                    bonus,
+                    total: tableRoll,
+                    type: allvarligTable.tableLabel,
+                    location: preview.bodyPartLabel
+                }));
+
+                if (resolved.ok) {
+                    if (resolved.row.text) sections.push(resolved.row.text);
+                    if (resolved.row.dodslag != null && resolved.row.dodslag !== "") {
+                        sections.push(game.i18n.format("eon.combatAttack.allvarligResultDodslag", { value: resolved.row.dodslag }));
+                    }
+                    if (Array.isArray(resolved.row.effects) && resolved.row.effects.length) {
+                        sections.push(game.i18n.format("eon.combatAttack.allvarligResultEffects", { effects: resolved.row.effects.join(", ") }));
+                    }
+                } else {
+                    sections.push(game.i18n.localize("eon.combatAttack.damagePreviewSarFromTable"));
+                }
+            } else {
+                sections.push(game.i18n.format("eon.combatAttack.damagePreviewAllvarlig", {
+                    roll: preview.allvarligRoll,
+                    type: allvarligTable.tableLabel,
+                    location: preview.bodyPartLabel
+                }));
+                sections.push(game.i18n.localize("eon.combatAttack.damagePreviewSarFromTable"));
+            }
         } else {
             sections.push(game.i18n.localize("eon.combatAttack.damagePreviewAllvarligNo"));
+        }
+
+        if (preview.utmattning > 0) {
+            const currentUtmattning = Number(defender?.system?.skada?.utmattning?.varde ?? 0);
+            const totalUtmattning = currentUtmattning + preview.utmattning;
+            const chockslagHeader = `<strong class="tray-section-header">${game.i18n.localize("eon.combatAttack.damageResultChockslagHeader")}</strong>`;
+            sections.push(chockslagHeader);
+            sections.push(game.i18n.format("eon.combatAttack.damageResultChockslag", { totalUtmattning }));
         }
 
         await CombatAttackFlow.postSystemMessage({
             actor: defender,
             title: game.i18n.localize("eon.combatAttack.damageCalcTitle"),
             sections,
-            result: `<em>${game.i18n.localize("eon.combatAttack.damageCalcHint")}</em>`,
+            result: `<em>${game.i18n.localize("eon.combatAttack.damageResultHint")}</em>`,
             flags: {
                 ...foundry.utils.mergeObject(flags, {
-                    flowType: "damageCalc",
+                    flowType: "damageResult",
                     rawDamage,
                     armor,
+                    baseArmor,
                     finalDamage,
                     damageType: dtype,
-                    damageApplied: false,
-                    allvarligBaseRoll: allvarligBaseRoll ?? null,
-                    allvarligResolved: false,
+                    allvarligDamageType: allvarligTable.tableType,
+                    allvarligTableSource: allvarligTable.sourceName,
+                    utmattningEffects,
                     bodyPartKey: bodyKey,
                     bodyPartLabel: body.label,
                     hitLocationRoll: body.roll ?? flags.hitLocationRoll ?? null

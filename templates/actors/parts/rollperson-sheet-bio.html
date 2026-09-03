@@ -1,4 +1,4 @@
-{{#if (eq actor.system.installningar.eon "eon4")}}
+{{#unless (isEon5 actor)}}
 
     <div>
 
@@ -57,7 +57,7 @@
                     <span class="floating-label">{{localize "eon.sheets.actor.folkslag"}}</span>
                 </div>
             </div>
-            {{#if (eq data.system.installningar.eon "eon5")}}
+            {{#if (isEon5 actor)}}
             <div class="bio">
                 <div class="floating-label-group">
                     <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.kulturfolkslag" value="{{data.system.bakgrund.kulturfolkslag}}" />
@@ -66,15 +66,15 @@
             </div>
             {{/if}}
 
-            {{#if (eq data.system.installningar.eon "eon4")}}
+            {{#unless (isEon5 actor)}}
             <div class="bio">
                 <div class="floating-label-group">
                     <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.religion" value="{{data.system.bakgrund.religion}}" />
                     <span class="floating-label">{{localize "eon.sheets.actor.religion"}}</span>
                 </div>
             </div>
-            {{/if}}
-            {{#if (eq data.system.installningar.eon "eon5")}}
+            {{/unless}}
+            {{#if (isEon5 actor)}}
             <div class="bio">
                 <div class="floating-label-group">
                     <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.religion" value="{{data.system.bakgrund.religion}}" />
@@ -102,7 +102,7 @@
                     <span class="floating-label">{{localize "eon.sheets.actor.hemort"}}</span>
                 </div>
             </div>
-            {{#if (eq data.system.installningar.eon "eon5")}}
+            {{#if (isEon5 actor)}}
             <div class="bio">
                 <div class="floating-label-group">
                     <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.hemland" value="{{data.system.bakgrund.hemland}}" />
@@ -124,7 +124,7 @@
                     <span class="floating-label">{{localize "eon.sheets.actor.miljo"}}</span>
                 </div>
             </div>
-            {{#if (eq data.system.installningar.eon "eon5")}}
+            {{#if (isEon5 actor)}}
             <div class="bio">
                 <div class="floating-label-group">
                     <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.levnadsstandard" value="{{data.system.bakgrund.levnadsstandard}}" />
@@ -139,7 +139,7 @@
                     <span class="floating-label">{{localize "eon.sheets.actor.sysselsattning"}}</span>
                 </div>
             </div>
-            {{#if (eq data.system.installningar.eon "eon5")}}
+            {{#if (isEon5 actor)}}
             <div class="bio">
                 <div class="floating-label-group">
                     <input class="text-value editable" type="text" data-dtype="String" style="width: 300px" name="system.bakgrund.koncept" value="{{data.system.bakgrund.koncept}}" />
@@ -154,9 +154,9 @@
         </div>
     </div>
 
-{{/if}}
+{{/unless}}
 
-{{#if (eq actor.system.installningar.eon "eon5")}}
+{{#if (isEon5 actor)}}
 
     <div class="bio-box">
 
@@ -326,7 +326,7 @@
 
 {{> "systems/eon-rpg/templates/actors/parts/rollperson-sheet-trait.html"}}
 
-{{#if (eq data.system.installningar.eon "eon5")}}
+{{#if (isEon5 actor)}}
 
     <div class="headline headline-background item-row">
         <div class="weapon-icon pointer">

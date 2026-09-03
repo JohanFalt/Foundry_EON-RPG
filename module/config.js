@@ -351,6 +351,20 @@ eon.vapenskador = {
     stick: "eon.config.vapenskador.stick"
 }
 
+/** Tabeller för allvarlig skada (effekt typ skadetabell). */
+eon.skadetabeller = {
+    hugg: "eon.config.vapenskador.hugg",
+    kross: "eon.config.vapenskador.kross",
+    stick: "eon.config.vapenskador.stick",
+    slagsmal: "eon.config.vapenskador.slagsmal"
+}
+
+eon.skadetyp = {
+    tillstand: "eon.effects.tillstand",
+    skada: "eon.config.effektTyper.allvarlig",
+    faltstorning: "eon.items.faltstorning"
+}
+
 eon.vapenavstand = {
     kort: {
         namn: "eon.config.vapenavstand.kort.namn",
@@ -566,6 +580,102 @@ eon.strid = {
         rollable: false
     }
 }
+
+/** Effekttyper för system.effekter[] (handlers byggs fasvis). */
+eon.effektTyper = {
+    tvarde: { label: "eon.config.effektTyper.tvarde", apply: true },
+    skadebonus: { label: "eon.config.effektTyper.skadebonus", apply: true },
+    utmattning: { label: "eon.config.effektTyper.utmattning", apply: true },
+    rustning: { label: "eon.config.effektTyper.rustning", apply: true },
+    skadetabell: { label: "eon.config.effektTyper.skadetabell", apply: true },
+    tabellbonus: { label: "eon.config.effektTyper.tabellbonus", apply: true },
+    allvarlig: { label: "eon.config.effektTyper.allvarlig", apply: true },
+    specialslag: { label: "eon.config.effektTyper.specialslag", apply: false },
+    regel: { label: "eon.config.effektTyper.regel", apply: false },
+    overtagKostnad: { label: "eon.config.effektTyper.overtagKostnad", apply: false },
+    statusVidTraff: { label: "eon.config.effektTyper.statusVidTraff", apply: false },
+    handling: { label: "eon.config.effektTyper.handling", apply: false }
+};
+
+eon.effektMode = {
+    add: "eon.config.effektMode.add",
+    subtract: "eon.config.effektMode.subtract",
+    override: "eon.config.effektMode.override",
+    block: "eon.config.effektMode.block"
+};
+
+eon.effektVaraktighet = {
+    permanent: "eon.config.effektVaraktighet.permanent",
+    runda: "eon.config.effektVaraktighet.runda",
+    nasta_aktiva_fas: "eon.config.effektVaraktighet.nasta_aktiva_fas",
+    scen: "eon.config.effektVaraktighet.scen",
+    dygn: "eon.config.effektVaraktighet.dygn",
+    handelse: "eon.config.effektVaraktighet.handelse",
+    tills_borttagen: "eon.config.effektVaraktighet.tills_borttagen",
+    ingen: "eon.config.effektVaraktighet.ingen"
+};
+
+eon.effektTargetExempel = {
+    "slag:alla": "eon.config.effektTargetExempel.slagAlla",
+    "slag:attribut": "eon.config.effektTargetExempel.slagAttribut",
+    "slag:fardighet": "eon.config.effektTargetExempel.slagFardighet",
+    "slag:anfall": "eon.config.effektTargetExempel.slagAnfall",
+    "slag:forsvar": "eon.config.effektTargetExempel.slagForsvar",
+    "slag:skada": "eon.config.effektTargetExempel.slagSkada",
+    "slag:chock": "eon.config.effektTargetExempel.slagChock",
+    "slag:dod": "eon.config.effektTargetExempel.slagDod",
+    "slag:reaktion": "eon.config.effektTargetExempel.slagReaktion",
+    "slag:vapen": "eon.config.effektTargetExempel.slagVapen",
+    "grupp:rorelse": "eon.config.effektTargetExempel.gruppRorelse",
+    "grupp:strid": "eon.config.effektTargetExempel.gruppStrid",
+    "grupp:social": "eon.config.effektTargetExempel.gruppSocial",
+    "grupp:kunskap": "eon.config.effektTargetExempel.gruppKunskap",
+    "grupp:vildmark": "eon.config.effektTargetExempel.gruppVildmark",
+    "grupp:mystik": "eon.config.effektTargetExempel.gruppMystik",
+    "grupp:sprak": "eon.config.effektTargetExempel.gruppSprak",
+    "grupp:ovriga": "eon.config.effektTargetExempel.gruppOvriga",
+    "fardighet:undvika:rorelse": "eon.config.effektTargetExempel.fardighetUndvika",
+    "attribut:livskraft": "eon.config.effektTargetExempel.attributLivskraft",
+    "attribut:reaktion": "eon.config.effektTargetExempel.attributReaktion"
+};
+
+for (const [key, attr] of Object.entries(eon.grundegenskaper)) {
+    eon.effektTargetExempel[`attribut:${key}`] = attr.namn;
+}
+for (const [key, attr] of Object.entries(eon.harleddegenskaper)) {
+    if (attr.rollable === false) continue;
+    if (!eon.effektTargetExempel[`attribut:${key}`]) {
+        eon.effektTargetExempel[`attribut:${key}`] = attr.namn;
+    }
+}
+for (const [key, label] of Object.entries(eon.fardighetgrupper)) {
+    const targetKey = `grupp:${key}`;
+    if (!eon.effektTargetExempel[targetKey]) {
+        eon.effektTargetExempel[targetKey] = label;
+    }
+}
+
+eon.effektPredicateExempel = {
+    "vapen": "eon.config.effektPredicateExempel.vapen",
+    "taktik:normal": "eon.config.effektPredicateExempel.taktikNormal",
+    "taktik:tungt": "eon.config.effektPredicateExempel.taktikTungt",
+    "taktik:snabbt": "eon.config.effektPredicateExempel.taktikSnabbt",
+    "taktik:grupp": "eon.config.effektPredicateExempel.taktikGrupp",
+    "taktik:defensivt": "eon.config.effektPredicateExempel.taktikDefensivt",
+    "taktik:kontring": "eon.config.effektPredicateExempel.taktikKontring",
+    "fattning:enhand": "eon.config.effektPredicateExempel.fattningEnhand",
+    "fattning:tvahand": "eon.config.effektPredicateExempel.fattningTvahand",
+    "mal:aktor": "eon.config.effektPredicateExempel.malAktor",
+    "mal:forsvarare": "eon.config.effektPredicateExempel.malForsvarare",
+    "orustad": "eon.config.effektPredicateExempel.orustad",
+    "rustad": "eon.config.effektPredicateExempel.rustad",
+    "bevapnad": "eon.config.effektPredicateExempel.bevapnad",
+    "obevapnad": "eon.config.effektPredicateExempel.obevapnad",
+    "vapentyp:Sköld": "eon.config.effektPredicateExempel.vapentypSkold",
+    "slag:chock": "eon.config.effektTargetExempel.slagChock",
+    "slag:dod": "eon.config.effektTargetExempel.slagDod"
+};
+
 // Combat phases: 1 = Avstånd, 2 = Närstrid, 3 = Mystik, 4 = Övrigt (names from eon.config.combatPhases.*.namn)
 eon.combatPhases = {
     initiative_distance: {

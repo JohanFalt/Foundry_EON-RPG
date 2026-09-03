@@ -444,9 +444,9 @@ async function rollDice(number, bonus, type, obRollActive) {
     const chatData = {
         rolls: allRolls,
         content: rendered,
-        speaker: ChatMessage.getSpeaker(),
-        rollMode: game.settings.get("core", "rollMode"),
+        speaker: ChatMessage.getSpeaker()
     };
+    ChatMessage.applyMode(chatData);
     ChatMessage.create(chatData);
 
     return canRoll;

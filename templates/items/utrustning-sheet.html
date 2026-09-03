@@ -27,11 +27,11 @@
                         <div class="item-property-area floating-label-group">
                             <select class="text-value editable" name="system.grupp" style="width: 125px;">                                
                                 <option value="">{{localize "eon.sheets.item.ingetOption"}}</option>
-                                {{#if (eq item.system.installningar.eon "eon4")}}
+                                {{#unless (isEon5Item item)}}
                                     {{selectOptions EON.CONFIG.utrustningsgrupper selected=item.system.grupp localize=true}}
                                 {{else}}
                                      {{selectOptions EON.CONFIG.utrustningsgrupper5 selected=item.system.grupp localize=true}}
-                                {{/if}}
+                                {{/unless}}
                             </select>
                             <span class="floating-label">{{localize "eon.sheets.item.grupp"}}</span>
                         </div>

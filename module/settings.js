@@ -111,6 +111,15 @@ export const systemSettings = function() {
 		type: Boolean,
 	});
 
+    game.settings.register("eon-rpg", "eonstates", {
+		name: L("eon.settings.eonstates"),
+		hint: "",
+		scope: "world",
+		config: false,
+		default: false,
+		type: Boolean,
+	});
+
     game.settings.register("eon-rpg", "textfont", {
 		name: L("eon.settings.textfont"),
 		hint: L("eon.settings.textfontHint"),

@@ -304,10 +304,40 @@ export default class ItemHelper {
                         eon: actor.system.installningar.eon,
                         version: version
                     },
-                    typ: "skada"
+                    typ: "skada",
+                    effekter: [],
+                    varaktighet: "tills_borttagen"
                 }
             };
 		}
+
+        if (type == "tillstand" || type == "tillstånd") {
+            if (!actor.isEon5) {
+                ui.notifications.warn(game.i18n.localize("eon.effects.tillstandEndastEon5"));
+                return false;
+            }
+
+            found = true;
+
+            itemData = {
+                name: game.i18n.localize("eon.effects.tillstand"),
+                type: "Skada",
+                system: {
+                    installningar: {
+                        skapad: true,
+                        eon: actor.system.installningar.eon,
+                        version: version,
+                        kantabort: true
+                    },
+                    typ: "tillstand",
+                    effekter: [],
+                    varaktighet: "runda",
+                    rundorKvar: 1,
+                    varaktighetFormel: "",
+                    kalla: ""
+                }
+            };
+        }
 
         if (type == "fältstörning") {
             found = true;

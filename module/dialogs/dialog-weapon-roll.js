@@ -13,6 +13,42 @@ import {
 import { CombatAttackFlow, EON_ATTACK_FLAG } from "../combat-attack-flow.js";
 import { CombatAttackChat } from "../combat-attack-chat.js";
 import CalculateHelper from "../calculate-helper.js";
+import EffectHelper from "../effect-helper.js";
+
+/** Utmattning och färdighetstärningar per anfallstaktik (Eon 5, sid 89). */
+const ANFALLSTAKTIKER = {
+    normal: { utmattning: 0, fardighet: 0 },
+    tungt: { utmattning: 2, fardighet: -1 },
+    snabbt: { utmattning: 1, fardighet: 1 },
+    grupp: { utmattning: 1, fardighet: -1 }
+};
+
+/** Utmattning, färdighetstärningar och särregel per försvarstaktik. */
+const FORSVARSTAKTIKER = {
+    normal: { note: "eon.dialogs.lyckasForsvara" },
+    defensivt: { utmattning: 1, fardighet: 1, note: "eon.dialogs.weaponRollTacticDefensivtOvertag" },
+    kontring: { utmattning: 1, fardighet: -1, note: "eon.dialogs.weaponRollTacticKontringAnfallare" }
+};
+
+/** "+2" / "−1" / "+0" med typografiskt minustecken. */
+function formatSignedValue(value) {
+    const number = Number(value) || 0;
+    return number < 0 ? `−${Math.abs(number)}` : `+${number}`;
+}
+
+/** "+1T6" / "−1T6" / "+0" för tärningsmodifierare. */
+function formatDiceValue(value) {
+    const number = Number(value) || 0;
+    return number === 0 ? "+0" : `${formatSignedValue(number)}T6`;
+}
+
+/** "+3T6" eller "+3T6 +1"; tom sträng när bidraget är noll. */
+function formatDiceContribution({ tvarde = 0, bonus = 0 } = {}) {
+    const parts = [];
+    if (tvarde !== 0) parts.push(`${formatSignedValue(tvarde)}T6`);
+    if (bonus !== 0) parts.push(formatSignedValue(bonus));
+    return parts.join(" ");
+}
 
 export class WeaponRoll {
 
@@ -116,6 +152,9 @@ export class WeaponRoll {
 
         this.vapen = item;
         this.vapennamn = item["name"];
+        this._weaponEffects = [];
+        this._externalEffects = [];
+        this.bevapnad = true;
 
         const weaponData = item.system;
 
@@ -236,6 +275,41 @@ export class WeaponRoll {
         return adjusted;
     }
 
+    /**
+     * Matcha försvararens egna effekter och anfallsvapnets externa effekter
+     * mot varsin målkontext.
+     * @param {string[]} [types]
+     * @returns {object[]}
+     */
+    getMatchedEffects(types) {
+        const rollKind = this.#_isdamage ? "skada" : (this.#_isdefence ? "forsvar" : "anfall");
+        const commonContext = {
+            fattning: this.#_fattning || "",
+            taktik: this.#_attacktype || "",
+            bevapnad: this.bevapnad !== false
+        };
+        const ownContext = EffectHelper.buildWeaponContext(this.actor, this.vapen, rollKind, {
+            ...commonContext,
+            mal: "aktor"
+        });
+        const ownEffects = EffectHelper.getMatchingEffects(this.actor, ownContext, {
+            types,
+            extraEffects: this._weaponEffects
+        });
+
+        const externalContext = EffectHelper.buildWeaponContext(this.actor, this.vapen, rollKind, {
+            ...commonContext,
+            mal: "forsvarare"
+        });
+        const externalEffects = EffectHelper.getMatchingEffects(this.actor, externalContext, {
+            types,
+            extraEffects: this._externalEffects,
+            includeActorEffects: false
+        });
+
+        return [...ownEffects, ...externalEffects];
+    }
+
     get visaTarning() {
         let tarning = {
             tvarde: this.#_totalTarning,
@@ -264,6 +338,12 @@ export class WeaponRoll {
                 }   
             }
         }        
+
+        if (this.actor.isEon5) {
+            const types = this.#_isdamage ? ["tvarde", "skadebonus"] : ["tvarde"];
+            const effects = this.getMatchedEffects(types);
+            tarning = EffectHelper.applyToPool(tarning, effects);
+        }
 
         return tarning;
     }
@@ -607,6 +687,65 @@ export class WeaponRoll {
         this.updateAttackModifiers();
     }
 
+    /**
+     * Matchande skadeeffekter om skadeslaget görs med angiven taktik.
+     * @param {string} taktik
+     * @returns {object[]}
+     */
+    #damageEffectsForTactic(taktik) {
+        if (!this.actor.isEon5) return [];
+
+        const context = EffectHelper.buildWeaponContext(this.actor, this.vapen, "skada", {
+            fattning: this.#_fattning || "",
+            taktik: taktik || "",
+            mal: "aktor"
+        });
+        return EffectHelper.getMatchingEffects(this.actor, context, {
+            types: ["tvarde", "skadebonus"],
+            extraEffects: this._weaponEffects
+        });
+    }
+
+    /**
+     * Vad en anfallstaktik tillför skadeslaget: taktikens egna tärningar plus
+     * vapeneffekter som bara gäller den taktiken (t.ex. Kraftfull vid kraftfullt
+     * anfall). Effekter som gäller oavsett taktik räknas bort, eftersom de inte är
+     * en följd av taktikvalet.
+     * @param {string} taktik
+     * @returns {{tvarde: number, bonus: number, sources: string[]}}
+     */
+    getTacticDamageContribution(taktik) {
+        let tvarde = 0;
+        if (taktik === "tungt") tvarde += 2;
+        if (taktik === "snabbt") tvarde -= 1;
+
+        const utanTaktik = new Set(
+            this.#damageEffectsForTactic("normal").map((effect) => effect.effectId)
+        );
+        const endastMedTaktik = this.#damageEffectsForTactic(taktik)
+            .filter((effect) => !utanTaktik.has(effect.effectId));
+        const bidrag = EffectHelper.sumPoolContribution(endastMedTaktik);
+
+        return {
+            tvarde: tvarde + bidrag.tvarde,
+            bonus: bidrag.bonus,
+            sources: bidrag.sources
+        };
+    }
+
+    /**
+     * Återställ anfallstaktiken när skadeslaget startas från stridsflödet i stället
+     * för direkt efter anfallet. Sätter även lastAttackType så att skadetärningar och
+     * effektvillkor (taktik:*) utgår från samma taktik som anfallet gjordes med.
+     * @param {string} type
+     */
+    restoreAttackType(type) {
+        if (!type) return;
+        this.attacktype = type;
+        this.#_lastAttackType = this.#_attacktype;
+        this.updateAttackModifiers();
+    }
+
     updateAttackModifiers() {
         this.#_totalTarning = this.grundTarning;
         this.#_totalBonus = this.grundBonus;
@@ -713,13 +852,16 @@ export class DialogWeaponRoll extends FormApplication {
     }
 
     async getData() {
-        if (CalculateHelper.isEon5Actor(this.actor)) {
+        if (this.actor.isEon5) {
             const actorData = foundry.utils.duplicate(this.actor.toObject());
             await CalculateHelper.beraknaGrundrustningOchGrundskadaEon5(actorData);
             const grundskadaTotalt = actorData.system?.harleddegenskaper?.grundskada?.totalt;
             if (grundskadaTotalt) {
                 this.object.setGrundskadaTotalt(grundskadaTotalt);
                 this.object.refreshWeaponDamage();
+            }
+            if (!this.object._weaponEffects?.length) {
+                this.object._weaponEffects = await EffectHelper.collectWeaponEffects(this.object.vapen, this.actor);
             }
         }
 
@@ -739,10 +881,82 @@ export class DialogWeaponRoll extends FormApplication {
                 if (pending.weaponFattning === "enhand" || pending.weaponFattning === "tvahand") {
                     this.object.fattning = pending.weaponFattning;
                 }
+                this.object.restoreAttackType(pending.weaponAttackType);
             }
         }
         data.hasPendingDamageFlow = Boolean(this._combatAttackFlow?.flowId);
+        data.tacticRows = this.#buildTacticRows(this.object.attacktype);
+        data.tacticTitles = this.#buildTacticTitles();
+        // Standard anfall ändrar inget, så rutan visas bara när taktiken gör skillnad.
+        data.showTacticInfo = data.tacticRows.length > 0
+            && (this.object.isdefence || this.object.attacktype !== "normal");
         return data;
+    }
+
+    /**
+     * Radtexter för taktikrutan. Skaderaden visar taktikens totala bidrag, alltså
+     * även vapeneffekter som utlöses av taktiken, så att rutan stämmer med det
+     * skadeslag som sedan görs.
+     * @param {string} taktik
+     * @returns {string[]}
+     */
+    #buildTacticRows(taktik) {
+        if (this.object.isdefence) {
+            const forsvar = FORSVARSTAKTIKER[taktik];
+            if (!forsvar) return [];
+
+            const rows = [];
+            if (forsvar.utmattning !== undefined) {
+                rows.push(game.i18n.format("eon.dialogs.weaponRollTacticUtmattning", {
+                    value: formatSignedValue(forsvar.utmattning)
+                }));
+            }
+            if (forsvar.fardighet !== undefined) {
+                rows.push(game.i18n.format("eon.dialogs.weaponRollTacticFardighet", {
+                    value: formatDiceValue(forsvar.fardighet)
+                }));
+            }
+            if (forsvar.note) rows.push(game.i18n.localize(forsvar.note));
+            return rows;
+        }
+
+        const anfall = ANFALLSTAKTIKER[taktik];
+        if (!anfall) return [];
+
+        const rows = [
+            game.i18n.format("eon.dialogs.weaponRollTacticUtmattning", {
+                value: formatSignedValue(anfall.utmattning)
+            })
+        ];
+
+        const skada = this.object.getTacticDamageContribution(taktik);
+        const skadeText = formatDiceContribution(skada);
+        if (skadeText) {
+            rows.push(game.i18n.format("eon.dialogs.weaponRollTacticSkada", { value: skadeText }));
+            if (skada.sources.length) {
+                rows.push(game.i18n.format("eon.dialogs.weaponRollTacticFranEffekt", {
+                    sources: skada.sources.join(", ")
+                }));
+            }
+        }
+
+        rows.push(game.i18n.format("eon.dialogs.weaponRollTacticFardighet", {
+            value: formatDiceValue(anfall.fardighet)
+        }));
+        return rows;
+    }
+
+    /**
+     * Knapptips per taktik, samma innehåll som taktikrutan.
+     * @returns {Record<string, string>}
+     */
+    #buildTacticTitles() {
+        const keys = Object.keys(this.object.isdefence ? FORSVARSTAKTIKER : ANFALLSTAKTIKER);
+        const titles = {};
+        for (const key of keys) {
+            titles[key] = this.#buildTacticRows(key).join("\n");
+        }
+        return titles;
     }
 
     activateListeners(html) {
@@ -913,6 +1127,11 @@ export class DialogWeaponRoll extends FormApplication {
             description += "<br />";
         }
 
+        if (this.actor.isEon5) {
+            const effects = this.object.getMatchedEffects();
+            description += EffectHelper.describeEffects(effects);
+        }
+
         const roll = new DiceRollContainer(this.actor, this.config);
         roll.typeroll = CONFIG.EON.slag.vapen;
         roll.action = this.object.vapennamn;                       
@@ -1063,7 +1282,9 @@ export class DialogWeaponRoll extends FormApplication {
         }
 
         let allvarligBaseRoll = null;
-        if (this.object.isdamage && this._combatAttackFlow?.flowId) {
+        const skipAllvarlig = this.object.isdamage && this.actor.isEon5
+            && EffectHelper.blocksAllvarlig(this.object.getMatchedEffects(["allvarlig"]));
+        if (this.object.isdamage && this._combatAttackFlow?.flowId && !skipAllvarlig) {
             try {
                 const allvarligRoll = await (new Roll("1d10")).evaluate();
                 allvarligBaseRoll = Number(allvarligRoll.total);
@@ -1216,6 +1437,8 @@ export class DialogWeaponRoll extends FormApplication {
                 weaponFattning: (this.object.fattning === "enhand" || this.object.fattning === "tvahand")
                     ? this.object.fattning
                     : null,
+                weaponAttackType: this.object.attacktype ?? null,
+                weaponEffects: EffectHelper.serializeEffects(this.object._weaponEffects),
                 attackResult: null
             }
         };

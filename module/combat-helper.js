@@ -6,6 +6,32 @@ export class CombatHelper {
         Hooks.on("combatStart", async (combat) => {
             await this.sortCombatantsByPhase(combat);
         });
+
+        Hooks.on("updateCombat", async (combat, changed) => {
+            if (!("round" in changed) && !("turn" in changed)) return;
+            await this.#tickEffectDurations(combat, changed);
+        });
+    }
+
+    /**
+     * @param {Combat} combat
+     * @param {object} changed
+     */
+    static async #tickEffectDurations(combat, changed) {
+        const EffectHelper = (await import("./effect-helper.js")).default;
+
+        if ("round" in changed) {
+            for (const combatant of combat.combatants) {
+                const actor = combatant.actor;
+                if (actor) await EffectHelper.tickRoundDurations(actor);
+            }
+        }
+
+        if ("turn" in changed) {
+            const combatant = combat.combatant;
+            const actor = combatant?.actor;
+            if (actor) await EffectHelper.clearNextActivePhase(actor);
+        }
     }
 
     static getPhaseOrder(combatant) {

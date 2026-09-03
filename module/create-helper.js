@@ -1,3 +1,5 @@
+import CalculateHelper from "./calculate-helper.js";
+
 export default class CreateHelper {
     static async SkapaFardigheter(actor, config, version) {
 
@@ -17,7 +19,7 @@ export default class CreateHelper {
                 }
             }       
         } 
-        else if (actor.system.installningar.eon === "eon4") {
+        else if (!actor.isEon5) {
             let itemData = await this.SkapaFardighetItem(actor, 'allman', game.EON.fardigheter['vildmark']['genomsoka'], 'genomsoka', version, false, true);
             await actor.createEmbeddedDocuments("Item", [itemData]);
 
@@ -91,7 +93,7 @@ export default class CreateHelper {
     static async SkapaKaraktarsdrag(actorData) {
         let drag;
 
-        if (actorData.system.installningar.eon === "eon4") {
+        if (!CalculateHelper.isEon5Actor(actorData)) {
             drag = {
                 namn: "",
                 niva1: {
@@ -111,7 +113,7 @@ export default class CreateHelper {
                 tvivel: 0
             };
         }
-        else if (actorData.system.installningar.eon === "eon5") {
+        else {
             drag = {
                 namn: "",
                 niva1: {
@@ -183,7 +185,7 @@ export default class CreateHelper {
             bonusgrund = fardighet.grund.bonus;
         }
 
-        if (actor.system.installningar.eon === "eon4") {
+        if (!CalculateHelper.isEon5Actor(actor)) {
             attribut = fardighet.attribut;
         }
 

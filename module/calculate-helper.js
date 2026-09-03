@@ -17,7 +17,8 @@ export default class CalculateHelper {
 
     /**
      * Eon 5-rollperson, motståndare eller annan aktör med installningar.eon === "eon5".
-     * @param {Actor|object} actorOrData
+     * Källa för versionkollen; EonActor.isEon5 delegerar hit.
+     * @param {Actor|object} actorOrData - Actor eller duplicerad actorData med .type och .system
      */
     static isEon5Actor(actorOrData) {
         if (!actorOrData) return false;

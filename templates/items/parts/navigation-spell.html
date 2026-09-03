@@ -1,4 +1,4 @@
-{{#if (eq item.system.installningar.eon "eon4")}}
+{{#unless (isEon5Item item)}}
 
     <nav class="item-tabs tab-area headlineTabs" data-group="primary">    
         <a class="tabButton" data-tab="values">{{localize "eon.sheets.actor.varde"}}</a>
@@ -6,11 +6,11 @@
         <a class="tabButton tabboxleft" data-tab="description">{{localize "eon.sheets.item.beskrivning"}}</a>
     </nav>
 
-{{else if (eq item.system.installningar.eon "eon5")}}
+{{else}}
 
     <nav class="item-tabs tab-area headlineTabs" data-group="primary">    
         <a class="tabButton" data-tab="values" style="width: 50%;">{{localize "eon.sheets.actor.varde"}}</a>
         <a class="tabButton tabboxleft" data-tab="description" style="width: 50%;">{{localize "eon.sheets.item.beskrivning"}}</a>
     </nav>
 
-{{/if}}
+{{/unless}}

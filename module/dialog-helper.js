@@ -45,8 +45,8 @@ export default class classDialogHelper {
 		spellRollUse.render(true);
     }
 
-    static async AttributeDialog(actor, type, key, title) {
-        const roll = new AttributeRoll(actor, type, key, title);
+    static async AttributeDialog(actor, type, key, title, rollKey = "") {
+        const roll = new AttributeRoll(actor, type, key, title, rollKey);
 		let attributeRollUse = new DialogAttributeRoll(actor, roll);
 		attributeRollUse.render(true);
     }

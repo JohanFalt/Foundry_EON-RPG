@@ -29,7 +29,7 @@
 							{{/if}}
 						{{/if}}
 						
-					{{#if (eq item.system.installningar.eon "eon4")}}
+					{{#unless (isEon5Item item)}}
 
 						{{#if isPC}}
 
@@ -44,7 +44,7 @@
 
 						{{/if}}
 
-					{{/if}}
+					{{/unless}}
 
 					<div class="item-property-area floating-label-group">
 						<input class="text-value editable" name="system.referens" type="text" value="{{item.system.referens}}" data-dtype="String" />
@@ -60,7 +60,7 @@
 
 					{{#if isPC}}
 						{{#unless (eq item.system.grupp "ovriga")}}
-							{{#if (eq item.system.installningar.eon "eon4")}}
+							{{#unless (isEon5Item item)}}
 								<div class="item-row">
 									<div class="headline-checkbox">{{localize "eon.sheets.actor.lattlard"}}</div>
 									<div><input class="svarighet pointer" type="checkbox" data-value="L" {{isChecked item.system.installningar.lattlard}} data-dtype="String" /></div>
@@ -70,7 +70,7 @@
 									<div class="headline-checkbox">{{localize "eon.sheets.actor.svarlard"}}</div>
 									<div><input class="svarighet pointer" type="checkbox" data-value="S" {{isChecked item.system.installningar.svarlard}} data-dtype="String" /></div>
 								</div> 
-							{{else if (eq item.system.installningar.eon "eon5")}}
+							{{else}}
 								<div class="item-row">
 									<div class="headline-checkbox">{{localize "eon.sheets.actor.talang"}}</div>
 									<div><input class="svarighet pointer" type="checkbox" data-value="T" {{isChecked item.system.installningar.talang}} data-dtype="String" /></div>
@@ -85,7 +85,7 @@
 									<div class="headline-checkbox">{{localize "eon.sheets.actor.blockering"}}</div>
 									<div><input class="svarighet pointer" type="checkbox" data-value="B" {{isChecked item.system.installningar.blockering}} data-dtype="String" /></div>
 								</div>
-							{{/if}}
+							{{/unless}}
 						{{/unless}}
 					{{/if}}
 
@@ -101,7 +101,7 @@
 							<div class="headline-checkbox">{{localize "eon.sheets.actor.expertis"}}</div>
 							<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.expertis}} data-dtype="Boolean" data-field="expertis" /></div>
 						</div>  
-						{{#if (eq item.system.installningar.eon "eon5")}}
+						{{#if (isEon5Item item)}}
 							<div class="item-row">
 								<div class="headline-checkbox">{{localize "eon.sheets.actor.formaga"}}</div>
 								<div><input class="item-property pointer" type="checkbox" {{isChecked item.system.formaga}} data-dtype="Boolean" data-field="formaga" /></div>

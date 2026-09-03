@@ -254,6 +254,22 @@ export const updateItem = async function(item, config, actor) {
             }
         }
 
+        if (item.type === "Tillstånd") {
+            const itemData = item.toObject();
+            delete itemData._id;
+            itemData.type = "Skada";
+            itemData.system = itemData.system ?? {};
+            itemData.system.typ = itemData.system.typ || "tillstand";
+            itemData.system.effekter = itemData.system.effekter ?? [];
+            if (actor) {
+                await actor.createEmbeddedDocuments("Item", [itemData]);
+            } else {
+                await Item.create(itemData);
+            }
+            await item.delete();
+            return;
+        }
+
         if (update) {
             //console.log("Uppdaterar " + item.name + " " + item.system.installningar.version);
             await item.update(updateData);
@@ -490,7 +506,7 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         </ul></p>    
         `;
         partMessage += `
-            <h4>Stridmodulen</h4>  
+            <h4>Stridmodulen (Eon 5)</h4>  
             <p>Stridmodulen har växt och nu hanterar den även stridsresultat.</p>
             <p>Varje deltagare av striden har en besegrad-knapp som markerar deltagaren som besegrad, vilket kan vara tillfälligt eller permanent. Systemet hoppar då över dem.</p>
             <p>Genom att klicka på deltagarens porträtt öppnas detas formulär.</p>
@@ -499,6 +515,25 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
             <p>De motståndare som finns listade i Regelboken finns i Eon 5 kompendiumet under Varelser.</p>
         `;
     } 
+
+    if (await CompareVersion(installedVersion, '5.5.0', isDemo)) {
+        headMessage += `
+        <p><ul style="margin-top: 0">
+        <li>Förbättrat hanteringen av stridsresultatet i stridmodulen.</li>
+        <li>Förbättrat hanteringen av vapenegenskaper och gett de som har direkta effekter på utgången i stridmodulen så dessa läggs till automatiskt.</li>
+        <li>Lagt till en ny typ av skador till rollformuläret - Tillstånd.</li>
+        </ul></p>
+        `;
+
+        partMessage += `
+            <h4>Stridmodulen (Eon 5)</h4>
+            <p>Förbättrat hanteringen av stridsresultatet. Nu gör man sitt anfall, motståndaren försvarar sig, om träff slår anfallaren skadan och därefter presenteras resultatet som man sedan fyller i rollformuläret manuellt.</p>
+            <h4>Vapenegenskaper (Eon 5)</h4>
+            <p>Förbättrat hanteringen av vapenegenskaper och gett de som har direkta effekter på utgången i stridmodulen så dessa läggs till automatiskt. Detaljerna hittas <a href="https://github.com/JohanFalt/Foundry_EON-RPG/issues/379">här</a> vilka dessa är. De vapen som har dessa egenskaper har blivit uppdaterade i kompendiet.</p>
+            <h4>Tillstånd (Eon 5)</h4>
+            <p>Lagt till en ny typ av skador - Tillstånd. Dessa är till för att hantera de tillstånd som kan uppstå i stridmodulen och som påverkar rollformuläret. De finns i Eon 5 kompendiumet under Efterverkningar -> Tillstånd. Fler kommer läggas till allt eftersom.</p>
+        `;
+    }
 
     if (await CompareVersion(installedVersion, '5.4.1', isDemo)) {
          partMessage += `

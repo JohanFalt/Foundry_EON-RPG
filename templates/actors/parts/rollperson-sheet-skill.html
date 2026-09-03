@@ -1,4 +1,4 @@
-{{#if (eq actor.system.installningar.eon "eon4")}}
+{{#unless (isEon5 actor)}}
     <div class="skill-area" style="{{getSkillAreaHeight actor.system.listdata.fardigheter}}">
         {{#each EON.CONFIG.fardighetgrupper as |grupp key|}}
             <div class="skill-row skill">
@@ -29,7 +29,7 @@
                             <a class="item-edit" title="{{localize 'eon.sheets.actor.editeraSprak'}}" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
                         </div>
                     {{else}}
-                        {{#if (eq actor.system.installningar.eon "eon4")}}
+                        {{#unless (isEon5 @root.actor)}}
                             <div>
                                 {{#if fardighet.system.installningar.lattlard}}
                                     <div style="width: 8px;position: relative;top: 1px;"><i class="fa-solid fa-sort-up green"></i></div>
@@ -38,7 +38,7 @@
                                     <div style="width: 8px;position: relative;top: -4px;"><i class="fa-solid fa-sort-down red"></i></div>
                                 {{/if}}
                             </div>
-                        {{/if}}
+                        {{/unless}}
                         <div class="vrollable caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{localize fardighet.name}}</div> 
                             
                         <div class="dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
@@ -51,7 +51,7 @@
             {{/each}}
         {{/each}}
     </div>
-{{else if (eq actor.system.installningar.eon "eon5")}}
+{{else}}
     <div class="floating-label-group">
         <input class="attribute-value editable skill-value" name="system.fardigheter.ovriga.erf" type="text" value="{{getActorSkillGroupExp actor.system.fardigheter 'ovriga'}}" data-dtype="Number" />
         <span class="erfarenhet-box floating-label">{{localize "eon.sheets.actor.erfarenhet"}}</span>
@@ -94,11 +94,11 @@
                         <div class="vrollable caption {{#if fardighet.system.installningar.normal}}normalskill{{/if}}" data-source="skill" data-itemid="{{fardighet._id}}">{{localize fardighet.name}}</div> 
                             
                         <div class="dice-value" data-itemid="{{fardighet._id}}">{{getDiceValue fardighet.system.varde}}</div>
-                        {{#if (eq actor.system.installningar.eon "eon4")}}
+                        {{#unless (isEon5 @root.actor)}}
                             {{{getAttributeShortName fardighet.system.attribut}}}
-                        {{else if (eq actor.system.installningar.eon "eon5")}}
+                        {{else}}
                             <div>{{skillDisplayShort fardighet}}</div>
-                        {{/if}}
+                        {{/unless}}
                         <div class="pointer skill-icon">
                             <a class="item-edit" title="{{localize 'eon.sheets.actor.editeraFardighet'}}" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
                         </div>
@@ -108,4 +108,4 @@
         {{/each}}
         
     </div>
-{{/if}}
+{{/unless}}
