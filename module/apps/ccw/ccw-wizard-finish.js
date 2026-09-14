@@ -275,7 +275,10 @@ export async function applyCharacterCreationFinish(actor, wizardData) {
         const grundVarde = parseIntSafe(harleddRad.grund);
         const bonusVarde = parseIntSafe(harleddRad.bonus);
         if (key === "visdom") {
-            harleddegenskaper.visdom = grundVarde + bonusVarde;
+            harleddegenskaper.visdom = {
+                varde: grundVarde + bonusVarde,
+                hojningar: harleddegenskaper.visdom?.hojningar ?? 0
+            };
             continue;
         }
         const t6Pool = attributVardeTillHarleddT6Attribut(grundVarde + bonusVarde);

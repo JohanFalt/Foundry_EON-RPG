@@ -17,6 +17,7 @@ function prepareSettingForForm(s) {
 }
 
 const RULES_SEGMENT_KEYS = {
+    attribut: ["attributHojningKryss"],
     belastning: ["weightRules", "hinderenceSkillGroupMovement", "hinderenceAttributeMovement"],
     strid: ["stridEon5KroppsbyggnadAvdrag"]
 };
@@ -206,6 +207,15 @@ export const systemSettings = function() {
 		type: Boolean
 	});
 
+    game.settings.register("eon-rpg", "attributHojningKryss", {
+		name: L("eon.settings.attributHojningKryss"),
+		hint: L("eon.settings.attributHojningKryssHint"),
+		scope: "world",
+		config: false,
+		default: 4,
+		type: Number
+	});
+
     game.settings.register("eon-rpg", "weightRules", {
 		name: L("eon.settings.weightRules"),
 		hint: L("eon.settings.weightRulesHint"),
@@ -387,6 +397,11 @@ export class Rules extends FormApplication {
         if (hasPermission) {
             data.system.segments = [
                 {
+                    id: "attribut",
+                    label: game.i18n.localize("eon.settings.segment.attribut"),
+                    settings: buildRulesSettingsForKeys(RULES_SEGMENT_KEYS.attribut)
+                },
+                {
                     id: "belastning",
                     label: game.i18n.localize("eon.settings.segment.belastning"),
                     settings: buildRulesSettingsForKeys(RULES_SEGMENT_KEYS.belastning)
@@ -450,11 +465,21 @@ export class Rules extends FormApplication {
         for (let [k, v] of Object.entries(foundry.utils.flattenObject(formData))) {
             let s = game.settings.settings.get(k);
             let current = game.settings.get("eon-rpg", s.key);
+            let value = v;
 
-            if (v !== current) {
-                await game.settings.set("eon-rpg", s.key, v);
+            if (s.key === "attributHojningKryss") {
+                const parsed = Number(v);
+                if (!Number.isInteger(parsed) || parsed < 0) {
+                    ui.notifications.warn(game.i18n.localize("eon.settings.attributHojningKryssInvalid"));
+                    continue;
+                }
+                value = parsed;
+            }
+
+            if (value !== current) {
+                await game.settings.set("eon-rpg", s.key, value);
                 if (s.key === "stridEon5KroppsbyggnadAvdrag" && CONFIG.EON?.settings) {
-                    CONFIG.EON.settings.stridEon5KroppsbyggnadAvdrag = v;
+                    CONFIG.EON.settings.stridEon5KroppsbyggnadAvdrag = value;
                 }
             }
         }

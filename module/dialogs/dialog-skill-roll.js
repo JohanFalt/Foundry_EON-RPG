@@ -261,6 +261,7 @@ export class DialogAttributeRoll extends FormApplication {
         this.isDialog = true;  
         this.onRollComplete = typeof options.onRollComplete === "function" ? options.onRollComplete : null;
         this.onRollCancelled = typeof options.onRollCancelled === "function" ? options.onRollCancelled : null;
+        this.lockDifficulty = options.lockDifficulty === true;
         
         let headline = "";
         
@@ -281,6 +282,7 @@ export class DialogAttributeRoll extends FormApplication {
 
     getData() {
         const data = super.getData();
+        data.lockDifficulty = this.lockDifficulty;
 
         if (data.object.title == "") {
             if (data.object.type != "skada") {
@@ -350,6 +352,8 @@ export class DialogAttributeRoll extends FormApplication {
             }
         }
         if (dataset?.source == "difficulty") {
+            if (this.lockDifficulty) return;
+
             const difficultyInput = document.getElementById("difficulty");
             let value = "";
 
@@ -719,6 +723,7 @@ export class DialogSkillRoll extends FormApplication {
         this.onRollComplete = typeof options.onRollComplete === "function" ? options.onRollComplete : null;
         this.onRollCancelled = typeof options.onRollCancelled === "function" ? options.onRollCancelled : null;
         this.combatContext = options.combatContext ?? null;
+        this.lockDifficulty = options.lockDifficulty === true;
         this.options.title = game.i18n.format("eon.roll.rollTitle", { name: roll.namn.toLowerCase() });
     }
 
@@ -729,6 +734,8 @@ export class DialogSkillRoll extends FormApplication {
 
     getData() {
         const data = super.getData();
+        data.lockDifficulty = this.lockDifficulty;
+
         return data;
     }
 
@@ -788,6 +795,8 @@ export class DialogSkillRoll extends FormApplication {
             }
         }
         if (dataset?.source == "difficulty") {
+            if (this.lockDifficulty) return;
+            
             const difficultyInput = document.getElementById("difficulty");
             let value = "";
 

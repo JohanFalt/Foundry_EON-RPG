@@ -89,6 +89,17 @@
                         <div class="dice-value {{#if object.canTic}}tic pointer{{else}}disabled{{/if}}" data-property="{{object.attributeType}}">{{getDiceValue object.attributeBasicValue}}</div>
                     {{/if}}
 
+                    {{#if object.showAttributHojningar}}
+                        <div class="attribut-hojning-area">
+                            <div class="smalltext">{{localize "eon.dialogs.attributeEdit.hojningar"}}</div>
+                            <div class="resource-box" data-value="{{object.attributHojningar}}" data-name="hojningar">
+                                {{#numFromLoop 1 object.attributHojningMax}}
+                                    <span class="resource-value pointer" data-index="{{this}}" data-type="attributHojning"></span>
+                                {{/numFromLoop}}
+                            </div>
+                        </div>
+                    {{/if}}
+
                     {{#if object.hasDescription}}
                         <div class="large-headline">{{localize "eon.sheets.item.beskrivning"}}</div>
                         <div class="editor-box">

@@ -98,7 +98,13 @@ export default class Eon5Rollperson extends foundry.abstract.DataModel {
             blodningsvarighet: new fields.NumberField({...valueInteger}),
             infektion: new fields.NumberField({...valueInteger}),
             infektionsvarighet: new fields.NumberField({...valueInteger}),
-            inreskada: new fields.NumberField({...valueInteger})
+            inreskada: new fields.NumberField({...valueInteger}),
+            pafrestning: new fields.SchemaField({
+                hunger: new fields.NumberField({...valueInteger}),
+                nedkylning: new fields.NumberField({...valueInteger}),
+                syrebrist: new fields.NumberField({...valueInteger}),
+                torst: new fields.NumberField({...valueInteger})
+            })
         });
 
         schema.magi = new fields.SchemaField({
@@ -217,6 +223,14 @@ export default class Eon5Rollperson extends foundry.abstract.DataModel {
         }
         delete bakgrund.doktrin1;
         delete bakgrund.doktrin2;
+
+        if (source.harleddegenskaper && CalculateHelper.isNumeric(source.harleddegenskaper.visdom)) {
+            const varde = source.harleddegenskaper.visdom;
+            source.harleddegenskaper.visdom = {
+                varde: varde,
+                hojningar: 0
+            };
+        }
 
         let version310 = CompareVersion(source.installningar?.version, "3.1.0");
 

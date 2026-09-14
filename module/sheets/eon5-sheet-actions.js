@@ -1,6 +1,7 @@
 import ItemHelper from "../item-helper.js";
 import DialogHelper from "../dialog-helper.js";
 import { DialogPickFardighet } from "../dialogs/dialog-pick-fardighet.js";
+import PafrestningHelper from "../pafrestning-helper.js";
 
 /**
  * @param {Event} event
@@ -41,6 +42,21 @@ export async function onSkadaResource(event, target) {
     }
 
     await this.render();
+}
+
+/**
+ * Öppna ett manuellt Chock- eller Dödsslag mot en påfrestningsnivå.
+ * @param {Event} event
+ * @param {HTMLElement} target
+ * @this {import("./eon5-actor-sheet-base.js").default}
+ */
+export async function onPafrestningRoll(event, target) {
+    event.preventDefault();
+    await PafrestningHelper.openRoll(
+        this.actor,
+        target.dataset.pafrestning,
+        target.dataset.slag
+    );
 }
 
 /**

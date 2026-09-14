@@ -1,4 +1,4 @@
-<div class="large-headline">{{localize "eon.sheets.actor.skador"}}</div>
+<div class="item-row headline eon-pafrestning-headline">{{localize "eon.sheets.actor.skador"}}</div>
 
 <div class="item-box item-row">
     <div class="two-third-column item-row">
@@ -86,6 +86,35 @@
     </div>
 </div>
 
+{{#if (isEon5 actor)}}
+<div class="item-box eon-pafrestning-box">
+    <div class="item-row headline eon-pafrestning-headline">
+        <div>{{localize "eon.pafrestning.rubrik"}}</div>
+    </div>
+    <div class="eon-pafrestning-grid">
+        {{#each EON.CONFIG.pafrestningstyper as |label key|}}
+            <div class="eon-pafrestning-cell">
+                <input id="pafrestning-{{key}}" class="attribute-value editable eon-pafrestning-input"
+                    name="system.skada.pafrestning.{{key}}" type="number" min="0" step="1"
+                    value="{{lookup @root.actor.system.skada.pafrestning key}}" data-dtype="Number" />
+                <label for="pafrestning-{{key}}">{{localize label}}</label>
+                <img class="eon-pafrestning-icon pointer pafrestning-roll"
+                    src="{{@root.EON.CONFIG.ikoner.slag_chock}}"
+                    data-pafrestning="{{key}}" data-slag="chock"
+                    alt="{{localize 'eon.pafrestning.chock'}}"
+                    title="{{localize 'eon.pafrestning.chock'}} – {{localize label}}">
+                <img class="eon-pafrestning-icon pointer pafrestning-roll"
+                    src="{{@root.EON.CONFIG.ikoner.slag_dod}}"
+                    data-pafrestning="{{key}}" data-slag="dod"
+                    alt="{{localize 'eon.pafrestning.dod'}}"
+                    title="{{localize 'eon.pafrestning.dod'}} – {{localize label}}">
+            </div>
+        {{/each}}
+    </div>
+    <div class="information-area information-box">{{localize "eon.pafrestning.manuellInfo"}}</div>
+</div>
+{{/if}}
+
 <div class="item-box">
     <div>
         <!-- <div class="clear">
@@ -120,9 +149,9 @@
                     <div class="item-listbox weapon-icon"><a class="item-send" title="{{localize 'eon.sheets.item.skickaBeskrivning'}}" data-source="description" data-itemid="{{skada._id}}"><i class="icon fa-solid fa-share"></i></a></div>
                 {{/if}}
                 <div class="item-listbox" style="width: 125px;" data-source="wound" data-itemid="{{skada._id}}">{{skada.name}}</div>
-                {{#if skada.system.rundorKvar}}
-                    <div class="item-listbox information-area">({{skada.system.rundorKvar}})</div>
-                {{/if}}
+                {{#with (varaktighetText skada) as |varaktighet|}}
+                    <div class="item-listbox information-area">({{varaktighet}})</div>
+                {{/with}}
             </div>
         {{/each}}
     </div>
@@ -148,9 +177,9 @@
             <div class="item-row item-listrow">
                 <div class="item-listbox weapon-icon"><a class="item-edit" title="{{localize 'eon.sheets.actor.editeraTillstand'}}" data-itemid="{{tillstand._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a></div>
                 <div class="item-listbox" style="width: 125px;">{{tillstand.name}}</div>
-                {{#if tillstand.system.rundorKvar}}
-                    <div class="item-listbox information-area">({{tillstand.system.rundorKvar}})</div>
-                {{/if}}
+                {{#with (varaktighetText tillstand) as |varaktighet|}}
+                    <div class="item-listbox information-area">({{varaktighet}})</div>
+                {{/with}}
             </div>
         {{/each}}
     </div>

@@ -412,6 +412,46 @@
     margin-bottom: 25px;
 }
 
+.EON .eon-pafrestning-headline {
+    line-height: 25px;
+    width: 100%;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+}
+
+.EON .eon-pafrestning-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+    gap: 4px 10px;
+    padding: 6px 0;
+}
+
+.EON .eon-pafrestning-cell {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.EON .eon-pafrestning-cell label {
+    flex: 1 1 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.EON .eon-pafrestning-cell input.eon-pafrestning-input {
+    flex: 0 0 auto;
+    width: 34px;
+    text-align: center;
+}
+
+.EON .eon-pafrestning-icon {
+    flex: 0 0 auto;
+    height: 22px;
+    width: 22px;
+    border: 0;
+}
+
 .EON .item-row {
     display: flex; flex-wrap: wrap; flex-direction: row;
 }
@@ -725,6 +765,15 @@
     line-height: 25px;
     width: 100%;
     height: 25px;
+}
+
+/* Infotext i en listrad ska ligga kvar på raden, inte tvinga radbrytning */
+.EON .item-listrow .information-area {
+    width: auto;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-left: 4px;
+    white-space: nowrap;
 }
 
 /* Skada/tillstånd: effekteditor (flera rader per post) */
@@ -1998,6 +2047,14 @@ input.skill-value {
     left: 110px;
     width: 230px;
     height: 45px;
+}
+
+.EON.general-dialog .attribut-hojning-area {
+    margin-top: 8px;
+}
+
+.EON.general-dialog .attribut-hojning-area .smalltext {
+    margin-bottom: 4px;
 }
 
 .EON.itemsheet .property-area {

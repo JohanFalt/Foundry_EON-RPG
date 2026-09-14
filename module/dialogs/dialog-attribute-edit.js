@@ -42,6 +42,19 @@ export class DialogAttribute {
     #_attributeList = [];
     #_attributeListId = "";
     #_attributeDescription = "";
+    #_attributHojningar = 0;
+    #_attributHojningMax = 0;
+    #_showAttributHojningar = false;
+
+    static getAttributHojningMax() {
+        try {
+            const antal = Number(game.settings.get("eon-rpg", "attributHojningKryss"));
+            if (Number.isInteger(antal) && antal >= 0) return antal;
+        } catch (e) {
+            /* saknad inställning */
+        }
+        return 4;
+    }
 
     constructor(actor, type, key) {
         if (actor != undefined) {
@@ -160,6 +173,18 @@ export class DialogAttribute {
             this.#_attributeDescription = actor.system[this.#_attributeType][this.#_attributeKey]?.beskrivning;
         }
 
+        const fieldData = actor.system[this.#_attributeType]?.[this.#_attributeKey];
+        const hojningMax = DialogAttribute.getAttributHojningMax();
+        const hasHojningar = fieldData?.hojningar !== undefined;
+        this.#_attributHojningMax = hojningMax;
+        this.#_showAttributHojningar = this.#_isPC
+            && actor.isEon5
+            && this.#_attributeType === "harleddegenskaper"
+            && hasHojningar
+            && hojningMax > 0;
+        const sparadeHojningar = Number(fieldData?.hojningar) || 0;
+        this.#_attributHojningar = Math.min(Math.max(0, sparadeHojningar), hojningMax || sparadeHojningar);
+
         return this;
     }
 
@@ -221,6 +246,18 @@ export class DialogAttribute {
 
     get attributeDescription() {
         return this.#_attributeDescription;
+    }
+
+    get showAttributHojningar() {
+        return this.#_showAttributHojningar;
+    }
+
+    get attributHojningar() {
+        return this.#_attributHojningar;
+    }
+
+    get attributHojningMax() {
+        return this.#_attributHojningMax;
     }
 }
 
@@ -304,7 +341,9 @@ export class DialogAttributeEdit extends FormApplication {
         if (DialogAttribute.usesGrundskadaModifierare(src, this.object.attributeType, this.object.attributeKey)) {
             return false;
         }
-        if (this.object.attributeType !== "harleddegenskaper" || this.object.attributeKey === "grundrustning") {
+        if (this.object.attributeType !== "harleddegenskaper"
+            || this.object.attributeKey === "grundrustning"
+            || this.object.attributeKey === "visdom") {
             return false;
         }
 
@@ -451,6 +490,42 @@ export class DialogAttributeEdit extends FormApplication {
             const input = html.find('input[name="attribut.listaid"]');
             if (input.length) input.val(valdListaId);
         });
+
+        this._setupAttributHojningCounters(html);
+        html
+            .find('.resource-value[data-type="attributHojning"]')
+            .click(this._onAttributHojningClick.bind(this));
+    }
+
+    _setupAttributHojningCounters(html) {
+        html.find(".attribut-hojning-area .resource-box").each(function () {
+            const value = Number(this.dataset.value);
+            $(this)
+                .find(".resource-value")
+                .each(function (i) {
+                    if (i <= value - 1) {
+                        $(this).addClass("active");
+                    }
+                });
+        });
+    }
+
+    async _onAttributHojningClick(event) {
+        event.preventDefault();
+        const element = event.currentTarget;
+        const index = Number(element.dataset.index);
+        const max = DialogAttribute.getAttributHojningMax();
+        if (!Number.isInteger(index) || index < 1 || max <= 0 || index > max) return;
+
+        const path = `system.${this.object.attributeType}.${this.object.attributeKey}.hojningar`;
+        const current = Number(foundry.utils.getProperty(this.actor, path)) || 0;
+        let next = index;
+        if (current === 1 && index === 1) next = 0;
+        next = Math.min(Math.max(0, next), max);
+
+        await this.actor.update({ [path]: next });
+        this.object.reload(this.actor);
+        this.render();
     } 
 
     async _updateObject(event, formData) {
@@ -586,6 +661,14 @@ export class DialogAttributeEdit extends FormApplication {
             return;
         }
 
+        if (this.object.attributeType === "harleddegenskaper" && this.object.attributeKey === "visdom") {
+            actorData.system.harleddegenskaper.visdom.varde = (actorData.system.harleddegenskaper.visdom.varde || 0) + 1;
+            await this.actor.update(actorData);
+            this.object.reload(this.actor);
+            this.render();
+            return;
+        }
+
         if (this.object.attributeType === "strid" || 
             (this.object.attributeType === "harleddegenskaper" && this.object.attributeKey === "grundrustning")) {
             if (dataset.key !== undefined) {
@@ -691,6 +774,16 @@ export class DialogAttributeEdit extends FormApplication {
             } else if (path.tvarde > 0) {
                 path.tvarde -= 1;
                 path.bonus = 3;
+            }
+            await this.actor.update(actorData);
+            this.object.reload(this.actor);
+            this.render();
+            return;
+        }
+
+        if (this.object.attributeType === "harleddegenskaper" && this.object.attributeKey === "visdom") {
+            if ((actorData.system.harleddegenskaper.visdom.varde || 0) > 0) {
+                actorData.system.harleddegenskaper.visdom.varde -= 1;
             }
             await this.actor.update(actorData);
             this.object.reload(this.actor);

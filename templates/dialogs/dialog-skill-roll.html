@@ -104,6 +104,7 @@
                             </div>
                         </div>
                     </div>
+                    {{#unless lockDifficulty}}
                     <div>
                         <div class="dice-row">
                             {{#numFromLoop 1 9}}
@@ -113,6 +114,7 @@
                             <button class="dialog-event-button eventbutton" title="{{localize 'eon.dialogs.rensa'}}" style="width: 7%;" data-source="difficulty" data-value="clear"><span>...</span></button>
                         </div>
                     </div>  
+                    {{/unless}}
 
                 </div>
             </div>

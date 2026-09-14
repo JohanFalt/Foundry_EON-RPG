@@ -9,6 +9,7 @@ import { datavaluta } from '../../data/valuta.js';
 import { ensureRollperson5StartingItems } from "../apps/character-creation-helper.js";
 import { HANDELSE_SIDEBAR_SLAG_KEYS } from "../apps/ccw/ccw-constants-keys.js";
 import EffectHelper from "../effect-helper.js";
+import PafrestningHelper from "../pafrestning-helper.js";
 
 /** @type {Record<string, string>} */
 const HANDELSE_TABELL_I18N = {
@@ -433,6 +434,10 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
             .find(".resource-box > .resource-value")
             .click(this._clickedCircle.bind(this));
 
+        html
+            .find(".pafrestning-roll")
+            .click(this._onPafrestningRoll.bind(this));
+
         // Rollable stuff
         html
             .find(".vrollable")
@@ -679,6 +684,16 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
         ui.notifications.error(game.i18n.localize("eon.messages.slagSaknarFunktion"));
 
         return;
+    }
+
+    async _onPafrestningRoll(event) {
+        event.preventDefault();
+        const dataset = event.currentTarget.dataset;
+        await PafrestningHelper.openRoll(
+            this.actor,
+            dataset.pafrestning,
+            dataset.slag
+        );
     }
 
     /**

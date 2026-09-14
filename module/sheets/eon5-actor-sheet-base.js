@@ -8,6 +8,7 @@ import {
     onItemCreate,
     onItemDelete,
     onItemEdit,
+    onPafrestningRoll,
     onPickFardighet,
     onRollDialog,
     onSkadaResource,
@@ -56,6 +57,7 @@ export default class Eon5ActorSheetBase extends HandlebarsApplicationMixin(found
             pickFardighet: onPickFardighet,
             rollDialog: onRollDialog,
             skadaResource: onSkadaResource,
+            pafrestningRoll: onPafrestningRoll,
             toggleSprakField: onToggleSprakField,
             attributeEdit: onAttributeEdit
         },

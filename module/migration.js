@@ -159,12 +159,33 @@ export const updateActor = async function(actor, config, systemVersion) {
                 updateData.system.installningar.eon = "eon4";
             }
             if (actor.type === "rollperson5" || actor.type === "Motstandare5") {
-                if (!Number.isInteger(actor.system.harleddegenskaper?.visdom)) {
-                    updateData.system.harleddegenskaper.visdom = 0;
+                const visdom = actor.system.harleddegenskaper?.visdom;
+                
+                if (typeof visdom === "number") {
+                    updateData.system.harleddegenskaper.visdom = { varde: visdom, hojningar: 0 };
                     console.log('visdom ' + actor.name);
-                }                
+                } else if (!Number.isInteger(visdom?.varde)) {
+                    updateData.system.harleddegenskaper.visdom = { varde: 0, hojningar: 0 };
+                    console.log('visdom ' + actor.name);
+                }
             }
         }
+
+        // Behövs inte för närvarande
+        // if (actor.type === "Rollperson5" || actor.type === "Motstandare5") {
+        //     const pafrestning = actor._source?.system?.skada?.pafrestning;
+        //     const pafrestningstyper = ["hunger", "nedkylning", "syrebrist", "torst"];
+        //     const saknarPafrestning = !pafrestning
+        //         || pafrestningstyper.some((typ) => !Number.isFinite(Number(pafrestning[typ])));
+
+        //     if (saknarPafrestning) {
+        //         updateData.system.skada = updateData.system.skada ?? {};
+        //         updateData.system.skada.pafrestning = Object.fromEntries(
+        //             pafrestningstyper.map((typ) => [typ, Math.max(0, Number(pafrestning?.[typ]) || 0)])
+        //         );
+        //         update = true;
+        //     }
+        // }
 
         if (update) {
             await actor.update(updateData);
@@ -535,15 +556,24 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         `;
     }
 
-    if (await CompareVersion(installedVersion, '5.4.1', isDemo)) {
+    if (await CompareVersion(installedVersion, '5.5.1', isDemo)) {
          partMessage += `
-         <p>
-             <p>Fixat till grafiken i chattrutorna.</p>
-             <p>Hanterat så att varje spelare fastställer sitt språk första gången de loggar in och därefter håller sig Foundry till detta. Finns som inte ställning i Världsinställningarna ifall man vill ändra detta i efterhand.</p>
-             <p>Eon 5: Förbättrat hur listningen av Händelsetabellerna listas på rollformuläret. Gäller bara nya rollpersoner från och med denna version.</p>
-         </p>           
+         <h4>Påfrestningsskador (Eon 5)</h4>
+         <p>Har nu lagt till så man kan hantera påfrestningsskador på rollformuläret. Dessa listas nu under skador.</p>
+         <h4>Markering höjning attribut (Eon 5)</h4>
+         <p>Enligt reglerna finns det en gräns hur många höjningar man kan göra på ett attribut, dessa kan nu markeras när man editerar ett attribut. Har även lagt till en inställning i Världsinställningarna som bestämmer hur många höjningar man kan göra på ett attribut. Markeringarna är enbart visning och stöd, ej en inbyggd gräns.</p>
           `;
     }
+
+    // if (await CompareVersion(installedVersion, '5.4.1', isDemo)) {
+    //      partMessage += `
+    //      <p>
+    //          <p>Fixat till grafiken i chattrutorna.</p>
+    //          <p>Hanterat så att varje spelare fastställer sitt språk första gången de loggar in och därefter håller sig Foundry till detta. Finns som inte ställning i Världsinställningarna ifall man vill ändra detta i efterhand.</p>
+    //          <p>Eon 5: Förbättrat hur listningen av Händelsetabellerna listas på rollformuläret. Gäller bara nya rollpersoner från och med denna version.</p>
+    //      </p>           
+    //       `;
+    // }
 
     // if (await CompareVersion(installedVersion, '5.3.1', isDemo)) {
     //      partMessage += `

@@ -414,6 +414,8 @@
             "aktiv": "Aktiv",
             "varaktighet": "Varaktighet",
             "rundorKvar": "Rundor kvar",
+            "rundaEn": "1 runda",
+            "rundorFlera": "{antal} rundor",
             "varaktighetFormel": "Varaktighetsformel",
             "kalla": "Källa",
             "slaVaraktighet": "Slå varaktighet",
@@ -424,6 +426,46 @@
             "ingaEfterverkningarAttApplicera": "Inga efterverkningar att applicera.",
             "ingaEffekter": "Inga effekter.",
             "ingetValt": "Inget valt"
+        },
+        "pafrestning": {
+            "rubrik": "Påfrestning",
+            "chock": "Chockslag",
+            "dod": "Dödsslag",
+            "manuellInfo": "Värden, återhämtning och följder ändras manuellt. Slagknapparna använder påfrestningsvärdet som svårighet.",
+            "svarighetSaknas": "Påfrestningsvärdet måste vara minst 1 för att slå.",
+            "slagtitel": "{slag} – {typ}",
+            "valjSlagmetodTitel": "Välj slag för {typ}",
+            "valjSlagmetodText": "Välj vilken egenskap eller färdighet som används för detta påfrestningsslag.",
+            "valjSlagmetodRegel": {
+                "nedkylning": "Vildmarksvana får användas när nedkylningen sker ute i vildmarken under en längre tid.",
+                "syrebrist": "Simma får användas vid drunkning."
+            },
+            "resultatTitel": "{slag} mot {typ}",
+            "resultatSammanfattning": "{slag}: resultat {resultat} mot svårighet {svarighet} ({typ}).",
+            "manuellHint": "Applicera följden manuellt på rollformuläret.",
+            "typer": {
+                "hunger": "Hunger",
+                "nedkylning": "Nedkylning",
+                "syrebrist": "Syrebrist",
+                "torst": "Törst"
+            },
+            "resultat": {
+                "chock": {
+                    "lyckat": "Chockslaget lyckas: varelsen klarar sig för stunden.",
+                    "misslyckat": "Chockslaget misslyckas."
+                },
+                "dod": {
+                    "lyckat": "Dödsslaget lyckas: varelsen klarar sig för stunden.",
+                    "misslyckat": "Dödsslaget misslyckas: påfrestningen tar varelsen av daga."
+                }
+            },
+            "foljd": {
+                "valjEn": "Välj en av följande tillåtna följder:",
+                "utslagen": "Varelsen blir Utslagen.",
+                "utslagenTvingande": "Varelsen blir Utslagen; vid Syrebrist får Välmående inte sänkas i stället.",
+                "valmaende": "Varelsen får −3 Välmående.",
+                "frostskada": "Frostskada: 1 Sår i en lem. Slå 1T10: 1–3 vänster arm, 4–6 höger arm, 7–8 vänster ben, 9–10 höger ben."
+            }
         },
         "bodyparts": {
             "1": "Ansikte",
@@ -884,7 +926,8 @@
             "attributeEdit": {
                 "headlineGrundegenskap": "GRUNDEGENSKAP",
                 "headlineStrid": "STRID",
-                "headlineHarlettAttribut": "HÄRLETT ATTRIBUT"
+                "headlineHarlettAttribut": "HÄRLETT ATTRIBUT",
+                "hojningar": "Höjningar"
             }
         },
         "settings": {
@@ -919,6 +962,9 @@
             "nej": "Nej",
             "bookMagic": "Magi",
             "bookMagicHint": "Skall systemet använda sig av de regler och tillägg som kom i boken Magi?",
+            "attributHojningKryss": "Antal kryss för attributhöjning",
+            "attributHojningKryssHint": "Hur många kryssrutor som visas när man editerar ett härlett attribut (Eon 5). 0 döljer området.",
+            "attributHojningKryssInvalid": "Antal kryss för attributhöjning måste vara ett icke-negativt heltal (0, 1, 2, …).",
             "weightRules": "Vikt/Belastning",
             "weightRulesHint": "Skall vad man bär på sig utöver rustningar beräknas in i belastning?",
             "hinderenceSkillGroupMovement": "Belastningsavdrag Rörelsefärdigheter",
@@ -926,6 +972,7 @@
             "hinderenceAttributeMovement": "Belastningsavdrag Rörlighet",
             "hinderenceAttributeMovementHint": "Skall färdigheter med attributet Rörlighet få avdrag för belastning automatiskt?",
             "segment": {
+                "attribut": "Attribut",
                 "belastning": "Belastning",
                 "strid": "Strid"
             },

@@ -615,6 +615,13 @@ eon.effektVaraktighet = {
     ingen: "eon.config.effektVaraktighet.ingen"
 };
 
+eon.pafrestningstyper = {
+    hunger: "eon.pafrestning.typer.hunger",
+    nedkylning: "eon.pafrestning.typer.nedkylning",
+    syrebrist: "eon.pafrestning.typer.syrebrist",
+    torst: "eon.pafrestning.typer.torst"
+};
+
 eon.effektTargetExempel = {
     "slag:alla": "eon.config.effektTargetExempel.slagAlla",
     "slag:attribut": "eon.config.effektTargetExempel.slagAttribut",

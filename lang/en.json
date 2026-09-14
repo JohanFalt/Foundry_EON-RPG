@@ -414,6 +414,8 @@
             "aktiv": "Active",
             "varaktighet": "Duration",
             "rundorKvar": "Rounds left",
+            "rundaEn": "1 round",
+            "rundorFlera": "{antal} rounds",
             "varaktighetFormel": "Duration formula",
             "kalla": "Source",
             "slaVaraktighet": "Roll duration",
@@ -424,6 +426,46 @@
             "ingaEfterverkningarAttApplicera": "No after-effects to apply.",
             "ingaEffekter": "No effects.",
             "ingetValt": "Nothing selected"
+        },
+        "pafrestning": {
+            "rubrik": "Strain",
+            "chock": "Shock roll",
+            "dod": "Death roll",
+            "manuellInfo": "Values, recovery, and consequences are changed manually. Roll buttons use the strain value as difficulty.",
+            "svarighetSaknas": "The strain value must be at least 1 to roll.",
+            "slagtitel": "{slag} – {typ}",
+            "valjSlagmetodTitel": "Choose roll for {typ}",
+            "valjSlagmetodText": "Choose which attribute or skill is used for this strain roll.",
+            "valjSlagmetodRegel": {
+                "nedkylning": "Wilderness Lore may be used when hypothermia occurs outdoors over a longer period.",
+                "syrebrist": "Swimming may be used when drowning."
+            },
+            "resultatTitel": "{slag} against {typ}",
+            "resultatSammanfattning": "{slag}: result {resultat} against difficulty {svarighet} ({typ}).",
+            "manuellHint": "Apply the consequence manually on the character sheet.",
+            "typer": {
+                "hunger": "Hunger",
+                "nedkylning": "Hypothermia",
+                "syrebrist": "Oxygen deprivation",
+                "torst": "Thirst"
+            },
+            "resultat": {
+                "chock": {
+                    "lyckat": "The Shock roll succeeds: the creature manages for the moment.",
+                    "misslyckat": "The Shock roll fails."
+                },
+                "dod": {
+                    "lyckat": "The Death roll succeeds: the creature manages for the moment.",
+                    "misslyckat": "The Death roll fails: the strain kills the creature."
+                }
+            },
+            "foljd": {
+                "valjEn": "Choose one of the following permitted consequences:",
+                "utslagen": "The creature becomes Incapacitated.",
+                "utslagenTvingande": "The creature becomes Incapacitated; Oxygen Deprivation does not allow losing Well-being instead.",
+                "valmaende": "The creature loses 3 Well-being.",
+                "frostskada": "Frostbite: 1 Wound in a limb. Roll 1D10: 1–3 left arm, 4–6 right arm, 7–8 left leg, 9–10 right leg."
+            }
         },
         "bodyparts": {
             "1": "Ansikte",
@@ -884,7 +926,8 @@
             "attributeEdit": {
                 "headlineGrundegenskap": "ATTRIBUTE",
                 "headlineStrid": "COMBAT",
-                "headlineHarlettAttribut": "DERIVED ATTRIBUTE"
+                "headlineHarlettAttribut": "DERIVED ATTRIBUTE",
+                "hojningar": "Raises"
             }
         },
         "settings": {
@@ -919,6 +962,9 @@
             "nej": "Nej",
             "bookMagic": "Magi",
             "bookMagicHint": "Skall systemet använda sig av de regler och tillägg som kom i boken Magi?",
+            "attributHojningKryss": "Attribute raise checkboxes",
+            "attributHojningKryssHint": "How many checkboxes to show when editing a derived attribute (Eon 5). 0 hides the area.",
+            "attributHojningKryssInvalid": "Attribute raise checkboxes must be a non-negative integer (0, 1, 2, …).",
             "weightRules": "Weight/Encombrance",
             "weightRulesHint": "Skall vad man bär på sig utöver rustningar beräknas in i belastning?",
             "hinderenceSkillGroupMovement": "Encombrance penalty Movement skills",
@@ -926,6 +972,7 @@
             "hinderenceAttributeMovement": "Encombrance penalty Agility attribute",
             "hinderenceAttributeMovementHint": "Are the skills with the Agility Attribute affected by the encombrance penalty?",
             "segment": {
+                "attribut": "Attributes",
                 "belastning": "Encumbrance",
                 "strid": "Combat"
             },

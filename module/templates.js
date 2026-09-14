@@ -831,6 +831,31 @@ export const RegisterHandlebarsHelpers = function () {
 		return item?.isEon5 === true || EffectHelper.isEon5Item(item);
 	});
 
+	Handlebars.registerHelper("varaktighetText", function(item) {
+		const varaktighet = item?.system?.varaktighet ?? "";
+
+		if ((varaktighet === "") || (varaktighet === "tills_borttagen") || (varaktighet === "ingen")) {
+			return "";
+		}
+
+		// CONFIG.EON.effektVaraktighet är redan lokaliserad vid init (localizeEonConfig)
+		if (varaktighet === "runda") {
+			const rundorKvar = Number(item?.system?.rundorKvar);
+
+			if (!Number.isFinite(rundorKvar)) {
+				return CONFIG.EON.effektVaraktighet.runda ?? "";
+			}
+
+			if (rundorKvar === 1) {
+				return game.i18n.localize("eon.effects.rundaEn");
+			}
+
+			return game.i18n.format("eon.effects.rundorFlera", { antal: rundorKvar });
+		}
+
+		return CONFIG.EON.effektVaraktighet[varaktighet] ?? "";
+	});
+
 	Handlebars.registerHelper("setVariable", function(varName, varValue, options) {
 		options.data.root[varName] = varValue;
 	});
