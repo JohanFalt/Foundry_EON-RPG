@@ -4,8 +4,8 @@
 
 		<header class="sheet-header item-top">
 
-            <div class="item-row">
-                <div class="item-column" style="width: 650px;">
+            <div class="item-row item-sheet-top-row">
+                <div class="item-column item-sheet-main">
                     <div class="tab" data-group="primary" data-tab="values">
                         <div class="item-row">
                             {{> "systems/eon-rpg/templates/items/parts/items-defence-weapon-data.html"}}
@@ -19,7 +19,7 @@
                     </div>
                 </div>
 
-                <div class="pullLeft" style="flex-grow: 1; text-align: right;">
+                <div class="item-sheet-side">
                     {{#if hasActor}}
                         <div class="pointer red item-delete large-icon" data-itemid="{{item._id}}"><i class="icon fa-solid fa-trash-can"></i></div>
                     {{/if}}     

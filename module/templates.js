@@ -5,11 +5,6 @@ import { CombatAttackFlow } from "./combat-attack-flow.js";
 import { dataskapa } from "../data/skapa.js";
 import { datafardigheter } from "../data/fardigheter.js";
 import { data5fardigheter } from "../data/fardigheter.js";
-// import { datavapen } from "../packs/vapen.js";
-// import { data5vapen } from "../packs/vapen_eon5.js";
-// import { datastrid } from "../packs/strid.js";
-// import { datautrustning } from "../packs/utrustning.js";
-// import { datautrustning5 } from "../packs/utrustning5.js";
 import { datavaluta } from "../data/valuta.js";
 
 /**
@@ -144,159 +139,6 @@ export async function Setup() {
         return
     }
 }
-
-// export async function RegisterRollableTables() {
-// 	console.warn("RegisterRollableTables() är depricated och skall inte användas.");
-	
-// 	let stridfolderData = false;
-// 	let skadefolderData = false;
-// 	let vandningfolderData = false;
-
-// 	// skapa mapp-strukturen först strid
-// 	for (const folder of game.folders) {
-// 		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Strid")) {
-// 			stridfolderData = folder;
-// 			break;
-// 		}
-// 	}
-
-// 	if (!stridfolderData) {
-// 		// Create a new Folder
-// 		stridfolderData = await Folder.create({
-// 			name: "[EON] Strid",
-// 			type: "RollTable",
-// 			parent: null,
-// 			sorting: 'm',
-// 			"flags.eon.folderId": "Strid"
-// 		});
-// 	}
-
-// 	// skapa mapp-strukturen först skada
-// 	for (const folder of game.folders) {
-// 		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Skadetabell")) {
-// 			skadefolderData = folder;
-// 			break;
-// 		}
-// 	}
-
-// 	if (!skadefolderData) {
-// 		// Create a new Folder
-// 		skadefolderData = await Folder.create({
-// 			name: "[EON] Skadetabell",
-// 			type: "RollTable",
-// 			parent: null,
-// 			sorting: 'm',
-// 			"flags.eon.folderId": "Skadetabell"
-// 		});
-// 	}
-
-// 	// skapa mapp-strukturen först vändning
-// 	for (const folder of game.folders) {
-// 		if ((folder.type == "RollTable") && (folder.flags?.eon?.folderId == "Vandningstabell")) {
-// 			vandningfolderData = folder;
-// 			break;
-// 		}
-// 	}
-
-// 	if (!vandningfolderData) {
-// 		// Create a new Folder
-// 		vandningfolderData = await Folder.create({
-// 			name: "[EON] Vändningstabell",
-// 			type: "RollTable",
-// 			parent: null,
-// 			sorting: 'm',
-// 			"flags.eon.folderId": "Vandningstabell"
-// 		});
-// 	}
-
-// 	// läs in alla tabellerna
-// 	let data = await FilePicker.browse("data", "systems/eon-rpg/packs/tabeller", { bucket: null, extensions: [".json", ".JSON"], wildcard: false }); 
-
-// 	for (const file of data.files) {
-// 		const fileData = await fetch(`${file}`).then((response) => response.json());
-
-// 		let id = "";
-
-// 		try {
-// 			id = game.settings.get('eon-rpg', fileData.id);
-// 		}
-// 		catch(err) {
-// 			// om tabellen inte har en inställning hoppa över denna (settings.js)
-// 			console.warn(`${fileData.id} finns inte registrerad i systemet`);
-// 			continue;
-// 		}
-
-// 		let folderData = false;
-
-// 		// kontrollera om mappen redan finns
-// 		if (fileData.mapp != "") {
-// 			if (fileData.mapp == "Skadetabell") {
-// 				folderData = skadefolderData;
-// 			}
-// 			if (fileData.mapp == "Strid") {
-// 				folderData = stridfolderData;
-// 			}
-// 			if (fileData.mapp == "Vandningstabell") {
-// 				folderData = vandningfolderData;
-// 			}
-// 		}	
-
-// 		let range = 1;
-
-// 		try {
-// 			range = parseInt(fileData.tabell.results[fileData.tabell.results.length-1].range[1]);
-// 		}
-// 		catch(err) {
-// 			console.error(`Kunde inte läsa in antalet sidor tabellen ${fileData.id} skulle ha`);
-// 			continue;
-// 		}		
-
-// 		if (id == "") {
-// 			let formula = `1d${range}`;
-
-// 			if (fileData.tabell?.formula != undefined) {
-// 				formula = fileData.tabell?.formula;
-// 			}
-
-// 			let tabell = await RollTable.implementation.create({
-// 				name: fileData.tabell.name,
-// 				results: fileData.tabell.results,
-// 				img: fileData.tabell.img,
-// 				description: fileData.tabell.description,
-// 				folder: folderData._id,
-// 				replacement: true,
-// 				displayRoll: true,
-// 				formula: formula
-// 			});
-
-// 			console.log(`Tabell ${fileData.id} skapad ${tabell._id}`);
-// 			await game.settings.set('eon-rpg', fileData.id, tabell._id);
-// 		}
-// 		// kontrollera version på tabellen
-// 		// om tabellen är borttagen OM borttagen skall den läggas till igen?
-// 		else {
-// 			const table = game.tables.find(i => i._id === id);
-
-// 			if ((!table) || (table == undefined)) {
-// 				let tabell = await RollTable.implementation.create({
-// 					name: fileData.tabell.name,
-// 					results: fileData.tabell.results,
-// 					img: fileData.tabell.img,
-// 					description: fileData.tabell.description,
-// 					folder: folderData._id,
-// 					replacement: true,
-// 					displayRoll: true,
-// 					formula: `1d${range}`
-// 				});
-
-// 				console.log(`Tabell ${fileData.id} skapad ${tabell._id}`);		
-// 				await game.settings.set('eon-rpg', fileData.id, tabell._id);
-// 			}			
-// 		}		
-// 	}
-
-// 	//await Macro.implementation.create({});
-// }
 
 export const RegisterHandlebarsHelpers = function () {
 	// Ensure localize is available for all Handlebars templates (e.g. ApplicationV2 combat tracker).
@@ -517,13 +359,17 @@ export const RegisterHandlebarsHelpers = function () {
 		//game.EON.CONFIG.ikoner[icon]
 	});
 
-	// hämtar en särskild räckvidd
+	/**
+	 * Returnerar ALLTID redan översatt display-text (via game.i18n.localize).
+	 * Använd i mallar utan {{localize}}: {{getRange rackviddlista rackvidd}}
+	 * Saknas rackvidd/namn → "".
+	 */
 	Handlebars.registerHelper("getRange", function(rackviddlista, rackvidd) {
 		if (isEmpty(rackvidd) || !rackviddlista?.[rackvidd]?.namn) {
 			return "";
 		}
 
-		return rackviddlista[rackvidd].namn;
+		return game.i18n.localize(rackviddlista[rackvidd].namn);
 	});
 
 	// kontrollerar om en viss egenhet finns i listan
@@ -741,20 +587,25 @@ export const RegisterHandlebarsHelpers = function () {
 		}
 	});
 
+	/**
+	 * Returnerar ALLTID redan översatt display-text (via game.i18n.localize).
+	 * Använd i mallar utan {{localize}}: {{getConfigPropertyName key config}}
+	 * Saknas name → "" ; saknas config/nyckel → localize(name) som fallback.
+	 */
 	Handlebars.registerHelper("getConfigPropertyName", function(name, config) {
 		if (name == undefined) {
-			return name;
+			return "";
 		}
 
 		if (config == undefined) {
-			return name;
+			return game.i18n.localize(name);
 		}
 
 		if (config[name] == undefined) {
-			return name;
+			return game.i18n.localize(name);
 		}
 
-		return config[name];
+		return game.i18n.localize(config[name]);
 	});
 
 	Handlebars.registerHelper("getActorSar", function(actor, key) {
@@ -793,6 +644,11 @@ export const RegisterHandlebarsHelpers = function () {
 		return localized !== key ? localized : "";
 	});
 
+	/**
+	 * Returnerar ALLTID redan översatt display-text (via game.i18n.localize).
+	 * Använd i mallar utan {{localize}}: {{getArmorType armor actorOrEon5}}
+	 * Saknas armor → "" ; saknas material → localize(armor) som fallback.
+	 */
 	Handlebars.registerHelper("getArmorType", function(armor, actorOrEon5) {
 		if (armor == "") {
 			return "";
@@ -802,7 +658,8 @@ export const RegisterHandlebarsHelpers = function () {
 			|| CalculateHelper.isEon5Actor(actorOrEon5);
 		const rustningsmaterial = isEon5 ? CONFIG.EON?.forsvar5?.rustningsmaterial : CONFIG.EON?.forsvar?.rustningsmaterial;
 		const entry = rustningsmaterial?.[armor];
-		return entry?.namn ?? armor;
+
+		return game.i18n.localize(entry?.namn) ?? game.i18n.localize(armor);
 	});
 
 	Handlebars.registerHelper("propertyTrueInList", function(list, property) {
@@ -977,12 +834,17 @@ export const RegisterHandlebarsHelpers = function () {
 		return "";
 	});
 
+	/**
+	 * Returnerar ALLTID redan översatt display-text (via game.i18n.localize).
+	 * Använd i mallar utan {{localize}}: {{getEquipmentGroupName groupid}}
+	 * Saknas groupid → "".
+	 */
 	Handlebars.registerHelper("getEquipmentGroupName", function(groupid) {
 		if ((groupid == "") || (groupid == undefined)) {
 			return "";
 		}
 
-		return CONFIG.EON.utrustningsgrupper[groupid];
+		return game.i18n.localize(CONFIG.EON.utrustningsgrupper[groupid]);
 	});
 
 	Handlebars.registerHelper("getCurrencyList", function() {

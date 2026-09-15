@@ -171,22 +171,6 @@ export const updateActor = async function(actor, config, systemVersion) {
             }
         }
 
-        // Behövs inte för närvarande
-        // if (actor.type === "Rollperson5" || actor.type === "Motstandare5") {
-        //     const pafrestning = actor._source?.system?.skada?.pafrestning;
-        //     const pafrestningstyper = ["hunger", "nedkylning", "syrebrist", "torst"];
-        //     const saknarPafrestning = !pafrestning
-        //         || pafrestningstyper.some((typ) => !Number.isFinite(Number(pafrestning[typ])));
-
-        //     if (saknarPafrestning) {
-        //         updateData.system.skada = updateData.system.skada ?? {};
-        //         updateData.system.skada.pafrestning = Object.fromEntries(
-        //             pafrestningstyper.map((typ) => [typ, Math.max(0, Number(pafrestning?.[typ]) || 0)])
-        //         );
-        //         update = true;
-        //     }
-        // }
-
         if (update) {
             await actor.update(updateData);
             update = false;
@@ -412,88 +396,7 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
 
     let headMessage = "";
     let partMessage = "";
-    let futureMessage = "";    
-
-    // if (await CompareVersion(installedVersion, '4.0.0', isDemo)) {
-    //     headMessage += `
-    //     <p><ul style="margin-top: 0">
-    //         <li>Stöd för Foundry v13</li>
-    //         <li>Eon 5 rollformulär</li>
-    //         <li>Tillägg till Eon IV kompendium:<br />
-    //             Utrustning<br />
-    //             Folkslag<br />
-    //             Folkslags egenskaper<br />
-    //             Språk
-    //         </li>
-    //         <li>Dra föremål mellan rollformulär</li>
-    //         <li>Väskor och behållare</li>
-    //         <li>Manuell sortering av Utrustningslistan på namn och typ.</li>
-    //         <li>Folkslag lagrar nu de egenskaper som folkslaget har samt de språk de talar. Dessa läggs till automatiskt till formuläret när Folkslaget läggs till.</li>
-    //         <li>I lite mer detalj: <a href="https://github.com/JohanFalt/Foundry_EON-RPG/milestone/8?closed=1">v4.0</a></li>
-    //     </ul></p>     
-    //     `;
-    //     partMessage += `
-    //     <h4>Eon 5 rollformulär</h4>  
-    //     <p>Lagt till en beta-version av ett nytt Eon 5 rollformulär, finns också en världsinställning vilken version av Eon man spelar som fasställer vilken typ av Rollformulär (bl a) som är förvalt när man skapar en ny Actor.</p>
-
-    //     <h4>Dra föremål mellan rollformulär</h4>
-    //     <p>Man kan nu dra utrustning, vapen, rustningar och förvaringsutrustning mellan rollformulärer. Dessa läggs då till på det nya formuläret och tas bort från det ursprungliga. Fungerar mellan Eon 4 och Eon 5 rollformuläret.</p>
-
-    //     <h4>Väskor och behållare</h4>
-    //     <p>Man kan sätta en utrustning så den blir Förvaring, alltså en behållare att lägga annan utrustning i. Detta gör man med drag and drop. Du sätter egenskapen Förvaring på föremålet du vill ha som förvaring därefter drar den utrustning du vill förvara i den till den.</p>
-    //     `;
-    // }
-
-    // if (await CompareVersion(installedVersion, '5.0.0', isDemo)) {
-    //     headMessage += `
-    //     <p><ul style="margin-top: 0">
-    //         <li>Skapat ett Eon V kompendium</li>
-    //         <li>Tillägg till Eon V kompendium:<br />
-    //             Nästridsvapen<br />
-    //             Avståndsvapen<br />
-    //             Sköldar
-    //         </li>
-    //         <li>Skapat en intern stridsmodul för att hantera turordning i strid. Denna är i beta för närvarande.</li>
-    //     </ul></p>     
-    //     `;
-    //     partMessage += `
-    //     <h4>Eon stridsmodul</h4>  
-    //     <p>Denna modulen hanterar turordningen i strid. Den är för närvarande i beta och kan användas som ett alternativ till Foundrys inbyggda stridsmodul.</p>
-    //     `;
-    // }
-
-    // if (await CompareVersion(installedVersion, '5.1.0', isDemo)) {
-    //      partMessage += `
-    //      <p>
-    //          <p>Uppdaterade Eon 5 kompendiumet och lade till Utrustning.</p>
-    //          <p>Uppdaterat utseendet på Stridshanteraren, ikonknappar och mer kompakt utseende.</p>
-    //          <p>Rättade några föremål i Eon 4 kompendiumet.</p>             
-    //          <p>Fixat några darkmode fel.</p>
-    //      </p>           
-    //      `;
-    // }
-
-    // if (await CompareVersion(installedVersion, '5.2.0', isDemo)) {
-    //     headMessage += `
-    //     <p><ul style="margin-top: 0">
-    //         <li>Översättning till engelska</li
-    //         <li>Lagt till Hjälpformuläret från Eon 5 vid skapande av rollperson</li>
-    //         <li>Tillägg till Eon V kompendium:<br />
-    //             Folkslag<br />
-    //             Folkslagsegenskaper<br />
-    //             Språk<br />
-    //             Utrustningspaket under Utrustning/paket
-    //         </li>
-            
-    //     </ul></p>     
-    //     `;
-    //     partMessage += `
-    //     <h4>Eon 5 Hjälpformulär</h4>  
-    //     <p>Denna modulen startar upp när ett Eon 5 rollformulär skapas.</p>
-    //     <h4>Engelsk översättning</h4>  
-    //     <p>Systemet finns nu på engelska, vilket språk (svenska/engelska) man vill använda bestämmer respektive användare i Foundry inställningarna.</p>
-    //     `;
-    // }    
+    let futureMessage = "";   
 
     if (await CompareVersion(installedVersion, '5.3.0', isDemo)) {
         headMessage += `
@@ -556,6 +459,13 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         `;
     }
 
+    if (await CompareVersion(installedVersion, '5.5.2', isDemo)) {
+        partMessage += `
+        <h4>Småbuggar (Eon 5)</h4>
+        <p>Fixat lite grafikproblem och översättningsfel.</p>
+         `;
+   }
+
     if (await CompareVersion(installedVersion, '5.5.1', isDemo)) {
          partMessage += `
          <h4>Påfrestningsskador (Eon 5)</h4>
@@ -564,25 +474,6 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
          <p>Enligt reglerna finns det en gräns hur många höjningar man kan göra på ett attribut, dessa kan nu markeras när man editerar ett attribut. Har även lagt till en inställning i Världsinställningarna som bestämmer hur många höjningar man kan göra på ett attribut. Markeringarna är enbart visning och stöd, ej en inbyggd gräns.</p>
           `;
     }
-
-    // if (await CompareVersion(installedVersion, '5.4.1', isDemo)) {
-    //      partMessage += `
-    //      <p>
-    //          <p>Fixat till grafiken i chattrutorna.</p>
-    //          <p>Hanterat så att varje spelare fastställer sitt språk första gången de loggar in och därefter håller sig Foundry till detta. Finns som inte ställning i Världsinställningarna ifall man vill ändra detta i efterhand.</p>
-    //          <p>Eon 5: Förbättrat hur listningen av Händelsetabellerna listas på rollformuläret. Gäller bara nya rollpersoner från och med denna version.</p>
-    //      </p>           
-    //       `;
-    // }
-
-    // if (await CompareVersion(installedVersion, '5.3.1', isDemo)) {
-    //      partMessage += `
-    //      <p>
-    //          <p>Fixat översättningar i världsinställningarna.</p>
-    //          <p>Fixat ett fel där man inte kunde spara eon inställningarna för världen.</p>
-    //      </p>           
-    //       `;
-    // }
 
     if (partMessage == "") {
         return;

@@ -75,7 +75,7 @@
                     {{/if}}
                 </div>
                 <div class="item-listbox centerText" style="width: 70px;">{{getDiceValue vapen.system.skada}} {{{getWeaponDamageType vapen.system.skadetyp}}}</div>
-                <div class="item-listbox centerText" style="width: 90px;">{{localize (getRange @root.EON.CONFIG.vapenavstand vapen.system.rackvidd)}}</div>
+                <div class="item-listbox centerText" style="width: 90px;">{{getRange @root.EON.CONFIG.vapenavstand vapen.system.rackvidd}}</div>
                 <div class="item-listbox" title="{{getPropertyList vapen.system.egenskaper}}">{{shorten (getPropertyList vapen.system.egenskaper) 40 false}}</div>
             </div>
         {{/each}}

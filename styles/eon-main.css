@@ -359,6 +359,23 @@
     padding-right: 8px;
 }
 
+/* Håll ta bort-ikon + sidrubrik uppe till höger (wrappa inte under innehållet) */
+.EON.itemsheet .item-sheet-top-row {
+    flex-wrap: nowrap;
+    align-items: flex-start;
+}
+
+.EON.itemsheet .item-sheet-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
+}
+
+.EON.itemsheet .item-sheet-side {
+    flex: 0 0 auto;
+    text-align: right;
+}
+
 .EON .sheet-character,
 .EON.sheet-character,
 .EON .sheet-item {
@@ -1000,9 +1017,10 @@
 }
 
 .EON .item-listbox img {
-  height: 15px;                /* Justera beroende på ikonstorlek */
+  height: 15px;
   width: auto;
-  display: block;              /* Ta bort extra utrymme under bilden */
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .EON .centerText .img-icon {

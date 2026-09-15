@@ -30,7 +30,7 @@
             <div class="item-listbox centerText" style="width: 75px;">{{getDiceValue (getActorSkillGroupValue ../actor vapen.system.grupp "strid")}}</div>
             <div class="item-listbox centerText" style="width: 70px;">{{getDiceValue vapen.system.skada}} {{{getWeaponDamageType vapen.system.skadetyp}}}</div>
 
-            <div class="item-listbox centerText" style="width: 90px;">{{localize (getRange ../EON.CONFIG.vapenavstand vapen.system.rackvidd)}}</div>
+            <div class="item-listbox centerText" style="width: 90px;">{{getRange ../EON.CONFIG.vapenavstand vapen.system.rackvidd}}</div>
             <div class="item-listbox centerText" style="width: 70px;">
                 <i class="fa-solid fa-square-plus green pointer weapon-count" data-action="increase" data-itemid="{{vapen._id}}"></i>
                 <span class="number-of-text">{{vapen.system.antal}}</span>

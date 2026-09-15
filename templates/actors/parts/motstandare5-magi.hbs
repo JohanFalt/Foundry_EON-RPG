@@ -24,7 +24,7 @@
                     </a>
                 </div>
                 <div class="item-listbox vrollable" style="width: 175px;" data-action="rollDialog" data-source="spell" data-item-id="{{kraft._id}}">{{kraft.name}}</div>
-                <div class="item-listbox" style="width: 75px;">{{localize (getConfigPropertyName kraft.system.aspekt @root.EON.CONFIG.aspekter)}}</div>
+                <div class="item-listbox" style="width: 75px;">{{getConfigPropertyName kraft.system.aspekt @root.EON.CONFIG.aspekter}}</div>
                 <div class="item-listbox centerText" style="width: 80px;">{{kraft.system.svarighet}}</div>
                 <div class="item-listbox" style="width: 140px;">{{shorten (getSpellSetting kraft "omfang") 15 false}}</div>
                 <div class="item-listbox" style="width: 140px;">{{shorten (getSpellSetting kraft "rackvidd") 15 false}}</div>
