@@ -2515,6 +2515,68 @@ input.skill-value {
     padding: 2px 0;
 }
 
+.EON.eon-weapon-roll-dialog .eon-wr-panel--overtag {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-overtag-row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 6px 8px;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-overtag-label {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-overtag-btn {
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    width: 28px;
+    min-width: 28px;
+    max-width: 28px;
+    height: 28px;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-overtag-value {
+    flex: 0 0 auto;
+    min-width: 1.25em;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-overtag-hint {
+    flex: 0 0 auto;
+    margin-left: 2px;
+    opacity: 0.9;
+    white-space: nowrap;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-overtag-toggle {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 100%;
+    margin: 0;
+    height: 30px;
+    padding: 0 10px;
+}
+
+.EON.eon-weapon-roll-dialog .eon-wr-overtag-select {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 7em;
+    max-width: 12em;
+    margin: 0;
+    height: 28px;
+}
+
 .EON.eon-weapon-roll-dialog .eon-wr-footer {
     display: flex;
     gap: 10px;
