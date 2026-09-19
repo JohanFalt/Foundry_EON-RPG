@@ -572,6 +572,49 @@ export default class EffectHelper {
     }
 
     /**
+     * Statusrader för slagdialoger (samma stil som Smärta: "Källa (−1T6)").
+     * @param {object[]} effects
+     * @returns {{ text: string, warning: boolean }[]}
+     */
+    static listEffectStatusItems(effects) {
+        if (!effects?.length) return [];
+
+        const items = [];
+        for (const effect of effects) {
+            if (this.#isNoopEffect(effect)) continue;
+
+            const source = effect.sourceName || game.i18n.localize("eon.effects.okandKalla");
+            const automated = AUTOMATED_EFFECT_TYPES.has(effect.typ);
+            const valueText = String(this.#formatEffectValue(effect)).replace(/-/g, "−");
+            const suffix = automated
+                ? ""
+                : ` (${game.i18n.localize("eon.effects.ejAutomatiserad")})`;
+
+            items.push({
+                text: `${source} (${valueText})${suffix}`,
+                warning: this.#isNegativePoolEffect(effect)
+            });
+        }
+        return items;
+    }
+
+    /**
+     * @param {object} effect
+     * @returns {boolean}
+     */
+    static #isNegativePoolEffect(effect) {
+        const typ = effect?.typ || "tvarde";
+        if (typ !== "tvarde" && typ !== "skadebonus") return false;
+
+        const mode = effect.mode || "add";
+        const t = Number(effect.tvarde ?? 0);
+        const b = Number(effect.bonus ?? 0);
+        if (mode === "subtract") return t > 0 || b > 0;
+        if (mode === "override") return false;
+        return t < 0 || b < 0;
+    }
+
+    /**
      * Bygg slagkontext för attributslag. Slagtypen styrs av en stabil nyckel
      * (t.ex. "chock"), inte av den lokaliserade rubriken.
      * @param {Actor} actor
@@ -669,18 +712,33 @@ export default class EffectHelper {
     }
 
     /**
-     * Ta bort Skada/tillstånd med varaktighet nasta_aktiva_fas för en actor.
+     * Minska rundorKvar på Skada/tillstånd med varaktighet nasta_aktiva_fas;
+     * tas bort vid 0. Anropas vid skifte mellan stridsfaser (inte per tur).
+     * Saknas eller ogiltigt rundorKvar räknas som 1.
      * @param {Actor} actor
      */
-    static async clearNextActivePhase(actor) {
+    static async tickPhaseDurations(actor) {
         if (!actor || !this.isEon5(actor)) return;
-        const ids = actor.items
-            .filter((i) =>
-                this.isSkadaEffectItem(i)
-                && i.system?.varaktighet === "nasta_aktiva_fas"
-            )
-            .map((i) => i.id);
-        if (ids.length) await actor.deleteEmbeddedDocuments("Item", ids);
+
+        const updates = [];
+        const deletions = [];
+
+        for (const item of actor.items) {
+            if (!this.isSkadaEffectItem(item)) continue;
+            if (item.system?.varaktighet !== "nasta_aktiva_fas") continue;
+
+            const raw = Number(item.system.rundorKvar);
+            const kvar = Number.isFinite(raw) ? raw : 1;
+
+            if (kvar <= 1) {
+                deletions.push(item.id);
+            } else {
+                updates.push({ _id: item.id, "system.rundorKvar": kvar - 1 });
+            }
+        }
+
+        if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
+        if (deletions.length) await actor.deleteEmbeddedDocuments("Item", deletions);
     }
 
     /**

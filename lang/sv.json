@@ -328,7 +328,7 @@
             "effektVaraktighet": {
                 "permanent": "Permanent",
                 "runda": "Runda",
-                "nasta_aktiva_fas": "Till nästa aktiva fas",
+                "nasta_aktiva_fas": "Till nästa stridsfasskifte",
                 "scen": "Scen",
                 "dygn": "Dygn",
                 "handelse": "Omvälvande/livsavgörande händelse",
@@ -1008,6 +1008,9 @@
             "valjFas": "Välj fas först.",
             "valjNarstridsfas": "Välj närstridsfas först.",
             "allaMasteValjaFas": "Alla combatants måste välja fas först.",
+            "besegradIntInitiativ": "Besegrad/ute slår inte initiativ.",
+            "valjFasForstInitiativ": "Välj fas först.",
+            "allaMasteValjaFasInitiativ": "Alla combatants måste välja fas innan initiativ kan slås.",
             "lamnaDelstridForst": "Lämna delstrid först om du vill välja andra motståndare.",
             "ingaAndraDeltagare": "Inga andra deltagare att välja.",
             "ingaGiltigaMotstandare": "Inga giltiga motståndare i närstrid att välja.",
@@ -1092,6 +1095,20 @@
             "damageResultHint": "Applicera ovan manuellt på rollformuläret.",
             "damageResultChockslagHeader": "Chockslag",
             "damageResultChockslag": "Utmattning ökade av skadan → slå Livskraft mot {totalUtmattning} i slutet av fasen."
+        },
+        "overtag": {
+            "panel": "Övertag",
+            "kvar": "kvar",
+            "okaskada": "Öka skada",
+            "bonus": "bonus",
+            "finnablotta": "Finna blotta",
+            "precision": "Precision",
+            "finnablottaHjalp": "Skadan reduceras endast av försvararens Grundrustning.",
+            "precisionHjalp": "Välj kroppsdel att träffa istället för slagen träffplats.",
+            "chatOkaskada": "Öka skada (+{bonus})",
+            "chatFinnablotta": "Finna blotta",
+            "chatPrecision": "Precision: {del}",
+            "chatKvar": "{antal} övertag ej spenderade"
         },
         "roll": {
             "slar": "Slår {dice}",

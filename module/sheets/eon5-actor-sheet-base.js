@@ -4,6 +4,7 @@ import DialogHelper from "../dialog-helper.js";
 import EffectHelper from "../effect-helper.js";
 import {
     onAttributeEdit,
+    onEditImage,
     onItemActive,
     onItemCreate,
     onItemDelete,
@@ -50,6 +51,7 @@ export default class Eon5ActorSheetBase extends HandlebarsApplicationMixin(found
             height: 720
         },
         actions: {
+            editImage: onEditImage,
             itemCreate: onItemCreate,
             itemEdit: onItemEdit,
             itemDelete: onItemDelete,

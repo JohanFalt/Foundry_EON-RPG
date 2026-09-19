@@ -700,7 +700,7 @@ export const RegisterHandlebarsHelpers = function () {
 			const rundorKvar = Number(item?.system?.rundorKvar);
 
 			if (!Number.isFinite(rundorKvar)) {
-				return CONFIG.EON.effektVaraktighet.runda ?? "";
+				return game.i18n.localize(CONFIG.EON.effektVaraktighet.runda) ?? "";
 			}
 
 			if (rundorKvar === 1) {
@@ -710,7 +710,7 @@ export const RegisterHandlebarsHelpers = function () {
 			return game.i18n.format("eon.effects.rundorFlera", { antal: rundorKvar });
 		}
 
-		return CONFIG.EON.effektVaraktighet[varaktighet] ?? "";
+		return game.i18n.localize(CONFIG.EON.effektVaraktighet[varaktighet]) ?? "";
 	});
 
 	Handlebars.registerHelper("setVariable", function(varName, varValue, options) {

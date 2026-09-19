@@ -187,6 +187,13 @@ export class AttributeRoll {
         return this.#_harSmarta;
     }
 
+    get effektStatusLista() {
+        if (!this.actor?.isEon5) return [];
+        const context = EffectHelper.buildAttributeContext(this.actor, this.key, this.rollKey);
+        const effects = EffectHelper.getMatchingEffects(this.actor, context, { types: ["tvarde"] });
+        return EffectHelper.listEffectStatusItems(effects);
+    }
+
     get harSar() {
         return this.#_harSar;
     }
@@ -649,6 +656,11 @@ export class SkillRoll {
 
     get harSmarta() {
         return this.#_harSmarta;
+    }
+
+    get effektStatusLista() {
+        if (!this.actor?.isEon5) return [];
+        return EffectHelper.listEffectStatusItems(this.getMatchedEffects(["tvarde"]));
     }
 
     get harSar() {

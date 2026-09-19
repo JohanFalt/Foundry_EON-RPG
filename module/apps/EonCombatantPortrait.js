@@ -47,13 +47,13 @@ export class EonCombatantPortrait {
         const defeated = this.isDefeated;
 
         let rollInitiativeDisabledReason = "";
-        if (defeated) rollInitiativeDisabledReason = "Besegrad/ute slår inte initiativ.";
-        else if (!phaseSelected) rollInitiativeDisabledReason = "Välj fas först.";
-        else if (this.interactionsLocked) rollInitiativeDisabledReason = "Alla combatants måste välja fas först.";
-        else if (isDefender) rollInitiativeDisabledReason = "Försvarare slår inte initiativ separat i delstrid.";
+        if (defeated) rollInitiativeDisabledReason = game.i18n.localize("eon.combat.besegradIntInitiativ");
+        else if (!phaseSelected) rollInitiativeDisabledReason = game.i18n.localize("eon.combat.valjFasForstInitiativ");
+        else if (this.interactionsLocked) rollInitiativeDisabledReason = game.i18n.localize("eon.combat.allaMasteValjaFasInitiativ");
 
         const canRollInitiativeAction = phaseSelected && !isDefender && !defeated;
-        const showInitiativeButton = phaseSelected && !defeated;
+        // Försvarare i delstrid slår inte initiativ separat – knappen döljs helt för dem.
+        const showInitiativeButton = phaseSelected && !defeated && !isDefender;
         const canUseRoleActions = isClose && !this.interactionsLocked && !defeated;
         const notInSubcombat = this.groupId === "main";
         const groupHasAttacker = notInSubcombat || (this.tracker?.combat?.combatants?.contents?.some(
@@ -79,7 +79,7 @@ export class EonCombatantPortrait {
             phase: this.phase,
             phaseLabel,
             role: this.role,
-            initiative: Number(this.combatant?.initiative ?? 0),
+            initiativeDisplay: this.flags.initiativeBase != null ? String(Number(this.flags.initiativeBase)) : "–",
             groupId: this.groupId,
             roleLabel: this.roleLabel,
             pendingTargetsCount: this.pendingTargets.length,

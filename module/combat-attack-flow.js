@@ -453,7 +453,7 @@ export class CombatAttackFlow {
      * @returns {boolean}
      */
     static isPlayerCharacter(actor) {
-        const actorType = actor?.type?.toLowerCase?.()?.replace?.(" ", "") ?? "";
+        const actorType = actor?.type?.toLowerCase?.()?.replace?.(/\s+/g, "") ?? "";
         return actorType === "rollperson" || actorType === "rollperson5";
     }
 
@@ -463,7 +463,7 @@ export class CombatAttackFlow {
      * @returns {boolean}
      */
     static isFolkslagActor(actor) {
-        const actorType = actor?.type?.toLowerCase?.()?.replace?.(" ", "") ?? "";
+        const actorType = actor?.type?.toLowerCase?.()?.replace?.(/\s+/g, "") ?? "";
         return actorType === "rollperson" || actorType === "rollperson5" || actorType === "motstandare5";
     }
 
@@ -602,7 +602,8 @@ export class CombatAttackFlow {
                     defenderName: attackFlags.defenderName,
                     hitLocationMessageId: message.id,
                     weaponFattning: attackFlags.weaponFattning ?? null,
-                    weaponAttackType: attackFlags.weaponAttackType ?? null
+                    weaponAttackType: attackFlags.weaponAttackType ?? null,
+                    overtag: attackFlags.overtag ?? 0
                 };
             }
         }

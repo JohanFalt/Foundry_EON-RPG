@@ -43,7 +43,7 @@
                 <button type="button" data-action="roll-initiative" data-combatant-id="{{id}}" {{#unless canRollInitiativeAction}}disabled{{/unless}} title="{{#if canRollInitiativeAction}}{{localize 'eon.dialogs.slaInitiativ'}}{{else}}{{rollInitiativeDisabledReason}}{{/if}}" class="portrait-initiative-btn {{#if canRollInitiativeAction}}needs-roll{{/if}}" aria-label="{{localize 'eon.dialogs.slaInitiativ'}}"><i class="fa-light fa-dice"></i></button>
                 {{/if}}
                 <div class="portrait-meta">
-                    <span>{{localize "eon.combat.init"}}: {{initiative}}</span>
+                    <span>{{localize "eon.combat.init"}}: {{initiativeDisplay}}</span>
                     {{#if phaseLabel}}<span>{{localize "eon.combat.fas"}}: {{localize phaseLabel}}</span>{{/if}}
                     {{#if roleLabel}}<span>{{localize "eon.combat.delstrid"}} - {{localize roleLabel}}</span>{{/if}}
                     {{#if pendingTargetsCount}}<span>{{localize "eon.combat.valdaMotstandare"}}: {{pendingTargetsCount}}</span>{{/if}}

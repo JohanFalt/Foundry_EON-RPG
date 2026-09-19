@@ -64,12 +64,16 @@ export class DialogPickFardighet extends HandlebarsApplicationMixin(ApplicationV
                 }
 
                 const version = game.system.version;
+                // Motståndare ska kunna ta bort tillagda färdigheter (kantabort).
+                // Rollperson/rollperson5 använder SkapaFardigheter med tabort=false.
                 const itemData = await CreateHelper.SkapaFardighetItem(
                     this.actor,
                     this.selectedGroup,
                     fardighet,
                     nyckel,
-                    version
+                    version,
+                    true,
+                    true
                 );
                 const created = await this.actor.createEmbeddedDocuments("Item", [itemData]);
                 const itemId = created?.[0]?.id;

@@ -528,12 +528,15 @@ export class CombatAttackChat {
         }
         roll.setCombatmode("damage");
         roll.restoreAttackType(flags.weaponAttackType);
+
+        const overtag = Number(flags.overtag ?? 0);
         const dialog = new DialogWeaponRoll(attacker, roll);
         dialog._combatAttackFlow = {
             flowId: flags.attackFlowId,
             defenderActorId: flags.defenderActorId,
             defenderName: flags.defenderName,
-            hitLocationMessageId: carrierMessage.id
+            hitLocationMessageId: carrierMessage.id,
+            overtag
         };
         await dialog.render(true);
     }
@@ -554,12 +557,13 @@ export class CombatAttackChat {
     }
 
     /**
-     * Samla alla matchande utmattningseffekter från anfallaren och det använda vapnet.
-     * Regelmotorn bryr sig inte om effektens eller källans namn.
-     * @param {object} flags
+     * Gemensam hjälpfunktion: samla matchande effekter från anfallaren och dennes vapen.
+     * @param {object} flags            - Chattmeddelandets EON-flaggor
+     * @param {string[]} types          - Effekttyper att matcha (t.ex. ["rustning"])
+     * @param {object} [extraContext]   - Extra fält att slå ihop med bas-kontexten
      * @returns {Promise<object[]>}
      */
-    static async _collectDamageUtmattningEffects(flags) {
+    static async _collectEffectsOfType(flags, types, extraContext = {}) {
         const attacker = game.actors.get(flags?.attackerActorId);
         if (!attacker?.isEon5) return [];
 
@@ -571,42 +575,31 @@ export class CombatAttackChat {
             fattning: flags.weaponFattning || "",
             taktik: flags.weaponAttackType || "",
             orustad: this._isDefenderUnarmored(flags),
-            mal: "aktor"
+            mal: "aktor",
+            ...extraContext
         });
 
-        return EffectHelper.getMatchingEffects(attacker, context, {
-            types: ["utmattning"],
-            extraEffects: weaponEffects
-        });
+        return EffectHelper.getMatchingEffects(attacker, context, { types, extraEffects: weaponEffects });
+    }
+
+    /**
+     * Samla alla matchande utmattningseffekter från anfallaren och det använda vapnet.
+     * @param {object} flags
+     * @returns {Promise<object[]>}
+     */
+    static async _collectDamageUtmattningEffects(flags) {
+        return this._collectEffectsOfType(flags, ["utmattning"]);
     }
 
     /**
      * Samla matchande rustningseffekter (t.ex. Genomslag) från anfallaren och vapnet.
-     * Skadetypen avgör vilka effekter som gäller; namnet på källan spelar ingen roll.
+     * Skadetypen avgör vilka effekter som gäller.
      * @param {object} flags
      * @param {string} damageType
      * @returns {Promise<object[]>}
      */
     static async _collectDamageRustningEffects(flags, damageType) {
-        const attacker = game.actors.get(flags?.attackerActorId);
-        if (!attacker?.isEon5) return [];
-
-        const weapon = flags.weaponItemId ? attacker.items.get(flags.weaponItemId) : null;
-        const weaponEffects = weapon
-            ? await EffectHelper.collectWeaponEffects(weapon, attacker)
-            : [];
-        const context = EffectHelper.buildWeaponContext(attacker, weapon, "skada", {
-            fattning: flags.weaponFattning || "",
-            taktik: flags.weaponAttackType || "",
-            skadetyp: damageType || "",
-            orustad: this._isDefenderUnarmored(flags),
-            mal: "aktor"
-        });
-
-        return EffectHelper.getMatchingEffects(attacker, context, {
-            types: ["rustning"],
-            extraEffects: weaponEffects
-        });
+        return this._collectEffectsOfType(flags, ["rustning"], { skadetyp: damageType || "" });
     }
 
     /**
@@ -615,51 +608,16 @@ export class CombatAttackChat {
      * @returns {Promise<object[]>}
      */
     static async _collectAllvarligTableEffects(flags) {
-        const attacker = game.actors.get(flags?.attackerActorId);
-        if (!attacker?.isEon5) return [];
-
-        const weapon = flags.weaponItemId ? attacker.items.get(flags.weaponItemId) : null;
-        const weaponEffects = weapon
-            ? await EffectHelper.collectWeaponEffects(weapon, attacker)
-            : [];
-        const context = EffectHelper.buildWeaponContext(attacker, weapon, "skada", {
-            fattning: flags.weaponFattning || "",
-            taktik: flags.weaponAttackType || "",
-            orustad: this._isDefenderUnarmored(flags),
-            mal: "aktor"
-        });
-
-        return EffectHelper.getMatchingEffects(attacker, context, {
-            types: ["skadetabell"],
-            extraEffects: weaponEffects
-        });
+        return this._collectEffectsOfType(flags, ["skadetabell"]);
     }
 
     /**
-     * Samla effekter som ändrar själva tabellslaget vid allvarlig skada (t.ex. Sargande X).
+     * Samla effekter som ändrar tabellslaget vid allvarlig skada (t.ex. Sargande X).
      * @param {object} flags
      * @returns {Promise<object[]>}
      */
     static async _collectAllvarligTableBonusEffects(flags) {
-        const attacker = game.actors.get(flags?.attackerActorId);
-        if (!attacker?.isEon5) return [];
-
-        const weapon = flags.weaponItemId ? attacker.items.get(flags.weaponItemId) : null;
-        const weaponEffects = weapon
-            ? await EffectHelper.collectWeaponEffects(weapon, attacker)
-            : [];
-        const context = EffectHelper.buildWeaponContext(attacker, weapon, "skada", {
-            fattning: flags.weaponFattning || "",
-            taktik: flags.weaponAttackType || "",
-            skadetyp: flags.damageType || "",
-            orustad: this._isDefenderUnarmored(flags),
-            mal: "aktor"
-        });
-
-        return EffectHelper.getMatchingEffects(attacker, context, {
-            types: ["tabellbonus"],
-            extraEffects: weaponEffects
-        });
+        return this._collectEffectsOfType(flags, ["tabellbonus"], { skadetyp: flags.damageType || "" });
     }
 
     /**
@@ -668,25 +626,7 @@ export class CombatAttackChat {
      * @returns {Promise<object[]>}
      */
     static async _collectAllvarligBlockEffects(flags) {
-        const attacker = game.actors.get(flags?.attackerActorId);
-        if (!attacker?.isEon5) return [];
-
-        const weapon = flags.weaponItemId ? attacker.items.get(flags.weaponItemId) : null;
-        const weaponEffects = weapon
-            ? await EffectHelper.collectWeaponEffects(weapon, attacker)
-            : [];
-        const context = EffectHelper.buildWeaponContext(attacker, weapon, "skada", {
-            fattning: flags.weaponFattning || "",
-            taktik: flags.weaponAttackType || "",
-            skadetyp: flags.damageType || "",
-            orustad: this._isDefenderUnarmored(flags),
-            mal: "aktor"
-        });
-
-        return EffectHelper.getMatchingEffects(attacker, context, {
-            types: ["allvarlig"],
-            extraEffects: weaponEffects
-        });
+        return this._collectEffectsOfType(flags, ["allvarlig"], { skadetyp: flags.damageType || "" });
     }
 
     /**
@@ -912,13 +852,14 @@ export class CombatAttackChat {
     }
 
     /**
-     * Efter skadeslag: beräkna rustning och slutskada på träffplats-meddelande.
+     * Beräknar och lagrar slutgiltigt skaderesultat på ett träffplatsmeddelande.
      * @param {string} hitLocationMessageId
      * @param {number} rawDamage
      * @param {string} damageType
-     * @param {number|null} [allvarligBaseRoll]
+     * @param {number|null} allvarligBaseRoll
+     * @param {{ finnablotta?: boolean }} [options]
      */
-    static async attachDamageCalculation(hitLocationMessageId, rawDamage, damageType, allvarligBaseRoll = null) {
+    static async attachDamageCalculation(hitLocationMessageId, rawDamage, damageType, allvarligBaseRoll = null, { finnablotta = false } = {}) {
         const msg = game.messages.get(hitLocationMessageId);
         if (!msg) return null;
         const flags = msg.flags?.[EON_ATTACK_FLAG];
@@ -928,7 +869,12 @@ export class CombatAttackChat {
         const body = CombatAttackFlow.resolveBodyPartFromFlags(flags);
         const bodyKey = body.key;
         const dtype = damageType || "hugg";
-        const baseArmor = CombatAttackFlow.getArmorProtection(defender, bodyKey, dtype);
+
+        // Finna blotta: rustningen reduceras endast av försvararens Grundrustning
+        // (dvs. buren rustning ignoreras).
+        const baseArmor = finnablotta
+            ? Number(defender?.system?.harleddegenskaper?.grundrustning?.totalt ?? 0)
+            : CombatAttackFlow.getArmorProtection(defender, bodyKey, dtype);
         const rustningEffects = await this._collectDamageRustningEffects(flags, dtype);
         const rustning = EffectHelper.applyRustningEffects(baseArmor, rustningEffects);
         const armor = rustning.value;

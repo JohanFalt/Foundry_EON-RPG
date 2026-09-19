@@ -328,7 +328,7 @@
             "effektVaraktighet": {
                 "permanent": "Permanent",
                 "runda": "Round",
-                "nasta_aktiva_fas": "Until next active phase",
+                "nasta_aktiva_fas": "Until next combat phase change",
                 "scen": "Scene",
                 "dygn": "Day",
                 "handelse": "Major/life-changing event",
@@ -1008,6 +1008,9 @@
             "valjFas": "Välj fas först.",
             "valjNarstridsfas": "Välj närstridsfas först.",
             "allaMasteValjaFas": "Alla combatants måste välja fas först.",
+            "besegradIntInitiativ": "Defeated combatants do not roll initiative.",
+            "valjFasForstInitiativ": "Select a phase before rolling initiative.",
+            "allaMasteValjaFasInitiativ": "All combatants must select a phase before initiative can be rolled.",
             "lamnaDelstridForst": "Lämna delstrid först om du vill välja andra motståndare.",
             "ingaAndraDeltagare": "Inga andra deltagare att välja.",
             "ingaGiltigaMotstandare": "Inga giltiga motståndare i närstrid att välja.",
@@ -1092,6 +1095,20 @@
             "damageResultHint": "Apply the above manually on the character sheet.",
             "damageResultChockslagHeader": "Shock save",
             "damageResultChockslag": "Fatigue increased from damage → roll Vitality against {totalUtmattning} at the end of the phase."
+        },
+        "overtag": {
+            "panel": "Advantage",
+            "kvar": "remaining",
+            "okaskada": "Increase damage",
+            "bonus": "bonus",
+            "finnablotta": "Find weakness",
+            "precision": "Precision",
+            "finnablottaHjalp": "Damage is only reduced by the defender's Base Armor.",
+            "precisionHjalp": "Choose a body part to hit instead of the rolled location.",
+            "chatOkaskada": "Increase damage (+{bonus})",
+            "chatFinnablotta": "Find weakness",
+            "chatPrecision": "Precision: {del}",
+            "chatKvar": "{antal} advantage unspent"
         },
         "roll": {
             "slar": "Rolling {dice}",

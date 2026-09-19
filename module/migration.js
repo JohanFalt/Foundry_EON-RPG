@@ -459,12 +459,25 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         `;
     }
 
+    if (await CompareVersion(installedVersion, '5.5.3', isDemo)) {
+        partMessage += `
+        <h4>Förtydliga initiativ stridsmodulen (Eon 5)</h4>
+        <p>För att få rätt ordning på de som stred så manipulerade jag värdet på initiativet i sig. Jag har nu fixat till det så för användarna så visas initiativet korrekt nu.</p>
+        <h4>Övertag i stridmodulen (Eon 5)</h4>
+        <p>Har nu lagt till tre olika fördelar man kan spendera övertag på - Finna blotta, Precision och Öka skada. Dessa kommer upp i skadeformuläret och om man har tillräckligt med övertag kan man använda dessa. De räknas då automatiskt in i resultatet.</p>      
+        <h4>Hantering av tillstånd i stridsmodulen (Eon 5)</h4>  
+        <p>Om en deltagare i stridsmodulen hade ett tillstånd som var markerat att tickas ner när en fas var över så funkade dett inte som det skulle.<p>
+        <h4>Småfixar för Motståndare (Eon 5)</h4>
+        <p>Man kunder inte byta en motståndares bild eller ta bort en adderad färdighet.</p>
+         `;
+    }
+
     if (await CompareVersion(installedVersion, '5.5.2', isDemo)) {
         partMessage += `
         <h4>Småbuggar (Eon 5)</h4>
         <p>Fixat lite grafikproblem och översättningsfel.</p>
          `;
-   }
+    }
 
     if (await CompareVersion(installedVersion, '5.5.1', isDemo)) {
          partMessage += `

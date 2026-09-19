@@ -10,32 +10,35 @@
 
             <ul class="eon-wr-status-list">
                 {{#if object.harKroppsbyggnadAvdrag}}
-                <li class="eon-wr-status-item">{{localize "eon.dialogs.kroppsbyggnadVapenAvdrag" avdrag=object.kroppsbyggnadAvdragT6}}</li>
+                    <li class="eon-wr-status-item">{{localize "eon.dialogs.kroppsbyggnadVapenAvdrag" avdrag=object.kroppsbyggnadAvdragT6}}</li>
                 {{/if}}
                 {{#if (eq object.isdamage false)}}
                     {{#if object.harSmarta}}
-                    <li class="eon-wr-status-item eon-wr-status-item--warning">{{localize "eon.sheets.actor.smarta"}} (−{{object.actor.system.berakning.svarighet.smarta}}T6)</li>
+                        <li class="eon-wr-status-item eon-wr-status-item--warning">{{localize "eon.sheets.actor.smarta"}} (−{{object.actor.system.berakning.svarighet.smarta}}T6)</li>
                     {{/if}}
                     {{#if (and object.visaSar (gt object.hamtaAntalSar 0))}}
-                    <li class="eon-wr-status-item">
-                        <label class="eon-wr-check-row">
-                            <input class="item-property pointer eventbutton" {{isChecked object.harSar}} type="checkbox" data-dtype="Boolean" data-source="set" data-value="harSar" />
-                            <span>{{localize "eon.sheets.actor.sar"}} (−{{object.hamtaAntalSar}}T6)</span>
-                        </label>
-                    </li>
+                        <li class="eon-wr-status-item">
+                            <label class="eon-wr-check-row">
+                                <input class="item-property pointer eventbutton" {{isChecked object.harSar}} type="checkbox" data-dtype="Boolean" data-source="set" data-value="harSar" />
+                                <span>{{localize "eon.sheets.actor.sar"}} (−{{object.hamtaAntalSar}}T6)</span>
+                            </label>
+                        </li>
                     {{/if}}
                 {{/if}}
+                {{#each object.effektStatusLista as |effekt|}}
+                    <li class="eon-wr-status-item{{#if effekt.warning}} eon-wr-status-item--warning{{/if}}">{{effekt.text}}</li>
+                {{/each}}
             </ul>
 
             {{#if showTacticInfo}}
-            <aside class="eon-wr-tactic-info attack-info" aria-live="polite">
-                <span class="eon-wr-tactic-label">{{localize "eon.dialogs.weaponRollTacticEffects"}}</span>
-                <ul class="eon-wr-tactic-list">
-                    {{#each tacticRows as |row|}}
-                    <li>{{row}}</li>
-                    {{/each}}
-                </ul>
-            </aside>
+                <aside class="eon-wr-tactic-info attack-info" aria-live="polite">
+                    <span class="eon-wr-tactic-label">{{localize "eon.dialogs.weaponRollTacticEffects"}}</span>
+                    <ul class="eon-wr-tactic-list">
+                        {{#each tacticRows as |row|}}
+                            <li>{{row}}</li>
+                        {{/each}}
+                    </ul>
+                </aside>
             {{/if}}
 
             <div class="eon-wr-block dialog-area">
@@ -44,56 +47,56 @@
                     <button type="button" class="mode eon-wr-tab {{#if object.isattack}}active{{/if}}" data-type="attack">{{localize "eon.dialogs.anfall"}}</button>
                     <button type="button" class="mode eon-wr-tab {{#if object.isdamage}}active{{/if}}" data-type="damage">{{localize "eon.dialogs.skada"}}</button>
                     {{#unless object.vapen.isRangedWeapon}}
-                    <button type="button" class="mode eon-wr-tab {{#if object.isdefence}}active{{/if}}" data-type="defence">{{localize "eon.dialogs.forsvar"}}</button>
+                        <button type="button" class="mode eon-wr-tab {{#if object.isdefence}}active{{/if}}" data-type="defence">{{localize "eon.dialogs.forsvar"}}</button>
                     {{/unless}}
                 </div>
 
                 {{#if object.valbarFattning}}
-                <span class="eon-wr-block-label">{{localize "eon.dialogs.fattning"}}</span>
-                <div id="fattning_area" class="eon-wr-btn-row clear" role="group" aria-label="{{localize 'eon.dialogs.fattning'}}">
-                    <button type="button" class="fattning eon-wr-tab {{#if (eq object.fattning 'enhand')}}active{{/if}}" data-type="enhand">{{localize "eon.sheets.item.enHand"}}</button>
-                    <button type="button" class="fattning eon-wr-tab {{#if (eq object.fattning 'tvahand')}}active{{/if}}" data-type="tvahand">{{localize "eon.sheets.item.tvaHand"}}</button>
-                </div>
+                    <span class="eon-wr-block-label">{{localize "eon.dialogs.fattning"}}</span>
+                    <div id="fattning_area" class="eon-wr-btn-row clear" role="group" aria-label="{{localize 'eon.dialogs.fattning'}}">
+                        <button type="button" class="fattning eon-wr-tab {{#if (eq object.fattning 'enhand')}}active{{/if}}" data-type="enhand">{{localize "eon.sheets.item.enHand"}}</button>
+                        <button type="button" class="fattning eon-wr-tab {{#if (eq object.fattning 'tvahand')}}active{{/if}}" data-type="tvahand">{{localize "eon.sheets.item.tvaHand"}}</button>
+                    </div>
                 {{/if}}
 
                 <div id="attack_area" class="eon-wr-btn-row clear" role="group">
                     {{#if object.isdamage}}
                         {{#if object.vapen.system.hugg.aktiv}}
-                        <button type="button" class="attacktype eon-wr-tab {{#if object.usehugg}}active{{/if}}" data-type="hugg">{{localize "eon.config.vapenskador.hugg"}}</button>
+                            <button type="button" class="attacktype eon-wr-tab {{#if object.usehugg}}active{{/if}}" data-type="hugg">{{localize "eon.config.vapenskador.hugg"}}</button>
                         {{/if}}
                         {{#if object.vapen.system.kross.aktiv}}
-                        <button type="button" class="attacktype eon-wr-tab {{#if object.usekross}}active{{/if}}" data-type="kross">{{localize "eon.config.vapenskador.kross"}}</button>
+                            <button type="button" class="attacktype eon-wr-tab {{#if object.usekross}}active{{/if}}" data-type="kross">{{localize "eon.config.vapenskador.kross"}}</button>
                         {{/if}}
                         {{#if object.vapen.system.stick.aktiv}}
-                        <button type="button" class="attacktype eon-wr-tab {{#if object.usestick}}active{{/if}}" data-type="stick">{{localize "eon.config.vapenskador.stick"}}</button>
+                            <button type="button" class="attacktype eon-wr-tab {{#if object.usestick}}active{{/if}}" data-type="stick">{{localize "eon.config.vapenskador.stick"}}</button>
                         {{/if}}
                     {{else}}
                         {{#if object.isattack}}
                             {{#unless object.vapen.isRangedWeapon}}
-                            <button type="button" class="attacktype eon-wr-tab {{#if (or (not object.attacktype) (eq object.attacktype 'normal'))}}active{{/if}}"
-                                    data-type="normal"
-                                    title="{{tacticTitles.normal}}">{{localize 'eon.dialogs.weaponRollStandard'}}</button>
-                            <button type="button" class="attacktype eon-wr-tab {{#if (eq object.attacktype 'tungt')}}active{{/if}}"
-                                    data-type="tungt"
-                                    title="{{tacticTitles.tungt}}">{{localize 'eon.dialogs.weaponRollKraftfullt'}}</button>
-                            <button type="button" class="attacktype eon-wr-tab {{#if (eq object.attacktype 'snabbt')}}active{{/if}}"
-                                    data-type="snabbt"
-                                    title="{{tacticTitles.snabbt}}">{{localize 'eon.dialogs.weaponRollSnabbt'}}</button>
-                            <button type="button" class="attacktype eon-wr-tab {{#if (eq object.attacktype 'grupp')}}active{{/if}}"
-                                    data-type="grupp"
-                                    title="{{tacticTitles.grupp}}">{{localize 'eon.dialogs.weaponRollGruppanfall'}}</button>
+                                <button type="button" class="attacktype eon-wr-tab {{#if (or (not object.attacktype) (eq object.attacktype 'normal'))}}active{{/if}}"
+                                        data-type="normal"
+                                        title="{{tacticTitles.normal}}">{{localize 'eon.dialogs.weaponRollStandard'}}</button>
+                                <button type="button" class="attacktype eon-wr-tab {{#if (eq object.attacktype 'tungt')}}active{{/if}}"
+                                        data-type="tungt"
+                                        title="{{tacticTitles.tungt}}">{{localize 'eon.dialogs.weaponRollKraftfullt'}}</button>
+                                <button type="button" class="attacktype eon-wr-tab {{#if (eq object.attacktype 'snabbt')}}active{{/if}}"
+                                        data-type="snabbt"
+                                        title="{{tacticTitles.snabbt}}">{{localize 'eon.dialogs.weaponRollSnabbt'}}</button>
+                                <button type="button" class="attacktype eon-wr-tab {{#if (eq object.attacktype 'grupp')}}active{{/if}}"
+                                        data-type="grupp"
+                                        title="{{tacticTitles.grupp}}">{{localize 'eon.dialogs.weaponRollGruppanfall'}}</button>
                             {{/unless}}
                         {{/if}}
                         {{#if object.isdefence}}
-                        <button type="button" class="attacktype eon-wr-tab {{#if (or (not object.attacktype) (eq object.attacktype 'normal'))}}active{{/if}}"
-                                data-type="normal"
-                                title="{{tacticTitles.normal}}">{{localize 'eon.dialogs.weaponRollStandard'}}</button>
-                        <button type="button" class="attacktype eon-wr-tab {{#if (eq object.attacktype 'defensivt')}}active{{/if}}"
-                                data-type="defensivt"
-                                title="{{tacticTitles.defensivt}}">{{localize 'eon.dialogs.weaponRollDefensivt'}}</button>
-                        <button type="button" class="attacktype eon-wr-tab {{#if (eq object.attacktype 'kontring')}}active{{/if}}"
-                                data-type="kontring"
-                                title="{{tacticTitles.kontring}}">{{localize 'eon.dialogs.weaponRollKontring'}}</button>
+                            <button type="button" class="attacktype eon-wr-tab {{#if (or (not object.attacktype) (eq object.attacktype 'normal'))}}active{{/if}}"
+                                    data-type="normal"
+                                    title="{{tacticTitles.normal}}">{{localize 'eon.dialogs.weaponRollStandard'}}</button>
+                            <button type="button" class="attacktype eon-wr-tab {{#if (eq object.attacktype 'defensivt')}}active{{/if}}"
+                                    data-type="defensivt"
+                                    title="{{tacticTitles.defensivt}}">{{localize 'eon.dialogs.weaponRollDefensivt'}}</button>
+                            <button type="button" class="attacktype eon-wr-tab {{#if (eq object.attacktype 'kontring')}}active{{/if}}"
+                                    data-type="kontring"
+                                    title="{{tacticTitles.kontring}}">{{localize 'eon.dialogs.weaponRollKontring'}}</button>
                         {{/if}}
                     {{/if}}
                 </div>
@@ -121,7 +124,7 @@
             <p class="eon-wr-total-pool">
                 <span class="eon-wr-total-label">{{localize "eon.sheets.actor.totalt"}}:</span>
                 {{#if (lt object.visaTarning.bonus 0)}}
-                {{localize "eon.roll.ob"}}{{object.visaTarning.tvarde}}T6{{object.visaTarning.bonus}}
+                    {{localize "eon.roll.ob"}}{{object.visaTarning.tvarde}}T6({{object.visaTarning.bonus}})
                 {{else if (gt object.visaTarning.bonus 0)}}
                 {{localize "eon.roll.ob"}}{{object.visaTarning.tvarde}}T6+{{object.visaTarning.bonus}}
                 {{else}}
@@ -132,40 +135,84 @@
     </div>
 
     {{#if object.isattack}}
-    {{#if targetContext.showSelector}}
-    <section class="eon-wr-panel eon-wr-panel--full eon-wr-target-block">
-        <label for="eon-attack-target-select" class="eon-wr-block-label headline">{{localize "eon.combatAttack.targetLabel"}}</label>
-        <select id="eon-attack-target-select" class="eon-attack-target-select" name="eonAttackTarget">
-            {{#each targetContext.candidates}}
-            <option value="{{id}}" {{#if (eq ../selectedTargetCombatantId id)}}selected{{/if}}>{{name}}</option>
-            {{/each}}
-        </select>
-    </section>
-    {{else if targetContext.hintKey}}
-    <p class="eon-wr-hint">{{localize targetContext.hintKey}}</p>
-    {{/if}}
+        {{#if targetContext.showSelector}}
+            <section class="eon-wr-panel eon-wr-panel--full eon-wr-target-block">
+                <label for="eon-attack-target-select" class="eon-wr-block-label headline">{{localize "eon.combatAttack.targetLabel"}}</label>
+                <select id="eon-attack-target-select" class="eon-attack-target-select" name="eonAttackTarget">
+                    {{#each targetContext.candidates}}
+                    <option value="{{id}}" {{#if (eq ../selectedTargetCombatantId id)}}selected{{/if}}>{{name}}</option>
+                    {{/each}}
+                </select>
+            </section>
+        {{else if targetContext.hintKey}}
+            <p class="eon-wr-hint">{{localize targetContext.hintKey}}</p>
+        {{/if}}
     {{/if}}
 
     {{#if hasPendingDamageFlow}}
-    <p class="eon-wr-hint eon-wr-hint--info">{{localize "eon.combatAttack.pendingDamageHint"}}</p>
+        <p class="eon-wr-hint eon-wr-hint--info">{{localize "eon.combatAttack.pendingDamageHint"}}</p>
+    {{/if}}
+
+    {{#if object.isdamage}}
+    {{#if overtagAvailable}}
+    <section class="eon-wr-panel eon-wr-panel--overtag">
+        <span class="eon-wr-block-label">
+            {{localize "eon.overtag.panel"}} ({{overtagRemaining}} / {{overtagAvailable}} {{localize "eon.overtag.kvar"}})
+        </span>
+
+        <!-- Öka skada: 1 övertag = +2 skada -->
+        <div class="eon-wr-overtag-row">
+            <span class="eon-wr-overtag-label">{{localize "eon.overtag.okaskada"}}</span>
+            <button type="button" class="dialog-event-button eventbutton eon-wr-overtag-btn"
+                    data-source="overtag" data-action="okaskada-remove"
+                    title="−">−</button>
+            <span class="eon-wr-overtag-value">{{overtagState.okaskada}}</span>
+            <button type="button" class="dialog-event-button eventbutton eon-wr-overtag-btn"
+                    data-source="overtag" data-action="okaskada-add"
+                    title="+">+</button>
+            <span class="eon-wr-overtag-hint">+{{overtagOkaskadaBonus}} {{localize "eon.overtag.bonus"}}</span>
+        </div>
+
+        <!-- Finna blotta: 4 övertag -->
+        <div class="eon-wr-overtag-row">
+            <button type="button" class="dialog-event-button eventbutton eon-wr-overtag-toggle{{#if overtagState.finnablotta}} active{{/if}}"
+                    data-source="overtag" data-action="finnablotta-toggle"
+                    title="{{localize 'eon.overtag.finnablottaHjalp'}}">
+                {{localize "eon.overtag.finnablotta"}} (4)
+            </button>
+        </div>
+
+        <!-- Precision: 2 övertag + kroppsdelsväljare -->
+        <div class="eon-wr-overtag-row">
+            <span class="eon-wr-overtag-label">{{localize "eon.overtag.precision"}} (2)</span>
+            <select class="eon-wr-overtag-select"
+                    data-source="overtag" data-action="precision-set">
+                <option value="">–</option>
+                {{#each precisionBodyParts}}
+                <option value="{{key}}" {{#if (eq ../overtagState.precisionBodyPartKey key)}}selected{{/if}}>{{label}}</option>
+                {{/each}}
+            </select>
+        </div>
+    </section>
+    {{/if}}
     {{/if}}
 
     {{#if (eq object.isdamage false)}}
-    <section class="eon-wr-panel eon-wr-panel--full eon-wr-difficulty-block">
-        <div class="eon-wr-difficulty-header">
-            <div class="floating-label-group">
-                <input id="difficulty" class="attribute-value" type="text" value="{{object.svarighet}}" style="width: 120px;" disabled readonly />
-                <span class="floating-label weaponroll-label">{{localize "eon.sheets.actor.svarighet"}}</span>
+        <section class="eon-wr-panel eon-wr-panel--full eon-wr-difficulty-block">
+            <div class="eon-wr-difficulty-header">
+                <div class="floating-label-group">
+                    <input id="difficulty" class="attribute-value" type="text" value="{{object.svarighet}}" style="width: 120px;" disabled readonly />
+                    <span class="floating-label weaponroll-label">{{localize "eon.sheets.actor.svarighet"}}</span>
+                </div>
             </div>
-        </div>
-        <div class="eon-wr-difficulty-pad dice-row" role="group" aria-label="{{localize 'eon.sheets.actor.svarighet'}}">
-            {{#numFromLoop 1 9}}
-            <button type="button" class="dialog-event-button eventbutton" title="{{this}}" data-source="difficulty" data-value="{{this}}"><span>{{this}}</span></button>
-            {{/numFromLoop}}
-            <button type="button" class="dialog-event-button eventbutton" title="0" data-source="difficulty" data-value="0"><span>0</span></button>
-            <button type="button" class="dialog-event-button eventbutton" title="{{localize 'eon.dialogs.rensa'}}" data-source="difficulty" data-value="clear"><span>…</span></button>
-        </div>
-    </section>
+            <div class="eon-wr-difficulty-pad dice-row" role="group" aria-label="{{localize 'eon.sheets.actor.svarighet'}}">
+                {{#numFromLoop 1 9}}
+                    <button type="button" class="dialog-event-button eventbutton" title="{{this}}" data-source="difficulty" data-value="{{this}}"><span>{{this}}</span></button>
+                {{/numFromLoop}}
+                <button type="button" class="dialog-event-button eventbutton" title="0" data-source="difficulty" data-value="0"><span>0</span></button>
+                <button type="button" class="dialog-event-button eventbutton" title="{{localize 'eon.dialogs.rensa'}}" data-source="difficulty" data-value="clear"><span>…</span></button>
+            </div>
+        </section>
     {{/if}}
 
     <footer class="eon-wr-footer">

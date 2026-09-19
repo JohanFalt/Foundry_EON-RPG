@@ -4,6 +4,30 @@ import { DialogPickFardighet } from "../dialogs/dialog-pick-fardighet.js";
 import PafrestningHelper from "../pafrestning-helper.js";
 
 /**
+ * Byt porträttbild via FilePicker och spara till actor.
+ * @param {Event} event
+ * @param {HTMLElement} target
+ * @this {import("./eon5-actor-sheet-base.js").default}
+ */
+export async function onEditImage(event, target) {
+    event.preventDefault();
+    if (!this.isEditable) return;
+
+    const field = target.dataset.field || "img";
+    const current = foundry.utils.getProperty(this.document, field);
+    const FilePickerClass = foundry.applications.apps.FilePicker.implementation;
+
+    const filePicker = new FilePickerClass({
+        type: "image",
+        current,
+        callback: (path) => this.document.update({ [field]: path }),
+        top: (this.position?.top ?? 0) + 40,
+        left: (this.position?.left ?? 0) + 10
+    });
+    await filePicker.browse();
+}
+
+/**
  * @param {Event} event
  * @param {HTMLElement} target
  * @this {import("./eon5-actor-sheet-base.js").default}

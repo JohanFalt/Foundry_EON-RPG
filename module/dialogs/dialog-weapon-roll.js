@@ -90,6 +90,9 @@ export class WeaponRoll {
     #_totalBonus = 0;
     #_grundTarning = 0;
     #_grundBonus = 0;
+    // Manuell delta som överlever updateAttackModifiers-omräkning vid re-render.
+    #_manualBonusTarning = 0;
+    #_manualBonusBonus = 0;
 
     #_isattack = true;
     #_isdamage = false;
@@ -403,6 +406,12 @@ export class WeaponRoll {
         return this.#_harSmarta;
     }
 
+    get effektStatusLista() {
+        if (!this.actor?.isEon5) return [];
+        const types = this.#_isdamage ? ["tvarde", "skadebonus"] : ["tvarde"];
+        return EffectHelper.listEffectStatusItems(this.getMatchedEffects(types));
+    }
+
     get visaSar() {
         return this.#_visaSar;
     }
@@ -461,36 +470,38 @@ export class WeaponRoll {
     }
 
     addTicToTarning() {
-        if (this.#_totalBonus == 3) {
-            this.#_totalTarning += 1;
-            this.#_totalBonus = 0;
+        if (this.#_manualBonusBonus >= 3) {
+            this.#_manualBonusTarning += 1;
+            this.#_manualBonusBonus -= 3;
+        } else {
+            this.#_manualBonusBonus += 1;
         }
-        else {
-            this.#_totalBonus += 1;
-        }
+        this.updateAttackModifiers();
     }
 
     addDiceToTarning() {
-        this.#_totalTarning += 1;
+        this.#_manualBonusTarning += 1;
+        this.updateAttackModifiers();
     }
 
     removeTicToTarning() {
-        if ((this.#_totalBonus == -1) && (this.#_totalTarning > 0)) {
-            this.#_totalTarning -= 1;
-            this.#_totalBonus = 3;
+        if (this.#_manualBonusBonus > 0) {
+            // Ta bort 1 tic direkt.
+            this.#_manualBonusBonus -= 1;
+        } else if (this.#_manualBonusTarning > 0) {
+            // Bryt 1T6 → 3 tics och ta sedan bort 1 tic (netto: −1 tic).
+            this.#_manualBonusTarning -= 1;
+            this.#_manualBonusBonus += 2;
         }
-        else if ((this.#_totalTarning == 0) && (this.#_totalBonus == 0)) {
-            // gör inget alls
-        }
-        else {
-            this.#_totalBonus -= 1;
-        }
+        // (0, 0) → gör inget, redan på grundvärdet.
+        this.updateAttackModifiers();
     }
 
     removeDiceToTarning() {
-        if (this.#_totalTarning > 0) {
-            this.#_totalTarning -= 1;
+        if (this.#_manualBonusTarning > 0) {
+            this.#_manualBonusTarning -= 1;
         }
+        this.updateAttackModifiers();
     }
 
     setGrundskadaTotalt(totalt) {
@@ -794,6 +805,13 @@ export class WeaponRoll {
         if (this.#_totalTarning < 0) {
             this.#_totalTarning = 0;
         }
+
+        // Applicera manuell delta (knapptryckningar) ovanpå de taktikjusterade värdena.
+        // Add/remove-metoderna anropar updateAttackModifiers() direkt så att totalen
+        // uppdateras i alla lägen (anfall, försvar, skada). Delta-fälten överlever
+        // re-render; bara initieringen av WeaponRoll nollställer dem.
+        this.#_totalTarning = Math.max(0, this.#_totalTarning + this.#_manualBonusTarning);
+        this.#_totalBonus = this.#_totalBonus + this.#_manualBonusBonus;
     }
 
     get lastAttackType() {
@@ -820,8 +838,25 @@ export class DialogWeaponRoll extends FormApplication {
     /** @type {string|null} */
     selectedTargetCombatantId = null;
 
-    /** @type {{ flowId: string, defenderActorId: string, defenderName: string }|null} */
+    /** @type {{ flowId: string, defenderActorId: string, defenderName: string, overtag: number }|null} */
     _combatAttackFlow = null;
+
+    /**
+     * State för övertag-spendering i skadeläge.
+     * @type {{ okaskada: number, finnablotta: boolean, precisionBodyPartKey: string|null }}
+     */
+    _overtagState = { okaskada: 0, finnablotta: false, precisionBodyPartKey: null };
+
+    /**
+     * Beräknar hur mycket övertag som återstår att spendera.
+     * @returns {number}
+     */
+    get _overtagRemaining() {
+        const spent = this._overtagState.okaskada
+            + (this._overtagState.finnablotta ? 4 : 0)
+            + (this._overtagState.precisionBodyPartKey ? 2 : 0);
+        return Math.max(0, (this._combatAttackFlow?.overtag ?? 0) - spent);
+    }
 
     constructor(actor, roll) {
         super(roll, {submitOnChange: true, closeOnSubmit: false});
@@ -885,6 +920,15 @@ export class DialogWeaponRoll extends FormApplication {
             }
         }
         data.hasPendingDamageFlow = Boolean(this._combatAttackFlow?.flowId);
+
+        // Övertag-spendering (visas bara i skadeläge med ett aktivt combat-flow).
+        data.overtagAvailable = Number(this._combatAttackFlow?.overtag ?? 0);
+        data.overtagRemaining = this._overtagRemaining;
+        data.overtagState = foundry.utils.duplicate(this._overtagState);
+        data.overtagOkaskadaBonus = this._overtagState.okaskada * 2;
+        data.precisionBodyParts = Object.keys(CONFIG.EON?.kroppsdelar?.grund ?? {})
+            .map((key) => ({ key, label: CombatAttackFlow.localizeBodyPart(key) }));
+
         data.tacticRows = this.#buildTacticRows(this.object.attacktype);
         data.tacticTitles = this.#buildTacticTitles();
         // Standard anfall ändrar inget, så rutan visas bara när taktiken gör skillnad.
@@ -972,7 +1016,7 @@ export class DialogWeaponRoll extends FormApplication {
 
         html
             .find('.attacktype')
-            .click(this._setAttackType.bind(this));
+            .click(this._onAttackTypeClick.bind(this));
 
         html
             .find('.fattning')
@@ -986,11 +1030,18 @@ export class DialogWeaponRoll extends FormApplication {
             .find('.eventbutton')
             .click(this._eventclick.bind(this));
 
+        // Övertag-precision är en select; den skickar change-event istället för click.
+        html.find('.eon-wr-overtag-select').on('change', (event) => {
+            const element = event.currentTarget;
+            const dataset = element.dataset;
+            this.#_handleOvertagAction(dataset, element);
+            this.render();
+        });
+
         html
             .find('.closebutton')
             .click(this._closeForm.bind(this));
 
-        html.find('.attacktype').click(this._onAttackTypeClick.bind(this));
     }    
 
     async _updateObject(event, formData) {
@@ -1015,19 +1066,6 @@ export class DialogWeaponRoll extends FormApplication {
         this.render();
     }
 
-    _setAttackType(event) {
-        event.preventDefault();
-
-		const element = event.currentTarget;
-		const dataset = element.dataset;
-        const type = dataset.type;
-
-        if (this.object.isdamage) {     
-            this.object.setDamageType(type);
-        }
-
-        this.render();
-    }
 
     _setFattning(event) {
         event.preventDefault();
@@ -1043,14 +1081,6 @@ export class DialogWeaponRoll extends FormApplication {
 
         const element = event.currentTarget;
 		const dataset = element.dataset;
-
-        if (dataset?.type && element.classList.contains('attacktype')) {
-            this.object.attacktype = dataset.type;
-        }
-
-        if (dataset?.type && element.classList.contains('fattning')) {
-            this.object.fattning = dataset.type;
-        }
 
         if (dataset?.source == "set") {
             this.object[dataset.value] = !this.object[dataset.value];
@@ -1086,7 +1116,53 @@ export class DialogWeaponRoll extends FormApplication {
             this.object.svarighet = value;
         }
 
+        if (dataset?.source == "overtag") {
+            this.#_handleOvertagAction(dataset, element);
+        }
+
         this.render();
+    }
+
+    /**
+     * Hanterar övertag-spenderingsknapparna och -väljaren.
+     * @param {DOMStringMap} dataset
+     * @param {HTMLElement} element
+     */
+    #_handleOvertagAction(dataset, element) {
+        const action = dataset.action;
+        const state = this._overtagState;
+        const remaining = this._overtagRemaining;
+
+        if (action === "okaskada-add") {
+            if (remaining >= 1) {
+                state.okaskada += 1;
+            }
+        } else if (action === "okaskada-remove") {
+            state.okaskada = Math.max(0, state.okaskada - 1);
+        } else if (action === "finnablotta-toggle") {
+            if (state.finnablotta) {
+                // Stäng av – frigör 4 övertag.
+                state.finnablotta = false;
+            } else if (remaining >= 4) {
+                state.finnablotta = true;
+            }
+        } else if (action === "precision-set") {
+            const chosenKey = element.value || null;
+            if (!chosenKey) {
+                // Rensa valet – frigör 2 övertag.
+                state.precisionBodyPartKey = null;
+            } else if (state.precisionBodyPartKey === chosenKey) {
+                // Avmarkera befintligt val.
+                state.precisionBodyPartKey = null;
+            } else {
+                // Nytt val: kräver antingen att rensa gammalt val (inga extra kostnad om
+                // man byter) eller att remaining >= 2 om inget val gjorts än.
+                const hasCurrentPrecision = Boolean(state.precisionBodyPartKey);
+                if (hasCurrentPrecision || remaining >= 2) {
+                    state.precisionBodyPartKey = chosenKey;
+                }
+            }
+        }
     }
 
     /* clicked to roll */
@@ -1297,75 +1373,147 @@ export class DialogWeaponRoll extends FormApplication {
                 console.warn("eon-rpg | Kunde inte slå 1T10 för allvarlig skada", err);
             }
         }
+
+        // Sammanfatta övertag-spendering i chatkortet.
+        if (this.object.isdamage && this._combatAttackFlow?.flowId) {
+            const state = this._overtagState;
+            const valda = [];
+            if (state.okaskada > 0) {
+                valda.push(game.i18n.format("eon.overtag.chatOkaskada", { bonus: state.okaskada * 2 }));
+            }
+            if (state.finnablotta) {
+                valda.push(game.i18n.localize("eon.overtag.chatFinnablotta"));
+            }
+            if (state.precisionBodyPartKey) {
+                valda.push(game.i18n.format("eon.overtag.chatPrecision", {
+                    del: CombatAttackFlow.localizeBodyPart(state.precisionBodyPartKey)
+                }));
+            }
+            if (valda.length > 0) {
+                roll.description += valda.join(", ") + "<br />";
+            }
+            const kvar = this._overtagRemaining;
+            if (kvar > 0) {
+                roll.description += game.i18n.format("eon.overtag.chatKvar", { antal: kvar }) + "<br />";
+            }
+        }
         
         const result = await RollDice(roll);
 
         if (this.linkedAttackMessageId && this.object.isdefence) {
-            const attackMsg = game.messages.get(this.linkedAttackMessageId);
-            if (attackMsg) {
-                await CombatAttackChat.resolveDefense(attackMsg, result, roll.action);
-            }
-            this.close();
-            return;
+            return this._handleDefenseRoll(result, roll);
         }
 
         if (this.object.isdamage && this._combatAttackFlow?.flowId) {
-            let damageType = "hugg";
-            if (this.object.usekross) damageType = "kross";
-            if (this.object.usestick) damageType = "stick";
-            const hitMsgId = this._combatAttackFlow.hitLocationMessageId;
-            const hitMsg = hitMsgId
-                ? game.messages.get(hitMsgId)
-                : this._findHitLocationMessage(this._combatAttackFlow.flowId);
-            if (hitMsg) {
-                await CombatAttackChat.attachDamageCalculation(hitMsg.id, result, damageType, allvarligBaseRoll);
+            return this._handleDamageRoll(result, allvarligBaseRoll);
+        }
+
+        if (this.object.isattack) {
+            return this._handleAttackRoll(roll, result, attackFlowMeta);
+        }
+
+        this.close();
+    }
+
+    /**
+     * Efterbehandling för försvarsslag: skickar resultatet till resolveDefense och stänger dialogen.
+     * @param {number} result
+     * @param {DiceRollContainer} roll
+     */
+    async _handleDefenseRoll(result, roll) {
+        const attackMsg = game.messages.get(this.linkedAttackMessageId);
+        if (attackMsg) {
+            await CombatAttackChat.resolveDefense(attackMsg, result, roll.action);
+        }
+        this.close();
+    }
+
+    /**
+     * Efterbehandling för skadeslag med aktivt combat-flow:
+     * applicerar övertag, precision och finna blotta, sedan räknar slutskada.
+     * @param {number} result      - Råresultat från tärningarna
+     * @param {number|null} allvarligBaseRoll
+     */
+    async _handleDamageRoll(result, allvarligBaseRoll) {
+        let damageType = "hugg";
+        if (this.object.usekross) damageType = "kross";
+        if (this.object.usestick) damageType = "stick";
+
+        const hitMsgId = this._combatAttackFlow.hitLocationMessageId;
+        const hitMsg = hitMsgId
+            ? game.messages.get(hitMsgId)
+            : this._findHitLocationMessage(this._combatAttackFlow.flowId);
+
+        if (hitMsg) {
+            // Öka skada: +2 skada per spenderat övertag.
+            const rawDamageWithOvertag = result + (this._overtagState.okaskada * 2);
+
+                // Precision: skriv över kroppsdel i chattmeddelandet.
+                // hitLocationRoll nollställs så att resolveBodyPartFromFlags
+                // prioriterar bodyPartKey istället för det slagna 1T10-värdet.
+                if (this._overtagState.precisionBodyPartKey) {
+                    const newKey = this._overtagState.precisionBodyPartKey;
+                    await hitMsg.update({
+                        [`flags.${EON_ATTACK_FLAG}.bodyPartKey`]: newKey,
+                        [`flags.${EON_ATTACK_FLAG}.bodyPartLabel`]: CombatAttackFlow.localizeBodyPart(newKey),
+                        [`flags.${EON_ATTACK_FLAG}.hitLocationRoll`]: null,
+                    });
+                }
+
+            await CombatAttackChat.attachDamageCalculation(
+                hitMsg.id,
+                rawDamageWithOvertag,
+                damageType,
+                allvarligBaseRoll,
+                { finnablotta: this._overtagState.finnablotta }
+            );
+        }
+        this.close();
+    }
+
+    /**
+     * Efterbehandling för anfallsslag: uppdaterar utmattning, skickar till afterAttackRolled
+     * och byter antingen till skadeläge (utan flow) eller stänger dialogen (med flow).
+     * @param {DiceRollContainer} roll
+     * @param {number} result
+     * @param {{ flags: object, flowState: object }|null} attackFlowMeta
+     */
+    async _handleAttackRoll(roll, result, attackFlowMeta) {
+        let utmattningIncrease = 0;
+        switch (this.object.attacktype) {
+            case 'tungt':
+                utmattningIncrease = 2;
+                break;
+            case 'snabbt':
+            case 'grupp':
+                utmattningIncrease = 1;
+                break;
+        }
+
+        if (utmattningIncrease > 0) {
+            const currentUtmattning = Number(this.actor.system?.skada?.utmattning?.varde ?? 0);
+            await this.actor.update({
+                "system.skada.utmattning.varde": currentUtmattning + utmattningIncrease
+            });
+        }
+
+        if (attackFlowMeta) {
+            const msg = roll._createdMessageId
+                ? game.messages.get(roll._createdMessageId)
+                : CombatAttackChat.findAttackMessageByFlowId(attackFlowMeta.flowState.flowId);
+            if (msg) {
+                await CombatAttackChat.afterAttackRolled(msg, result);
+            } else {
+                ui.notifications.warn(game.i18n.localize("eon.combatAttack.attackMessageNotFound"));
             }
             this.close();
             return;
         }
 
-        if (this.object.isattack) {
-            let utmattningIncrease = 0;
-            switch(this.object.attacktype) {
-                case 'tungt':
-                    utmattningIncrease = 2;
-                    break;
-                case 'snabbt':
-                case 'grupp':
-                    utmattningIncrease = 1;
-                    break;
-            }
-
-            if (utmattningIncrease > 0) {
-                const currentUtmattning = Number(this.actor.system?.skada?.utmattning?.varde ?? 0);
-                await this.actor.update({
-                    "system.skada.utmattning.varde": currentUtmattning + utmattningIncrease
-                });
-            }
-
-            if (attackFlowMeta) {
-                const msg = roll._createdMessageId
-                    ? game.messages.get(roll._createdMessageId)
-                    : CombatAttackChat.findAttackMessageByFlowId(attackFlowMeta.flowState.flowId);
-                if (msg) {
-                    await CombatAttackChat.afterAttackRolled(msg, result);
-                } else {
-                    ui.notifications.warn(game.i18n.localize("eon.combatAttack.attackMessageNotFound"));
-                }
-                this.close();
-                return;
-            }
-
-            this.object.setCombatmode("damage");
-            this.object.close = false;
-        }
-        else {
-            this.close();
-            return;      
-        }   
-
+        // Inget flow – byt till skadeläge direkt i dialogen.
+        this.object.setCombatmode("damage");
+        this.object.close = false;
         this.render();
-        return;
     }
 
     /* clicked to close form */
@@ -1377,12 +1525,15 @@ export class DialogWeaponRoll extends FormApplication {
 
     _onAttackTypeClick(event) {
         event.preventDefault();
-        if (this.object.isdamage) return;
-
-        const button = event.currentTarget;
-        const type = button.dataset.type;
-        this.object.attacktype = type;
-        this.render(true);
+        const type = event.currentTarget.dataset.type;
+        if (this.object.isdamage) {
+            // I skadeläge: byt skadetyp (hugg/kross/stick).
+            this.object.setDamageType(type);
+        } else {
+            // I anfall/försvarsläge: byt anfallstaktik.
+            this.object.attacktype = type;
+        }
+        this.render();
     }
 
     _resolveTargetName() {

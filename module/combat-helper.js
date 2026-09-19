@@ -27,11 +27,67 @@ export class CombatHelper {
             }
         }
 
-        if ("turn" in changed) {
-            const combatant = combat.combatant;
-            const actor = combatant?.actor;
-            if (actor) await EffectHelper.clearNextActivePhase(actor);
+        if (("turn" in changed) || ("round" in changed)) {
+            await this.#tickPhaseDurationsOnPhaseChange(combat, EffectHelper);
         }
+    }
+
+    /**
+     * Vid framåt-steg där aktiv combatants fas byts: ticka nasta_aktiva_fas
+     * för alla figurer i striden (en tick per fasskifte).
+     * @param {Combat} combat
+     * @param {*} EffectHelper
+     */
+    static async #tickPhaseDurationsOnPhaseChange(combat, EffectHelper) {
+        if (!this.#isForwardCombatAdvance(combat)) return;
+
+        const prevId = combat.previous?.combatantId;
+        const prevCombatant = prevId ? combat.combatants.get(prevId) : null;
+        const currCombatant = combat.combatant;
+        const prevPhase = this.#getCombatantPhase(prevCombatant);
+        const currPhase = this.#getCombatantPhase(currCombatant);
+        if (!prevPhase || !currPhase || prevPhase === currPhase) return;
+
+        const seenActorIds = new Set();
+        for (const combatant of combat.combatants) {
+            const actor = combatant.actor;
+            if (!actor || seenActorIds.has(actor.id)) continue;
+            seenActorIds.add(actor.id);
+            await EffectHelper.tickPhaseDurations(actor);
+        }
+    }
+
+    /**
+     * @param {Combatant|null|undefined} combatant
+     * @returns {string}
+     */
+    static #getCombatantPhase(combatant) {
+        return combatant?.flags?.["eon-rpg"]?.phase ?? "";
+    }
+
+    /**
+     * Är updateCombat ett steg framåt i Eon-turordningen (inte rewind)?
+     * @param {Combat} combat
+     * @returns {boolean}
+     */
+    static #isForwardCombatAdvance(combat) {
+        const prev = combat.previous;
+        if (!prev) return false;
+
+        const prevRound = Number(prev.round ?? 0);
+        const currRound = Number(combat.round ?? 0);
+        if (currRound > prevRound) return true;
+        if (currRound < prevRound) return false;
+
+        const eonOrder = this.getEonTurnOrder(combat);
+        const prevId = prev.combatantId;
+        const currId = combat.combatant?.id;
+        if (!prevId || !currId || !eonOrder.length) return false;
+
+        const prevIdx = eonOrder.indexOf(prevId);
+        const currIdx = eonOrder.indexOf(currId);
+        if (prevIdx < 0 || currIdx < 0) return false;
+        return currIdx > prevIdx;
     }
 
     static getPhaseOrder(combatant) {

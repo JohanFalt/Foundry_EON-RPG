@@ -15,6 +15,9 @@
                 {{#if object.harSmarta}}
                     <div class="centerText">{{localize "eon.sheets.actor.smarta"}} (-{{object.actor.system.berakning.svarighet.smarta}}T6)</div>
                 {{/if}}
+                {{#each object.effektStatusLista as |effekt|}}
+                    <div class="centerText">{{effekt.text}}</div>
+                {{/each}}
                 {{#if object.harSar}}
                     <div class="centerText">{{localize "eon.sheets.actor.sar"}} (-{{object.hamtaAntalSar}}T6)</div>
                 {{/if}}

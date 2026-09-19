@@ -246,6 +246,16 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 				if ((this.item.system.grupp == "mystik") && (this.item.system.id == "teoretiskmagi")) {
 					data.item.system.installningar.kantabort = true;
 				}
+
+				// Motståndare5: alla färdigheter ska kunna tas bort (till skillnad från rollperson/rollperson5).
+				if (this.item.actor.type.toLowerCase().replace(" ", "") === "motstandare5") {
+					data.item.system.installningar.kantabort = true;
+				}
+			}
+			if (this.item.type.toLowerCase() == "språk") {
+				if (this.item.actor.type.toLowerCase().replace(" ", "") === "motstandare5") {
+					data.item.system.installningar.kantabort = true;
+				}
 			}
 			if ((this.item.type.toLowerCase() == "närstridsvapen") || (this.item.type.toLowerCase() == "avståndsvapen")) {
 				let egenskaper = this.actor.items.filter(

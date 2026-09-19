@@ -418,10 +418,6 @@ export class EonCombatTracker extends HandlebarsApplicationMixin(ApplicationV2) 
             ui.notifications.warn(game.i18n.localize("eon.combat.ingaAndraDeltagare"));
             return;
         }
-        if (!candidates.length) {
-            ui.notifications.warn(game.i18n.localize("eon.combat.ingaGiltigaMotstandare"));
-            return;
-        }
 
         const selected = new Set(combatant.flags?.["eon-rpg"]?.pendingSubcombatTargets ?? []);
         const autoSelectSingle = candidates.length === 1;
