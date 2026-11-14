@@ -89,7 +89,7 @@ export function partitionFolkslagEgenskaper(primaryDoc, kulturDoc, harKultur) {
  * @param {string[]} folkValfriaValda uuid
  * @returns {FolkslagEgenskapRef[]}
  */
-export function collectAllEgenskapRefsForFinish(listedRefs, valfriaPoolRefs, folkValfriaValda) {
+export function collectAllEgenskapRefsForFinish(listedRefs, valfriaPoolRefs, folkValfriaValda, externEgenskaper = []) {
     /** @type {FolkslagEgenskapRef[]} */
     const out = [];
     const seenUuids = new Set();
@@ -106,6 +106,14 @@ export function collectAllEgenskapRefsForFinish(listedRefs, valfriaPoolRefs, fol
         if (key && valda.has(key) && !seenUuids.has(key)) {
             seenUuids.add(key);
             out.push(ref);
+        }
+    }
+    /* Externa folkslagsegenskaper (t.ex. misslors Integrerade) */
+    for (const ext of externEgenskaper ?? []) {
+        const key = (ext.uuid ?? "").toString().trim();
+        if (key && !seenUuids.has(key)) {
+            seenUuids.add(key);
+            out.push({ uuid: key, namn: (ext.namn ?? "").toString() });
         }
     }
     return out;

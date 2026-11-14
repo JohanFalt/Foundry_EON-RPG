@@ -1003,7 +1003,8 @@
             "init": "Init",
             "fas": "Phase",
             "delstrid": "Duel",
-            "valdaMotstandare": "Valda motståndare",
+            "valdaMotstandare": "Selected opponents",
+            "lastMotstandare": "Locked vs",
             "ingaDeltagare": "Inga deltagare i aktiv encounter.",
             "valjFas": "Välj fas först.",
             "valjNarstridsfas": "Välj närstridsfas först.",
@@ -1020,6 +1021,10 @@
         "combatAttack": {
             "targetLabel": "Target",
             "selectTargetRequired": "Select a target before rolling the attack.",
+            "permissionSaveTarget": "Could not save selected target (missing permission).",
+            "permissionUpdateAttack": "Could not update the attack message – an active GM is required.",
+            "permissionNoGm": "No active GM – the combat flow cannot continue.",
+            "permissionUpdateTimeout": "Timeout: the GM did not respond to the combat update.",
             "noEncounterHint": "No active encounter - select targets manually.",
             "notInEncounterHint": "Character is not in the encounter - no tracker targets.",
             "noMeleeTargetsHint": "No subcombat configured - confirm subcombat in Eon Combat Tracker first.",
@@ -1260,6 +1265,16 @@
             "vapenarmVal_annat": "Other",
             "vapenarmSlumpa": "Roll (1d10)",
             "utrustningHint": "Drag and drop equipment from the compendium or create your own.",
+            "arketypVapenRubrik": "Weapons (step 13)",
+            "arketypRustningRubrik": "Armour (step 13)",
+            "arketypUtrustningHint": "Set the number of weapons by usage category that the archetype grants.",
+            "arketypBrukKategori": "Usage",
+            "arketypVanligaVapen": "Common",
+            "arketypOvanligaVapen": "Uncommon",
+            "arketypSallsyntaVapen": "Rare",
+            "arketypVanligaRustningar": "Common",
+            "arketypOvanligaRustningar": "Uncommon",
+            "arketypSallsyntaRustningar": "Rare",
             "mystikRubrik": "Mysticism and magic",
             "mystikHint": "For mages, summoners, etc., per rulebook.",
             "omstopt": "Reforged",
@@ -1291,7 +1306,13 @@
             "folkEgenskaperIngenFolkslag": "Choose an ancestry above.",
             "folkEgenskaperValfria": "Optional traits",
             "folkValfriaHint": "Check each optional trait the character should have. If there are more than two options, you must pick exactly two.",
-            "folkValfriaInga": "No optional traits in this setup."
+            "folkValfriaInga": "No optional traits in this setup.",
+            "externEgenskaperRubrik": "External traits",
+            "externEgenskaperHint": "Drag and drop ancestry traits here from the compendium (e.g. for missla \"Integrated\" trait).",
+            "externEgenskaperDropHint": "Drop an ancestry trait here",
+            "externEgenskapTaBort": "Remove",
+            "externEgenskapFelTyp": "Only traits (type Egenskap) can be added here.",
+            "externEgenskapRedanTillagd": "This trait has already been added."
         }
     }
 }

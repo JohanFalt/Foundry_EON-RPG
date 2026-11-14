@@ -16,6 +16,7 @@ import { EonCombatTracker } from "./apps/EonCombatTracker.js";
 import { CharacterCreationWizard } from "./apps/CharacterCreationWizard.js";
 import { CombatAttackFlow } from "./combat-attack-flow.js";
 import { CombatAttackChat } from "./combat-attack-chat.js";
+import { EonSocket } from "./eon-socket.js";
 
 import ItemHelper from "./item-helper.js";
 import MigrationWizard from "./ui/migration-wizard-helper.js";
@@ -322,6 +323,8 @@ Hooks.once("setup", function () {
 /* 3. When ready						*/
 /* ------------------------------------ */
 Hooks.once("ready", async () => {
+    EonSocket.register();
+
     // Per-spelarspråk: förstaval + återställ preferens vid inloggning i Eon-världen
     await ensureUiLanguage();
 

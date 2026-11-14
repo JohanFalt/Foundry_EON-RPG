@@ -1,4 +1,5 @@
 import { CombatHelper } from "../combat-helper.js";
+import { CombatAttackFlow } from "../combat-attack-flow.js";
 import { EonCombatantPortrait } from "./EonCombatantPortrait.js";
 import { SubcombatManager } from "../subcombat-manager.js";
 
@@ -423,7 +424,8 @@ export class EonCombatTracker extends HandlebarsApplicationMixin(ApplicationV2) 
         const autoSelectSingle = candidates.length === 1;
         const rows = candidates.map((candidate) => {
             const checked = (autoSelectSingle || selected.has(candidate.id)) ? "checked" : "";
-            return `<label class="eon-select-opponent-option"><input type="checkbox" name="target" value="${candidate.id}" ${checked}> ${candidate.name}</label>`;
+            const label = CombatAttackFlow.formatCombatantLabel(candidate, candidates);
+            return `<label class="eon-select-opponent-option"><input type="checkbox" name="target" value="${candidate.id}" ${checked}> ${foundry.utils.escapeHTML(label)}</label>`;
         }).join("");
 
         const dialog = new foundry.applications.api.DialogV2({

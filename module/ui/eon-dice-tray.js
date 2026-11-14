@@ -2,7 +2,7 @@
  * Inbyggd tärningsbricka och grafikinställningar (tidigare modulen eon-dice-roller).
  */
 
-import { buildRollDiceTitle } from "../dice-helper.js";
+import { buildRollDiceTitle, evaluateEonDicePool } from "../dice-helper.js";
 
 const EON_DICE_TEMPLATES = {
     tray: "systems/eon-rpg/templates/dice/tray.html",
@@ -237,7 +237,9 @@ function handleButtonClick(event, button) {
     }
 
     if (button.classList.contains("eon-roller__num")) {
-        dataset.value = parseInt(button.innerText, 10);
+        const raw = button.dataset.value ?? button.innerText;
+        dataset.value = parseInt(raw, 10);
+        if (!dataset.formula) dataset.formula = diceType || "d6";
         _dtUpdateChatDice(dataset, "calc", document);
     }
 
@@ -276,7 +278,9 @@ function handleButtonRightClick(event, button) {
     }
 
     if (button.classList.contains("eon-roller__num")) {
-        dataset.value = parseInt(button.innerText, 10);
+        const raw = button.dataset.value ?? button.innerText;
+        dataset.value = parseInt(raw, 10);
+        if (!dataset.formula) dataset.formula = diceType || "d6";
         _dtUpdateChatDice(dataset, "calc", document);
     }
 
@@ -308,13 +312,15 @@ function _dtUpdateChatDice(dataset, direction, html) {
         if (numberDices > 0) numberDices--;
     }
     if (direction === "calc") {
-        numberDices = dataset.value;
+        numberDices = Number(dataset.value);
+        if (!Number.isFinite(numberDices) || numberDices < 0) numberDices = 0;
 
         if (diceType === "") {
-            diceType = "d6";
+            diceType = dataset.formula || "d6";
+            dataset.formula = diceType;
+        } else if (!dataset.formula) {
             dataset.formula = diceType;
         }
-        if (numberDices === -1) numberDices = 0;
     }
 
     const allDices = _objLoadGenericDice();
@@ -355,8 +361,8 @@ function _dtApplyGenericLayout(html) {
         if (!modInput) return;
 
         const bonus = Number(modInput.value);
-
-        await rollDice(numberDices, bonus, diceType, obRoll);
+        const rolled = await rollDice(numberDices, bonus, diceType, obRoll);
+        if (!rolled) return;
 
         const flag = html.querySelector(`.eon-roller__flag--${diceType}`);
         if (flag) {
@@ -389,65 +395,37 @@ function _objLoadGenericDice() {
 }
 
 async function rollDice(number, bonus, type, obRollActive) {
-    let canRoll = number > 0;
-    let result = 0;
-    const diceResult = [];
-    let numDices = number;
-    let rolledDices = 0;
-    const allRolls = [];
+    const canRoll = number > 0 && Boolean(type);
+    if (!canRoll) return false;
 
-    while (numDices > rolledDices) {
-        const roll = new Roll(`1${type}`);
-        allRolls.push(roll);
-        await roll.evaluate();
-
-        roll.terms[0].results.forEach((dice) => {
-            rolledDices += 1;
-
-            if (type === "d6" && dice.result === 6 && obRollActive) {
-                numDices += 1;
-                rolledDices -= 1;
-            } else {
-                result += parseInt(dice.result, 10);
-            }
-
-            diceResult.push(dice.result);
-        });
-    }
-
-    const diceList = [];
-
-    if (canRoll) {
-        diceResult.forEach((dice) => diceList.push(dice));
-        result += parseInt(bonus, 10);
-    }
-
-    const text = buildRollDiceTitle(number, type, bonus, { ob: obRollActive });
+    const pool = await evaluateEonDicePool(number, type, { ob: obRollActive });
+    const result = pool.result + (Number(bonus) || 0);
+    const text = buildRollDiceTitle(number, type, bonus, { ob: pool.obApplied });
 
     const templateData = {
         data: {
             dicetype: type,
             config: undefined,
             dicecolor: game.settings.get("eon-rpg", "diceColor"),
-            isrollable: canRoll,
+            isrollable: true,
             type: "general",
             action: game.i18n.localize("eon.roll.genericDiceAction"),
             title: text,
-            diceresult: diceList,
+            diceresult: pool.diceResult,
             result,
-            obroll: obRollActive,
+            obroll: pool.obApplied,
         },
     };
 
     const rendered = await foundry.applications.handlebars.renderTemplate(EON_DICE_TEMPLATES.roll, templateData);
 
     const chatData = {
-        rolls: allRolls,
+        rolls: pool.rolls,
         content: rendered,
         speaker: ChatMessage.getSpeaker()
     };
     ChatMessage.applyMode(chatData);
-    ChatMessage.create(chatData);
+    await ChatMessage.create(chatData);
 
-    return canRoll;
+    return true;
 }

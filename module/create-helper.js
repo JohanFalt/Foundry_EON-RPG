@@ -164,6 +164,58 @@ export default class CreateHelper {
         return kroppsdelar;
     }
 
+    /**
+     * Synkar en rustnings kroppsdelsarray mot aktiva kroppsdelar i CONFIG.EON.
+     * Befintliga kroppsdelar med skyddsvärden behålls, nya läggs till tomma,
+     * och kroppsdelar som inte finns i aktiva systemet tas bort.
+     * @param {object} rustningSystemData - rustningens system-data (behöver .kroppsdel)
+     * @param {object} config - CONFIG.EON
+     * @param {string} version - game.system.version
+     * @returns {Array} synkad kroppsdelsarray
+     */
+    static synkRustningKroppsdelar(rustningSystemData, config, version) {
+        const bok = config.settings.bookCombat ? "strid" : "grund";
+        const aktuellaKroppsdelar = config.kroppsdelar[bok];
+        const befintliga = rustningSystemData.kroppsdel || [];
+
+        const synkad = [];
+        for (const key in aktuellaKroppsdelar) {
+            const existing = befintliga.find(k => k.kroppsdel === key);
+            if (existing) {
+                synkad.push({
+                    ...existing,
+                    namn: aktuellaKroppsdelar[key],
+                    version: version
+                });
+            } else {
+                synkad.push({
+                    namn: aktuellaKroppsdelar[key],
+                    kroppsdel: key,
+                    version: version,
+                    material: "",
+                    stick: 0,
+                    kross: 0,
+                    hugg: 0,
+                    belastning: 0
+                });
+            }
+        }
+
+        return synkad;
+    }
+
+    /**
+     * Beräknar tacker-sträng (delområde) från kroppsdelsarray.
+     * @param {Array} kroppsdelar - kroppsdelsarray
+     * @returns {string} kommaseparerad sträng av kroppsdelar med material
+     */
+    static beraknaTacker(kroppsdelar) {
+        return kroppsdelar
+            .filter(k => k.material && k.material !== "")
+            .map(k => game.i18n.localize(k.namn))
+            .join(", ");
+    }
+
     static async SkapaNarstridsvapen(actor, vapennamn, vapenlista, version, buren = false) {
         for (const vapen in vapenlista) {
             if (vapenlista[vapen].system.mall == vapennamn) {

@@ -10,7 +10,8 @@ import {
     UTRUSTNING_PKT_KEYS,
     ENHETER_FARDIGHET_GRUPP_KEYS,
     WIZARD_OVRIGA_ENHET_KEYS,
-    CCW_WIZARD_CREATED_FARDIGHET_ROW
+    CCW_WIZARD_CREATED_FARDIGHET_ROW,
+    ARKETYP_UTRUSTNING_KEYS
 } from "./ccw-constants-keys.js";
 import { defaultWizardData } from "./ccw-wizard-draft-defaults.js";
 import { getMergedWizardData } from "./ccw-wizard-draft-merge.js";
@@ -128,6 +129,9 @@ export function collectWizardDraftFromRoot(root, actor = null) {
     for (const key of UTRUSTNING_PKT_KEYS) {
         draft.utrustningPaket[key] = clampWizardFieldToNonNegativeIntStr(numericFieldStr(`ccw_pkt_${key}`));
     }
+    for (const key of ARKETYP_UTRUSTNING_KEYS) {
+        draft.arketypUtrustning[key] = clampWizardFieldToNonNegativeIntStr(numericFieldStr(`ccw_aut_${key}`));
+    }
 
     if (activeTab === "handelser") {
         const handelseRows = [];
@@ -224,7 +228,7 @@ export function collectWizardDraftFromRoot(root, actor = null) {
         let sprakRowIndex = 0;
         while (root.querySelector(`[name="ccw_tf_sprak_rf_${sprakRowIndex}_item"]`)) {
             sprakRows.push({
-                itemId: fieldValue(`ccw_tf_sprak_rf_${sprakRowIndex}_item`).toString().trim(),
+                compendiumUuid: fieldValue(`ccw_tf_sprak_rf_${sprakRowIndex}_item`).toString().trim(),
                 grundvarde: "0",
                 poang: "0",
                 talang: false,

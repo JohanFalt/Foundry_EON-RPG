@@ -384,6 +384,16 @@ export default class Eon5ActorSheetBase extends HandlebarsApplicationMixin(found
         const itemData = EffectHelper.normalizeSkadaItemData(foundry.utils.duplicate(dropped.toObject()));
         itemData.system.installningar = itemData.system.installningar ?? {};
         itemData.system.installningar.eon = "eon5";
+
+        // Synka rustningens kroppsdelar mot aktiva kroppsdelar vid drop
+        if (itemData.type === "Rustning" && itemData.system.kroppsdel?.length > 0) {
+            itemData.system.kroppsdel = CreateHelper.synkRustningKroppsdelar(
+                itemData.system, CONFIG.EON, game.system.version
+            );
+            itemData.system.tacker = CreateHelper.beraknaTacker(itemData.system.kroppsdel);
+            itemData.system.installningar.skapad = true;
+        }
+
         const created = await this.actor.createEmbeddedDocuments("Item", [itemData]);
         const item = created?.[0];
         if (item && EffectHelper.isSkadaEffectItem(item) && item.system?.varaktighetFormel) {

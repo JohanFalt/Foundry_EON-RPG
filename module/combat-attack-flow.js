@@ -35,17 +35,29 @@ export class CombatAttackFlow {
     static findCombatantForActor(actor) {
         if (!actor || !game.combat?.combatants) return null;
         const actorId = actor.id ?? actor._id;
+
+        // Prefer a controlled token belonging to this actor (multi-token same actor).
+        const controlled = canvas?.tokens?.controlled ?? [];
+        for (const token of controlled) {
+            if ((token.actor?.id ?? token.actorId) !== actorId) continue;
+            const byToken = game.combat.combatants.find((c) => c.tokenId === token.id);
+            if (byToken) return byToken;
+        }
+
         const tokenIds = new Set(
             (actor.getActiveTokens?.() ?? []).map((token) => token.id).filter(Boolean)
         );
         for (const c of game.combat.combatants.contents) {
-            if (c.actorId === actorId) return c;
             if (c.tokenId && tokenIds.has(c.tokenId)) return c;
+        }
+        for (const c of game.combat.combatants.contents) {
+            if (c.actorId === actorId) return c;
         }
         return null;
     }
 
     /**
+     * Motståndare i samma delstrid med motsatt roll (anfallare ↔ försvarare).
      * @param {Combatant} attackerCombatant
      * @returns {Combatant[]}
      */
@@ -55,11 +67,54 @@ export class CombatAttackFlow {
         const flags = attackerCombatant.flags?.[EON_ATTACK_FLAG] ?? {};
         const groupId = flags.groupId ?? "main";
         if (groupId === "main") return [];
+        const myRole = flags.subcombatRole ?? "";
 
         return combat.combatants.contents.filter((combatant) => {
             if (combatant.id === attackerCombatant.id || combatant.defeated) return false;
             const combatantFlags = combatant.flags?.[EON_ATTACK_FLAG] ?? {};
-            return (combatantFlags.groupId ?? "main") === groupId;
+            if ((combatantFlags.groupId ?? "main") !== groupId) return false;
+            const theirRole = combatantFlags.subcombatRole ?? "";
+            if (myRole && theirRole) return theirRole !== myRole;
+            return true;
+        });
+    }
+
+    /**
+     * @param {Combatant} combatant
+     * @param {Combatant[]} [peers]
+     * @returns {string}
+     */
+    static formatCombatantLabel(combatant, peers = []) {
+        const base = combatant?.name ?? combatant?.actor?.name ?? "?";
+        if (!peers.length) return base;
+        const sameName = peers.filter(
+            (peer) => (peer.name ?? peer.actor?.name ?? "?") === base
+        );
+        if (sameName.length <= 1) return base;
+        const index = sameName.findIndex((peer) => peer.id === combatant.id) + 1;
+        return index > 0 ? `${base} (#${index})` : base;
+    }
+
+    /**
+     * Låsta partners (motsatt roll i samma delstrid).
+     * @param {Combatant} combatant
+     * @returns {Combatant[]}
+     */
+    static getLockedPartners(combatant) {
+        const combat = combatant?.combat ?? game.combat;
+        if (!combat || !combatant) return [];
+        const flags = combatant.flags?.[EON_ATTACK_FLAG] ?? {};
+        const groupId = flags.groupId ?? "main";
+        if (groupId === "main") return [];
+        const myRole = flags.subcombatRole ?? "";
+
+        return combat.combatants.contents.filter((other) => {
+            if (other.id === combatant.id || other.defeated) return false;
+            const otherFlags = other.flags?.[EON_ATTACK_FLAG] ?? {};
+            if ((otherFlags.groupId ?? "main") !== groupId) return false;
+            const theirRole = otherFlags.subcombatRole ?? "";
+            if (myRole && theirRole) return theirRole !== myRole;
+            return true;
         });
     }
 
@@ -88,13 +143,12 @@ export class CombatAttackFlow {
     }
 
     /**
-     * @param {Combat} combat
-     * @param {string} attackerCombatantId
+     * Senaste mål lagras på anfallarens combatant (ägare får uppdatera), inte på Combat.flags.
+     * @param {Combatant|null} attackerCombatant
      * @returns {string|null}
      */
-    static getLastTargetCombatantId(combat, attackerCombatantId) {
-        const last = combat?.flags?.[EON_ATTACK_FLAG]?.lastTargets ?? {};
-        const id = last[attackerCombatantId];
+    static getLastTargetCombatantId(attackerCombatant) {
+        const id = attackerCombatant?.flags?.[EON_ATTACK_FLAG]?.lastTargetId;
         return typeof id === "string" && id.length ? id : null;
     }
 
@@ -111,15 +165,17 @@ export class CombatAttackFlow {
     }
 
     /**
-     * @param {Combat} combat
-     * @param {string} attackerCombatantId
+     * @param {Combatant} attackerCombatant
      * @param {string} defenderCombatantId
      */
-    static async saveLastTarget(combat, attackerCombatantId, defenderCombatantId) {
-        if (!combat || !attackerCombatantId || !defenderCombatantId) return;
-        const prev = foundry.utils.duplicate(combat.flags?.[EON_ATTACK_FLAG]?.lastTargets ?? {});
-        prev[attackerCombatantId] = defenderCombatantId;
-        await combat.setFlag(EON_ATTACK_FLAG, "lastTargets", prev);
+    static async saveLastTarget(attackerCombatant, defenderCombatantId) {
+        if (!attackerCombatant || !defenderCombatantId) return;
+        try {
+            await attackerCombatant.setFlag(EON_ATTACK_FLAG, "lastTargetId", defenderCombatantId);
+        } catch (error) {
+            console.error("eon-rpg | Kunde inte spara senaste mål", error);
+            ui.notifications.error(game.i18n.localize("eon.combatAttack.permissionSaveTarget"));
+        }
     }
 
     static createFlowId() {
@@ -136,15 +192,14 @@ export class CombatAttackFlow {
         const encounterActive = this.isEncounterActive();
         const attackerCombatant = this.findCombatantForActor(attackerActor);
         const candidates = this.getTargetCandidates(attackerCombatant, weaponType);
-        const combat = game.combat;
-        const preferredId = combat && attackerCombatant
-            ? this.getLastTargetCombatantId(combat, attackerCombatant.id)
+        const preferredId = attackerCombatant
+            ? this.getLastTargetCombatantId(attackerCombatant)
             : null;
         const defaultId = this.resolveDefaultTargetId(candidates, preferredId);
 
         const candidateRows = candidates.map((combatant) => ({
             id: combatant.id,
-            name: combatant.name ?? combatant.actor?.name ?? "?",
+            name: this.formatCombatantLabel(combatant, candidates),
             actorId: combatant.actorId ?? combatant.actor?.id ?? null
         }));
 

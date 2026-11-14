@@ -594,25 +594,23 @@ export default class Eon5ActorSheet extends foundry.appv1.sheets.ActorSheet {
         else if (droppedItem.type == "Folkslag") {
             ui.notifications.warn(game.i18n.format("eon.messages.folkslagKanInteLaggasTill", { type: this.actor.type }));
             return false;
-        }  
-        
-        // if (droppedItem.system.installningar.eon !== "eon5") {           
-        //     update = true;
-        // }
-
-        // if (update) {
-        //     if (itemData == undefined) {
-        //         itemData = foundry.utils.duplicate(droppedItem);            
-        //     }
-        //     itemData.system.installningar.eon = "eon5";
-        //     await this.actor.createEmbeddedDocuments('Item', [itemData])
-        // }
+        }
 
         if (itemData == undefined) {
-            itemData = foundry.utils.duplicate(droppedItem);            
+            itemData = foundry.utils.duplicate(droppedItem);
         }
         itemData = EffectHelper.normalizeSkadaItemData(itemData);
         itemData.system.installningar.eon = "eon5";
+
+        // Synka rustningens kroppsdelar mot aktiva kroppsdelar vid drop
+        if (itemData.type === "Rustning" && itemData.system.kroppsdel?.length > 0) {
+            itemData.system.kroppsdel = CreateHelper.synkRustningKroppsdelar(
+                itemData.system, CONFIG.EON, game.system.version
+            );
+            itemData.system.tacker = CreateHelper.beraknaTacker(itemData.system.kroppsdel);
+            itemData.system.installningar.skapad = true;
+        }
+
         const created = await this.actor.createEmbeddedDocuments('Item', [itemData]);
         const item = created?.[0];
         if (item && EffectHelper.isSkadaEffectItem(item) && item.system?.varaktighetFormel) {

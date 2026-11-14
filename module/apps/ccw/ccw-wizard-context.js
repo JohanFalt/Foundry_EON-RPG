@@ -253,6 +253,17 @@ export async function buildCharacterCreationWizardContext(wizard, context, _opti
         .map((poolRef) => (poolRef.uuid ?? "").toString())
         .filter(Boolean)
         .join(",");
+
+    /* Externa folkslagsegenskaper (t.ex. misslors Integrerade) */
+    const externEgenskaper = Array.isArray(wizardDraft.externFolkslagEgenskaper)
+        ? wizardDraft.externFolkslagEgenskaper
+        : [];
+    context.externFolkslagRows = externEgenskaper.map((entry, index) => ({
+        uuid: (entry.uuid ?? "").toString(),
+        label: (entry.namn ?? "").toString(),
+        index
+    }));
+
     context.startsprakLista = await resolveStartsprakRowsWithPack(
         wizardDraft.folkslag,
         wizardDraft.kulturfolkslag,
@@ -265,29 +276,26 @@ export async function buildCharacterCreationWizardContext(wizard, context, _opti
     const sprakRowsRaw = Array.isArray(wizardDraft.sprakFordelning) ? [...wizardDraft.sprakFordelning] : [];
     context.sprakFordelningRows = await Promise.all(
         sprakRowsRaw.map(async (row, index) => {
-            const itemIdStr = (row?.itemId ?? "").toString().trim();
-            const itemDoc = itemIdStr && wizard.actor?.items?.get ? wizard.actor.items.get(itemIdStr) : null;
-            let selectedCompendiumUuid = "";
-            if (itemDoc?.type === "Språk") {
-                selectedCompendiumUuid = (itemDoc.getFlag(EON_CCW_FLAG_SCOPE, CCW_EGENSKAP_SOURCE_UUID_FLAG) ?? "")
-                    .toString()
-                    .trim();
-            } else if (itemIdStr.includes("Compendium.")) {
-                selectedCompendiumUuid = itemIdStr;
+            /* Bakåtkompatibilitet: äldre data har itemId (embedded actor-item) istf. compendiumUuid. */
+            let selectedCompendiumUuid = (row?.compendiumUuid ?? "").toString().trim();
+            if (!selectedCompendiumUuid) {
+                const legacyItemId = (row?.itemId ?? "").toString().trim();
+                if (legacyItemId) {
+                    if (legacyItemId.includes("Compendium.")) {
+                        selectedCompendiumUuid = legacyItemId;
+                    } else {
+                        const legacyDoc = wizard.actor?.items?.get?.(legacyItemId);
+                        if (legacyDoc?.type === "Språk") {
+                            selectedCompendiumUuid = (legacyDoc.getFlag(EON_CCW_FLAG_SCOPE, CCW_EGENSKAP_SOURCE_UUID_FLAG) ?? "")
+                                .toString().trim();
+                        }
+                    }
+                }
             }
             const itemUuidsTakenByOtherRows = new Set();
             for (let peerIndex = 0; peerIndex < sprakRowsRaw.length; peerIndex += 1) {
                 if (peerIndex === index) continue;
-                const otherId = (sprakRowsRaw[peerIndex]?.itemId ?? "").toString().trim();
-                const otherDoc = otherId ? wizard.actor?.items?.get?.(otherId) : null;
-                let otherUuid = "";
-                if (otherDoc?.type === "Språk") {
-                    otherUuid = (otherDoc.getFlag(EON_CCW_FLAG_SCOPE, CCW_EGENSKAP_SOURCE_UUID_FLAG) ?? "")
-                        .toString()
-                        .trim();
-                } else if (otherId.includes("Compendium.")) {
-                    otherUuid = otherId;
-                }
+                const otherUuid = (sprakRowsRaw[peerIndex]?.compendiumUuid ?? "").toString().trim();
                 if (otherUuid) itemUuidsTakenByOtherRows.add(otherUuid);
             }
             const itemOptionsHtml = await buildSprakItemOptionsHtml(
@@ -297,7 +305,7 @@ export async function buildCharacterCreationWizardContext(wizard, context, _opti
                 itemUuidsTakenByOtherRows
             );
             return {
-                itemId: itemIdStr,
+                compendiumUuid: selectedCompendiumUuid,
                 index,
                 itemOptionsHtml
             };

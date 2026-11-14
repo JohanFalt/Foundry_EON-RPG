@@ -200,7 +200,7 @@ function delay(ms) {
  * @param {{ ob?: boolean }} [options]
  */
 export function buildRollDiceTitle(number, dicetype, bonus, options = {}) {
-    const dt = dicetype.replace("d", "T");
+    const dt = String(dicetype || "").replace("d", "T");
     const ob = (options.ob && dicetype === "d6") ? game.i18n.localize("eon.roll.ob") : "";
     const dice = `${ob}${number}${dt}`;
 
@@ -212,6 +212,72 @@ export function buildRollDiceTitle(number, dicetype, bonus, options = {}) {
     }
 
     return game.i18n.format("eon.roll.slar", { dice });
+}
+
+/** Max antal enskilda tärningskast i ett Ob-slag (skydd mot hängande klient). */
+const EON_DICE_POOL_MAX_ROLLS = 500;
+
+/**
+ * Slår ett antal Eon-tärningar.
+ * Ob (obegränsad) gäller endast T6: varje 6 tas bort och ersätts med två nya T6 (Eon grundregler).
+ *
+ * @param {number} number
+ * @param {string} dicetype t.ex. "d6", "d10", "d100"
+ * @param {{ ob?: boolean }} [options]
+ * @returns {Promise<{ result: number, diceResult: number[], rolls: Roll[], obApplied: boolean }>}
+ */
+export async function evaluateEonDicePool(number, dicetype, options = {}) {
+    const count = Number(number);
+    const type = String(dicetype || "");
+    const obApplied = Boolean(options.ob) && type === "d6";
+
+    const diceResult = [];
+    const rolls = [];
+    let result = 0;
+
+    if (!(count > 0) || !/^d(6|10|100)$/.test(type)) {
+        return { result: 0, diceResult, rolls, obApplied: false };
+    }
+
+    let numDices = count;
+    let rolledDices = 0;
+    let evaluations = 0;
+
+    while (numDices > rolledDices) {
+        if (evaluations >= EON_DICE_POOL_MAX_ROLLS) {
+            console.error("eon-rpg | Avbröt tärningsslag: för många Ob-omslag.");
+            break;
+        }
+
+        const roll = new Roll(`1${type}`);
+        rolls.push(roll);
+        await roll.evaluate({ allowInteractive: false });
+        evaluations += 1;
+
+        const die = roll.dice?.[0] ?? roll.terms?.find((term) => Array.isArray(term?.results));
+        const faces = die?.results;
+        if (!faces?.length) {
+            console.error("eon-rpg | Tärningsslag saknar resultat", { type, formula: roll.formula });
+            break;
+        }
+
+        for (const face of faces) {
+            rolledDices += 1;
+            const value = Number(face.result);
+
+            // Ob-T6: 6:an räknas inte, ersätts med två nya T6 (numDices+1 och "råka om" denna).
+            if (obApplied && value === 6) {
+                numDices += 1;
+                rolledDices -= 1;
+            } else if (Number.isFinite(value)) {
+                result += value;
+            }
+
+            diceResult.push(value);
+        }
+    }
+
+    return { result, diceResult, rolls, obApplied };
 }
 
 /**
@@ -359,45 +425,18 @@ export async function RollDice(diceRoll) {
         rollDescription = diceRoll.description;
     }
 
-    let numDices = number;
-    let rolledDices = 0;
-
-    const allDices = [];
-
-    while (numDices > rolledDices) {
-        let roll = await new Roll("1" + dicetype);
-        await roll.evaluate();
-        allDices.push(roll);
-        
-        roll.terms[0].results.forEach((dice) => {
-            rolledDices += 1;
-
-            if ((dicetype == "d6") && (dice.result == 6) && (obRoll)) {
-                numDices += 1;
-                rolledDices -= 1;
-            }
-            else {
-                result += parseInt(dice.result);
-            }
-
-            diceResult.push(dice.result);
-        });
-    }
-
-    const diceList = [];
+    const pool = await evaluateEonDicePool(number, dicetype, { ob: obRoll });
+    const allDices = pool.rolls;
+    diceResult = pool.diceResult;
+    const obApplied = pool.obApplied;
 
     if (canRoll) {
-        diceResult.forEach((dice) => {
-            diceList.push(dice);
-        });
-
-        result += parseInt(bonus);
-    }
-    else {
-        result = parseInt(bonus);
+        result = pool.result + parseInt(bonus, 10);
+    } else {
+        result = parseInt(bonus, 10) || 0;
     }
 
-    let text = buildRollDiceTitle(number, dicetype, bonus, { ob: obRoll });
+    let text = buildRollDiceTitle(number, dicetype, bonus, { ob: obApplied });
 
     if (diceRoll.grundvarde != undefined) {
         if (diceRoll.grundvarde != "") {
@@ -418,11 +457,12 @@ export async function RollDice(diceRoll) {
             type: typeRoll,
             action: action,
             title: text,
-            diceresult: diceList,
+            diceresult: diceResult,
+            dicetype: dicetype,
             difficulty: difficulty,
             result: result,
             resulttext: resulttext,
-            obroll: obRoll
+            obroll: obApplied
         }
     };
 

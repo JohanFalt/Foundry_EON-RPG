@@ -377,32 +377,50 @@ export async function applyCharacterCreationFinish(actor, wizardData) {
                 sprakDocs = [];
             }
         }
-        /** @type {{ _id: string, system: Record<string, unknown> }[]} */
-        const sprakUpdates = [];
-        const scope = EON_CCW_FLAG_SCOPE;
+        /** @type {object[]} */
+        const sprakItemsToCreate = [];
         for (const row of sprakFordelning) {
-            const itemId = (row.itemId ?? "").toString().trim();
-            if (!itemId) continue;
-            const itemDoc = actor.items.get(itemId);
-            if (!itemDoc || itemDoc.type !== "Språk") continue;
-            const uuid = (itemDoc.getFlag(scope, CCW_EGENSKAP_SOURCE_UUID_FLAG) ?? "").toString().trim();
-            const kallaSprakDoc = uuid ? sprakDocs.find((doc) => doc.uuid === uuid) : null;
-            const fardighetsvarde = kallaSprakDoc
-                ? defaultWizardFardighetGrundFardighetsvarde(kallaSprakDoc, "sprak", false)
-                : defaultWizardFardighetGrundFardighetsvarde(itemDoc, "sprak", false);
-            const t6Pool = fardighetsvardeToTvardeBonus(fardighetsvarde);
-            sprakUpdates.push({
-                _id: itemId,
-                system: {
-                    varde: {
-                        tvarde: t6Pool.tvarde,
-                        bonus: t6Pool.bonus,
-                        bonuslista: []
+            let uuid = (row.compendiumUuid ?? "").toString().trim();
+            /* Bakåtkompatibilitet: äldre data kan ha itemId istf. compendiumUuid. */
+            if (!uuid) {
+                const legacyItemId = (row.itemId ?? "").toString().trim();
+                if (legacyItemId && legacyItemId.includes("Compendium.")) {
+                    uuid = legacyItemId;
+                } else if (legacyItemId) {
+                    const legacyDoc = actor.items.get(legacyItemId);
+                    if (legacyDoc?.type === "Språk") {
+                        uuid = (legacyDoc.getFlag(EON_CCW_FLAG_SCOPE, CCW_EGENSKAP_SOURCE_UUID_FLAG) ?? "")
+                            .toString().trim();
                     }
                 }
+            }
+            if (!uuid) continue;
+            /* Hoppa över om det redan finns ett embedded Språk med detta source-uuid (legacy/omslutför). */
+            const alreadyExists = actor.items.some((it) =>
+                it.type === "Språk" &&
+                (it.getFlag(EON_CCW_FLAG_SCOPE, CCW_EGENSKAP_SOURCE_UUID_FLAG) ?? "").toString().trim() === uuid
+            );
+            if (alreadyExists) continue;
+            const src = sprakDocs.find((doc) => doc.uuid === uuid);
+            if (!src) continue;
+            const fardighetsvarde = defaultWizardFardighetGrundFardighetsvarde(src, "sprak", false);
+            const t6Pool = fardighetsvardeToTvardeBonus(fardighetsvarde);
+            const itemData = foundry.utils.duplicate(src.toObject());
+            delete itemData._id;
+            itemData.system = itemData.system ?? {};
+            itemData.system.varde = {
+                tvarde: t6Pool.tvarde,
+                bonus: t6Pool.bonus,
+                bonuslista: []
+            };
+            itemData.flags = foundry.utils.mergeObject(itemData.flags ?? {}, {
+                [EON_CCW_FLAG_SCOPE]: {
+                    [CCW_EGENSKAP_SOURCE_UUID_FLAG]: uuid
+                }
             });
+            sprakItemsToCreate.push(itemData);
         }
-        if (sprakUpdates.length) await actor.updateEmbeddedDocuments("Item", sprakUpdates);
+        if (sprakItemsToCreate.length) await actor.createEmbeddedDocuments("Item", sprakItemsToCreate);
     }
 
     actorData.system.egenskap.karaktärsdrag = buildEon5KaraktarsdragFromWizardRows(

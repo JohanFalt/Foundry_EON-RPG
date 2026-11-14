@@ -156,9 +156,12 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 					itemData.name = "Ny rustning";
 				}
 
-				const kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, game.system.version);
-				kroppsdelar.forEach(k => k.modifiera = false);
-				itemData.system.kroppsdel = kroppsdelar;
+				// Skapa bara tomma kroppsdelar om det inte redan finns data (t.ex. från compendium)
+				if (!itemData.system.kroppsdel || itemData.system.kroppsdel.length === 0) {
+					const kroppsdelar = await CreateHelper.SkapaKroppsdelar(CONFIG.EON, game.system.version);
+					kroppsdelar.forEach(k => k.modifiera = false);
+					itemData.system.kroppsdel = kroppsdelar;
+				}
 				itemData.system.typ = "utrustning";
 			}
 			if (itemData.type == "Utrustning") {

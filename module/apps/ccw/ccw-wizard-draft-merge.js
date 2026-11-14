@@ -12,7 +12,8 @@ import {
     ENHETER_FARDIGHET_GRUPP_KEYS,
     WIZARD_OVRIGA_ENHET_KEYS,
     CCW_WIZARD_CREATED_FARDIGHET_ROW,
-    CCW_WIZARD_CREATED_SPRAK_ROW
+    CCW_WIZARD_CREATED_SPRAK_ROW,
+    ARKETYP_UTRUSTNING_KEYS
 } from "./ccw-constants-keys.js";
 import { defaultWizardData, emptySprakFordelningRow, emptyKaraktarsdragRow } from "./ccw-wizard-draft-defaults.js";
 import {
@@ -121,6 +122,13 @@ export function getMergedWizardData(actor) {
     for (const key of UTRUSTNING_PKT_KEYS) {
         const paketVarde = merged.utrustningPaket[key];
         if (paketVarde === "" || paketVarde === null || paketVarde === undefined) merged.utrustningPaket[key] = "0";
+    }
+    if (!Array.isArray(merged.externFolkslagEgenskaper)) merged.externFolkslagEgenskaper = [];
+
+    if (!merged.arketypUtrustning || typeof merged.arketypUtrustning !== "object") merged.arketypUtrustning = {};
+    for (const key of ARKETYP_UTRUSTNING_KEYS) {
+        const autVarde = merged.arketypUtrustning[key];
+        if (autVarde === "" || autVarde === null || autVarde === undefined) merged.arketypUtrustning[key] = "0";
     }
     const mystikAntalRaw = merged.mystikAntal;
     if (mystikAntalRaw === "" || mystikAntalRaw === null || mystikAntalRaw === undefined) merged.mystikAntal = "0";

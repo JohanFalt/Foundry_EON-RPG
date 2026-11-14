@@ -97,5 +97,18 @@ export const UTRUSTNING_PKT_KEYS = [
     "vapenvar"
 ];
 
+/**
+ * Arketyp-utrustning (flik 13): antal vapen/rustningar per bruk-kategori.
+ * @type {readonly string[]}
+ */
+export const ARKETYP_UTRUSTNING_KEYS = [
+    "vanligaVapen",
+    "ovanligaVapen",
+    "sallsyntaVapen",
+    "vanligaRustningar",
+    "ovanligaRustningar",
+    "sallsyntaRustningar"
+];
+
 /** Max antal färdighetsenheter per färdighet i karaktärsskapande-wizarden (steg 9). */
 export const CCW_FARDIGHET_ENHETER_MAX = 8;

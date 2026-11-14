@@ -9,6 +9,7 @@ import { DialogSkillRoll, SkillRoll } from "./dialogs/dialog-skill-roll.js";
 import { SkadetabellHelper } from "./skadetabell-helper.js";
 import CalculateHelper from "./calculate-helper.js";
 import EffectHelper from "./effect-helper.js";
+import { EonSocket } from "./eon-socket.js";
 
 export class CombatAttackChat {
     static _clickListenerBound = false;
@@ -449,11 +450,17 @@ export class CombatAttackChat {
         const attackResult = Number(flags.attackResult ?? 0);
         const { hit, overtag } = CombatAttackFlow.compareAttackDefense(attackResult, defenseResult);
 
-        await freshAttack.update({
-            [`flags.${EON_ATTACK_FLAG}.waitingForDefense`]: false,
-            [`flags.${EON_ATTACK_FLAG}.defenseResult`]: defenseResult,
-            [`flags.${EON_ATTACK_FLAG}.flowType`]: "resolution"
-        });
+        try {
+            await EonSocket.updateChatMessage(freshAttack, {
+                [`flags.${EON_ATTACK_FLAG}.waitingForDefense`]: false,
+                [`flags.${EON_ATTACK_FLAG}.defenseResult`]: defenseResult,
+                [`flags.${EON_ATTACK_FLAG}.flowType`]: "resolution"
+            });
+        } catch (error) {
+            console.error("eon-rpg | resolveDefense kunde inte uppdatera anfallsmeddelandet", error);
+            ui.notifications.error(game.i18n.localize("eon.combatAttack.permissionUpdateAttack"));
+            return;
+        }
 
         const attackerName = flags.attackerName ?? "?";
         const defenderName = flags.defenderName ?? "?";

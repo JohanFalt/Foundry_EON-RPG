@@ -410,24 +410,22 @@ export default class EonActorSheet extends foundry.appv1.sheets.ActorSheet {
         else if (droppedItem.type == "Folkslag") {
             ui.notifications.warn(game.i18n.format("eon.messages.folkslagKanInteLaggasTill", { type: this.actor.type }));
             return false;
-        }  
-        
-        // if (droppedItem.system.installningar.eon !== "eon4") {           
-        //     update = true;
-        // }
-
-        // if (update) {
-        //     if (itemData == undefined) {
-        //         itemData = foundry.utils.duplicate(droppedItem);            
-        //     }
-        //     itemData.system.installningar.eon = "eon4";
-        //     await this.actor.createEmbeddedDocuments('Item', [itemData])
-        // }
+        }
 
         if (itemData == undefined) {
-            itemData = foundry.utils.duplicate(droppedItem);            
+            itemData = foundry.utils.duplicate(droppedItem);
         }
         itemData.system.installningar.eon = "eon4";
+
+        // Synka rustningens kroppsdelar mot aktiva kroppsdelar vid drop
+        if (itemData.type === "Rustning" && itemData.system.kroppsdel?.length > 0) {
+            itemData.system.kroppsdel = CreateHelper.synkRustningKroppsdelar(
+                itemData.system, CONFIG.EON, game.system.version
+            );
+            itemData.system.tacker = CreateHelper.beraknaTacker(itemData.system.kroppsdel);
+            itemData.system.installningar.skapad = true;
+        }
+
         await this.actor.createEmbeddedDocuments('Item', [itemData])
     }
 

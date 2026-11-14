@@ -10,7 +10,6 @@ import {
     EON_CCW_FLAG_SCOPE,
     collectWizardDraftFromRoot,
     syncWizardOvrigFardighetItemNamesFromForm,
-    syncWizardSprakItemsFromForm,
     syncPairedWizardField,
     mirrorWizardFardighetPoolDisplay,
     applyPrimaryFolkslagAttributToMergedDraft,
@@ -33,6 +32,7 @@ import {
     clampWizardFieldToNonNegativeIntStr,
     HANDELSE_SIDEBAR_SLAG_KEYS,
     UTRUSTNING_PKT_KEYS,
+    ARKETYP_UTRUSTNING_KEYS,
     CCW_WIZARD_CREATED_FARDIGHET_ROW,
     emptySprakFordelningRow,
     emptyKaraktarsdragRow
@@ -41,6 +41,7 @@ import ItemHelper from "../item-helper.js";
 import {
     CCW_EGENSKAP_SOURCE_UUID_FLAG,
     CCW_FOLKSLAG_MANAGED_FLAG,
+    FOLKSLAGSEGENSKAPER5_PACK,
     getFolkslagPrimaryChangeResetPatch,
     loadFolkslag5Doc,
     partitionFolkslagEgenskaper
@@ -99,6 +100,16 @@ const PAKET_LABEL_KEYS = {
     underhallning: "eon.sheets.actor.utrustningspaketUnderhallning",
     vildmark: "eon.sheets.actor.utrustningspaketVildmark",
     vapenvar: "eon.sheets.actor.utrustningspaketVapenvar"
+};
+
+/** @type {Record<string, string>} */
+const ARKETYP_UTRUSTNING_LABEL_KEYS = {
+    vanligaVapen: "eon.wizard.arketypVanligaVapen",
+    ovanligaVapen: "eon.wizard.arketypOvanligaVapen",
+    sallsyntaVapen: "eon.wizard.arketypSallsyntaVapen",
+    vanligaRustningar: "eon.wizard.arketypVanligaRustningar",
+    ovanligaRustningar: "eon.wizard.arketypOvanligaRustningar",
+    sallsyntaRustningar: "eon.wizard.arketypSallsyntaRustningar"
 };
 
 /**
@@ -384,7 +395,8 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
             ccwUtrustningStepCount: CharacterCreationWizard.#onUtrustningStepCount,
             ccwMystikStepAntal: CharacterCreationWizard.#onMystikStepAntal,
             ccwVapenarmSlumpa: CharacterCreationWizard.#onVapenarmSlumpa,
-            ccwHarleddOvStep: CharacterCreationWizard.#onHarleddOvStep
+            ccwHarleddOvStep: CharacterCreationWizard.#onHarleddOvStep,
+            ccwRemoveExternEgenskap: CharacterCreationWizard.#onRemoveExternEgenskap
         }
     };
 
@@ -598,15 +610,6 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
             const merged = getMergedWizardData(this.actor);
             const rows = Array.isArray(merged.sprakFordelning) ? [...merged.sprakFordelning] : [];
             if (idx >= rows.length) return;
-            const removed = rows[idx];
-            const delId = (removed?.itemId ?? "").toString().trim();
-            const delItem = delId ? this.actor.items?.get?.(delId) : null;
-            if (
-                delItem?.type === "Språk" &&
-                delItem.getFlag(EON_CCW_FLAG_SCOPE, CCW_FOLKSLAG_MANAGED_FLAG) !== true
-            ) {
-                await this.actor.deleteEmbeddedDocuments("Item", [delId]);
-            }
             rows.splice(idx, 1);
             await persistWizardData(this.actor, { sprakFordelning: rows });
             this._ccwSkipFocusRestoreOnce = true;
@@ -893,6 +896,92 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
         })();
     }
 
+    /* ── Drag & drop: folkslagsegenskaper (extern, t.ex. misslors Integrerade) ── */
+
+    static #onFolkEgenskapDropDragOver(event, target) {
+        event?.preventDefault?.();
+        if (target instanceof HTMLElement) target.classList.add("is-dragover");
+    }
+
+    static #onFolkEgenskapDropDragLeave(event, target) {
+        event?.preventDefault?.();
+        if (target instanceof HTMLElement) target.classList.remove("is-dragover");
+    }
+
+    /**
+     * Drop-handler: accepterar Egenskap-items (typ "Egenskap") från compendiet
+     * `eon-rpg.folkslagegenskaper5` eller från världen. Lägger till i wizardData
+     * utan att skapa embedded items (det sker vid Slutför).
+     */
+    static #onFolkEgenskapDrop(event, target) {
+        return (async () => {
+            event?.preventDefault?.();
+            event?.stopPropagation?.();
+            if (target instanceof HTMLElement) target.classList.remove("is-dragover");
+            const raw = event?.dataTransfer?.getData?.("text/plain");
+            if (!raw) return;
+            /** @type {unknown} */
+            let dropData;
+            try {
+                dropData = JSON.parse(raw);
+            } catch {
+                return;
+            }
+            /** @type {Item|null} */
+            let droppedItem = null;
+            try {
+                droppedItem = await Item.implementation.fromDropData(dropData);
+            } catch {
+                droppedItem = null;
+            }
+            if (!droppedItem || droppedItem.type !== "Egenskap") {
+                ui.notifications?.warn?.(game.i18n.localize("eon.wizard.externEgenskapFelTyp"));
+                return;
+            }
+            /* Bestäm compendium-uuid (om det droppades från compendium) eller bygg ett id */
+            const compUuid = (droppedItem.uuid ?? "").toString().trim();
+            const namn = (droppedItem.name ?? "").toString().trim();
+            if (!compUuid || !namn) return;
+
+            await this._saveFormToFlags();
+            const merged = getMergedWizardData(this.actor);
+            const externArr = Array.isArray(merged.externFolkslagEgenskaper) ? [...merged.externFolkslagEgenskaper] : [];
+
+            /* Undvik dubbletter */
+            if (externArr.some((e) => e.uuid === compUuid)) {
+                ui.notifications?.info?.(game.i18n.localize("eon.wizard.externEgenskapRedanTillagd"));
+                return;
+            }
+
+            externArr.push({ uuid: compUuid, namn });
+            await persistWizardData(this.actor, { externFolkslagEgenskaper: externArr });
+            this._ccwSkipFocusRestoreOnce = true;
+            await this.render(true);
+        })();
+    }
+
+    /**
+     * Ta bort en externt droppad folkslagsegenskap via dess index.
+     */
+    static #onRemoveExternEgenskap(event, target) {
+        return (async () => {
+            event?.preventDefault?.();
+            const indexStr = (target?.dataset?.ccwExternIndex ?? "").toString().trim();
+            const index = parseInt(indexStr, 10);
+            if (!Number.isFinite(index) || index < 0) return;
+
+            await this._saveFormToFlags();
+            const merged = getMergedWizardData(this.actor);
+            const externArr = Array.isArray(merged.externFolkslagEgenskaper) ? [...merged.externFolkslagEgenskaper] : [];
+            if (index >= externArr.length) return;
+
+            externArr.splice(index, 1);
+            await persistWizardData(this.actor, { externFolkslagEgenskaper: externArr });
+            this._ccwSkipFocusRestoreOnce = true;
+            await this.render(true);
+        })();
+    }
+
     /** ±-steg: sidopanel (härledd G/B, valfria poäng, färdighetsenheter), flik 8 bonus. */
     static #onHarleddOvStep(event, target) {
         event?.preventDefault?.();
@@ -914,6 +1003,7 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
             /^ccw_(?:ov|tf)_e_/.test(input.name) ||
             /^ccw_ht_/.test(input.name) ||
             /^ccw_pkt_/.test(input.name) ||
+            /^ccw_aut_/.test(input.name) ||
             /^ccw_avt_/.test(input.name) ||
             /^ccw_tf_.+_rf_\d+_(?:poang|grundvarde)$/.test(input.name) ||
             input.name === "ccw_mystik_antal"
@@ -1395,7 +1485,6 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
         }
 
         const draft = collectWizardDraftFromRoot(inner, this.actor);
-        await syncWizardSprakItemsFromForm(inner, this.actor, draft);
         await syncWizardOvrigFardighetItemNamesFromForm(inner, this.actor, draft);
         await persistWizardData(this.actor, draft);
         return true;
@@ -1527,13 +1616,27 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
             label: game.i18n.localize(PAKET_LABEL_KEYS[key] ?? key),
             value: wizardDraft.utrustningPaket?.[key] ?? "0"
         }));
+        const vapenBrukKeys = ["vanligaVapen", "ovanligaVapen", "sallsyntaVapen"];
+        const rustningBrukKeys = ["vanligaRustningar", "ovanligaRustningar", "sallsyntaRustningar"];
+        const arketypVapenRows = vapenBrukKeys.map((key) => ({
+            key,
+            label: game.i18n.localize(ARKETYP_UTRUSTNING_LABEL_KEYS[key] ?? key),
+            value: wizardDraft.arketypUtrustning?.[key] ?? "0"
+        }));
+        const arketypRustningRows = rustningBrukKeys.map((key) => ({
+            key,
+            label: game.i18n.localize(ARKETYP_UTRUSTNING_LABEL_KEYS[key] ?? key),
+            value: wizardDraft.arketypUtrustning?.[key] ?? "0"
+        }));
 
         return {
             harleddaRowsOv,
             harleddaRowsT8,
             enhetRowsOv,
             handelseOvRows,
-            paketRows
+            paketRows,
+            arketypVapenRows,
+            arketypRustningRows
         };
     }
 
@@ -1816,6 +1919,13 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
                 dropEl.removeEventListener("drop", this._boundOnMystikDrop);
             }
         }
+        if (this._boundOnFolkEgenskapDropOver) {
+            for (const dropEl of root.querySelectorAll('[data-ccw-drop-zone="folkEgenskap"]')) {
+                dropEl.removeEventListener("dragover", this._boundOnFolkEgenskapDropOver);
+                dropEl.removeEventListener("dragleave", this._boundOnFolkEgenskapDropLeave);
+                dropEl.removeEventListener("drop", this._boundOnFolkEgenskapDrop);
+            }
+        }
         proseMirrorHost.removeEventListener("change", this._boundOnProseMirrorPersistItem, true);
         proseMirrorHost.removeEventListener("close", this._boundOnProseMirrorPersistItem, true);
 
@@ -1834,6 +1944,12 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
             CharacterCreationWizard.#onMystikDropDragLeave(event, event.currentTarget);
         this._boundOnMystikDrop = (event) =>
             CharacterCreationWizard.#onMystikDrop.call(this, event, event.currentTarget);
+        this._boundOnFolkEgenskapDropOver = (event) =>
+            CharacterCreationWizard.#onFolkEgenskapDropDragOver(event, event.currentTarget);
+        this._boundOnFolkEgenskapDropLeave = (event) =>
+            CharacterCreationWizard.#onFolkEgenskapDropDragLeave(event, event.currentTarget);
+        this._boundOnFolkEgenskapDrop = (event) =>
+            CharacterCreationWizard.#onFolkEgenskapDrop.call(this, event, event.currentTarget);
 
         root.addEventListener("change", this._boundOnFormChange);
         root.addEventListener("input", this._boundOnFormInput);
@@ -1872,6 +1988,11 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
             dropEl.addEventListener("dragover", this._boundOnMystikDropOver);
             dropEl.addEventListener("dragleave", this._boundOnMystikDropLeave);
             dropEl.addEventListener("drop", this._boundOnMystikDrop);
+        }
+        for (const dropEl of root.querySelectorAll('[data-ccw-drop-zone="folkEgenskap"]')) {
+            dropEl.addEventListener("dragover", this._boundOnFolkEgenskapDropOver);
+            dropEl.addEventListener("dragleave", this._boundOnFolkEgenskapDropLeave);
+            dropEl.addEventListener("drop", this._boundOnFolkEgenskapDrop);
         }
 
         if (this._boundOnDoktrinClick) {
@@ -1955,6 +2076,16 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
             this._boundOnMystikDropOver = null;
             this._boundOnMystikDropLeave = null;
             this._boundOnMystikDrop = null;
+        }
+        if (root && this._boundOnFolkEgenskapDropOver) {
+            for (const dropEl of root.querySelectorAll('[data-ccw-drop-zone="folkEgenskap"]')) {
+                dropEl.removeEventListener("dragover", this._boundOnFolkEgenskapDropOver);
+                dropEl.removeEventListener("dragleave", this._boundOnFolkEgenskapDropLeave);
+                dropEl.removeEventListener("drop", this._boundOnFolkEgenskapDrop);
+            }
+            this._boundOnFolkEgenskapDropOver = null;
+            this._boundOnFolkEgenskapDropLeave = null;
+            this._boundOnFolkEgenskapDrop = null;
         }
         if (root && this._boundOnProseMirrorPersistItem) {
             const proseMirrorHost = root.querySelector(".window-content") ?? root;

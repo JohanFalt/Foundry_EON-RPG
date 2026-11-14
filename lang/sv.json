@@ -1004,6 +1004,7 @@
             "fas": "Fas",
             "delstrid": "Delstrid",
             "valdaMotstandare": "Valda motståndare",
+            "lastMotstandare": "Låst mot",
             "ingaDeltagare": "Inga deltagare i aktiv encounter.",
             "valjFas": "Välj fas först.",
             "valjNarstridsfas": "Välj närstridsfas först.",
@@ -1020,6 +1021,10 @@
         "combatAttack": {
             "targetLabel": "Mål",
             "selectTargetRequired": "Välj ett mål innan du slår anfall.",
+            "permissionSaveTarget": "Kunde inte spara valt mål (saknar behörighet).",
+            "permissionUpdateAttack": "Kunde inte uppdatera anfallsslaget – behövs aktiv spelledare.",
+            "permissionNoGm": "Ingen aktiv spelledare – stridsflödet kan inte fortsätta.",
+            "permissionUpdateTimeout": "Timeout: spelledaren svarade inte på stridsuppdateringen.",
             "noEncounterHint": "Ingen aktiv encounter – mål väljs manuellt utanför trackern.",
             "notInEncounterHint": "Rollpersonen ingår inte i encounter – inga mål från trackern.",
             "noMeleeTargetsHint": "Ingen delstrid konfigurerad – bekräfta delstrid i Eon Combat Tracker först.",
@@ -1260,6 +1265,16 @@
             "vapenarmVal_annat": "Annat",
             "vapenarmSlumpa": "Slumpa (1T10)",
             "utrustningHint": "Dra till hjälpformuläret de vapen, rustningar, utrustning och utrustningspaket från kompendiet, eller skapa dem manuellt i världen du börjar med.",
+            "arketypVapenRubrik": "Vapen (steg 13)",
+            "arketypRustningRubrik": "Rustning (steg 13)",
+            "arketypUtrustningHint": "Ange antal vapen av respektive bruk som arketypen tilldelar.",
+            "arketypBrukKategori": "Bruk",
+            "arketypVanligaVapen": "Vanliga",
+            "arketypOvanligaVapen": "Ovanliga",
+            "arketypSallsyntaVapen": "Sällsynta",
+            "arketypVanligaRustningar": "Vanliga",
+            "arketypOvanligaRustningar": "Ovanliga",
+            "arketypSallsyntaRustningar": "Sällsynta",
             "mystikRubrik": "Mystik och magi",
             "mystikHint": "För magiker och åkallare m.m. enligt regelboken.",
             "omstopt": "Omstöpt",
@@ -1291,7 +1306,13 @@
             "folkEgenskaperIngenFolkslag": "Välj ett folkslag ovan.",
             "folkEgenskaperValfria": "Valfria egenskaper",
             "folkValfriaHint": "Markera varje valfri egenskap rollfiguren ska ha. Finns fler än två i listan måste du välja exakt två.",
-            "folkValfriaInga": "Inga valfria egenskaper i detta läge."
+            "folkValfriaInga": "Inga valfria egenskaper i detta läge.",
+            "externEgenskaperRubrik": "Externa egenskaper",
+            "externEgenskaperHint": "Dra och släpp folkslagsegenskaper hit från compendiet (t.ex. för misslors \"Integrerade\"-egenskap).",
+            "externEgenskaperDropHint": "Dra en folkslagsegenskap hit",
+            "externEgenskapTaBort": "Ta bort",
+            "externEgenskapFelTyp": "Endast egenskaper (typ Egenskap) kan läggas till här.",
+            "externEgenskapRedanTillagd": "Denna egenskap är redan tillagd."
         }
     }
 }

@@ -1,3 +1,5 @@
+import { CombatAttackFlow } from "../combat-attack-flow.js";
+
 export class EonCombatantPortrait {
     constructor(combatant, tracker, options = {}) {
         this.combatant = combatant;
@@ -32,6 +34,13 @@ export class EonCombatantPortrait {
         if (this.role === "attacker") return "eon.dialogs.anfallare";
         if (this.role === "defender") return "eon.dialogs.forsvarare";
         return "";
+    }
+
+    /** @returns {string[]} */
+    get lockedPartnerNames() {
+        const partners = CombatAttackFlow.getLockedPartners(this.combatant);
+        if (!partners.length) return [];
+        return partners.map((partner) => CombatAttackFlow.formatCombatantLabel(partner, partners));
     }
 
     get isDefeated() {
@@ -83,6 +92,8 @@ export class EonCombatantPortrait {
             groupId: this.groupId,
             roleLabel: this.roleLabel,
             pendingTargetsCount: this.pendingTargets.length,
+            lockedPartnersLabel: this.lockedPartnerNames.join(", "),
+            hasLockedPartners: this.lockedPartnerNames.length > 0,
             isDefeated: defeated,
             isCurrentTurn,
             canNext: isCurrentTurn && !this.interactionsLocked,

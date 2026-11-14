@@ -100,6 +100,42 @@
         {{/each}}
       </div>
     </div>
+
+    <div class="eon-ccw-summary-section">
+      <div class="eon-ccw-summary-title">{{localize "eon.wizard.arketypVapenRubrik"}}</div>
+      <div class="eon-ccw-datagrid eon-ccw-datagrid--summary-2">
+        {{#each arketypVapenRows}}
+        <div class="eon-ccw-datagrid__row">
+          <div class="eon-ccw-datagrid__cell">{{label}}</div>
+          <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--num">
+            <div class="eon-ccw-num-tiny-stepper" role="group">
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_aut_{{key}}" data-ccw-step-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+              <input type="number" class="eon-ccw-num-tiny" name="ccw_aut_{{key}}" value="{{value}}" min="0" step="1" data-dtype="Number" />
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_aut_{{key}}" data-ccw-step-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="eon-ccw-summary-section">
+      <div class="eon-ccw-summary-title">{{localize "eon.wizard.arketypRustningRubrik"}}</div>
+      <div class="eon-ccw-datagrid eon-ccw-datagrid--summary-2">
+        {{#each arketypRustningRows}}
+        <div class="eon-ccw-datagrid__row">
+          <div class="eon-ccw-datagrid__cell">{{label}}</div>
+          <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--num">
+            <div class="eon-ccw-num-tiny-stepper" role="group">
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_aut_{{key}}" data-ccw-step-delta="-1" title="{{localize 'eon.wizard.attrStepDown'}}" aria-label="{{localize 'eon.wizard.attrStepDown'}}">−</button>
+              <input type="number" class="eon-ccw-num-tiny" name="ccw_aut_{{key}}" value="{{value}}" min="0" step="1" data-dtype="Number" />
+              <button type="button" class="eon-ccw-num-step-btn" tabindex="-1" data-action="ccwHarleddOvStep" data-ccw-step-target="ccw_aut_{{key}}" data-ccw-step-delta="1" title="{{localize 'eon.wizard.attrStepUp'}}" aria-label="{{localize 'eon.wizard.attrStepUp'}}">+</button>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
   </aside>
 
   <div class="eon-ccw-main">
@@ -240,6 +276,28 @@
             <p class="eon-ccw-muted">{{localize "eon.wizard.folkValfriaInga"}}</p>
             {{/each}}
           </div>
+
+          {{!-- Externa folkslagsegenskaper (drag & drop) --}}
+          <div class="eon-ccw-subsection-title">{{localize "eon.wizard.externEgenskaperRubrik"}}</div>
+          <p class="eon-ccw-hint">{{localize "eon.wizard.externEgenskaperHint"}}</p>
+          <div class="eon-ccw-folk-egenskaper-list eon-ccw-extern-egenskaper">
+            {{#each externFolkslagRows}}
+            <div class="eon-ccw-folk-egenskap-row eon-ccw-extern-egenskap-row">
+              <span class="eon-ccw-folk-egenskap-namn">{{label}}</span>
+              <button type="button" class="eon-ccw-btn-icon eon-ccw-btn-remove"
+                      data-action="ccwRemoveExternEgenskap"
+                      data-ccw-extern-index="{{index}}"
+                      title="{{localize "eon.wizard.externEgenskapTaBort"}}">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+            {{/each}}
+          </div>
+          <div class="eon-ccw-drop-zone" data-ccw-drop-zone="folkEgenskap">
+            <i class="fas fa-hand-holding-magic"></i>
+            {{localize "eon.wizard.externEgenskaperDropHint"}}
+          </div>
+
         </div>
       </div>
       {{/if}}

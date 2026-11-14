@@ -1560,7 +1560,7 @@ export class DialogWeaponRoll extends FormApplication {
         if (!candidate || !combat) return null;
 
         if (attackerCombatant) {
-            await CombatAttackFlow.saveLastTarget(combat, attackerCombatant.id, candidate.id);
+            await CombatAttackFlow.saveLastTarget(attackerCombatant, candidate.id);
         }
 
         const flowId = CombatAttackFlow.createFlowId();

@@ -459,6 +459,21 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         `;
     }
 
+    if (await CompareVersion(installedVersion, '5.5.4', isDemo)) {
+        partMessage += `
+            <h4>Rustningar som världsitem (Eon 4/Eon 5)</h4>
+            <p>Drag-and-drop från compendium/värld till rollpersonsformuläret — Rustnings-items kan nu dras från compendium till en karaktär och automatiskt populera rustningsgriden med korrekta skyddsvärden. Fungerar för både Eon 4 och Eon 5.</p>
+            <h4>Hjälpformuläret (Eon 5)</h4>    
+            <p>Rustning och vapen i utrustningssteget — Det går nu att markera "En ovanlig rustning" eller "Ett vanligt vapen" innan man väljer specifikt föremål.</p>
+            <p>Språksynk fixad — Språk som läggs till i hjälpformuläret synkas nu korrekt till rollpersonen först när man klickar på Slutför.</p>
+            <h4>Stridmodulen (Eon 5)</h4>
+            <p>Målvalslogik för delstrider — Porträtt visar nu "Låst mot: …" efter bekräftad delstrid. Motståndarvalet i dialogen har tydligare etiketter vid dubblettnamn.</p> 
+            <p>Närstridsmål begränsas till motsatt roll i samma delstrid.</p>
+            <h4>Fix för slå ob1T100</h4>
+            <p>Fixat ett fel där ob1T100-slag fick tärningarna att flippa helt.</p>
+         `;
+    }
+
     if (await CompareVersion(installedVersion, '5.5.3', isDemo)) {
         partMessage += `
         <h4>Förtydliga initiativ stridsmodulen (Eon 5)</h4>

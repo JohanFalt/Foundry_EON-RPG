@@ -9,7 +9,7 @@ import {
     HANDELSE_SIDEBAR_SLAG_KEYS,
     UTRUSTNING_PKT_KEYS,
     ENHETER_FARDIGHET_GRUPP_KEYS,
-    CCW_WIZARD_CREATED_SPRAK_ROW
+    ARKETYP_UTRUSTNING_KEYS
 } from "./ccw-constants-keys.js";
 
 function emptyEgenskapRow() {
@@ -21,16 +21,15 @@ export function emptyHandelseResultRow() {
     return { tabell: "", nummer: "", anteckning: "" };
 }
 
-/** Rad på flik 10: ytterligare språk; `itemId` = embedded Item-id på actorn (synkas från kompendiumval). */
+/** Rad på flik 10: ytterligare språk; `compendiumUuid` = kompendium-uuid (embedded item skapas vid Slutför). */
 export function emptySprakFordelningRow() {
     return {
-        itemId: "",
+        compendiumUuid: "",
         grundvarde: "0",
         poang: "0",
         talang: false,
         inkompetent: false,
-        blockering: false,
-        [CCW_WIZARD_CREATED_SPRAK_ROW]: false
+        blockering: false
     };
 }
 
@@ -64,6 +63,10 @@ export function defaultWizardData() {
     const utrustningPaket = {};
     for (const key of UTRUSTNING_PKT_KEYS) {
         utrustningPaket[key] = "0";
+    }
+    const arketypUtrustning = {};
+    for (const key of ARKETYP_UTRUSTNING_KEYS) {
+        arketypUtrustning[key] = "0";
     }
     const fardighetFordelning = {};
     for (const key of ENHETER_FARDIGHET_GRUPP_KEYS) {
@@ -107,10 +110,12 @@ export function defaultWizardData() {
         enheter,
         handelseSlag,
         utrustningPaket,
+        /** Flik 13: arketyp-tilldelad beväpning/rustning per bruk-kategori */
+        arketypUtrustning,
         handelseResultat: [emptyHandelseResultRow()],
         fardighetFordelning,
         egenskaper: Array.from({ length: 6 }, () => ({ ...emptyEgenskapRow() })),
-        /** Flik 10: ytterligare språk (embedded itemId, synkas vid sparning) */
+        /** Flik 10: ytterligare språk (compendiumUuid, embedded items skapas vid Slutför) */
         sprakFordelning: [],
         kretsarRader: [],
         foljeslagareRader: [],
@@ -120,6 +125,8 @@ export function defaultWizardData() {
         mysterier: Array.from({ length: 5 }, () => ({ ...emptyMysteriumRow() })),
         /** Folkslag-wizard: valda valfria egenskaps-uuid (max 2 när pool > 2) */
         folkValfriaValda: [],
+        /** Folkslag-wizard: externt droppade folkslagsegenskaper (t.ex. misslors Integrerade) */
+        externFolkslagEgenskaper: [],
         /** Cache: uuid i valfri pool (sätts vid folkslagsbyte) */
         folkValfriaPoolUuids: [],
         /** När true: `ccw_kulturfolkslag` kan användas (efter dialog Ja) */

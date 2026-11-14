@@ -46,6 +46,7 @@
                     <span>{{localize "eon.combat.init"}}: {{initiativeDisplay}}</span>
                     {{#if phaseLabel}}<span>{{localize "eon.combat.fas"}}: {{localize phaseLabel}}</span>{{/if}}
                     {{#if roleLabel}}<span>{{localize "eon.combat.delstrid"}} - {{localize roleLabel}}</span>{{/if}}
+                    {{#if hasLockedPartners}}<span>{{localize "eon.combat.lastMotstandare"}}: {{lockedPartnersLabel}}</span>{{/if}}
                     {{#if pendingTargetsCount}}<span>{{localize "eon.combat.valdaMotstandare"}}: {{pendingTargetsCount}}</span>{{/if}}
                 </div>
             </div>

@@ -510,7 +510,7 @@ export default class ItemHelper {
                 kulturDoc,
                 harKulturfolkslagEffective
             );
-            const allRefs = collectAllEgenskapRefsForFinish(listedRefs, valfriaPoolRefs, mergedDraft.folkValfriaValda ?? []);
+            const allRefs = collectAllEgenskapRefsForFinish(listedRefs, valfriaPoolRefs, mergedDraft.folkValfriaValda ?? [], mergedDraft.externFolkslagEgenskaper ?? []);
 
             const egenskapPack = game.packs.get(FOLKSLAGSEGENSKAPER5_PACK);
             if (!egenskapPack) {
