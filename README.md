@@ -1,6 +1,6 @@
 ![](https://img.shields.io/badge/Foundry-v14-informational)
 
-![](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v5.5.3/v5.5.4.zip)
+![](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v5.5.4/v5.5.4.zip)
 
 ![](https://img.shields.io/github/downloads/JohanFalt/Foundry_EON-RPG/v5.5.3/v5.5.3.zip)
 
