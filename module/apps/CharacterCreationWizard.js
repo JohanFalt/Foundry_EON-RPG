@@ -171,6 +171,8 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
         if (!options.actor) {
             throw new Error("CharacterCreationWizard requires { actor }");
         }
+        // Unikt id per actor så att flera wizards kan vara öppna samtidigt
+        options.id = `eon-character-creation-wizard-${options.actor.id}`;
         super(options);
         this.actor = options.actor;
         this.options.window.title = game.i18n.localize("eon.sheets.actor.karaktarSkapande");
@@ -955,6 +957,8 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
 
             externArr.push({ uuid: compUuid, namn });
             await persistWizardData(this.actor, { externFolkslagEgenskaper: externArr });
+            /* Skapa bara den nya egenskapen som embedded item så att beskrivningen går att redigera. */
+            await ItemHelper.addCcwExternEgenskap(this.actor, compUuid);
             this._ccwSkipFocusRestoreOnce = true;
             await this.render(true);
         })();
@@ -977,6 +981,7 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
 
             externArr.splice(index, 1);
             await persistWizardData(this.actor, { externFolkslagEgenskaper: externArr });
+            await ItemHelper.pruneCcwEgenskaper(this.actor, getMergedWizardData(this.actor));
             this._ccwSkipFocusRestoreOnce = true;
             await this.render(true);
         })();
@@ -1549,12 +1554,9 @@ export class CharacterCreationWizard extends HandlebarsApplicationMixin(Applicat
                 await this.close({ animate: false });
                 // Vid hot-reload kan flera wizard-instanser ligga öppna; stäng alla för samma actor.
                 const ownAppId = this.appId;
-                const wizardId = CharacterCreationWizard.DEFAULT_OPTIONS?.id ?? "eon-character-creation-wizard";
                 const siblings = Object.values(ui.windows ?? {}).filter((openWindow) => {
                     if (!openWindow || openWindow.appId === ownAppId) return false;
-                    const sameActor = openWindow.actor?.id === this.actor?.id;
-                    const sameWizardId = (openWindow.options?.id ?? "") === wizardId;
-                    return sameActor && sameWizardId;
+                    return openWindow instanceof CharacterCreationWizard && openWindow.actor?.id === this.actor?.id;
                 });
                 for (const siblingWindow of siblings) {
                     try {

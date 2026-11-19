@@ -31,11 +31,17 @@ export default class EonSprak extends basforemal {
             )
         });
 
+        // Eon 4: brytning/flytande/läsa-skriva + begränsningar
         schema.talabrytning = new fields.BooleanField({initial: false});
         schema.talaflytande = new fields.BooleanField({initial: false});
         schema.lasaskriva = new fields.BooleanField({initial: false});
         schema.endasttal = new fields.BooleanField({initial: false});
         schema.endastskrift = new fields.BooleanField({initial: false});
+
+        // Eon 5: talspråksnamn, skriftspråksnamn, kan skriva
+        schema.talsprak = new fields.StringField({initial: "", nullable: false, blank: true});
+        schema.skriftsprak = new fields.StringField({initial: "", nullable: false, blank: true});
+        schema.kanskriva = new fields.BooleanField({initial: false});
 
         return schema;
     }

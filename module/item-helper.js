@@ -468,6 +468,114 @@ export default class ItemHelper {
     }
 
     /**
+     * Item-data för en CCW-hanterad folkslagsegenskap (kopia av kompendie-/världsitemet).
+     * @param {Actor} actor
+     * @param {Item} kallaEgenskap
+     * @param {string} refUuid
+     * @returns {object}
+     */
+    static #buildCcwEgenskapCreateData(actor, kallaEgenskap, refUuid) {
+        const beskrivning = (kallaEgenskap.system.beskrivning ?? "").toString();
+        return {
+            name: kallaEgenskap.name,
+            type: "Egenskap",
+            flags: {
+                [ITEM_FLAG_SCOPE]: {
+                    [CCW_FOLKSLAG_MANAGED_FLAG]: true,
+                    [CCW_EGENSKAP_SOURCE_UUID_FLAG]: refUuid
+                }
+            },
+            system: {
+                installningar: {
+                    skapad: true,
+                    eon: actor.system.installningar.eon,
+                    version: kallaEgenskap.system.installningar.version,
+                    kantabort: true,
+                    folkslag: true,
+                    harniva: kallaEgenskap.system.installningar.harniva
+                },
+                niva: kallaEgenskap.system.niva,
+                beskrivning
+            }
+        };
+    }
+
+    /**
+     * Skapar bara den externt droppade egenskapen som CCW-hanterat item (rör inga andra items, så redigerade
+     * beskrivningar på övriga egenskaper bevaras). Hoppar över om den redan finns.
+     * @param {Actor} actor
+     * @param {string} uuid
+     */
+    static async addCcwExternEgenskap(actor, uuid) {
+        const actorId = actor?.id;
+        const refUuid = (uuid ?? "").toString().trim();
+        if (!actorId || !refUuid) return;
+
+        const prev = this.#ccwFolkslagSyncChains.get(actorId) ?? Promise.resolve();
+        const next = prev.catch(() => {}).then(async () => {
+            const finns = actor.items.some(
+                (item) =>
+                    item.type === "Egenskap" &&
+                    item.getFlag(ITEM_FLAG_SCOPE, CCW_FOLKSLAG_MANAGED_FLAG) === true &&
+                    item.getFlag(ITEM_FLAG_SCOPE, CCW_EGENSKAP_SOURCE_UUID_FLAG) === refUuid
+            );
+            if (finns) return;
+            let kalla = null;
+            try {
+                kalla = await fromUuid(refUuid);
+            } catch {
+                kalla = null;
+            }
+            if (!kalla || kalla.type !== "Egenskap") return;
+            await actor.createEmbeddedDocuments("Item", [this.#buildCcwEgenskapCreateData(actor, kalla, refUuid)]);
+        });
+        this.#ccwFolkslagSyncChains.set(actorId, next);
+        return next;
+    }
+
+    /**
+     * Tar bort CCW-hanterade egenskaps-items som inte längre behövs av utkastet (t.ex. efter att en extern
+     * egenskap tagits bort). Övriga items rörs inte.
+     * @param {Actor} actor
+     * @param {object} mergedDraft
+     */
+    static async pruneCcwEgenskaper(actor, mergedDraft) {
+        const actorId = actor?.id;
+        if (!actorId) return;
+
+        const prev = this.#ccwFolkslagSyncChains.get(actorId) ?? Promise.resolve();
+        const next = prev.catch(() => {}).then(async () => {
+            const primarId = (mergedDraft?.folkslag ?? "").toString().trim();
+            const primarDoc = primarId ? await loadFolkslag5Doc(primarId) : null;
+            const kulturId = mergedDraft?.harKulturfolkslag ? (mergedDraft.kulturfolkslag ?? "").toString().trim() : "";
+            const kulturDoc = kulturId ? await loadFolkslag5Doc(kulturId) : null;
+            const harKultur = !!(mergedDraft?.harKulturfolkslag && kulturDoc);
+            const { listedRefs, valfriaPoolRefs } = primarDoc
+                ? partitionFolkslagEgenskaper(primarDoc, kulturDoc, harKultur)
+                : { listedRefs: [], valfriaPoolRefs: [] };
+            const behovs = new Set(
+                collectAllEgenskapRefsForFinish(
+                    listedRefs,
+                    valfriaPoolRefs,
+                    mergedDraft?.folkValfriaValda ?? [],
+                    mergedDraft?.externFolkslagEgenskaper ?? []
+                ).map((ref) => normalizeEgenskapRefKey(ref))
+            );
+            const ids = actor.items
+                .filter(
+                    (item) =>
+                        item.type === "Egenskap" &&
+                        item.getFlag(ITEM_FLAG_SCOPE, CCW_FOLKSLAG_MANAGED_FLAG) === true &&
+                        !behovs.has((item.getFlag(ITEM_FLAG_SCOPE, CCW_EGENSKAP_SOURCE_UUID_FLAG) ?? "").toString())
+                )
+                .map((item) => item.id);
+            if (ids.length) await actor.deleteEmbeddedDocuments("Item", ids);
+        });
+        this.#ccwFolkslagSyncChains.set(actorId, next);
+        return next;
+    }
+
+    /**
      * Byter ut CCW-folkslags-items på actorn mot aktuellt Folkslag5-utkast (obligatoriska + valfria + startspråk).
      * @param {Actor} actor
      * @param {object} mergedDraft
@@ -537,29 +645,7 @@ export default class ItemHelper {
                         kallaEgenskap = game.items.find((candidate) => candidate.uuid === refUuid);
                     }
                     if (kallaEgenskap === undefined) continue;
-                    const beskrivning = (kallaEgenskap.system.beskrivning ?? "").toString();
-                    egenskapCreates.push({
-                        name: kallaEgenskap.name,
-                        type: "Egenskap",
-                        flags: {
-                            [ITEM_FLAG_SCOPE]: {
-                                [CCW_FOLKSLAG_MANAGED_FLAG]: true,
-                                [CCW_EGENSKAP_SOURCE_UUID_FLAG]: refUuid
-                            }
-                        },
-                        system: {
-                            installningar: {
-                                skapad: true,
-                                eon: actor.system.installningar.eon,
-                                version: kallaEgenskap.system.installningar.version,
-                                kantabort: true,
-                                folkslag: true,
-                                harniva: kallaEgenskap.system.installningar.harniva
-                            },
-                            niva: kallaEgenskap.system.niva,
-                            beskrivning
-                        }
-                    });
+                    egenskapCreates.push(this.#buildCcwEgenskapCreateData(actor, kallaEgenskap, refUuid));
                 }
                 if (egenskapCreates.length) {
                     await actor.createEmbeddedDocuments("Item", egenskapCreates);
@@ -611,7 +697,9 @@ export default class ItemHelper {
                             eon: actor.system.installningar.eon,
                             version: kallaSprak.system.installningar.version,
                             kantabort: true
-                        }
+                        },
+                        talsprak: (kallaSprak.system.talsprak ?? "").toString(),
+                        skriftsprak: (kallaSprak.system.skriftsprak ?? "").toString()
                     }
                 });
             }

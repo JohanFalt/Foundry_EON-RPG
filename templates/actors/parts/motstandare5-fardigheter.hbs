@@ -45,11 +45,14 @@
                 {{#each listdata.fardigheter.sprak as |fardighet|}}
                     <div class="skill-row skill skill-row-sprak">
                         <div></div>
-                        <div class="caption normalskill">{{localize fardighet.name}}</div>
+                        <div class="caption normalskill">{{sprakDisplayName fardighet}}</div>
+                        {{#if fardighet.system.kanskriva}}
+                            <div class="caption normalskill sprak-skrift" style="margin-left: 4px; opacity: 0.7; font-style: italic;">
+                                ({{sprakSkriftName fardighet}})
+                            </div>
+                        {{/if}}
                         <div class="resource-box">
-                            <span class="resource-value {{#if fardighet.system.talabrytning}}active{{/if}} {{#if fardighet.system.endastskrift}}disabled{{/if}}" data-action="toggleSprakField" data-item-id="{{fardighet._id}}" data-field="talabrytning" title="{{localize 'eon.sheets.actor.talarMedBrytning'}}"></span>
-                            <span class="resource-value {{#if fardighet.system.talaflytande}}active{{/if}} {{#if fardighet.system.endastskrift}}disabled{{/if}}" data-action="toggleSprakField" data-item-id="{{fardighet._id}}" data-field="talaflytande" title="{{localize 'eon.sheets.actor.talarFlytande'}}"></span>
-                            <span class="resource-value {{#if fardighet.system.lasaskriva}}active{{/if}} {{#if fardighet.system.endasttal}}disabled{{/if}}" data-action="toggleSprakField" data-item-id="{{fardighet._id}}" data-field="lasaskriva" title="{{localize 'eon.sheets.actor.kanLasaochSkriva'}}"></span>
+                            <span class="resource-value {{#if fardighet.system.kanskriva}}active{{/if}}" data-action="toggleSprakField" data-item-id="{{fardighet._id}}" data-field="kanskriva" title="{{localize 'eon.sheets.item.kanSkriva'}}"></span>
                         </div>
                         <div></div>
                         <div class="pointer skill-icon">

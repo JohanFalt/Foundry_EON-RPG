@@ -240,9 +240,11 @@ export async function resolveStartsprakRowsWithPack(primaryId, kulturId, harKult
     return base.map((sprakRad) => {
         const sprakUuid = (sprakRad.uuid ?? "").toString();
         const sprakDoc = sprakUuid ? docs.find((d) => d.uuid === sprakUuid) : null;
+        const harSkriftsprak = !!(sprakDoc?.system?.skriftsprak ?? "").toString().trim();
         return {
             uuid: sprakUuid,
-            label: sprakDoc ? (sprakDoc.name ?? "").trim() || sprakRad.label : sprakRad.label
+            label: sprakDoc ? (sprakDoc.name ?? "").trim() || sprakRad.label : sprakRad.label,
+            harSkriftsprak
         };
     });
 }

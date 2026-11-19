@@ -72,13 +72,8 @@
             </div>
             {{#each (getActorSkillGroup ../actor.system.listdata.fardigheter key) as |fardighet key|}}
                 <div class="skill-row skill">
-                    {{#if (eq fardighet.type "Språk")}}   
-                        <div class="caption normalskill">{{localize fardighet.name}}</div>
-                        <div class="resource-box">
-                            <span class="resource-value {{#if fardighet.system.talabrytning}}active{{/if}} {{#if fardighet.system.endastskrift}}disabled{{/if}}" style="margin-top: 5px;" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="talabrytning" data-type="boolean" title="{{localize 'eon.sheets.actor.talarMedBrytning'}}"></span>
-                            <span class="resource-value {{#if fardighet.system.talaflytande}}active{{/if}} {{#if fardighet.system.endastskrift}}disabled{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="talaflytande" data-type="boolean" title="{{localize 'eon.sheets.actor.talarFlytande'}}"></span>
-                            <span class="resource-value {{#if fardighet.system.lasaskriva}}active{{/if}} {{#if fardighet.system.endasttal}}disabled{{/if}}" data-source="sprak" data-itemid="{{fardighet._id}}" data-field="lasaskriva" data-type="boolean" title="{{localize 'eon.sheets.actor.kanLasaochSkriva'}}"></span>
-                        </div>
+                    {{#if (eq fardighet.type "Språk")}}
+                        <div class="caption normalskill sprak-caption"{{#if fardighet.system.kanskriva}} title="{{sprakDisplayName fardighet}} ({{sprakSkriftName fardighet}})"{{/if}}>{{sprakDisplayName fardighet}}{{#if fardighet.system.kanskriva}} <span style="opacity: 0.7; font-style: italic; font-size: 0.85em;">({{sprakSkriftName fardighet}})</span>{{/if}}</div>
                         <div class="pointer language-icon">
                             <a class="item-edit" title="{{localize 'eon.sheets.actor.editeraSprak'}}" data-source="fardighet" data-itemid="{{fardighet._id}}"><i class="icon fa-solid fa-pen-to-square"></i></a>
                         </div>

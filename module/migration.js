@@ -459,6 +459,17 @@ export async function DoNotice(systemVersion, installedVersion, isDemo = false) 
         `;
     }
 
+    if (await CompareVersion(installedVersion, '5.5.5', isDemo)) {
+        partMessage += `
+            <h4>Karaktärsskapande och språk (Eon 5)</h4>
+            <p>Språk har fått talspråks- och skriftspråksnamn samt “Kan skriva”. Rollformuläret visar nu namnet och “(skriftspråk)” när rollpersonen kan skriva. De tre cirklarna för brytning, flytande och läsa/skriva är borta.</p>
+            <p>Fler språk har lagts till i språkkompendiet, med skriftspråk.</p>
+            <p>Obs: Befintliga språk på rollpersoner uppdateras inte automatiskt. Skapa om rollpersonen eller redigera språket för att få de nya värdena.</p>
+            <p>Man kan nu drag-and-drop folkegenskapsegenskaper in i listan av de egenskaper som rollpersonen har.</p>
+            <p>Det går nu att ha två karaktärsskapande wizards öppna för olika rollpersoner samtidigt.</p>
+         `;
+    }
+
     if (await CompareVersion(installedVersion, '5.5.4', isDemo)) {
         partMessage += `
             <h4>Rustningar som världsitem (Eon 4/Eon 5)</h4>

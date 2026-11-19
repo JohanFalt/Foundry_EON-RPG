@@ -41,6 +41,10 @@ export async function syncWizardSprakItemsFromForm(root, actor, draft) {
         const selEl = root.querySelector(`[name="ccw_tf_sprak_rf_${sprakRowIndex}_item"]`);
         const uuid = selEl instanceof HTMLSelectElement ? (selEl.value ?? "").toString().trim() : "";
 
+        // Läs "kan skriva"-checkbox för denna rad
+        const kanskrivaEl = root.querySelector(`[name="ccw_tf_sprak_rf_${sprakRowIndex}_kanskriva"]`);
+        const kanskriva = kanskrivaEl instanceof HTMLInputElement ? kanskrivaEl.checked : false;
+
         const prevRow = prevRows[sprakRowIndex];
         const prevId = (prevRow?.itemId ?? "").toString().trim();
         const prevItem = prevId ? actor.items.get(prevId) : null;
@@ -48,7 +52,7 @@ export async function syncWizardSprakItemsFromForm(root, actor, draft) {
 
         if (!uuid) {
             if (prevItem?.type === "Språk" && !folkslagManaged(prevItem)) toDelete.push(prevId);
-            newSprakRows.push({ ...emptySprakFordelningRow(), [CCW_WIZARD_CREATED_SPRAK_ROW]: false });
+            newSprakRows.push({ ...emptySprakFordelningRow(), kanskriva, [CCW_WIZARD_CREATED_SPRAK_ROW]: false });
             sprakRowIndex += 1;
             continue;
         }
@@ -58,9 +62,14 @@ export async function syncWizardSprakItemsFromForm(root, actor, draft) {
                 .toString()
                 .trim();
             if (prevSrc === uuid) {
+                // Uppdatera kanskriva på befintligt embedded item
+                if (prevItem.system.kanskriva !== kanskriva) {
+                    await prevItem.update({ "system.kanskriva": kanskriva });
+                }
                 newSprakRows.push({
                     ...emptySprakFordelningRow(),
                     itemId: prevId,
+                    kanskriva,
                     [CCW_WIZARD_CREATED_SPRAK_ROW]: prevWasWizard
                 });
                 sprakRowIndex += 1;
@@ -69,13 +78,14 @@ export async function syncWizardSprakItemsFromForm(root, actor, draft) {
             if (!folkslagManaged(prevItem)) toDelete.push(prevId);
         }
 
-        const newId = await createEmbeddedSprakFromCompendiumUuid(actor, uuid);
+        const newId = await createEmbeddedSprakFromCompendiumUuid(actor, uuid, kanskriva);
         if (!newId) {
-            newSprakRows.push({ ...emptySprakFordelningRow(), [CCW_WIZARD_CREATED_SPRAK_ROW]: false });
+            newSprakRows.push({ ...emptySprakFordelningRow(), kanskriva, [CCW_WIZARD_CREATED_SPRAK_ROW]: false });
         } else {
             newSprakRows.push({
                 ...emptySprakFordelningRow(),
                 itemId: newId,
+                kanskriva,
                 [CCW_WIZARD_CREATED_SPRAK_ROW]: true
             });
         }
@@ -93,9 +103,10 @@ export async function syncWizardSprakItemsFromForm(root, actor, draft) {
  * Skapar ett embedded Språk från språk5-kompendiet (flik 10).
  * @param {Actor} actor
  * @param {string} compendiumUuid
+ * @param {boolean} [kanskriva=false] Eon 5: om rollpersonen kan skriva språket
  * @returns {Promise<string|null>} item id
  */
-export async function createEmbeddedSprakFromCompendiumUuid(actor, compendiumUuid) {
+export async function createEmbeddedSprakFromCompendiumUuid(actor, compendiumUuid, kanskriva = false) {
     const uuid = (compendiumUuid ?? "").toString().trim();
     if (!uuid || !actor?.createEmbeddedDocuments) return null;
     const pack = game.packs.get(SPRAK5_PACK);
@@ -114,6 +125,7 @@ export async function createEmbeddedSprakFromCompendiumUuid(actor, compendiumUui
     const itemData = foundry.utils.duplicate(src.toObject());
     delete itemData._id;
     itemData.system = itemData.system ?? {};
+    itemData.system.kanskriva = kanskriva;
     itemData.system.varde = {
         tvarde: t6Pool.tvarde,
         bonus: t6Pool.bonus,

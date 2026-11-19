@@ -227,17 +227,32 @@ export function collectWizardDraftFromRoot(root, actor = null) {
         const sprakRows = [];
         let sprakRowIndex = 0;
         while (root.querySelector(`[name="ccw_tf_sprak_rf_${sprakRowIndex}_item"]`)) {
+            const selectEl = root.querySelector(`[name="ccw_tf_sprak_rf_${sprakRowIndex}_item"]`);
+            const selectedOption = selectEl?.selectedOptions?.[0];
+            const harSkriftsprak = (selectedOption?.dataset?.harSkriftsprak ?? "0") === "1";
+            const kanskrivaEl = root.querySelector(`[name="ccw_tf_sprak_rf_${sprakRowIndex}_kanskriva"]`);
+            const kanskriva = harSkriftsprak ? !!(kanskrivaEl?.checked) : false;
             sprakRows.push({
                 compendiumUuid: fieldValue(`ccw_tf_sprak_rf_${sprakRowIndex}_item`).toString().trim(),
                 grundvarde: "0",
                 poang: "0",
                 talang: false,
                 inkompetent: false,
-                blockering: false
+                blockering: false,
+                kanskriva
             });
             sprakRowIndex += 1;
         }
         draft.sprakFordelning = sprakRows;
+
+        /* Samla startspråkens "kan skriva"-kryssrutor i en { uuid: boolean }-mappning. */
+        const startSprakKanskriva = {};
+        root.querySelectorAll(`[name^="ccw_tf_startsprak_"][name$="_kanskriva"]`).forEach((cb) => {
+            const m = cb.name.match(/^ccw_tf_startsprak_(.+)_kanskriva$/);
+            /* UUID:n innehåller punkter, som Foundry expanderar till nästlade objekt vid flag-sparning. Koda om. */
+            if (m) startSprakKanskriva[m[1].replaceAll(".", "~")] = !!cb.checked;
+        });
+        draft.startSprakKanskriva = startSprakKanskriva;
 
         const kretsarRader = [];
         let kretsRowIndex = 0;

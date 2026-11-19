@@ -19,6 +19,24 @@
 						<span class="floating-label">{{localize "eon.sheets.item.referens"}}</span>
 					</div>
 
+					{{#if isEon5}}
+					{{!-- Eon 5: Talspråk-namn, Skriftspråk-namn, Kan skriva --}}
+					<div class="item-property-area floating-label-group">
+						<input class="text-value editable" type="text" name="system.talsprak" value="{{item.system.talsprak}}" data-dtype="String" autocomplete="off" placeholder="{{item.name}}" />
+						<span class="floating-label">{{localize "eon.sheets.item.talsprakNamn"}}</span>
+					</div>
+
+					<div class="item-property-area floating-label-group">
+						<input class="text-value editable" type="text" name="system.skriftsprak" value="{{item.system.skriftsprak}}" data-dtype="String" autocomplete="off" />
+						<span class="floating-label">{{localize "eon.sheets.item.skriftsprakNamn"}}</span>
+					</div>
+
+					<div class="item-row">
+						<div class="headline-checkbox">{{localize "eon.sheets.item.kanSkriva"}}</div>
+						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="kanskriva" {{isChecked item.system.kanskriva}} data-dtype="Boolean" /></div>
+					</div>
+					{{else}}
+					{{!-- Eon 4: Enbart talspråk/skriftspråk, Brytning, Flytande, Läsa & skriva --}}
 					<div class="item-row">
 						<div class="headline-checkbox">{{localize "eon.sheets.item.endastTalsprak"}}</div>
 						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="endasttal" {{isChecked item.system.endasttal}} data-dtype="Boolean" /></div>
@@ -35,11 +53,12 @@
 					<div class="item-row">
 						<div class="headline-checkbox">{{localize "eon.sheets.actor.talarFlytande"}}</div>
 						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="talaflytande" {{isChecked item.system.talaflytande}} data-dtype="Boolean" /></div>
-					</div>   
+					</div>
 					<div class="item-row">
 						<div class="headline-checkbox">{{localize "eon.sheets.actor.kanLasaochSkriva"}}</div>
 						<div><input class="item-property pointer" type="checkbox" data-type="boolean" data-field="lasaskriva" {{isChecked item.system.lasaskriva}} data-dtype="Boolean" /></div>
 					</div>
+					{{/if}}
      
 				</div>
 

@@ -283,13 +283,15 @@
           <div class="eon-ccw-folk-egenskaper-list eon-ccw-extern-egenskaper">
             {{#each externFolkslagRows}}
             <div class="eon-ccw-folk-egenskap-row eon-ccw-extern-egenskap-row">
-              <span class="eon-ccw-folk-egenskap-namn">{{label}}</span>
-              <button type="button" class="eon-ccw-btn-icon eon-ccw-btn-remove"
-                      data-action="ccwRemoveExternEgenskap"
-                      data-ccw-extern-index="{{index}}"
-                      title="{{localize "eon.wizard.externEgenskapTaBort"}}">
-                <i class="fas fa-trash"></i>
-              </button>
+              <div class="eon-ccw-extern-egenskap-head">
+                <span class="eon-ccw-folk-egenskap-namn">{{label}}</span>
+                <button type="button" class="eon-ccw-icon-btn" data-action="ccwRemoveExternEgenskap" data-ccw-extern-index="{{index}}" title="{{localize 'eon.wizard.externEgenskapTaBort'}}" aria-label="{{localize 'eon.wizard.externEgenskapTaBort'}}"><i class="icon fa-solid fa-trash-can"></i></button>
+              </div>
+              {{#if showProseMirror}}
+              <prose-mirror name="{{editFieldName}}" value="{{beskrivning}}" toggled compact>{{{beskrivningDisplay}}}</prose-mirror>
+              {{else if beskrivningDisplay}}
+              <div class="eon-ccw-folk-egenskap-besk eon-ccw-folk-beskrivning-readonly">{{{beskrivningDisplay}}}</div>
+              {{/if}}
             </div>
             {{/each}}
           </div>
@@ -511,6 +513,7 @@
             <div class="eon-ccw-datagrid eon-ccw-datagrid--fardighet-fordelning eon-ccw-datagrid--fardighet-sprak">
               <div class="eon-ccw-datagrid__row eon-ccw-datagrid__row--head">
                 <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-fardighet">{{localize "eon.sheets.item.sprak"}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-sprak-kanskriva">{{localize "eon.sheets.item.kanSkriva"}}</div>
                 <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--hdr eon-ccw-datagrid__cell--col-fardighet-actions"></div>
               </div>
               {{#if sprakListaHarInget}}
@@ -522,11 +525,25 @@
               {{#if isStartSprak}}
               <div class="eon-ccw-datagrid__row">
                 <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet"><span class="eon-ccw-sprak-lista-namn">{{startLabel}}</span></div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-sprak-kanskriva">
+                  {{#if harSkriftsprak}}
+                  <input type="checkbox" name="ccw_tf_startsprak_{{startUuid}}_kanskriva" {{#if kanskriva}}checked{{/if}} />
+                  {{else}}
+                  <input type="checkbox" disabled style="visibility:hidden" />
+                  {{/if}}
+                </div>
                 <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet-actions"></div>
               </div>
               {{else}}
               <div class="eon-ccw-datagrid__row">
                 <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet">{{{itemOptionsHtml}}}</div>
+                <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-sprak-kanskriva">
+                  {{#if harSkriftsprak}}
+                  <input type="checkbox" name="ccw_tf_sprak_rf_{{index}}_kanskriva" {{#if kanskriva}}checked{{/if}} />
+                  {{else}}
+                  <input type="checkbox" disabled style="visibility:hidden" />
+                  {{/if}}
+                </div>
                 <div class="eon-ccw-datagrid__cell eon-ccw-datagrid__cell--col-fardighet-actions">
                   <button type="button" class="eon-ccw-icon-btn" data-action="ccwSprakRemoveRow" data-ccw-sprak-index="{{index}}" title="{{localize 'eon.wizard.fardighetTaBortRad'}}" aria-label="{{localize 'eon.wizard.fardighetTaBortRad'}}"><i class="icon fa-solid fa-trash-can"></i></button>
                 </div>

@@ -1015,5 +1015,29 @@ export const RegisterHandlebarsHelpers = function () {
 		return items;
 	});
 
+	/**
+	 * Eon 5: Visa talspråksnamn för ett Språk-item.
+	 * Returnerar system.talsprak om det finns, annars item.name.
+	 */
+	Handlebars.registerHelper('sprakDisplayName', function(fardighet) {
+		const tal = (fardighet?.system?.talsprak ?? "").toString().trim();
+		return tal || (fardighet?.name ?? "").toString().trim() || "—";
+	});
+
+	/**
+	 * Eon 5: Visa skriftspråksnamn för ett Språk-item.
+	 * Returnerar system.skriftsprak om det finns, annars "".
+	 */
+	Handlebars.registerHelper('sprakSkriftName', function(fardighet) {
+		return (fardighet?.system?.skriftsprak ?? "").toString().trim();
+	});
+
+	/**
+	 * Eon 5: Returnerar true om ett Språk-item har ett skriftspråk definierat.
+	 */
+	Handlebars.registerHelper('harSkriftsprak', function(fardighet) {
+		return !!(fardighet?.system?.skriftsprak ?? "").toString().trim();
+	});
+
 
 }

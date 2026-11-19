@@ -1944,6 +1944,21 @@ input.skill-value {
     margin-left: 8px;
 }
 
+/* Eon 5 språkrader: lång text (namn + skriftspråk) får inte wrappa in i raden under. */
+.EON .skill-row .sprak-caption {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* Redigera-ikonen ligger längst till höger, i linje med övriga färdighetsrader. */
+.EON .skill-row .language-icon {
+    margin-left: 15px;
+    margin-right: 30px;
+}
+
 /* VAPEN */
 
 .EON.itemsheet.vapen .navigation {

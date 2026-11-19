@@ -258,11 +258,36 @@ export async function buildCharacterCreationWizardContext(wizard, context, _opti
     const externEgenskaper = Array.isArray(wizardDraft.externFolkslagEgenskaper)
         ? wizardDraft.externFolkslagEgenskaper
         : [];
-    context.externFolkslagRows = externEgenskaper.map((entry, index) => ({
-        uuid: (entry.uuid ?? "").toString(),
-        label: (entry.namn ?? "").toString(),
-        index
-    }));
+    context.externFolkslagRows = await Promise.all(
+        externEgenskaper.map(async (entry, index) => {
+            const uuid = (entry.uuid ?? "").toString();
+            /* Embedded kopia (skapas vid drop) gör beskrivningen redigerbar; saknas den visas kompendietexten skrivskyddad. */
+            const itemDoc = managedEgenskaperItems.find(
+                (folkslagsItem) =>
+                    folkslagsItem.getFlag(EON_CCW_FLAG_SCOPE, CCW_EGENSKAP_SOURCE_UUID_FLAG) === uuid
+            );
+            let rawBeskrivning = "";
+            if (itemDoc) {
+                rawBeskrivning = (itemDoc.system?.beskrivning ?? "").toString();
+            } else {
+                try {
+                    const externDoc = uuid ? await fromUuid(uuid) : null;
+                    rawBeskrivning = (externDoc?.system?.beskrivning ?? "").toString();
+                } catch { /* ignore: raden visas då utan beskrivning */ }
+            }
+            return {
+                uuid,
+                label: (entry.namn ?? "").toString(),
+                index,
+                showProseMirror: !!itemDoc,
+                editFieldName: itemDoc ? `ccw_folk_edit_${itemDoc.id}` : "",
+                beskrivning: rawBeskrivning,
+                beskrivningDisplay: await foundry.applications.ux.TextEditor.implementation.enrichHTML(rawBeskrivning, {
+                    async: true
+                })
+            };
+        })
+    );
 
     context.startsprakLista = await resolveStartsprakRowsWithPack(
         wizardDraft.folkslag,
@@ -304,18 +329,39 @@ export async function buildCharacterCreationWizardContext(wizard, context, _opti
                 startSprakUuidSet,
                 itemUuidsTakenByOtherRows
             );
+            /* Bestäm harSkriftsprak genom att slå upp vald compendium-doc. */
+            let harSkriftsprak = false;
+            if (selectedCompendiumUuid) {
+                try {
+                    const sprakDoc = await fromUuid(selectedCompendiumUuid);
+                    harSkriftsprak = !!(sprakDoc?.system?.skriftsprak ?? "").toString().trim();
+                } catch { /* ignore */ }
+            }
+            const kanskriva = harSkriftsprak ? !!(row?.kanskriva) : false;
             return {
                 compendiumUuid: selectedCompendiumUuid,
                 index,
-                itemOptionsHtml
+                itemOptionsHtml,
+                harSkriftsprak,
+                kanskriva
             };
         })
     );
 
-    const startSprakTabellRader = (context.startsprakLista ?? []).map((rad) => ({
-        isStartSprak: true,
-        startLabel: (rad?.label ?? "").toString().trim() || "—"
-    }));
+    /* startSprakKanskriva: { uuid: boolean } — bevaras i draft för folkslags-startspråkens "kan skriva". */
+    const startSprakKanskrivaMap = wizardDraft.startSprakKanskriva ?? {};
+    const startSprakTabellRader = (context.startsprakLista ?? []).map((rad) => {
+        const uuid = (rad?.uuid ?? "").toString().trim();
+        const harSkriftsprak = !!(rad?.harSkriftsprak);
+        const kanskriva = harSkriftsprak ? !!(startSprakKanskrivaMap[uuid.replaceAll(".", "~")]) : false;
+        return {
+            isStartSprak: true,
+            startLabel: (rad?.label ?? "").toString().trim() || "—",
+            startUuid: uuid,
+            harSkriftsprak,
+            kanskriva
+        };
+    });
     context.sprakListaAllRows = [
         ...startSprakTabellRader,
         ...context.sprakFordelningRows.map((row) => ({ isStartSprak: false, ...row }))

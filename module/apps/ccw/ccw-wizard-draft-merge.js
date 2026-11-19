@@ -58,6 +58,7 @@ export function getMergedWizardData(actor) {
     if (!Array.isArray(merged.doktrinRader)) merged.doktrinRader = [];
 
     if (!Array.isArray(merged.sprakFordelning)) merged.sprakFordelning = [];
+    if (merged.startSprakKanskriva == null || typeof merged.startSprakKanskriva !== "object") merged.startSprakKanskriva = {};
     if (!Array.isArray(merged.kretsarRader)) merged.kretsarRader = [];
     if (!Array.isArray(merged.foljeslagareRader)) merged.foljeslagareRader = [];
     if (!Array.isArray(merged.karaktarsdrag)) merged.karaktarsdrag = [];
@@ -100,11 +101,13 @@ export function getMergedWizardData(actor) {
             if (itemId) seenUuid.add(itemId);
             return {
                 itemId,
+                compendiumUuid: (row.compendiumUuid ?? "").toString().trim(),
                 grundvarde: clampWizardFardighetGrundTvardeStr(row.grundvarde),
                 poang: clampWizardFardighetPoangStr(row.poang, false),
                 talang: false,
                 inkompetent: false,
                 blockering: false,
+                kanskriva: row.kanskriva === true,
                 [CCW_WIZARD_CREATED_SPRAK_ROW]: row[CCW_WIZARD_CREATED_SPRAK_ROW] === true
             };
         });

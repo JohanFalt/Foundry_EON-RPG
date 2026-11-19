@@ -454,7 +454,7 @@
 
 /* Flik 10: endast språkval + ta bort (inga GV/enheter/totalt) */
 .eon-ccw-datagrid--fardighet-fordelning.eon-ccw-datagrid--fardighet-sprak .eon-ccw-datagrid__row {
-  grid-template-columns: minmax(9.5rem, 18rem) auto;
+  grid-template-columns: minmax(9.5rem, 18rem) auto max-content;
   column-gap: 6px;
   align-items: center;
   justify-content: start;
@@ -1022,6 +1022,18 @@
   border: 1px dashed #cfc8ba;
   border-radius: 4px;
   background: #f0ece4;
+}
+
+/* Extern egenskap: namn till vänster, ta bort-ikon längst till höger (som övriga rader i wizarden) */
+.eon-ccw-extern-egenskap-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.eon-ccw-extern-egenskap-head .eon-ccw-folk-egenskap-namn {
+  margin-bottom: 0;
 }
 
 /* Foundry <prose-mirror> för folkslag-egenskaper */

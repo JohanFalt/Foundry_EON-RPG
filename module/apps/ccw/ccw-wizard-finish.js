@@ -413,6 +413,7 @@ export async function applyCharacterCreationFinish(actor, wizardData) {
                 bonus: t6Pool.bonus,
                 bonuslista: []
             };
+            itemData.system.kanskriva = row.kanskriva === true;
             itemData.flags = foundry.utils.mergeObject(itemData.flags ?? {}, {
                 [EON_CCW_FLAG_SCOPE]: {
                     [CCW_EGENSKAP_SOURCE_UUID_FLAG]: uuid
@@ -421,6 +422,21 @@ export async function applyCharacterCreationFinish(actor, wizardData) {
             sprakItemsToCreate.push(itemData);
         }
         if (sprakItemsToCreate.length) await actor.createEmbeddedDocuments("Item", sprakItemsToCreate);
+
+        /* Uppdatera folkslags-startspråkens kanskriva på redan inbäddade Språk-items. */
+        const startSprakKanskriva = mergedDraft.startSprakKanskriva ?? {};
+        const startSprakUpdates = [];
+        for (const [encodedUuid, kanskriva] of Object.entries(startSprakKanskriva)) {
+            const sourceUuid = encodedUuid.replaceAll("~", ".");
+            const existing = actor.items.find((it) =>
+                it.type === "Språk" &&
+                (it.getFlag(EON_CCW_FLAG_SCOPE, CCW_EGENSKAP_SOURCE_UUID_FLAG) ?? "").toString().trim() === sourceUuid
+            );
+            if (existing && existing.system.kanskriva !== kanskriva) {
+                startSprakUpdates.push({ _id: existing.id, "system.kanskriva": kanskriva });
+            }
+        }
+        if (startSprakUpdates.length) await actor.updateEmbeddedDocuments("Item", startSprakUpdates);
     }
 
     actorData.system.egenskap.karaktärsdrag = buildEon5KaraktarsdragFromWizardRows(

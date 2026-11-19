@@ -232,8 +232,9 @@ export async function buildSprakItemOptionsHtml(
         const sprakUuid = (sprakDoc.uuid ?? "").toString();
         const selected = sprakUuid === sel ? " selected" : "";
         const defaultGrundvarde = defaultWizardFardighetGrundFardighetsvarde(sprakDoc, "sprak", false);
+        const harSkriftsprak = !!(sprakDoc?.system?.skriftsprak ?? "").toString().trim();
         parts.push(
-            `<option value="${esc(sprakUuid)}" data-ccw-grundvarde="${defaultGrundvarde}"${selected}>${esc((sprakDoc.name ?? "").toString())}</option>`
+            `<option value="${esc(sprakUuid)}" data-ccw-grundvarde="${defaultGrundvarde}" data-har-skriftsprak="${harSkriftsprak ? "1" : "0"}"${selected}>${esc((sprakDoc.name ?? "").toString())}</option>`
         );
     }
     parts.push("</select>");

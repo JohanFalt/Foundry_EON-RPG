@@ -205,7 +205,7 @@ export default class EonItemSheet extends foundry.appv1.sheets.ItemSheet {
 		data.EON.CONFIG = CONFIG.EON;
 
 		data.hasEffects = this.item.hasEffects;
-		data.isEon5 = this.item.isEon5;
+		data.isEon5 = EffectHelper.isEon5Item(this.item);
 
 		const effectRows = Array.isArray(this.item.system?.effekter) ? this.item.system.effekter : [];
 		const targetConfig = data.EON.CONFIG.effektTargetExempel ?? {};

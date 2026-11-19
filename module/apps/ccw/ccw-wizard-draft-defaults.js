@@ -29,7 +29,8 @@ export function emptySprakFordelningRow() {
         poang: "0",
         talang: false,
         inkompetent: false,
-        blockering: false
+        blockering: false,
+        kanskriva: false
     };
 }
 
